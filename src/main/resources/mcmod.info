@@ -1,0 +1,21 @@
+[
+{
+  "modid": "BiomeTweaker",
+  "name": "BiomeTweaker",
+  "description": "Used to tweak various characteristics of biomes.",
+  "version": "${mod_version}",
+  "mcversion": "${minecraft_version}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": [
+    "superckl"
+  ],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

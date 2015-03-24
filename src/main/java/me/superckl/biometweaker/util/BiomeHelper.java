@@ -5,6 +5,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class BiomeHelper {
@@ -71,9 +72,19 @@ public class BiomeHelper {
 		}
 		obj.add("Spawnable Cave Creatures", array);
 		
-		obj.addProperty("Tweaked", Config.INSTANCE.getParsedEntries().containsKey(gen.biomeID));
+		obj.addProperty("Tweaked", Config.INSTANCE.getParsedEntries().containsKey(gen.biomeID) || Config.INSTANCE.getParsedEntries().containsKey(-1));
 		
 		return obj;
+	}
+	
+	public static void setBiomeProperty(String prop, JsonElement value, BiomeGenBase biome) throws Exception{
+		if(prop.equals("enableSnow")){
+			boolean toSet = value.getAsBoolean();
+			biome.enableSnow = toSet;
+		}else if(prop.equals("temperature")){
+			float toSet = value.getAsFloat();
+			biome.temperature = toSet;
+		}
 	}
 	
 }

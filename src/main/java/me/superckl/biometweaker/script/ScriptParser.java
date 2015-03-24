@@ -8,25 +8,22 @@ import java.io.InputStreamReader;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Cleanup;
-import me.superckl.biometweaker.config.ParsedBiomeEntry;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
 
 public class ScriptParser {
 
-	public static Map<Integer, ParsedBiomeEntry> parseScriptFile(File file){
+	public static void parseScriptFile(File file){
 		try{
 			List<String> scriptLines = parseScriptLines(file);
-			return new ScriptHandler(scriptLines).parse();
+			new ScriptHandler(scriptLines).parse();
 		}catch(Exception e){
 			ModBiomeTweakerCore.logger.error("Failed to parse a script file: "+file.getPath());
 			e.printStackTrace();
 		}
-		return null;
 	}
 	
 	public static List<String> parseScriptLines(File file) throws IOException{
@@ -90,6 +87,8 @@ public class ScriptParser {
 			for(int i = 0; i < array.length; i++)
 				array[i] = ints.get(i);
 			return new AbstractMap.SimpleEntry(var, new BiomesScriptObject(array));
+		}else if(assign.equals("forAllBiomes()")){
+			return new AbstractMap.SimpleEntry(var, new BiomesScriptObject(-1));
 		}
 		return null;
 	}

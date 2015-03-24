@@ -1,24 +1,17 @@
 package me.superckl.biometweaker.script;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Cleanup;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.superckl.biometweaker.config.ParsedBiomeEntry;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 
 @RequiredArgsConstructor
+@Getter
 public class ScriptHandler {
 
 	private final List<String> lines;
@@ -28,11 +21,10 @@ public class ScriptHandler {
 	private final Map<String, String> shortcuts = new HashMap<String, String>();
 	private final Map<String, IScriptObject> objects = new HashMap<String, IScriptObject>();
 	
-	public Map<Integer, ParsedBiomeEntry> parse(){
+	public void parse(){
 		this.it = lines.iterator();
-		Map<Integer, ParsedBiomeEntry> map = new HashMap<Integer, ParsedBiomeEntry>();
 		if(!it.hasNext())
-			return map;
+			return;
 		
 		while(it.hasNext()){
 			String s = it.next().trim();
@@ -45,11 +37,19 @@ public class ScriptHandler {
 				else if(entry.getValue() instanceof IScriptObject)
 					this.objects.put(entry.getKey(), (IScriptObject) entry.getValue());
 			}else if(s.contains(".")){
-				//TODO
+				String[] split = s.split("[.]", 2);
+				if(split.length != 2){
+					ModBiomeTweakerCore.logger.error("Found operator '.' in invalid context: "+s);
+					continue;
+				}
+				if(!this.objects.containsKey(split[0])){
+					ModBiomeTweakerCore.logger.error("Object not found: "+split[0]);
+					continue;
+				}
+				IScriptObject obj = this.objects.get(split[0]);
+				obj.handleCall(split[1], this);
 			}
 		}
-		
-		return map;
 	}
 	
 }

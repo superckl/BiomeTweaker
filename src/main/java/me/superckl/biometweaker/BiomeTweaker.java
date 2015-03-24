@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map.Entry;
 
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -17,6 +18,7 @@ import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.config.ParsedBiomeEntry;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.util.BiomeHelper;
@@ -40,7 +42,37 @@ public class BiomeTweaker {
 	
 	@EventHandler
 	public void onLoadComplete(FMLLoadCompleteEvent e) throws IOException{
-		LogHelper.info("Generating biome status report...");
+		LogHelper.info("Found tweaks for "+Config.INSTANCE.getParsedEntries().size()+" biomes. Applying tweaks...");
+		
+		for(ParsedBiomeEntry entry:Config.INSTANCE.getParsedEntries().values()){
+			if(entry.getBiomeID() == -1){
+				for(BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
+					if(gen == null)
+						continue;
+					for(Entry<String, JsonElement> setting:entry.getMappings().entrySet())
+						try {
+							BiomeHelper.setBiomeProperty(setting.getKey(), setting.getValue(), gen);
+						} catch (Exception e1) {
+							LogHelper.error("Failed to set biome property "+setting.getKey()+" to value "+setting.getValue().toString());
+							e1.printStackTrace();
+						}
+				}
+				continue;
+			}
+			BiomeGenBase gen = BiomeGenBase.getBiome(entry.getBiomeID());
+			if(gen == null){
+				LogHelper.info("Error applying tweaks. Biome ID "+entry.getBiomeID()+" does not correspond to a biome! Check the output files for the correct ID!");
+				continue;
+			}
+			for(Entry<String, JsonElement> setting:entry.getMappings().entrySet())
+				try {
+					BiomeHelper.setBiomeProperty(setting.getKey(), setting.getValue(), gen);
+				} catch (Exception e1) {
+					LogHelper.error("Failed to set biome property "+setting.getKey()+" to value "+setting.getValue().toString());
+					e1.printStackTrace();
+				}
+		}
+		LogHelper.info("Successfully applied tweaks. Generating biome status report...");
 		JsonArray array = new JsonArray();
 		for(BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
 			if(gen == null)

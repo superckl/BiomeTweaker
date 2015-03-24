@@ -1,15 +1,12 @@
 package me.superckl.biometweaker.config;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import com.google.gson.JsonElement;
 
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

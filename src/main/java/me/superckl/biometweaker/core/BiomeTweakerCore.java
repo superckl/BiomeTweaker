@@ -8,10 +8,12 @@ import me.superckl.biometweaker.common.reference.ModData;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @SortingIndex(2000)
 @MCVersion("1.7.10")
+@TransformerExclusions("me.superckl.biometweaker.core")
 public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{
 	
 	public static File mcLocation;
@@ -22,7 +24,7 @@ public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPl
 
 	@Override
 	public String[] getASMTransformerClass() {
-		// TODO Auto-generated method stub
+		//TODO
 		return null;
 	}
 

@@ -48,22 +48,24 @@ public class BiomeTweaker {
 			array.add(BiomeHelper.fillJsonObject(gen));
 		}
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output").mkdirs();
+		File dir = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/");
+		dir.mkdirs();
+		for(File file:dir.listFiles())
+			file.delete();
 		if(Config.INSTANCE.isOutputSeperateFiles()){
 			for(JsonElement element:array){
 				JsonObject obj = (JsonObject) element;
-				File output = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/"+obj.get("Name").getAsString()+" Status Report.json");
+				File output = new File(dir, ""+obj.get("Name").getAsString()+".json");
 				if(output.exists())
 					output.delete();
 				output.createNewFile();
 				@Cleanup
 				BufferedWriter writer = new BufferedWriter(new FileWriter(output));
-				writer.write("//Yeah, it's a doozy.");
 				writer.newLine();
 				writer.write(gson.toJson(obj));
 			}
 		}else{
-			File output = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/BiomeTweaker - Biome Status Report.json");
+			File output = new File(dir, "BiomeTweaker - Biome Status Report.json");
 			if(output.exists())
 				output.delete();
 			output.createNewFile();

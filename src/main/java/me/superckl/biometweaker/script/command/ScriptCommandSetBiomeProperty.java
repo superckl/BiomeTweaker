@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -21,6 +22,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 					continue;
 				BiomeHelper.setBiomeProperty(this.key, this.value, gen);
 			}
+			Config.INSTANCE.onTweak(-1);
 			return;
 		}
 		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
@@ -29,6 +31,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 			return;
 		}
 		BiomeHelper.setBiomeProperty(this.key, this.value, gen);
+		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 	@Override

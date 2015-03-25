@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.util;
 
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.ScriptParser;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -15,7 +16,7 @@ public class BiomeHelper {
 		final JsonObject obj = new JsonObject();
 		obj.addProperty("ID", gen.biomeID);
 		obj.addProperty("Name", gen.biomeName);
-		obj.addProperty("Foliage Color", gen.color);
+		obj.addProperty("Color", gen.color);
 		obj.addProperty("Root Height", gen.rootHeight);
 		obj.addProperty("Height Variation", gen.heightVariation);
 		obj.addProperty("Top Block", gen.topBlock.delegate.name());
@@ -74,7 +75,7 @@ public class BiomeHelper {
 		obj.add("Spawnable Cave Creatures", array);
 
 		//TODO
-		//obj.addProperty("Tweaked", Config.INSTANCE.getParsedEntries().containsKey(gen.biomeID) || Config.INSTANCE.getParsedEntries().containsKey(-1));
+		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(gen.biomeID));
 
 		return obj;
 	}
@@ -83,7 +84,7 @@ public class BiomeHelper {
 		if(prop.equals("name")){
 			final String toSet = ScriptParser.extractStringArg(value.getAsString());
 			biome.biomeName = toSet;
-		}else if(prop.equals("foliageColor")){
+		}else if(prop.equals("color")){
 			final int toSet = value.getAsInt();
 			biome.color = toSet;
 		}else if(prop.equals("height")){

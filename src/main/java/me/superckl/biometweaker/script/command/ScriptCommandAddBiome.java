@@ -2,6 +2,7 @@ package me.superckl.biometweaker.script.command;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
@@ -23,6 +24,7 @@ public class ScriptCommandAddBiome implements IScriptCommand{
 		}
 		final BiomeTweakerBiome biome = new BiomeTweakerBiome(this.biomeID);
 		BiomeManager.addBiome(BiomeType.getType(this.type), new BiomeEntry(biome, this.weight));
+		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 }

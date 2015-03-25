@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -38,6 +39,7 @@ public class ScriptCommandRemoveBiomeFlower implements IScriptCommand{
 						it.remove();
 				}
 			}
+			Config.INSTANCE.onTweak(-1);
 			return;
 		}
 		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
@@ -52,6 +54,7 @@ public class ScriptCommandRemoveBiomeFlower implements IScriptCommand{
 			if((entry.block == block) && (entry.metadata == this.meta))
 				it.remove();
 		}
+		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 }

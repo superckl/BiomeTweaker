@@ -1,8 +1,10 @@
 package me.superckl.biometweaker.config;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -22,6 +24,7 @@ public class Config {
 	public static final Config INSTANCE = new Config();
 
 	private final List<IScriptCommand> parsedCommands = new LinkedList<IScriptCommand>();
+	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles;
 
 	private Config() {}
@@ -52,6 +55,10 @@ public class Config {
 
 	public void addCommand(final IScriptCommand command){
 		this.parsedCommands.add(command);
+	}
+
+	public void onTweak(final int biomeID){
+		this.tweakedBiomes.add(biomeID);
 	}
 
 }

@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
@@ -21,6 +22,7 @@ public class ScriptCommandRemoveBiome implements IScriptCommand{
 			for(final BiomeEntry entry:BiomeManager.getBiomes(type))
 				if(entry.biome.biomeID == this.biomeID)
 					BiomeManager.removeBiome(type, entry);
+		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 }

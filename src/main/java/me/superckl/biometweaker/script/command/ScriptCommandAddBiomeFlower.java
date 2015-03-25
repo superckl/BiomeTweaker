@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -30,7 +31,7 @@ public class ScriptCommandAddBiomeFlower implements IScriptCommand{
 			return;
 		}
 		gen.addFlower(block, this.meta, this.weight);
-		LogHelper.info("Added flower to "+this.biomeID);
+		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 }

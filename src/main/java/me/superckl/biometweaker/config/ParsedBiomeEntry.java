@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.gson.JsonElement;
-
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+
+import com.google.gson.JsonElement;
 
 @Getter
 public class ParsedBiomeEntry {
@@ -45,26 +45,25 @@ public class ParsedBiomeEntry {
 	private boolean hasSpawnableWaterCreatures;
 	private List<BiomeSpawnEntry> spawnableCaveCreatures = new ArrayList<BiomeSpawnEntry>();
 	private boolean hasSpawnableCaveCreatures;*/
-	
-	public ParsedBiomeEntry(int biomeID) {
+
+	public ParsedBiomeEntry(final int biomeID) {
 		this.biomeID = biomeID;
 	}
-	
-	public void overwriteWith(ParsedBiomeEntry entry){
+
+	public void overwriteWith(final ParsedBiomeEntry entry){
 		if(entry.biomeID != this.biomeID)
 			return;
-		for(Entry<String, JsonElement> ent:entry.getMappings().entrySet())
+		for(final Entry<String, JsonElement> ent:entry.getMappings().entrySet())
 			this.addMapping(ent.getKey(), ent.getValue());
 	}
-	
-	public void addMapping(String key, JsonElement element){
-		if(this.mappings.containsKey(key)){
+
+	public void addMapping(final String key, final JsonElement element){
+		if(this.mappings.containsKey(key))
 			ModBiomeTweakerCore.logger.warn("Biome ID "+this.biomeID+": Duplicate mapping detected for key: "+key+", with element: "+element.toString());
-		}
 		this.mappings.put(key, element);
 	}
-	
-	public void removeMapping(String key){
+
+	public void removeMapping(final String key){
 		this.mappings.remove(key);
 	}
 
@@ -127,7 +126,7 @@ public class ParsedBiomeEntry {
 		this.spawnableCreatures = spawnableCreatures;
 		this.hasSpawnableCreatures = true;
 	}
-	
+
 	public void addSpawnableCreaturesEntry(BiomeSpawnEntry entry){
 		this.spawnableCreatures.add(entry);
 	}
@@ -136,7 +135,7 @@ public class ParsedBiomeEntry {
 		this.spawnableMonsters = spawnableMonsters;
 		this.hasSpawnableMonsters = true;
 	}
-	
+
 	public void addSpawnableMonstersEntry(BiomeSpawnEntry entry){
 		this.spawnableMonsters.add(entry);
 	}
@@ -146,7 +145,7 @@ public class ParsedBiomeEntry {
 		this.spawnableWaterCreatures = spawnableWaterCreatures;
 		this.hasSpawnableWaterCreatures = true;
 	}
-	
+
 	public void addSpawnableWaterCreaturesEntry(BiomeSpawnEntry entry){
 		this.spawnableWaterCreatures.add(entry);
 	}
@@ -156,21 +155,21 @@ public class ParsedBiomeEntry {
 		this.spawnableCaveCreatures = spawnableCaveCreatures;
 		this.hasSpawnableCaveCreatures = true;
 	}
-	
+
 	public void addSpawnableCaveCreaturesEntry(BiomeSpawnEntry entry){
 		this.spawnableCaveCreatures.add(entry);
 	}*/
-	
+
 	@AllArgsConstructor
 	@Getter
 	public static class BiomeSpawnEntry{
-		
-		private String entityClass;
-		private int weight;
-		private int minGroupSize;
-		private int maxGroupsize;
-		private boolean add;
-		
+
+		private final String entityClass;
+		private final int weight;
+		private final int minGroupSize;
+		private final int maxGroupsize;
+		private final boolean add;
+
 	}
-	
+
 }

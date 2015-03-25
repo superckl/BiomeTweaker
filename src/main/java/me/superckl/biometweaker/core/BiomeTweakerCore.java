@@ -6,18 +6,18 @@ import java.util.Map;
 
 import me.superckl.biometweaker.common.reference.ModData;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @SortingIndex(2000)
 @MCVersion("1.7.10")
 @TransformerExclusions("me.superckl.biometweaker.core")
 public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{
-	
+
 	public static File mcLocation;
-	
+
 	public BiomeTweakerCore() throws IOException {
 		super(ModData.MOD_ID.toLowerCase()+"_at.cfg");
 	}
@@ -39,8 +39,8 @@ public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPl
 	}
 
 	@Override
-	public void injectData(Map<String, Object> data) {
-		mcLocation = (File) data.get("mcLocation");
+	public void injectData(final Map<String, Object> data) {
+		BiomeTweakerCore.mcLocation = (File) data.get("mcLocation");
 	}
 
 	@Override

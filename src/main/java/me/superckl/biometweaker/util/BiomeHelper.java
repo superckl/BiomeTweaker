@@ -1,6 +1,6 @@
 package me.superckl.biometweaker.util;
 
-import me.superckl.biometweaker.config.Config;
+import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
@@ -10,8 +10,8 @@ import com.google.gson.JsonObject;
 
 public class BiomeHelper {
 
-	public static JsonObject fillJsonObject(BiomeGenBase gen){
-		JsonObject obj = new JsonObject();
+	public static JsonObject fillJsonObject(final BiomeGenBase gen){
+		final JsonObject obj = new JsonObject();
 		obj.addProperty("ID", gen.biomeID);
 		obj.addProperty("Name", gen.biomeName);
 		obj.addProperty("Foliage Color", gen.color);
@@ -25,9 +25,9 @@ public class BiomeHelper {
 		obj.addProperty("Enable Rain", gen.enableRain);
 		obj.addProperty("Enable Snow", gen.enableSnow);
 		JsonArray array = new JsonArray();
-		for(Object entity:gen.spawnableCreatureList){
-			SpawnListEntry entry = (SpawnListEntry) entity;
-			JsonObject object = new JsonObject();
+		for(final Object entity:gen.spawnableCreatureList){
+			final SpawnListEntry entry = (SpawnListEntry) entity;
+			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
 			object.addProperty("Weight", entry.itemWeight);
 			object.addProperty("Min Group Count", entry.minGroupCount);
@@ -35,11 +35,11 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Creatures", array);
-		
+
 		array = new JsonArray();
-		for(Object entity:gen.spawnableMonsterList){
-			SpawnListEntry entry = (SpawnListEntry) entity;
-			JsonObject object = new JsonObject();
+		for(final Object entity:gen.spawnableMonsterList){
+			final SpawnListEntry entry = (SpawnListEntry) entity;
+			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
 			object.addProperty("Weight", entry.itemWeight);
 			object.addProperty("Min Group Count", entry.minGroupCount);
@@ -47,11 +47,11 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Monsters", array);
-		
+
 		array = new JsonArray();
-		for(Object entity:gen.spawnableWaterCreatureList){
-			SpawnListEntry entry = (SpawnListEntry) entity;
-			JsonObject object = new JsonObject();
+		for(final Object entity:gen.spawnableWaterCreatureList){
+			final SpawnListEntry entry = (SpawnListEntry) entity;
+			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
 			object.addProperty("Weight", entry.itemWeight);
 			object.addProperty("Min Group Count", entry.minGroupCount);
@@ -59,11 +59,11 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Water Creatures", array);
-		
+
 		array = new JsonArray();
-		for(Object entity:gen.spawnableCaveCreatureList){
-			SpawnListEntry entry = (SpawnListEntry) entity;
-			JsonObject object = new JsonObject();
+		for(final Object entity:gen.spawnableCaveCreatureList){
+			final SpawnListEntry entry = (SpawnListEntry) entity;
+			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
 			object.addProperty("Weight", entry.itemWeight);
 			object.addProperty("Min Group Count", entry.minGroupCount);
@@ -71,20 +71,58 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Cave Creatures", array);
-		
-		obj.addProperty("Tweaked", Config.INSTANCE.getParsedEntries().containsKey(gen.biomeID) || Config.INSTANCE.getParsedEntries().containsKey(-1));
-		
+
+		//TODO
+		//obj.addProperty("Tweaked", Config.INSTANCE.getParsedEntries().containsKey(gen.biomeID) || Config.INSTANCE.getParsedEntries().containsKey(-1));
+
 		return obj;
 	}
-	
-	public static void setBiomeProperty(String prop, JsonElement value, BiomeGenBase biome) throws Exception{
-		if(prop.equals("enableSnow")){
-			boolean toSet = value.getAsBoolean();
-			biome.enableSnow = toSet;
+
+	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
+		if(prop.equals("name")){
+			final String toSet = value.getAsString();
+			biome.biomeName = toSet;
+		}else if(prop.equals("foliageColor")){
+			final int toSet = value.getAsInt();
+			biome.color = toSet;
+		}else if(prop.equals("height")){
+			final float toSet = value.getAsFloat();
+			biome.rootHeight = toSet;
+		}else if(prop.equals("heightVariation")){
+			final float toSet = value.getAsFloat();
+			biome.heightVariation = toSet;
+		}else if(prop.equals("topBlock")){
+			final String blockName = value.getAsString();
+			try {
+				final Block block = Block.getBlockFromName(blockName);
+				biome.topBlock = block;
+			} catch (final Exception e) {
+				LogHelper.info("Failed to parse block: "+blockName);
+			}
+		}else if(prop.equals("fillerBlock")){
+			final String blockName = value.getAsString();
+			try {
+				final Block block = Block.getBlockFromName(blockName);
+				biome.fillerBlock = block;
+			} catch (final Exception e) {
+				LogHelper.info("Failed to parse block: "+blockName);
+			}
 		}else if(prop.equals("temperature")){
-			float toSet = value.getAsFloat();
+			final float toSet = value.getAsFloat();
 			biome.temperature = toSet;
+		}else if(prop.equals("humidity")){
+			final float toSet = value.getAsFloat();
+			biome.rainfall = toSet;
+		}else if(prop.equals("waterTint")){
+			final int toSet = value.getAsInt();
+			biome.waterColorMultiplier = toSet;
+		}else if(prop.equals("enableRain")){
+			final boolean toSet = value.getAsBoolean();
+			biome.enableRain = toSet;
+		}else if(prop.equals("enableSnow")){
+			final boolean toSet = value.getAsBoolean();
+			biome.enableSnow = toSet;
 		}
 	}
-	
+
 }

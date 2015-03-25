@@ -9,9 +9,9 @@ import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.ModMetadata;
 
 public class ModBiomeTweakerCore extends DummyModContainer{
-	
+
 	public static final Logger logger = LogManager.getLogger("BiomeTweakerCore");
-	
+
 	public ModBiomeTweakerCore() {
 		super(new ModMetadata());
 		final ModMetadata meta = this.getMetadata();
@@ -26,5 +26,5 @@ public class ModBiomeTweakerCore extends DummyModContainer{
 		meta.screenshots = new String[0];
 		meta.logoFile = "";
 	}
-	
+
 }

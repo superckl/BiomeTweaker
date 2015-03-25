@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.util;
 
+import me.superckl.biometweaker.script.ScriptParser;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -80,7 +81,7 @@ public class BiomeHelper {
 
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		if(prop.equals("name")){
-			final String toSet = value.getAsString();
+			final String toSet = ScriptParser.extractStringArg(value.getAsString());
 			biome.biomeName = toSet;
 		}else if(prop.equals("foliageColor")){
 			final int toSet = value.getAsInt();
@@ -92,7 +93,7 @@ public class BiomeHelper {
 			final float toSet = value.getAsFloat();
 			biome.heightVariation = toSet;
 		}else if(prop.equals("topBlock")){
-			final String blockName = value.getAsString();
+			final String blockName = ScriptParser.extractStringArg(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				biome.topBlock = block;
@@ -100,7 +101,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 		}else if(prop.equals("fillerBlock")){
-			final String blockName = value.getAsString();
+			final String blockName = ScriptParser.extractStringArg(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				biome.fillerBlock = block;

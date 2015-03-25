@@ -41,9 +41,7 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
-		//TODO
-		//LogHelper.info("Found tweaks for "+(Config.INSTANCE.getParsedEntries().containsKey(-1) ? "all":Config.INSTANCE.getParsedEntries().size())+" biome(s). Applying tweaks...");
-
+		LogHelper.info("Found "+Config.INSTANCE.getParsedCommands().size()+" tweak(s) to apply. Applying...");
 		for(final IScriptCommand command:Config.INSTANCE.getParsedCommands())
 			try {
 				command.perform();

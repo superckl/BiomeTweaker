@@ -6,11 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import lombok.Cleanup;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.command.ScriptCommandAddBiome;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
@@ -119,10 +119,9 @@ public class ScriptParser {
 			}
 			final String type = ScriptParser.extractStringArg(args[args.length-2]);
 			final int weight = Integer.parseInt(args[args.length-1]);
-			final Map<String, Object> map = new LinkedHashMap<String, Object>();
 			for(final int i:array)
-				map.put(var, new ScriptCommandAddBiome(i, type, weight));
-			return map;
+				Config.INSTANCE.addCommand(new ScriptCommandAddBiome(i, type, weight));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
 		}
 		return null;
 	}

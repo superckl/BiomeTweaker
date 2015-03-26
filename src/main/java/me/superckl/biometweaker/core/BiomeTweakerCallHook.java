@@ -31,17 +31,28 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 		operateIn.mkdirs();
 		if(!mainConfig.exists()){
 			mainConfig.createNewFile();
-			int readBytes;
-			final byte[] buffer = new byte[4096];
-			@Cleanup
-			final
-			InputStream stream = BiomeTweaker.class.getResourceAsStream("/BiomeTweaker.cfg");
-			@Cleanup
-			final
-			OutputStream outStream = new FileOutputStream(mainConfig);
-			while ((readBytes = stream.read(buffer)) > 0)
-				outStream.write(buffer, 0, readBytes);
-			//TODO create example tweak file.
+			{
+				int readBytes;
+				final byte[] buffer = new byte[4096];
+				@Cleanup
+				final InputStream stream = BiomeTweaker.class.getResourceAsStream("/BiomeTweaker.cfg");
+				@Cleanup
+				final OutputStream outStream = new FileOutputStream(mainConfig);
+				while ((readBytes = stream.read(buffer)) > 0)
+					outStream.write(buffer, 0, readBytes);
+			}
+			final File exampleTweaks = new File(operateIn, "ExampleTweaks.cfg");
+			if(!exampleTweaks.exists()){
+				exampleTweaks.createNewFile();
+				int readBytes;
+				final byte[] buffer = new byte[4096];
+				@Cleanup
+				final InputStream stream = BiomeTweaker.class.getResourceAsStream("/ExampleTweaks.cfg");
+				@Cleanup
+				final OutputStream outStream = new FileOutputStream(exampleTweaks);
+				while ((readBytes = stream.read(buffer)) > 0)
+					outStream.write(buffer, 0, readBytes);
+			}
 		}
 		@Cleanup
 		final

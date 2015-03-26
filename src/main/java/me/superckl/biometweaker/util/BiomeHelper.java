@@ -74,7 +74,6 @@ public class BiomeHelper {
 		}
 		obj.add("Spawnable Cave Creatures", array);
 
-		//TODO
 		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(gen.biomeID));
 
 		return obj;

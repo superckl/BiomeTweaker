@@ -14,6 +14,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 	private final int biomeID;
 	private final String key;
 	private final JsonElement value;
+
 	@Override
 	public void perform() throws Exception {
 		if(this.biomeID == -1){

@@ -5,6 +5,9 @@ import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.ScriptCommandAddBiomeFlower;
+import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
+import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
@@ -50,7 +53,7 @@ public class BiomesScriptObject implements IScriptObject{
 				return;
 			}
 			this.addFlower(ScriptParser.extractStringArg(args[0]), args[1], args[2]);
-		}else if(call.startsWith("removeFlower")){
+		}else if(call.startsWith("removeFlower(")){
 			final String[] args = ScriptParser.trimAll(ScriptParser.parseArguments(call));
 			if(args.length != 2){
 				ModBiomeTweakerCore.logger.error("Biome addFlower command requires 2 arguments, while "+args.length+" were found! Call: "+call);
@@ -67,7 +70,64 @@ public class BiomesScriptObject implements IScriptObject{
 			this.removeFlower(ScriptParser.extractStringArg(args[0]), args[1]);
 		}else if(call.equals("remove()"))
 			this.remove();
-		else
+		else if(call.startsWith("addSpawn(")){
+			final String[] args = ScriptParser.trimAll(ScriptParser.parseArguments(call));
+			if(args.length < 5){
+				ModBiomeTweakerCore.logger.error("Biome set command requires more than 4 arguments, while "+args.length+" were found! Call: "+call);
+				return;
+			}
+			if(!ScriptParser.isStringArg(args[args.length-4])){
+				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[0]+" where a String is required: "+call);
+				return;
+			}
+			if(!ScriptParser.isPositiveInteger(args[args.length-3]) || !ScriptParser.isPositiveInteger(args[args.length-2]) || !ScriptParser.isPositiveInteger(args[args.length-1])){
+				ModBiomeTweakerCore.logger.error("Found non-integer argument where integer required: "+call);
+				return;
+			}
+			final int weight = Integer.parseInt(args[args.length-3]), minCount = Integer.parseInt(args[args.length-2]), maxCount = Integer.parseInt(args[args.length-1]);
+			final Type type = Type.valueOf(ScriptParser.extractStringArg(args[args.length-4]));
+			if(type == null){
+				ModBiomeTweakerCore.logger.error("Failed to parse spawn list type: "+args[args.length - 4]);
+				return;
+			}
+			for(int i = 0; i < (args.length - 4); i++){
+				if(!ScriptParser.isStringArg(args[i]) && !handler.getShortcuts().containsKey(args[i])){
+					ModBiomeTweakerCore.logger.error("Found non-String argument "+args[i]+" where a String is required: "+call);
+					continue;
+				}
+				this.addSpawn(handler.getShortcuts().containsKey(args[i]) ? handler.getShortcuts().get(args[i]):ScriptParser.extractStringArg(args[i]), type, weight, minCount, maxCount);
+			}
+		}else if(call.startsWith("removeSpawn(")){
+			final String[] args = ScriptParser.trimAll(ScriptParser.parseArguments(call));
+			if(args.length < 2){
+				ModBiomeTweakerCore.logger.error("Biome set command requires more than 1 argument, while "+args.length+" were found! Call: "+call);
+				return;
+			}
+			if(!ScriptParser.isStringArg(args[args.length-1])){
+				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[0]+" where a String is required: "+call);
+				return;
+			}
+			final Type type = Type.valueOf(ScriptParser.extractStringArg(args[args.length-1]));
+			if(type == null){
+				ModBiomeTweakerCore.logger.error("Failed to parse spawn list type: "+args[args.length - 4]);
+				return;
+			}
+			for(int i = 0; i < (args.length - 4); i++){
+				if(!ScriptParser.isStringArg(args[i]) && !handler.getShortcuts().containsKey(args[i])){
+					ModBiomeTweakerCore.logger.error("Found non-String argument "+args[i]+" where a String is required: "+call);
+					continue;
+				}
+				this.removeSpawn(handler.getShortcuts().containsKey(args[i]) ? handler.getShortcuts().get(args[i]):ScriptParser.extractStringArg(args[i]), type);
+			}
+		}else if(call.startsWith("removeAllSpawns(")){
+			final String[] args = ScriptParser.trimAll(ScriptParser.parseArguments(call));
+			if(args.length != 1){
+				ModBiomeTweakerCore.logger.error("Biome set command requires 1 argument, while "+args.length+" were found! Call: "+call);
+				return;
+			}
+			final Type type = Type.valueOf(ScriptParser.extractStringArg(args[0]));
+			this.removeAllSpawns(type);
+		}else
 			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
@@ -89,6 +149,20 @@ public class BiomesScriptObject implements IScriptObject{
 	private void removeFlower(final String block, final String meta){
 		for(final int biome:this.biomes)
 			Config.INSTANCE.addCommand(new ScriptCommandRemoveBiomeFlower(biome, block, Integer.parseInt(meta)));
+	}
+
+	private void addSpawn(final String clazz, final Type type, final int weight, final int minCount, final int maxCount){
+		for(final int biome:this.biomes)
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, false, type, clazz, weight, minCount, maxCount));
+	}
+
+	private void removeSpawn(final String clazz, final Type type){
+		for(final int biome:this.biomes)
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, true, type, clazz, 0, 0, 0));
+	}
+	private void removeAllSpawns(final Type type){
+		for(final int biome:this.biomes)
+			Config.INSTANCE.addCommand(new ScriptCommandRemoveAllSpawns(biome, type));
 	}
 
 }

@@ -12,7 +12,7 @@ import java.util.Map;
 import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.script.command.ScriptCommandAddBiome;
+import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.util.CollectionHelper;
 
@@ -120,7 +120,7 @@ public class ScriptParser {
 			final String type = ScriptParser.extractStringArg(args[args.length-2]);
 			final int weight = Integer.parseInt(args[args.length-1]);
 			for(final int i:array)
-				Config.INSTANCE.addCommand(new ScriptCommandAddBiome(i, type, weight));
+				Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(i, type, weight));
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
 		}
 		return null;

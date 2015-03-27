@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.script.object.IScriptObject;
+import me.superckl.biometweaker.script.object.ScriptObject;
 
 @RequiredArgsConstructor
 @Getter
@@ -20,7 +20,7 @@ public class ScriptHandler {
 	private Iterator<String> it;
 
 	private final Map<String, String> shortcuts = new HashMap<String, String>();
-	private final Map<String, IScriptObject> objects = new HashMap<String, IScriptObject>();
+	private final Map<String, ScriptObject> objects = new HashMap<String, ScriptObject>();
 
 	public void parse(){
 		this.it = this.lines.iterator();
@@ -36,8 +36,8 @@ public class ScriptHandler {
 				for(final Entry<String, Object> entry:map.entrySet())
 					if(entry.getValue() instanceof String)
 						this.shortcuts.put(entry.getKey(), (String) entry.getValue());
-					else if(entry.getValue() instanceof IScriptObject)
-						this.objects.put(entry.getKey(), (IScriptObject) entry.getValue());
+					else if(entry.getValue() instanceof ScriptObject)
+						this.objects.put(entry.getKey(), (ScriptObject) entry.getValue());
 			}else if(s.contains(".")){
 				final String[] split = s.split("[.]", 2);
 				if(split.length != 2){
@@ -48,7 +48,7 @@ public class ScriptHandler {
 					ModBiomeTweakerCore.logger.error("Object not found: "+split[0]);
 					continue;
 				}
-				final IScriptObject obj = this.objects.get(split[0]);
+				final ScriptObject obj = this.objects.get(split[0]);
 				obj.handleCall(split[1], this);
 			}
 		}

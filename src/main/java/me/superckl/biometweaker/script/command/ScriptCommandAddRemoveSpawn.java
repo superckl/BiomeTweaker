@@ -3,13 +3,14 @@ package me.superckl.biometweaker.script.command;
 import java.util.Collection;
 import java.util.Iterator;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	public static enum Type{
@@ -22,6 +23,14 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
+	public ScriptCommandAddRemoveSpawn(int biomeID, Type type, String entityClass, int weight, int minCount, int maxCount) {
+		this(biomeID, false, type, entityClass, weight, minCount, maxCount);
+	}
+	
+	public ScriptCommandAddRemoveSpawn(int biomeID, Type type, String entityClass) {
+		this(biomeID, true, type, entityClass, 0, 0, 0);
+	}
+	
 	@Override
 	public void perform() throws Exception {
 		final Class<?> clazz = Class.forName(this.entityClass);

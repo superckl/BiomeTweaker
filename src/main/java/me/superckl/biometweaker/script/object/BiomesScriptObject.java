@@ -4,17 +4,16 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
-import me.superckl.biometweaker.script.command.ScriptCommandAddBiomeFlower;
+import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
-import me.superckl.biometweaker.script.command.ScriptCommandRemoveBiome;
-import me.superckl.biometweaker.script.command.ScriptCommandRemoveBiomeFlower;
+import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 
 import com.google.gson.JsonPrimitive;
 
-public class BiomesScriptObject implements IScriptObject{
+public class BiomesScriptObject extends ScriptObject{
 
 	private final int[] biomes;
 
@@ -138,31 +137,37 @@ public class BiomesScriptObject implements IScriptObject{
 
 	private void remove(){
 		for(final int biome:this.biomes)
-			Config.INSTANCE.addCommand(new ScriptCommandRemoveBiome(biome));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(biome));
 	}
 
 	private void addFlower(final String block, final String meta, final String weight){
 		for(final int biome:this.biomes)
-			Config.INSTANCE.addCommand(new ScriptCommandAddBiomeFlower(biome, block, Integer.parseInt(meta), Integer.parseInt(weight)));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiomeFlower(biome, block, Integer.parseInt(meta), Integer.parseInt(weight)));
 	}
 
 	private void removeFlower(final String block, final String meta){
 		for(final int biome:this.biomes)
-			Config.INSTANCE.addCommand(new ScriptCommandRemoveBiomeFlower(biome, block, Integer.parseInt(meta)));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiomeFlower(biome, block, Integer.parseInt(meta)));
 	}
 
 	private void addSpawn(final String clazz, final Type type, final int weight, final int minCount, final int maxCount){
 		for(final int biome:this.biomes)
-			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, false, type, clazz, weight, minCount, maxCount));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, type, clazz, weight, minCount, maxCount));
 	}
 
 	private void removeSpawn(final String clazz, final Type type){
 		for(final int biome:this.biomes)
-			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, true, type, clazz, 0, 0, 0));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveSpawn(biome, type, clazz, 0, 0, 0));
 	}
 	private void removeAllSpawns(final Type type){
 		for(final int biome:this.biomes)
 			Config.INSTANCE.addCommand(new ScriptCommandRemoveAllSpawns(biome, type));
+	}
+
+	@Override
+	public void populateCommands() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

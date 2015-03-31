@@ -52,9 +52,22 @@ public class ScriptParser {
 		return arg.matches("[0-9]+");
 	}
 
+	public static boolean isCommandCall(final String command){
+		if(!command.endsWith(")") || !command.contains("("))
+			return false;
+		final String call = command.substring(0, command.indexOf("("));
+		return call.equals(command);
+	}
+
+	public static String getCommandCalled(final String command){
+		if(!command.endsWith(")") || !command.contains("("))
+			return "";
+		return command.substring(0, command.indexOf("("));
+	}
+
 	public static String[] parseArguments(final String script){
-		if(!script.endsWith(")")){
-			ModBiomeTweakerCore.logger.error("Tried to parse an argument array that didn't end with ')'!");
+		if(!script.endsWith(")") || !script.contains("(")){
+			ModBiomeTweakerCore.logger.error("Tried to parse an invalid argument array!");
 			return new String[0];
 		}
 		final String[] split = script.substring(script.indexOf("(")+1, script.length()-1).split(",");

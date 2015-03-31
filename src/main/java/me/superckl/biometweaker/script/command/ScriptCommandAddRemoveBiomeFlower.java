@@ -16,34 +16,34 @@ import net.minecraft.world.biome.BiomeGenBase.FlowerEntry;
 public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 
 	private static Field field;
-	
+
 	private final int biomeID;
 	private final boolean remove;
 	private final String block;
 	private final int meta;
 	private final int weight;
-	
-	public ScriptCommandAddRemoveBiomeFlower(int biomeID, String block, int meta) {
+
+	public ScriptCommandAddRemoveBiomeFlower(final int biomeID, final String block, final int meta) {
 		this(biomeID, true, block, meta, 0);
 	}
-	
-	public ScriptCommandAddRemoveBiomeFlower(int biomeID, String block, int meta, int weight) {
+
+	public ScriptCommandAddRemoveBiomeFlower(final int biomeID, final String block, final int meta, final int weight) {
 		this(biomeID, false, block, meta, weight);
 	}
 
 	@Override
 	public void perform() throws Exception {
-		if(remove){
-			if(field == null){
-				field = BiomeGenBase.class.getDeclaredField("flowers");
-				field.setAccessible(true);
+		if(this.remove){
+			if(ScriptCommandAddRemoveBiomeFlower.field == null){
+				ScriptCommandAddRemoveBiomeFlower.field = BiomeGenBase.class.getDeclaredField("flowers");
+				ScriptCommandAddRemoveBiomeFlower.field.setAccessible(true);
 			}
 			final Block block = Block.getBlockFromName(this.block);
 			if(this.biomeID == -1){
 				for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
 					if(gen == null)
 						continue;
-					final List<FlowerEntry> flowers = (List<FlowerEntry>) field.get(gen);
+					final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
 					final Iterator<FlowerEntry> it = flowers.iterator();
 					while(it.hasNext()){
 						final FlowerEntry entry = it.next();
@@ -59,7 +59,7 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 				LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");
 				return;
 			}
-			final List<FlowerEntry> flowers = (List<FlowerEntry>) field.get(gen);
+			final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
 			final Iterator<FlowerEntry> it = flowers.iterator();
 			while(it.hasNext()){
 				final FlowerEntry entry = it.next();

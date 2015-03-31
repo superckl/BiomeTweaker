@@ -22,7 +22,7 @@ public class ScriptHandler {
 	private final Map<String, String> shortcuts = new HashMap<String, String>();
 	private final Map<String, ScriptObject> objects = new HashMap<String, ScriptObject>();
 
-	public void parse(){
+	public void parse() throws Exception{
 		this.it = this.lines.iterator();
 		if(!this.it.hasNext())
 			return;

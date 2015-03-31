@@ -18,13 +18,13 @@ public class ScriptCommandAddRemoveBiome implements IScriptCommand{
 	private final boolean remove;
 	private final String type;
 	private final int weight;
-	
-	public ScriptCommandAddRemoveBiome(int biomeID) {
+
+	public ScriptCommandAddRemoveBiome(final int biomeID) {
 		this(biomeID, true, null, 0);
 	}
-	
-	public ScriptCommandAddRemoveBiome(int biomeID, String type, int weight) {
-		this(biomeID, true, type, weight);
+
+	public ScriptCommandAddRemoveBiome(final int biomeID, final String type, final int weight) {
+		this(biomeID, false, type, weight);
 	}
 
 	@Override

@@ -68,7 +68,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					ModBiomeTweakerCore.logger.info("Successfully inserted Stone into 'actualFillerBlock'");
 					fixed++;
 				}
-			if(fixed < 4)
+			if(fixed < 5)
 				ModBiomeTweakerCore.logger.error("Failed to completely patch BiomeGenBase! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched BiomeGenBase! "+fixed+" patches were applied.");

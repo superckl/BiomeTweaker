@@ -38,12 +38,25 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			LogHelper.info("Failed to load entity class: "+this.entityClass);
 			return;
 		}
+		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
+		if(this.biomeID == -1){
+			for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
+				if(gen != null){
+					this.handleTypeSwitch(gen, entry, clazz);
+					Config.INSTANCE.onTweak(gen.biomeID);
+				}
+			return;
+		}
 		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
 		if(gen == null){
 			LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");
 			return;
 		}
-		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
+		this.handleTypeSwitch(gen, entry, clazz);
+		Config.INSTANCE.onTweak(this.biomeID);
+	}
+
+	private void handleTypeSwitch(final BiomeGenBase gen, final SpawnListEntry entry, final Class<?> clazz){
 		switch(this.type){
 		case CAVE_CREATURE:{
 			if(this.remove)
@@ -76,7 +89,6 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 		default:
 			break;
 		}
-		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 	private void removeEntry(final Class<?> clazz, final Collection<SpawnListEntry> coll){

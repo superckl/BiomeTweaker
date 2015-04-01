@@ -14,7 +14,14 @@ public class ScriptCommandRemoveAllSpawns implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		//TODO for all biomes
+		if(this.biomeID == -1){
+			for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
+				if(gen != null){
+					this.removeEntries(gen, this.type);
+					Config.INSTANCE.onTweak(gen.biomeID);
+				}
+			return;
+		}
 		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
 		if(gen == null){
 			LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");

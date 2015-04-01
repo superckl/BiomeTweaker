@@ -26,7 +26,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			reader.accept(cNode, 0);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
 			ModBiomeTweakerCore.logger.info("Successfully inserted 'actualFillerBlock' field into "+name);
-			int fixed = 0;
+			int fixed = 1;
 			for(final MethodNode node:cNode.methods)
 				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
 					for(AbstractInsnNode aNode:node.instructions.toArray())
@@ -71,7 +71,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			if(fixed < 4)
 				ModBiomeTweakerCore.logger.error("Failed to completely patch BiomeGenBase! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
 			else
-				ModBiomeTweakerCore.logger.info("Sucessfully patched BiomeGenBase!");
+				ModBiomeTweakerCore.logger.info("Sucessfully patched BiomeGenBase! "+fixed+" patches were applied.");
 			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 			cNode.accept(cWriter);
 			return cWriter.toByteArray();

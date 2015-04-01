@@ -41,9 +41,8 @@ public class BiomesScriptObject extends ScriptObject{
 		final String[] arguments = ScriptParser.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
 		for(final Entry<List<ParameterType>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
-			if(arguments.length != entry.getKey().size()){
+			if(arguments.length != entry.getKey().size())
 				continue;
-			}
 			final Object[] objs = new Object[arguments.length];
 			final List<ParameterType> list = entry.getKey();
 			boolean shouldCont = false;

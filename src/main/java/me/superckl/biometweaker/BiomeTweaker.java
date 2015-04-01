@@ -27,6 +27,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION)
 public class BiomeTweaker {
@@ -38,6 +39,11 @@ public class BiomeTweaker {
 	@SidedProxy(clientSide=ModData.CLIENT_PROXY, serverSide=ModData.SERVER_PROXY)
 	@Getter
 	private static IProxy proxy;
+
+	@EventHandler
+	public void onPreInit(final FMLPreInitializationEvent e){
+		BiomeTweaker.proxy.registerHandlers();
+	}
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{

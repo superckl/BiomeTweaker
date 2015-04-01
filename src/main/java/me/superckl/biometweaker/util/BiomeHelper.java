@@ -1,5 +1,7 @@
 package me.superckl.biometweaker.util;
 
+import java.lang.reflect.Field;
+
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.ScriptParser;
 import net.minecraft.block.Block;
@@ -79,7 +81,11 @@ public class BiomeHelper {
 		return obj;
 	}
 
+	private static Field actualFillerBlock;
+
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
+		if(BiomeHelper.actualFillerBlock == null)
+			BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
 		if(prop.equals("name")){
 			final String toSet = ScriptParser.extractStringArg(value.getAsString());
 			biome.biomeName = toSet;
@@ -123,6 +129,14 @@ public class BiomeHelper {
 		}else if(prop.equals("enableSnow")){
 			final boolean toSet = value.getAsBoolean();
 			biome.enableSnow = toSet;
+		}else if(prop.equals("actualFillerBlock")){
+			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			try {
+				final Block block = Block.getBlockFromName(blockName);
+				BiomeHelper.actualFillerBlock.set(biome, block);
+			} catch (final Exception e) {
+				LogHelper.info("Failed to parse block: "+blockName);
+			}
 		}
 	}
 

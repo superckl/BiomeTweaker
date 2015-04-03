@@ -43,7 +43,7 @@ public class GenHandler {
 					}
 				}
 		} catch (final Exception e1) {
-			LogHelper.error("Failed to process replace biomes blocks event.");
+			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
 		}
 	}

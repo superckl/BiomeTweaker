@@ -7,11 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.object.ScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 
-@RequiredArgsConstructor
 @Getter
 public class ScriptHandler {
 
@@ -21,6 +20,11 @@ public class ScriptHandler {
 
 	private final Map<String, String> shortcuts = new HashMap<String, String>();
 	private final Map<String, ScriptObject> objects = new HashMap<String, ScriptObject>();
+
+	public ScriptHandler(final List<String> lines) {
+		this.lines = lines;
+		this.objects.put("Tweaker", new TweakerScriptObject());
+	}
 
 	public void parse() throws Exception{
 		this.it = this.lines.iterator();

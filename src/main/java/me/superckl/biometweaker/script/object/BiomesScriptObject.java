@@ -17,6 +17,8 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandListing;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveBigTreeGen;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveTreeGen;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 
 import com.google.common.collect.Lists;
@@ -103,6 +105,14 @@ public class BiomesScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.JSON_ELEMENT)
 				, ScriptCommandSetBiomeProperty.class.getDeclaredConstructor(Integer.TYPE, String.class, JsonElement.class));
 		this.validCommands.put("set", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveTreeGen.class.getDeclaredConstructor(Integer.TYPE));
+		this.validCommands.put("removeTreeGen", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveBigTreeGen.class.getDeclaredConstructor(Integer.TYPE));
+		this.validCommands.put("removeBigTreeGen", listing);
 	}
 
 }

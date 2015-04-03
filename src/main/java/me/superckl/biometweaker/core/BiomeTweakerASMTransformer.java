@@ -25,7 +25,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
-			ModBiomeTweakerCore.logger.info("Successfully inserted 'actualFillerBlock' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+name);
 			int fixed = 1;
 			for(final MethodNode node:cNode.methods)
 				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
@@ -41,7 +41,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 									node.instructions.insertBefore(vNode, list);
 									node.instructions.remove(vNode);
 									fixed++;
-									ModBiomeTweakerCore.logger.info("Successfully redirected 'block1' to 'actualFillerBlock'");
+									ModBiomeTweakerCore.logger.debug("Successfully redirected 'block1' to 'actualFillerBlock'");
 								}
 							}
 						}else if(aNode instanceof VarInsnNode){
@@ -55,7 +55,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 									node.instructions.insertBefore(aNode, list);
 									node.instructions.remove(aNode);
 									fixed++;
-									ModBiomeTweakerCore.logger.info("Successfully redirected 'Blocks.stone' to 'actualFillerBlock'");
+									ModBiomeTweakerCore.logger.debug("Successfully redirected 'Blocks.stone' to 'actualFillerBlock'");
 								}
 							}
 						}
@@ -65,7 +65,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", BiomeTweakerASMTransformer.field_stone[index], "Lnet/minecraft/block/Block;"));
 					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
 					node.instructions.insert(list);
-					ModBiomeTweakerCore.logger.info("Successfully inserted Stone into 'actualFillerBlock'");
+					ModBiomeTweakerCore.logger.debug("Successfully inserted Stone into 'actualFillerBlock'");
 					fixed++;
 				}
 			if(fixed < 5)

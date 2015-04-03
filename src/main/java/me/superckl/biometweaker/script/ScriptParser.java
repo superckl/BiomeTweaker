@@ -70,7 +70,8 @@ public class ScriptParser {
 			ModBiomeTweakerCore.logger.error("Tried to parse an invalid argument array!");
 			return new String[0];
 		}
-		final String[] split = script.substring(script.indexOf("(")+1, script.length()-1).split(",");
+		final String args = script.substring(script.indexOf("(")+1, script.length()-1);
+		final String[] split = args.isEmpty() ? new String[0]:args.split(",");
 		return split;
 	}
 

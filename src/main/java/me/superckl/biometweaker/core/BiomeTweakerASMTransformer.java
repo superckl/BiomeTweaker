@@ -26,7 +26,9 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			reader.accept(cNode, 0);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+name);
-			int fixed = 1;
+			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+name);
+			int fixed = 2;
 			for(final MethodNode node:cNode.methods)
 				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
 					for(AbstractInsnNode aNode:node.instructions.toArray())
@@ -43,6 +45,17 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 									fixed++;
 									ModBiomeTweakerCore.logger.debug("Successfully redirected 'block1' to 'actualFillerBlock'");
 								}
+							}else if(CollectionHelper.find(vNode.name, BiomeTweakerASMTransformer.field_water) != -1){
+								aNode = vNode.getNext();
+								if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 10)){
+									final InsnList list = new InsnList();
+									list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+									list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "liquidFillerBlock", "Lnet/minecraft/block/Block;"));
+									node.instructions.insertBefore(vNode, list);
+									node.instructions.remove(vNode);
+									fixed++;
+									ModBiomeTweakerCore.logger.debug("Successfully redirected 'block' to 'liquidFillerBlock'");
+								}
 							}
 						}else if(aNode instanceof VarInsnNode){
 							final VarInsnNode vNode = (VarInsnNode) aNode;
@@ -55,21 +68,28 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 									node.instructions.insertBefore(aNode, list);
 									node.instructions.remove(aNode);
 									fixed++;
-									ModBiomeTweakerCore.logger.debug("Successfully redirected 'Blocks.stone' to 'actualFillerBlock'");
+									ModBiomeTweakerCore.logger.debug("Successfully redirected 'block2' to 'actualFillerBlock'");
 								}
 							}
 						}
 				}else if(node.name.equals("<init>") && node.desc.equals("(IZ)V")){
-					final InsnList list = new InsnList();
+					InsnList list = new InsnList();
 					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", BiomeTweakerASMTransformer.field_stone[index], "Lnet/minecraft/block/Block;"));
 					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
 					node.instructions.insert(list);
 					ModBiomeTweakerCore.logger.debug("Successfully inserted Stone into 'actualFillerBlock'");
 					fixed++;
+					list = new InsnList();
+					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", BiomeTweakerASMTransformer.field_water[index], "Lnet/minecraft/block/Block;"));
+					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "liquidFillerBlock", "Lnet/minecraft/block/Block;"));
+					node.instructions.insert(list);
+					ModBiomeTweakerCore.logger.debug("Successfully inserted Water into 'liquidFillerBlock'");
+					fixed++;
 				}
-			if(fixed < 5)
-				ModBiomeTweakerCore.logger.error("Failed to completely patch BiomeGenBase! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
+			if(fixed < 8)
+				ModBiomeTweakerCore.logger.error("Failed to completely patch "+name+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched BiomeGenBase! "+fixed+" patches were applied.");
 			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
@@ -84,6 +104,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	public static final String[] method_genBiomeTerrain = {"genBiomeTerrain", "func_150560_b"};
 
 	public static final String[] field_stone = {"stone", "field_150348_b"};
+	public static final String[] field_water = {"water", "field_150355_j"};
 
 	public static final String[] desc_genBiomeTerrain = {"(Lnet/minecraft/world/World;Ljava/util/Random;[Lnet/minecraft/block/Block;[BIID)V", "(Lahb;Ljava/util/Random;[Laji;[BIID)V"};
 

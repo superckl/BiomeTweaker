@@ -82,10 +82,13 @@ public class BiomeHelper {
 	}
 
 	private static Field actualFillerBlock;
+	private static Field liquidFillerBlock;
 
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		if(BiomeHelper.actualFillerBlock == null)
 			BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
+		if(BiomeHelper.liquidFillerBlock == null)
+			BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");
 		if(prop.equals("name")){
 			final String toSet = ScriptParser.extractStringArg(value.getAsString());
 			biome.biomeName = toSet;
@@ -134,6 +137,14 @@ public class BiomeHelper {
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				BiomeHelper.actualFillerBlock.set(biome, block);
+			} catch (final Exception e) {
+				LogHelper.info("Failed to parse block: "+blockName);
+			}
+		}else if(prop.equals("liquidFillerBlock")){
+			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			try {
+				final Block block = Block.getBlockFromName(blockName);
+				BiomeHelper.liquidFillerBlock.set(biome, block);
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}

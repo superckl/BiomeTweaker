@@ -10,10 +10,10 @@ import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ParameterType;
+import me.superckl.biometweaker.script.ScriptCommandListing;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
-import me.superckl.biometweaker.script.command.ScriptCommandListing;
 
 public abstract class ScriptObject {
 
@@ -52,7 +52,11 @@ public abstract class ScriptObject {
 			}
 			if(shouldCont)
 				continue;
-			Config.INSTANCE.addCommand(entry.getValue().newInstance(objs));
+			final IScriptCommand sCommand = entry.getValue().newInstance(objs);
+			if(listing.isPerformInst())
+				sCommand.perform();
+			else
+				Config.INSTANCE.addCommand(sCommand);
 			return;
 		}
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");

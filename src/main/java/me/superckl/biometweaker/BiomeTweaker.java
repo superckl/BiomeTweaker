@@ -11,7 +11,7 @@ import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
-import me.superckl.biometweaker.script.command.IScriptCommand;
+import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -26,8 +26,13 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLLoadEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 @Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION)
 public class BiomeTweaker {
@@ -41,21 +46,30 @@ public class BiomeTweaker {
 	private static IProxy proxy;
 
 	@EventHandler
+	public void onInit(final FMLLoadEvent e){
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.LOAD);
+	}
+
+	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
 		BiomeTweaker.proxy.registerHandlers();
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
+	}
+
+	@EventHandler
+	public void onInit(final FMLInitializationEvent e){
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);
+	}
+
+	@EventHandler
+	public void onPostInit(final FMLPostInitializationEvent e){
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.POST_INIT);
 	}
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
-		LogHelper.info("Found "+Config.INSTANCE.getParsedCommands().size()+" tweak(s) to apply. Applying...");
-		for(final IScriptCommand command:Config.INSTANCE.getParsedCommands())
-			try {
-				command.perform();
-			} catch (final Exception e1) {
-				LogHelper.error("Failed to execute script command: "+command);
-				e1.printStackTrace();
-			}
-		LogHelper.info("Successfully applied tweaks. Generating biome status report...");
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.FINISHED_LOAD);
+		LogHelper.info("Generating biome status report...");
 		final JsonArray array = new JsonArray();
 		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
 			if(gen == null)
@@ -92,6 +106,16 @@ public class BiomeTweaker {
 			writer.newLine();
 			writer.write(gson.toJson(array));
 		}
+	}
+
+	@EventHandler
+	public void onInit(final FMLServerStartingEvent e){
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
+	}
+
+	@EventHandler
+	public void onInit(final FMLServerStartedEvent e){
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
 	}
 
 }

@@ -2,13 +2,13 @@ package me.superckl.biometweaker.config;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.script.ScriptCommandManager;
+import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 
@@ -23,7 +23,7 @@ public class Config {
 
 	public static final Config INSTANCE = new Config();
 
-	private final List<IScriptCommand> parsedCommands = new LinkedList<IScriptCommand>();
+	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles;
 
@@ -46,6 +46,7 @@ public class Config {
 						subFile.createNewFile();
 					}
 					ScriptParser.parseScriptFile(subFile);
+					this.commandManager.setCurrentStage(ApplicationStage.FINISHED_LOAD);
 				}
 			} else
 				log.warn("Failed to parse include array! Check your formatting!");
@@ -54,7 +55,7 @@ public class Config {
 	}
 
 	public void addCommand(final IScriptCommand command){
-		this.parsedCommands.add(command);
+		this.commandManager.addCommand(command);
 	}
 
 	public void onTweak(final int biomeID){

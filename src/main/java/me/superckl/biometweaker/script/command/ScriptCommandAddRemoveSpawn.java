@@ -23,11 +23,11 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
-	public ScriptCommandAddRemoveSpawn(final int biomeID, final Type type, final String entityClass, final int weight, final int minCount, final int maxCount) {
+	public ScriptCommandAddRemoveSpawn(final int biomeID, final String entityClass, final Type type, final int weight, final int minCount, final int maxCount) {
 		this(biomeID, false, type, entityClass, weight, minCount, maxCount);
 	}
 
-	public ScriptCommandAddRemoveSpawn(final int biomeID, final Type type, final String entityClass) {
+	public ScriptCommandAddRemoveSpawn(final int biomeID, final String entityClass, final Type type) {
 		this(biomeID, true, type, entityClass, 0, 0, 0);
 	}
 

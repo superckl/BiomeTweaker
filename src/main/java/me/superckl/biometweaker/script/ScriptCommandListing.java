@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
+import lombok.Setter;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 
 import com.google.common.collect.Maps;
@@ -14,6 +15,9 @@ public class ScriptCommandListing {
 
 	@Getter
 	private final Map<List<ParameterType>, Constructor<? extends IScriptCommand>> constructors = Maps.newHashMap();
+	@Getter
+	@Setter
+	private boolean performInst;
 
 	public ScriptCommandListing() {}
 

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ParameterType;
+import me.superckl.biometweaker.script.ScriptCommandListing;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
@@ -15,7 +16,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
-import me.superckl.biometweaker.script.command.ScriptCommandListing;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBigTreeGen;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveTreeGen;
@@ -77,13 +77,13 @@ public class BiomesScriptObject extends ScriptObject{
 		this.validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE, ParameterType.STRING, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, Type.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
 		this.validCommands.put("addSpawn", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE, ParameterType.STRING)
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, Type.class, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE)
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, String.class, Type.class));
 		this.validCommands.put("removeSpawn", listing);
 
 		listing = new ScriptCommandListing();

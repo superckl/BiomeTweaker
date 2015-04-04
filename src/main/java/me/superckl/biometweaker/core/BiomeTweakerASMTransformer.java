@@ -37,9 +37,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 							if(CollectionHelper.find(vNode.name, BiomeTweakerASMTransformer.field_stone) != -1){
 								aNode = vNode.getNext();
 								if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 12)){
-									final InsnList list = new InsnList();
-									list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-									list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
+									final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
 									node.instructions.insertBefore(vNode, list);
 									node.instructions.remove(vNode);
 									fixed++;
@@ -48,9 +46,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 							}else if(CollectionHelper.find(vNode.name, BiomeTweakerASMTransformer.field_water) != -1){
 								aNode = vNode.getNext();
 								if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 10)){
-									final InsnList list = new InsnList();
-									list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-									list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "liquidFillerBlock", "Lnet/minecraft/block/Block;"));
+									final InsnList list = this.createGenBaseBlockFieldAccess("liquidFillerBlock");
 									node.instructions.insertBefore(vNode, list);
 									node.instructions.remove(vNode);
 									fixed++;
@@ -62,9 +58,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 							if((vNode.var == 20) && (vNode.getOpcode() == Opcodes.ALOAD)){
 								aNode = vNode.getNext();
 								if((aNode instanceof FieldInsnNode) && (CollectionHelper.find(((FieldInsnNode)aNode).name, BiomeTweakerASMTransformer.field_stone) != -1)){
-									final InsnList list = new InsnList();
-									list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-									list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
+									final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
 									node.instructions.insertBefore(aNode, list);
 									node.instructions.remove(aNode);
 									fixed++;
@@ -99,6 +93,13 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		return basicClass;
 	}
 
+	private InsnList createGenBaseBlockFieldAccess(String fieldName){
+		final InsnList list = new InsnList();
+		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+		list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", fieldName, "Lnet/minecraft/block/Block;"));
+		return list;
+	}
+	
 	public static final String[] class_biomeGenBase = {"net.minecraft.world.biome.BiomeGenBase", "ahu"};
 
 	public static final String[] method_genBiomeTerrain = {"genBiomeTerrain", "func_150560_b"};

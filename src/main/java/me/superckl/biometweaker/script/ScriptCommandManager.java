@@ -15,7 +15,7 @@ import com.google.common.collect.Maps;
 public class ScriptCommandManager {
 
 	public static enum ApplicationStage{
-		LOAD, PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
+		PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
 	}
 
 	@Setter

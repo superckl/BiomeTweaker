@@ -6,13 +6,15 @@ import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-public class GenHandler {
+public class BiomeEventHandler {
 
 	private Field actualFillerBlock;
 	private Field liquidFillerBlock;
+	private Field grassColor;
 
 	@SubscribeEvent
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
@@ -44,6 +46,38 @@ public class GenHandler {
 				}
 		} catch (final Exception e1) {
 			LogHelper.error("Failed to process replace biome blocks event.");
+			e1.printStackTrace();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onGetGrassColor(GetGrassColor e){
+		try {
+			if(this.grassColor == null)
+				this.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
+			int newColor = this.grassColor.getInt(e.biome);
+			newColor = 0x000060;
+			if(newColor == -1){
+				LogHelper.info("New color is -1. Returning.");
+				return;
+			}
+			//Deconstruct the colors
+			int newR = (newColor >> 16 & 255);
+	        int newG = (newColor >> 8 & 255);
+	        int newB = (newColor & 255);
+	        LogHelper.info(newB+":"+newColor);
+	        int oldR = (-1*e.originalColor >> 16 & 255);
+	        int oldG = (-1*e.originalColor >> 8 & 255);
+	        int oldB = (-1*e.originalColor & 255);
+	        int R = (newR+oldR) & 255;
+	        int G = (newG+oldG) & 255;
+	        int B = (newB+oldB) & 255;
+	        LogHelper.info(R+":"+G+":"+B);
+	        int color = -1*((R << 16) + (G << 8) + B);
+			LogHelper.info("Orig Color is "+e.originalColor+". New color is "+color);
+			e.newColor = color;
+		} catch (Exception e1) {
+			LogHelper.error("Failed to process getGrassColor event!");
 			e1.printStackTrace();
 		}
 	}

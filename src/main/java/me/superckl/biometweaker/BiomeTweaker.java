@@ -46,11 +46,6 @@ public class BiomeTweaker {
 	private static IProxy proxy;
 
 	@EventHandler
-	public void onInit(final FMLLoadEvent e){
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.LOAD);
-	}
-
-	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
 		BiomeTweaker.proxy.registerHandlers();
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);

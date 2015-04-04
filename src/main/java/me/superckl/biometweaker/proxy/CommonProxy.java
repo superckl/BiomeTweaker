@@ -1,13 +1,13 @@
 package me.superckl.biometweaker.proxy;
 
-import me.superckl.biometweaker.common.handler.GenHandler;
+import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CommonProxy implements IProxy{
 
 	@Override
 	public void registerHandlers(){
-		MinecraftForge.EVENT_BUS.register(new GenHandler());
+		MinecraftForge.EVENT_BUS.register(new BiomeEventHandler());
 	}
 
 }

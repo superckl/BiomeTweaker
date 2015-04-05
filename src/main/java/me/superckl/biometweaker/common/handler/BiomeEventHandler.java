@@ -6,8 +6,11 @@ import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
+import scala.actors.threadpool.Arrays;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeEventHandler {
@@ -15,6 +18,13 @@ public class BiomeEventHandler {
 	private Field actualFillerBlock;
 	private Field liquidFillerBlock;
 	private Field grassColor;
+	private Field foliageColor;
+	private Field waterColor;
+	private final int[] colorCache = new int[768];
+
+	public BiomeEventHandler() {
+		Arrays.fill(this.colorCache, -2);
+	}
 
 	@SubscribeEvent
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
@@ -49,20 +59,26 @@ public class BiomeEventHandler {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onGetGrassColor(GetGrassColor e){
+	public void onGetGrassColor(final GetGrassColor e){
 		try {
 			if(this.grassColor == null)
 				this.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
-			int newColor = this.grassColor.getInt(e.biome);
-			newColor = 0x000060;
-			if(newColor == -1){
-				LogHelper.info("New color is -1. Returning.");
+			int newColor = this.colorCache[e.biome.biomeID];
+			if(newColor == -1)
 				return;
+			else if((newColor = this.colorCache[e.biome.biomeID]) != -2)
+				e.newColor = newColor;
+			else{
+				newColor = this.grassColor.getInt(e.biome);
+				this.colorCache[e.biome.biomeID] = newColor;
+				if(newColor == -1)
+					return;
+				e.newColor = newColor;
 			}
 			//Deconstruct the colors
-			int newR = (newColor >> 16 & 255);
+			/*int newR = (newColor >> 16 & 255);
 	        int newG = (newColor >> 8 & 255);
 	        int newB = (newColor & 255);
 	        LogHelper.info(newB+":"+newColor);
@@ -75,9 +91,55 @@ public class BiomeEventHandler {
 	        LogHelper.info(R+":"+G+":"+B);
 	        int color = -1*((R << 16) + (G << 8) + B);
 			LogHelper.info("Orig Color is "+e.originalColor+". New color is "+color);
-			e.newColor = color;
-		} catch (Exception e1) {
+			e.newColor = color;*/
+		} catch (final Exception e1) {
 			LogHelper.error("Failed to process getGrassColor event!");
+			e1.printStackTrace();
+		}
+	}
+
+	@SubscribeEvent
+	public void onGetFoliageColor(final GetFoliageColor e){
+		try {
+			if(this.foliageColor == null)
+				this.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
+			int newColor = this.colorCache[e.biome.biomeID+256];
+			if(newColor == -1)
+				return;
+			else if((newColor = this.colorCache[e.biome.biomeID+256]) != -2)
+				e.newColor = newColor;
+			else{
+				newColor = this.foliageColor.getInt(e.biome);
+				this.colorCache[e.biome.biomeID+256] = newColor;
+				if(newColor == -1)
+					return;
+				e.newColor = newColor;
+			}
+		} catch (final Exception e1) {
+			LogHelper.error("Failed to process getFoliageColor event!");
+			e1.printStackTrace();
+		}
+	}
+
+	@SubscribeEvent
+	public void onGetWaterColor(final GetWaterColor e){
+		try {
+			if(this.waterColor == null)
+				this.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
+			int newColor = this.colorCache[e.biome.biomeID+512];
+			if(newColor == -1)
+				return;
+			else if((newColor = this.colorCache[e.biome.biomeID+512]) != -2)
+				e.newColor = newColor;
+			else{
+				newColor = this.waterColor.getInt(e.biome);
+				this.colorCache[e.biome.biomeID+512] = newColor;
+				if(newColor == -1)
+					return;
+				e.newColor = newColor;
+			}
+		} catch (final Exception e1) {
+			LogHelper.error("Failed to process getWaterColor event!");
 			e1.printStackTrace();
 		}
 	}

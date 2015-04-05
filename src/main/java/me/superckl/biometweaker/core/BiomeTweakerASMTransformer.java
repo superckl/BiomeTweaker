@@ -15,6 +15,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
@@ -24,11 +25,11 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	public byte[] transform(final String name, final String transformedName,
 			final byte[] basicClass) {
 		int index = -1;
+		final ClassReader reader = new ClassReader(basicClass);
+		final ClassNode cNode = new ClassNode();
+		reader.accept(cNode, 0);
 		if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_biomeGenBase)) != -1){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+name+"...");
-			final ClassReader reader = new ClassReader(basicClass);
-			final ClassNode cNode = new ClassNode();
-			reader.accept(cNode, 0);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+name);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
@@ -37,7 +38,9 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+name);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1));
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+name);
-			int fixed = 4;
+			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1));
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+name);
+			int fixed = 5;
 			for(final MethodNode node:cNode.methods)
 				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
 					for(AbstractInsnNode aNode:node.instructions.toArray())
@@ -104,6 +107,13 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					node.instructions.insert(list);
 					ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'foliageColor'");
 					fixed++;
+					list = new InsnList();
+					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+					list.add(new InsnNode(Opcodes.ICONST_M1));
+					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "waterColor", "I"));
+					node.instructions.insert(list);
+					ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
+					fixed++;
 				}/*else if(CollectionHelper.find(node.name, method_getBiomeGrassColor) != -1 && node.desc.equals("(III)I")){
 					InsnList list = new InsnList();
 					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -118,10 +128,40 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					node.instructions.insert(list);
 					fixed++;
 				}*/
-			if(fixed < 12)
+			if(fixed < 14)
 				ModBiomeTweakerCore.logger.error("Failed to completely patch "+name+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched "+name+"! "+fixed+" patches were applied.");
+			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+			cNode.accept(cWriter);
+			return cWriter.toByteArray();
+		}else if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_blockOldLeaf)) != -1){
+			ModBiomeTweakerCore.logger.info("Attempting to patch class "+name+"...");
+			boolean fixed = false;
+			for(final MethodNode mNode:cNode.methods)
+				if(CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_colorMultiplier) != -1){
+					final InsnList list = new InsnList();
+					list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+					list.add(new VarInsnNode(Opcodes.ILOAD, 2));
+					list.add(new VarInsnNode(Opcodes.ILOAD, 4));
+					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", BiomeTweakerASMTransformer.method_getBiomeGenForCoords[index], "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
+					list.add(new InsnNode(Opcodes.ICONST_M1));
+					final LabelNode label = new LabelNode(new Label());
+					list.add(new JumpInsnNode(Opcodes.IF_ICMPEQ, label));
+					list.add(new VarInsnNode(Opcodes.ALOAD, 1));
+					list.add(new VarInsnNode(Opcodes.ILOAD, 2));
+					list.add(new VarInsnNode(Opcodes.ILOAD, 4));
+					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", BiomeTweakerASMTransformer.method_getBiomeGenForCoords[index], "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
+					list.add(new InsnNode(Opcodes.IRETURN));
+					list.add(label);
+					mNode.instructions.insert(list);
+					ModBiomeTweakerCore.logger.debug("Successfully patched "+mNode.name+" in "+name);
+					fixed = true;
+				}
+			if(!fixed)
+				ModBiomeTweakerCore.logger.error("Failed to patch "+name+"! Ye who continue now abandon all hope.");
 			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 			cNode.accept(cWriter);
 			return cWriter.toByteArray();
@@ -129,26 +169,21 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		return basicClass;
 	}
 
-	private InsnList createGenBaseBlockFieldAccess(String fieldName){
+	private InsnList createGenBaseBlockFieldAccess(final String fieldName){
 		final InsnList list = new InsnList();
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", fieldName, "Lnet/minecraft/block/Block;"));
 		return list;
 	}
-	
-	private int grassColor;
-	
-	public int sampleCode(int p_150558_1_, int p_150558_2_, int p_150558_3_){
-		if(grassColor != -1)
-			return grassColor;
-		Math.abs(76);
-		return 65;
-	}
-	
+
 	public static final String[] class_biomeGenBase = {"net.minecraft.world.biome.BiomeGenBase", "ahu"};
+	public static final String[] class_blockOldLeaf = {"net.minecraft.block.BlockOldLeaf", "aml"};
 
 	public static final String[] method_genBiomeTerrain = {"genBiomeTerrain", "func_150560_b"};
 	public static final String[] method_getBiomeGrassColor = {"getBiomeGrassColor", "func_150558_b"};
+	public static final String[] method_getBiomeFoliageColor = {"getBiomeFoliageColor", "func_150571_c"};
+	public static final String[] method_colorMultiplier = {"colorMultiplier", "func_149720_d"};
+	public static final String[] method_getBiomeGenForCoords = {"getBiomeGenForCoords","func_72807_a"};
 
 	public static final String[] field_stone = {"stone", "field_150348_b"};
 	public static final String[] field_water = {"water", "field_150355_j"};

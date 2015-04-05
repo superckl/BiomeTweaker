@@ -33,7 +33,7 @@ public class ScriptCommandManager {
 		if(!this.commands.containsKey(stage))
 			return;
 		final List<IScriptCommand> commands = this.commands.get(stage);
-		LogHelper.info("Found "+commands.size()+" tweaks to apply for stage "+stage.toString()+". Applying...");
+		LogHelper.info("Found "+commands.size()+" tweak"+(commands.size() > 1 ? "s":"")+" to apply for stage "+stage.toString()+". Applying...");
 		for(final IScriptCommand command:commands)
 			try{
 				command.perform();

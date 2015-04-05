@@ -83,12 +83,22 @@ public class BiomeHelper {
 
 	private static Field actualFillerBlock;
 	private static Field liquidFillerBlock;
+	private static Field grassColor;
+	private static Field foliageColor;
+	private static Field waterColor;
 
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		if(BiomeHelper.actualFillerBlock == null)
 			BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
 		if(BiomeHelper.liquidFillerBlock == null)
 			BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");
+		if(BiomeHelper.grassColor == null)
+			BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
+		if(BiomeHelper.foliageColor == null)
+			BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
+		if(BiomeHelper.waterColor == null)
+			BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
+
 		if(prop.equals("name")){
 			final String toSet = ScriptParser.extractStringArg(value.getAsString());
 			biome.biomeName = toSet;
@@ -148,6 +158,15 @@ public class BiomeHelper {
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
+		}else if(prop.equals("grassColor")){
+			final int toSet = value.getAsInt();
+			BiomeHelper.grassColor.set(biome, toSet);
+		}else if(prop.equals("foliageColor")){
+			final int toSet = value.getAsInt();
+			BiomeHelper.foliageColor.set(biome, toSet);
+		}else if(prop.equals("waterColor")){
+			final int toSet = value.getAsInt();
+			BiomeHelper.waterColor.set(biome, toSet);
 		}
 	}
 

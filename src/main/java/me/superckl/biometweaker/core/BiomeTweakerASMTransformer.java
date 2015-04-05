@@ -157,7 +157,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					list.add(new InsnNode(Opcodes.IRETURN));
 					list.add(label);
 					mNode.instructions.insert(list);
-					ModBiomeTweakerCore.logger.debug("Successfully patched "+mNode.name+" in "+name);
+					ModBiomeTweakerCore.logger.info("Successfully patched "+mNode.name+" in "+name);
 					fixed = true;
 				}
 			if(!fixed)

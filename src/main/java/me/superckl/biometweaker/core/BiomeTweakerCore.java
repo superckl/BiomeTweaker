@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 import me.superckl.biometweaker.common.reference.ModData;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
@@ -40,6 +41,7 @@ public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPl
 	@Override
 	public void injectData(final Map<String, Object> data) {
 		BiomeTweakerCore.mcLocation = (File) data.get("mcLocation");
+		ObfHelper.setObfuscated((Boolean) data.get("runtimeDeobfuscationEnabled"));
 	}
 
 	@Override

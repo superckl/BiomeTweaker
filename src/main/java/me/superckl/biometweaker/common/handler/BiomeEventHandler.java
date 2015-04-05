@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
@@ -10,7 +11,6 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
-import scala.actors.threadpool.Arrays;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeEventHandler {

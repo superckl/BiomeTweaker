@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.superckl.biometweaker.util.CollectionHelper;
-import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;

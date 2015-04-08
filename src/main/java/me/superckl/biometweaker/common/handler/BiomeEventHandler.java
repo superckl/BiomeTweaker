@@ -44,7 +44,7 @@ public class BiomeEventHandler {
 					final int i1 = k;
 					final int j1 = l;
 					final int k1 = e.blockArray.length / 256;
-					for (int l1 = 255; l1 >= 0; --l1)
+					for (int l1 = k1-1; l1 >= 0; --l1)
 					{
 						final int i2 = (((j1 * 16) + i1) * k1) + l1;
 						final Block block2 = e.blockArray[i2];
@@ -77,21 +77,6 @@ public class BiomeEventHandler {
 					return;
 				e.newColor = newColor;
 			}
-			//Deconstruct the colors
-			/*int newR = (newColor >> 16 & 255);
-	        int newG = (newColor >> 8 & 255);
-	        int newB = (newColor & 255);
-	        LogHelper.info(newB+":"+newColor);
-	        int oldR = (-1*e.originalColor >> 16 & 255);
-	        int oldG = (-1*e.originalColor >> 8 & 255);
-	        int oldB = (-1*e.originalColor & 255);
-	        int R = (newR+oldR) & 255;
-	        int G = (newG+oldG) & 255;
-	        int B = (newB+oldB) & 255;
-	        LogHelper.info(R+":"+G+":"+B);
-	        int color = -1*((R << 16) + (G << 8) + B);
-			LogHelper.info("Orig Color is "+e.originalColor+". New color is "+color);
-			e.newColor = color;*/
 		} catch (final Exception e1) {
 			LogHelper.error("Failed to process getGrassColor event!");
 			e1.printStackTrace();

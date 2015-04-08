@@ -1,10 +1,13 @@
 package me.superckl.biometweaker.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.superckl.biometweaker.util.CollectionHelper;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -19,6 +22,9 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
+import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
+
 public class BiomeTweakerASMTransformer implements IClassTransformer{
 
 	@Override
@@ -29,17 +35,17 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		final ClassNode cNode = new ClassNode();
 		reader.accept(cNode, 0);
 		if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_biomeGenBase)) != -1){
-			ModBiomeTweakerCore.logger.info("Attempting to patch class "+name+"...");
+			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1));
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1));
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
 			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1));
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+name);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
 			int fixed = 5;
 			for(final MethodNode node:cNode.methods)
 				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
@@ -114,29 +120,14 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					node.instructions.insert(list);
 					ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
 					fixed++;
-				}/*else if(CollectionHelper.find(node.name, method_getBiomeGrassColor) != -1 && node.desc.equals("(III)I")){
-					InsnList list = new InsnList();
-					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "grassColor", "I"));
-					list.add(new InsnNode(Opcodes.ICONST_M1));
-					LabelNode label = new LabelNode(new Label());
-					list.add(new JumpInsnNode(Opcodes.IF_ICMPEQ, label));
-					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "grassColor", "I"));
-					list.add(new InsnNode(Opcodes.IRETURN));
-					list.add(label);
-					node.instructions.insert(list);
-					fixed++;
-				}*/
+				}
 			if(fixed < 14)
-				ModBiomeTweakerCore.logger.error("Failed to completely patch "+name+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
+				ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
 			else
-				ModBiomeTweakerCore.logger.info("Sucessfully patched "+name+"! "+fixed+" patches were applied.");
-			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-			cNode.accept(cWriter);
-			return cWriter.toByteArray();
+				ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
+			return ASMHelper.writeClassToBytesNoDeobf(cNode);
 		}else if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_blockOldLeaf)) != -1){
-			ModBiomeTweakerCore.logger.info("Attempting to patch class "+name+"...");
+			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			boolean fixed = false;
 			for(final MethodNode mNode:cNode.methods)
 				if(CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_colorMultiplier) != -1){
@@ -157,14 +148,63 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					list.add(new InsnNode(Opcodes.IRETURN));
 					list.add(label);
 					mNode.instructions.insert(list);
-					ModBiomeTweakerCore.logger.info("Successfully patched "+mNode.name+" in "+name);
+					ModBiomeTweakerCore.logger.info("Successfully patched "+mNode.name+" in "+transformedName);
 					fixed = true;
 				}
 			if(!fixed)
-				ModBiomeTweakerCore.logger.error("Failed to patch "+name+"! Ye who continue now abandon all hope.");
-			final ClassWriter cWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-			cNode.accept(cWriter);
-			return cWriter.toByteArray();
+				ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"! Ye who continue now abandon all hope.");
+			return ASMHelper.writeClassToBytesNoDeobf(cNode);
+		}else if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+			for(final MethodNode mNode:cNode.methods)
+				if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeGrassColor)) != -1) && mNode.desc.equals("(III)I")){
+					boolean shouldCont = false;
+					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
+					if(aNode instanceof MethodInsnNode){
+						final MethodInsnNode methNode = (MethodInsnNode) aNode;
+						if(methNode.name.equals("getModdedBiomeGrassColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/BiomeGenBase")){
+							shouldCont = true;
+							break;
+						}
+					}
+					if(shouldCont)
+						continue;
+					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden grass color method and no event call. Attempting to force modded color event call...");
+					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
+						final InsnList list = new InsnList();
+						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						mNode.instructions.insertBefore(aINode, list);
+					}
+				}else if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeFoliageColor)) != -1) && mNode.desc.equals("(III)I")){
+					boolean shouldCont = false;
+					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
+					if(aNode instanceof MethodInsnNode){
+						final MethodInsnNode methNode = (MethodInsnNode) aNode;
+						if(methNode.name.equals("getModdedBiomeFoliageColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/BiomeGenBase")){
+							shouldCont = true;
+							break;
+						}
+					}
+					if(shouldCont)
+						continue;
+					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden foliage color method and no event call. Attempting to force modded color event call...");
+					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
+						final InsnList list = new InsnList();
+						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						mNode.instructions.insertBefore(aINode, list);
+					}
+				}else if(mNode.name.equals("getWaterColorMultiplier") && mNode.desc.equals("()I")){
+					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
+					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
+						final InsnList list = new InsnList();
+						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						mNode.instructions.insertBefore(aINode, list);
+					}
+				}
+			//TODO force water color
+			return ASMHelper.writeClassToBytesNoDeobf(cNode);
 		}
 		return basicClass;
 	}
@@ -173,6 +213,14 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		final InsnList list = new InsnList();
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 		list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", fieldName, "Lnet/minecraft/block/Block;"));
+		return list;
+	}
+
+	private List<AbstractInsnNode> findReturnNodes(final InsnList instructions){
+		final List<AbstractInsnNode> list = new ArrayList<AbstractInsnNode>();
+		for(int i = instructions.size()-1; i >= 0; i--)
+			if(instructions.get(i).getOpcode() == Opcodes.IRETURN)
+				list.add(instructions.get(i));
 		return list;
 	}
 

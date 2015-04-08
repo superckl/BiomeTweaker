@@ -7,6 +7,10 @@ import me.superckl.biometweaker.script.ScriptParser;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -168,6 +172,24 @@ public class BiomeHelper {
 			final int toSet = value.getAsInt();
 			BiomeHelper.waterColor.set(biome, toSet);
 		}
+	}
+
+	public static int callGrassColorEvent(final int color, final BiomeGenBase gen){
+		final GetGrassColor e = new GetGrassColor(gen, color);
+		MinecraftForge.EVENT_BUS.post(e);
+		return e.newColor;
+	}
+
+	public static int callFoliageColorEvent(final int color, final BiomeGenBase gen){
+		final GetFoliageColor e = new GetFoliageColor(gen, color);
+		MinecraftForge.EVENT_BUS.post(e);
+		return e.newColor;
+	}
+
+	public static int callWaterColorEvent(final int color, final BiomeGenBase gen){
+		final GetWaterColor e = new GetWaterColor(gen, color);
+		MinecraftForge.EVENT_BUS.post(e);
+		return e.newColor;
 	}
 
 }

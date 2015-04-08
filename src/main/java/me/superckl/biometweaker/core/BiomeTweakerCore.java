@@ -4,17 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 import me.superckl.biometweaker.common.reference.ModData;
+import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
-@SortingIndex(2000)
+@SortingIndex(1001)
 @MCVersion("1.7.10")
-@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config"})
+@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker"})
 public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{
 
 	public static File mcLocation;

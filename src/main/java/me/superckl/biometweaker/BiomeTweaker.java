@@ -103,12 +103,12 @@ public class BiomeTweaker {
 	}
 
 	@EventHandler
-	public void onInit(final FMLServerStartingEvent e){
+	public void onServerStarting(final FMLServerStartingEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 
 	@EventHandler
-	public void onInit(final FMLServerStartedEvent e){
+	public void onServerStarted(final FMLServerStartedEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
 	}
 

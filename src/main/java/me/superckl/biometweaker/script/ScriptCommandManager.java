@@ -6,6 +6,7 @@ import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 import me.superckl.biometweaker.util.LogHelper;
 
@@ -26,6 +27,13 @@ public class ScriptCommandManager {
 	public boolean addCommand(final IScriptCommand command){
 		if(!this.commands.containsKey(this.currentStage))
 			this.commands.put(this.currentStage, new ArrayList<IScriptCommand>());
+		if(Config.INSTANCE.isInit())
+			try {
+				command.perform();
+			} catch (final Exception e) {
+				LogHelper.error("Failed to execute script command: "+command);
+				e.printStackTrace();
+			}
 		return this.commands.get(this.currentStage).add(command);
 	}
 
@@ -41,6 +49,11 @@ public class ScriptCommandManager {
 				LogHelper.error("Failed to execute script command: "+command);
 				e.printStackTrace();
 			}
+	}
+
+	public void reset(){
+		this.commands.clear();
+		this.currentStage = ApplicationStage.FINISHED_LOAD;
 	}
 
 }

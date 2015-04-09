@@ -26,12 +26,15 @@ public class Config {
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles;
-
+	private boolean init;
 	private Config() {}
 
 	@SneakyThrows
 	public void init(final File whereAreWe, final JsonObject obj){
 		final Logger log = ModBiomeTweakerCore.logger;
+		if(this.init)
+			log.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
+		this.commandManager.reset();
 		if(obj.has("separate files"))
 			this.outputSeperateFiles = obj.get("separate files").getAsBoolean();
 		if(obj.has("include")){
@@ -51,7 +54,8 @@ public class Config {
 			} else
 				log.warn("Failed to parse include array! Check your formatting!");
 		}
-		ModBiomeTweakerCore.logger.info("Finished early script parsing. Ready to force tweaks (Once implemented ;D).");
+		this.init = true;
+		ModBiomeTweakerCore.logger.info("Finished script parsing. Ready to force tweaks.");
 	}
 
 	public void addCommand(final IScriptCommand command){

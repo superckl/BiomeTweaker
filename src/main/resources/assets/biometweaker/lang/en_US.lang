@@ -1,0 +1,4 @@
+biometweaker.cfg.reload.tooltip=Press to reload BiomeTweaker configuration and scripts.
+biometweaker.msg.reload.usage.text=Takes no arguments. Simply run '/btr'
+biometweaker.msg.reload.success.text=Successfully reloaded scripts!
+biometweaker.msg.reload.failure.text=An error occurred while reloading scripts. Please check the log.

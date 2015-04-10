@@ -12,6 +12,7 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
+import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandReload;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
@@ -106,6 +107,7 @@ public class BiomeTweaker {
 	@EventHandler
 	public void onServerStarting(final FMLServerStartingEvent e){
 		e.registerServerCommand(new CommandReload());
+		e.registerServerCommand(new CommandInfo());
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 

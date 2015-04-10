@@ -24,7 +24,7 @@ public class BiomeHelper {
 	private static Field foliageColor;
 	private static Field waterColor;
 
-	public static JsonObject fillJsonObject(final BiomeGenBase gen){
+	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
 		BiomeHelper.checkFields();
 		final JsonObject obj = new JsonObject();
 		obj.addProperty("ID", gen.biomeID);
@@ -39,11 +39,18 @@ public class BiomeHelper {
 			int i = -1;
 			obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
 			obj.addProperty("Liquid Filler Block", ((Block) BiomeHelper.liquidFillerBlock.get(gen)).delegate.name());
-			obj.addProperty("Grass Color", ""+((i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not Set":i));
-			obj.addProperty("Foliage Color", ""+((i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not Set":i));
-			obj.addProperty("Water Color", ""+((i = BiomeHelper.waterColor.getInt(gen)) == -1 ? "Not Set":i));
+			final boolean hasCoords = (coords != null) && (coords.length == 3);
+			int x = 0, y = 0, z = 0;
+			if(hasCoords){
+				x = coords[0];
+				y = coords[1];
+				z = coords[2];
+			}
+			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getBiomeGrassColor(x, y, z):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not Set":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getBiomeFoliageColor(x, y, z):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not Set":i));
+			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
 		} catch (final Exception e) {
-			// TODO Auto-generated catch block
+			LogHelper.error("Failed to retrieve inserted fields!");
 			e.printStackTrace();
 		}
 		obj.addProperty("Temperature", gen.temperature);

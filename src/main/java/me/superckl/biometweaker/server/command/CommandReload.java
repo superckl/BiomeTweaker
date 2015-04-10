@@ -28,7 +28,9 @@ public class CommandReload implements ICommand{
 
 	@Override
 	public int compareTo(final Object o) {
-		return 0;
+		if((o instanceof ICommand) == false)
+			return 0;
+		return this.getCommandName().compareTo(((ICommand)o).getCommandName());
 	}
 
 	@Override

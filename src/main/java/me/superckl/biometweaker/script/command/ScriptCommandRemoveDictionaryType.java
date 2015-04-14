@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -19,6 +20,7 @@ public class ScriptCommandRemoveDictionaryType implements IScriptCommand{
 		if(this.biomeID == -1){
 			for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
 				BiomeHelper.modifyBiomeDicType(gen, bType, true);
+			Config.INSTANCE.onTweak(-1);
 			return;
 		}
 		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
@@ -27,6 +29,7 @@ public class ScriptCommandRemoveDictionaryType implements IScriptCommand{
 			return;
 		}
 		BiomeHelper.modifyBiomeDicType(gen, bType, true);
+		Config.INSTANCE.onTweak(gen.biomeID);
 	}
 
 }

@@ -213,6 +213,14 @@ public class BiomeHelper {
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
 			if(BiomeHelper.waterColor == null)
 				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
+			if(BiomeHelper.biomeList == null){
+				BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
+				BiomeHelper.biomeList.setAccessible(true);
+			}
+			if(BiomeHelper.typeInfoList == null){
+				BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
+				BiomeHelper.typeInfoList.setAccessible(true);
+			}
 		}catch(final Exception e){
 			LogHelper.info("Failed to find inserted fields!");
 			e.printStackTrace();
@@ -238,14 +246,7 @@ public class BiomeHelper {
 	}
 
 	public static void modifyBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
-		if(BiomeHelper.biomeList == null){
-			BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
-			BiomeHelper.biomeList.setAccessible(true);
-		}
-		if(BiomeHelper.typeInfoList == null){
-			BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
-			BiomeHelper.typeInfoList.setAccessible(true);
-		}
+		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
 		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
@@ -268,7 +269,23 @@ public class BiomeHelper {
 			set.remove(type);
 		else if(!set.contains(type))
 			set.add(type);
-		Config.INSTANCE.onTweak(gen.biomeID);
+	}
+
+	public static void removeAllBiomeDicType(final BiomeGenBase gen) throws Exception{
+		BiomeHelper.checkFields();
+		if(gen == null)
+			return;
+		final Object array = BiomeHelper.biomeList.get(null);
+		final Object biomeInfo = Array.get(array, gen.biomeID);
+		if(BiomeHelper.typeList == null){
+			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
+			BiomeHelper.typeList.setAccessible(true);
+		}
+		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
+		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
+		for(final BiomeDictionary.Type type : set)
+			listArray[type.ordinal()].remove(gen);
+		set.clear();
 	}
 
 }

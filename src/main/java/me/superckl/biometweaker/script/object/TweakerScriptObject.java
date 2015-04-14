@@ -7,6 +7,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBigTreeGen;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
@@ -76,6 +77,10 @@ public class TweakerScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.NON_NEG_INTEGER, ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
 		this.validCommands.put("removeDicType", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.NON_NEG_INTEGER), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(Integer.TYPE));
+		this.validCommands.put("removeAllDicTypes", listing);
 	}
 
 }

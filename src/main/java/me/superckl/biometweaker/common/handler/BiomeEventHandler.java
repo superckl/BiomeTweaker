@@ -2,7 +2,11 @@ package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -11,9 +15,15 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeEventHandler {
+
+	@Getter
+	private static final Map<Integer, List<String>> decorateTypes = new HashMap<Integer, List<String>>();
 
 	private Field actualFillerBlock;
 	private Field liquidFillerBlock;
@@ -26,7 +36,7 @@ public class BiomeEventHandler {
 		Arrays.fill(this.colorCache, -2);
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
 			if(this.actualFillerBlock == null)
@@ -60,7 +70,7 @@ public class BiomeEventHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
 		try {
 			if(this.grassColor == null)
@@ -83,7 +93,7 @@ public class BiomeEventHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetFoliageColor(final GetFoliageColor e){
 		try {
 			if(this.foliageColor == null)
@@ -106,7 +116,7 @@ public class BiomeEventHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetWaterColor(final GetWaterColor e){
 		try {
 			if(this.waterColor == null)
@@ -127,6 +137,15 @@ public class BiomeEventHandler {
 			LogHelper.error("Failed to process getWaterColor event!");
 			e1.printStackTrace();
 		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
+		LogHelper.info("Called");
+		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
+		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
+		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
+			e.setResult(Result.DENY);
 	}
 
 }

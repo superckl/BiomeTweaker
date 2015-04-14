@@ -7,7 +7,9 @@ public class CommonProxy implements IProxy{
 
 	@Override
 	public void registerHandlers(){
-		MinecraftForge.EVENT_BUS.register(new BiomeEventHandler());
+		final BiomeEventHandler handler = new BiomeEventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		MinecraftForge.TERRAIN_GEN_BUS.register(handler);
 	}
 
 }

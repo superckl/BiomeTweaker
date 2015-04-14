@@ -141,7 +141,6 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
-		LogHelper.info("Called");
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))

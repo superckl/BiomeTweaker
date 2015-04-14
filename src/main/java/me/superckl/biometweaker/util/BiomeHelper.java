@@ -1,12 +1,17 @@
 package me.superckl.biometweaker.util;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.EnumSet;
+import java.util.List;
 
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.ScriptParser;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
@@ -15,6 +20,7 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class BiomeHelper {
 
@@ -23,6 +29,10 @@ public class BiomeHelper {
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
+
+	private static Field biomeList;
+	private static Field typeInfoList;
+	private static Field typeList;
 
 	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
 		BiomeHelper.checkFields();
@@ -59,6 +69,11 @@ public class BiomeHelper {
 		obj.addProperty("Enable Rain", gen.enableRain);
 		obj.addProperty("Enable Snow", gen.enableSnow);
 		JsonArray array = new JsonArray();
+		for(final Type type: BiomeDictionary.getTypesForBiome(gen))
+			array.add(new JsonPrimitive(type.toString()));
+		obj.add("Dictionary Types", array);
+
+		array = new JsonArray();
 		for(final Object entity:gen.spawnableCreatureList){
 			final SpawnListEntry entry = (SpawnListEntry) entity;
 			final JsonObject object = new JsonObject();
@@ -220,6 +235,40 @@ public class BiomeHelper {
 		final GetWaterColor e = new GetWaterColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
 		return e.newColor;
+	}
+
+	public static void modifyBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
+		if(BiomeHelper.biomeList == null){
+			BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
+			BiomeHelper.biomeList.setAccessible(true);
+		}
+		if(BiomeHelper.typeInfoList == null){
+			BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
+			BiomeHelper.typeInfoList.setAccessible(true);
+		}
+		if(gen == null)
+			return;
+		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
+		if(listArray.length > type.ordinal()){
+			final List<BiomeGenBase> list = listArray[type.ordinal()];
+			if(remove)
+				list.remove(gen);
+			else if(!list.contains(gen))
+				list.add(gen);
+		}
+		//Okay, here we go. REFLECTION OVERLOAD!!!1! (It's really not that bad.)
+		final Object array = BiomeHelper.biomeList.get(null);
+		final Object biomeInfo = Array.get(array, gen.biomeID);
+		if(BiomeHelper.typeList == null){
+			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
+			BiomeHelper.typeList.setAccessible(true);
+		}
+		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
+		if(remove)
+			set.remove(type);
+		else if(!set.contains(type))
+			set.add(type);
+		Config.INSTANCE.onTweak(gen.biomeID);
 	}
 
 }

@@ -2,12 +2,14 @@ package me.superckl.biometweaker.script.object;
 
 import me.superckl.biometweaker.script.ParameterType;
 import me.superckl.biometweaker.script.ScriptCommandListing;
+import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBigTreeGen;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveTreeGen;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.script.command.ScriptCommandSetStage;
@@ -66,6 +68,14 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandSetStage.class.getDeclaredConstructor(String.class));
 		listing.setPerformInst(true);
 		this.validCommands.put("setStage", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.NON_NEG_INTEGER, ParameterType.STRING), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		this.validCommands.put("addDicType", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.NON_NEG_INTEGER, ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		this.validCommands.put("removeDicType", listing);
 	}
 
 }

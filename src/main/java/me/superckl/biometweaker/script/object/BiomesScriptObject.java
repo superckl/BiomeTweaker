@@ -12,12 +12,14 @@ import me.superckl.biometweaker.script.ScriptCommandListing;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
+import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveBigTreeGen;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveTreeGen;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 
@@ -113,6 +115,14 @@ public class BiomesScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveBigTreeGen.class.getDeclaredConstructor(Integer.TYPE));
 		this.validCommands.put("removeBigTreeGen", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		this.validCommands.put("addDicType", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		this.validCommands.put("removeDicType", listing);
 	}
 
 }

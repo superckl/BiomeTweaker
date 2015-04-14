@@ -29,6 +29,8 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	@Override
 	public byte[] transform(final String name, final String transformedName,
 			final byte[] basicClass) {
+		if(basicClass == null)
+			return basicClass;
 		int index = -1;
 		final ClassReader reader = new ClassReader(basicClass);
 		final ClassNode cNode = new ClassNode();
@@ -151,7 +153,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					fixed = true;
 				}
 			if(!fixed)
-				ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"! Ye who continue now abandon all hope.");
+				ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"!  If this is a server, you're fine. Otherwise ye who continue now abandon all hope.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
 		}else if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			for(final MethodNode mNode:cNode.methods)

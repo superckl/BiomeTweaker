@@ -6,10 +6,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import scala.actors.threadpool.Arrays;
 import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
@@ -77,7 +77,7 @@ public class ScriptParser {
 	}
 
 	public static Map<String, Object> parseAssignment(final String script){
-		String[] split = script.split("=");
+		final String[] split = script.split("=");
 		if(split.length != 2){
 			ModBiomeTweakerCore.logger.error("Failed to parse object assignment: "+script);
 			return null;
@@ -93,29 +93,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final List<Integer> ints = new ArrayList<Integer>();
-			for(final String arg:args){
-				boolean parsed = false;
-				if(ScriptParser.isPositiveInteger(arg)){
-					ints.add(Integer.parseInt(arg));
-					parsed = true;
-				}else if(arg.contains("-")){
-					split = arg.split("-");
-					if((split.length == 2) && ScriptParser.isPositiveInteger(split[0]) && ScriptParser.isPositiveInteger(split[1])){
-						final int start = Integer.parseInt(split[0]);
-						final int end = Integer.parseInt(split[1]);
-						final int[] values = CollectionHelper.range(start, end);
-						ModBiomeTweakerCore.logger.info(Arrays.toString(values));
-						CollectionHelper.addAll(ints, values);
-						parsed = true;
-					}
-				}
-				if(!parsed)
-					ModBiomeTweakerCore.logger.error("Found invalid argument when parsing biome IDs. It will be ignored: "+assign);
-			}
-			final int[] array = new int[ints.size()];
-			for(int i = 0; i < array.length; i++)
-				array[i] = ints.get(i);
+			final int[] array = ScriptParser.parseBiomeIds(args);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
 		}else if(assign.equals("forAllBiomes()"))
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(-1));
@@ -125,28 +103,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final List<Integer> ints = new ArrayList<Integer>();
-			for(final String arg:args){
-				boolean parsed = false;
-				if(ScriptParser.isPositiveInteger(arg)){
-					ints.add(Integer.parseInt(arg));
-					parsed = true;
-				}else if(arg.contains("-")){
-					split = arg.split("-");
-					if((split.length == 2) && ScriptParser.isPositiveInteger(split[0]) && ScriptParser.isPositiveInteger(split[1])){
-						final int start = Integer.parseInt(split[0]);
-						final int end = Integer.parseInt(split[1]);
-						final int[] values = CollectionHelper.range(start, end);
-						CollectionHelper.addAll(ints, values);
-						parsed = true;
-					}
-				}
-				if(!parsed)
-					ModBiomeTweakerCore.logger.error("Found invalid argument when parsing biome IDs. It will be ignored: "+assign);
-			}
-			final int[] array = new int[ints.size()];
-			for(int i = 0; i < array.length; i++)
-				array[i] = ints.get(i);
+			final int[] array = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2));
 			if(!ScriptParser.isStringArg(args[args.length-2])){
 				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[args.length-2]+" where a String is required: "+assign);
 				return null;
@@ -162,6 +119,32 @@ public class ScriptParser {
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
 		}
 		return null;
+	}
+
+	public static int[] parseBiomeIds(final String[] args){
+		final List<Integer> ints = new ArrayList<Integer>();
+		for(final String arg:args){
+			boolean parsed = false;
+			if(ScriptParser.isPositiveInteger(arg)){
+				ints.add(Integer.parseInt(arg));
+				parsed = true;
+			}else if(arg.contains("-")){
+				final String[] split = arg.split("-");
+				if((split.length == 2) && ScriptParser.isPositiveInteger(split[0]) && ScriptParser.isPositiveInteger(split[1])){
+					final int start = Integer.parseInt(split[0]);
+					final int end = Integer.parseInt(split[1]);
+					final int[] values = CollectionHelper.range(start, end);
+					CollectionHelper.addAll(ints, values);
+					parsed = true;
+				}
+			}
+			if(!parsed)
+				ModBiomeTweakerCore.logger.error("Found invalid argument when parsing biome IDs. It will be ignored: "+arg);
+		}
+		final int[] array = new int[ints.size()];
+		for(int i = 0; i < array.length; i++)
+			array[i] = ints.get(i);
+		return array;
 	}
 
 }

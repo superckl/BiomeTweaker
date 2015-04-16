@@ -109,6 +109,14 @@ public class ScriptParser {
 				types.add((String) ParameterType.STRING.tryParse(arg));
 			}
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new TypeBiomesPackage(types.toArray(new String[types.size()]))));
+		}else if(assign.startsWith("forallBiomesExcept(")){
+			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
+			if(args.length < 1){
+				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
+				return null;
+			}
+			final int[] array = ScriptParser.parseBiomeIds(args, handler);
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllButBiomesPackage(array)));
 		}else if(assign.equals("forAllBiomes()"))
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllBiomesPackage()));
 		else if(assign.startsWith("newBiomes(")){
@@ -145,6 +153,10 @@ public class ScriptParser {
 				final ScriptObject obj = handler.getObjects().get(arg);
 				if(obj instanceof BiomesScriptObject){
 					final BiomesScriptObject biomes = (BiomesScriptObject) obj;
+					if(!biomes.getPack().supportsEarlyRawIds()){
+						ModBiomeTweakerCore.logger.error("Tried to merge biome objects but biome object "+arg+" does not support early raw IDs! (It is dependent on biome registration.)");
+						continue;
+					}
 					ints.addAll(biomes.getPack().getRawIds());
 				}
 			}else if(arg.contains("-")){

@@ -20,7 +20,16 @@ public class AllBiomesPackage implements IBiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		return Lists.newArrayList(-1);
+		final List<Integer> list = Lists.newArrayList();
+		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
+			if(gen != null)
+				list.add(gen.biomeID);
+		return list;
+	}
+
+	@Override
+	public boolean supportsEarlyRawIds() {
+		return false;
 	}
 
 }

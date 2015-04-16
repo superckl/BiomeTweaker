@@ -42,4 +42,9 @@ public class TypeBiomesPackage implements IBiomePackage{
 		return ints;
 	}
 
+	@Override
+	public boolean supportsEarlyRawIds() {
+		return false;
+	}
+
 }

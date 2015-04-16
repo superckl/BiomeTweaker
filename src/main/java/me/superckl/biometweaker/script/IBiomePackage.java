@@ -12,6 +12,7 @@ public interface IBiomePackage{
 	 * @return An Iterator that iterates over the viable BiomeGenBases, not in any particular order.
 	 */
 	public Iterator<BiomeGenBase> getIterator();
+	public boolean supportsEarlyRawIds();
 	public List<Integer> getRawIds();
 
 }

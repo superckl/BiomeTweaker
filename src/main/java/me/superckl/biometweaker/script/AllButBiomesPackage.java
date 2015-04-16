@@ -34,4 +34,9 @@ public class AllButBiomesPackage implements IBiomePackage{
 		return list;
 	}
 
+	@Override
+	public boolean supportsEarlyRawIds() {
+		return false;
+	}
+
 }

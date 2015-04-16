@@ -38,6 +38,11 @@ public class BasicBiomesPackage implements IBiomePackage{
 		return ids;
 	}
 
+	@Override
+	public boolean supportsEarlyRawIds() {
+		return true;
+	}
+
 
 
 }

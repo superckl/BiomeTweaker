@@ -55,7 +55,7 @@ public class Config {
 				log.warn("Failed to parse include array! Check your formatting!");
 		}
 		this.init = true;
-		ModBiomeTweakerCore.logger.info("Finished script parsing. Ready to force tweaks.");
+		ModBiomeTweakerCore.logger.info("Finished script parsing. Ready to tweak.");
 	}
 
 	public void addCommand(final IScriptCommand command){

@@ -8,7 +8,7 @@ import com.google.gson.JsonPrimitive;
 
 public enum ParameterType {
 
-	STRING, INTEGER, NON_NEG_INTEGER, FLOAT, SPAWN_TYPE, JSON_ELEMENT;
+	STRING, INTEGER, NON_NEG_INTEGER, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOME_PACKAGE;
 
 	public Object tryParse(final String parameter){
 		switch(this){
@@ -37,6 +37,12 @@ public enum ParameterType {
 		}
 		case JSON_ELEMENT: {
 			return new JsonPrimitive(parameter);
+		}
+		case BASIC_BIOME_PACKAGE: {
+			final Integer i = (Integer) ParameterType.NON_NEG_INTEGER.tryParse(parameter);
+			if(i != null)
+				return new BasicBiomesPackage(i);
+			break;
 		}
 		default:
 			break;

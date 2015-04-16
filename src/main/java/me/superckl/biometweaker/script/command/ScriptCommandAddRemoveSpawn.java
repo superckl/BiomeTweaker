@@ -6,6 +6,7 @@ import java.util.Iterator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.script.IBiomePackage;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -17,18 +18,18 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 		CREATURE, MONSTER, CAVE_CREATURE, WATER_CREATURE;
 	}
 
-	private final int biomeID;
+	private final IBiomePackage pack;
 	private final boolean remove;
 	private final Type type;
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
-	public ScriptCommandAddRemoveSpawn(final int biomeID, final String entityClass, final Type type, final int weight, final int minCount, final int maxCount) {
-		this(biomeID, false, type, entityClass, weight, minCount, maxCount);
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final Type type, final int weight, final int minCount, final int maxCount) {
+		this(pack, false, type, entityClass, weight, minCount, maxCount);
 	}
 
-	public ScriptCommandAddRemoveSpawn(final int biomeID, final String entityClass, final Type type) {
-		this(biomeID, true, type, entityClass, 0, 0, 0);
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final Type type) {
+		this(pack, true, type, entityClass, 0, 0, 0);
 	}
 
 	@Override
@@ -39,21 +40,12 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			return;
 		}
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
-		if(this.biomeID == -1){
-			for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-				if(gen != null){
-					this.handleTypeSwitch(gen, entry, clazz);
-					Config.INSTANCE.onTweak(gen.biomeID);
-				}
-			return;
+		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
+			this.handleTypeSwitch(gen, entry, clazz);
+			Config.INSTANCE.onTweak(gen.biomeID);
 		}
-		final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
-		if(gen == null){
-			LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");
-			return;
-		}
-		this.handleTypeSwitch(gen, entry, clazz);
-		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 	private void handleTypeSwitch(final BiomeGenBase gen, final SpawnListEntry entry, final Class<?> clazz){

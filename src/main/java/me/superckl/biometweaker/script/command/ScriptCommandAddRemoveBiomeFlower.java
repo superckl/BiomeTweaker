@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.biometweaker.script.IBiomePackage;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.FlowerEntry;
@@ -17,18 +17,18 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 
 	private static Field field;
 
-	private final int biomeID;
+	private final IBiomePackage pack;
 	private final boolean remove;
 	private final String block;
 	private final int meta;
 	private final int weight;
 
-	public ScriptCommandAddRemoveBiomeFlower(final int biomeID, final String block, final int meta) {
-		this(biomeID, true, block, meta, 0);
+	public ScriptCommandAddRemoveBiomeFlower(final IBiomePackage pack, final String block, final int meta) {
+		this(pack, true, block, meta, 0);
 	}
 
-	public ScriptCommandAddRemoveBiomeFlower(final int biomeID, final String block, final int meta, final int weight) {
-		this(biomeID, false, block, meta, weight);
+	public ScriptCommandAddRemoveBiomeFlower(final IBiomePackage pack, final String block, final int meta, final int weight) {
+		this(pack, false, block, meta, weight);
 	}
 
 	@Override
@@ -39,51 +39,27 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 				ScriptCommandAddRemoveBiomeFlower.field.setAccessible(true);
 			}
 			final Block block = Block.getBlockFromName(this.block);
-			if(this.biomeID == -1){
-				for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
-					if(gen == null)
-						continue;
-					final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
-					final Iterator<FlowerEntry> it = flowers.iterator();
-					while(it.hasNext()){
-						final FlowerEntry entry = it.next();
-						if((entry.block == block) && (entry.metadata == this.meta))
-							it.remove();
-					}
-				}
-				Config.INSTANCE.onTweak(-1);
-				return;
-			}
-			final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
-			if(gen == null){
-				LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");
-				return;
-			}
-			final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
-			final Iterator<FlowerEntry> it = flowers.iterator();
+			final Iterator<BiomeGenBase> it = this.pack.getIterator();
 			while(it.hasNext()){
-				final FlowerEntry entry = it.next();
-				if((entry.block == block) && (entry.metadata == this.meta))
-					it.remove();
+				final BiomeGenBase gen = it.next();
+				final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
+				final Iterator<FlowerEntry> itF = flowers.iterator();
+				while(itF.hasNext()){
+					final FlowerEntry entry = itF.next();
+					if((entry.block == block) && (entry.metadata == this.meta))
+						itF.remove();
+				}
+				Config.INSTANCE.onTweak(gen.biomeID);
 			}
 		}else{
 			final Block block = Block.getBlockFromName(this.block);
-			if(this.biomeID == -1){
-				for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
-					if(gen == null)
-						continue;
-					gen.addFlower(block, this.meta, this.weight);
-				}
-				return;
+			final Iterator<BiomeGenBase> it = this.pack.getIterator();
+			while(it.hasNext()){
+				final BiomeGenBase gen = it.next();
+				gen.addFlower(block, this.meta, this.weight);
+				Config.INSTANCE.onTweak(gen.biomeID);
 			}
-			final BiomeGenBase gen = BiomeGenBase.getBiome(this.biomeID);
-			if(gen == null){
-				LogHelper.info("Error applying tweaks. Biome ID "+this.biomeID+" does not correspond to a biome! Check the output files for the correct ID!");
-				return;
-			}
-			gen.addFlower(block, this.meta, this.weight);
 		}
-		Config.INSTANCE.onTweak(this.biomeID);
 	}
 
 }

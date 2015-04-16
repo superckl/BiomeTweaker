@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.script.IBiomePackage;
 import me.superckl.biometweaker.script.ParameterType;
 import me.superckl.biometweaker.script.ScriptCommandListing;
 import me.superckl.biometweaker.script.ScriptHandler;
@@ -31,11 +32,11 @@ import com.google.gson.JsonElement;
 public class BiomesScriptObject extends ScriptObject{
 
 	@Getter
-	private final int[] biomes;
+	private final IBiomePackage pack;
 
-	public BiomesScriptObject(final int ... biomes) {
+	public BiomesScriptObject(final IBiomePackage pack) {
 		super();
-		this.biomes = biomes;
+		this.pack = pack;
 	}
 
 	@Override
@@ -62,13 +63,11 @@ public class BiomesScriptObject extends ScriptObject{
 			}
 			if(shouldCont)
 				continue;
-			//ParamterType list does not contain biomeIDs, so insert them.
+			//ParamterType list does not contain BiomePackages, so insert them.
 			final Object[] args = new Object[objs.length+1];
 			System.arraycopy(objs, 0, args, 1, objs.length);
-			for(final int i:this.biomes){
-				args[0] = i;
-				Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
-			}
+			args[0] = this.pack;
+			Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
 			return;
 		}
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
@@ -78,53 +77,53 @@ public class BiomesScriptObject extends ScriptObject{
 	public void populateCommands() throws Exception {
 		ScriptCommandListing listing = new ScriptCommandListing();
 		listing.addEntry(new ArrayList<ParameterType>()
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(Integer.TYPE));
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
 		this.validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
 		this.validCommands.put("addSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE)
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(Integer.TYPE, String.class, Type.class));
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class));
 		this.validCommands.put("removeSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE)
-				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(Integer.TYPE, Type.class));
+				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(IBiomePackage.class, Type.class));
 		this.validCommands.put("removeAllSpawns", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
-				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(Integer.TYPE, String.class, Integer.TYPE, Integer.TYPE));
+				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, Integer.TYPE));
 		this.validCommands.put("addFlower", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.NON_NEG_INTEGER)
-				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(Integer.TYPE, String.class, Integer.TYPE));
+				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		this.validCommands.put("removeFlower", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.JSON_ELEMENT)
-				, ScriptCommandSetBiomeProperty.class.getDeclaredConstructor(Integer.TYPE, String.class, JsonElement.class));
+				, ScriptCommandSetBiomeProperty.class.getDeclaredConstructor(IBiomePackage.class, String.class, JsonElement.class));
 		this.validCommands.put("set", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("addDicType", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("removeDicType", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(Integer.TYPE));
+		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
 		this.validCommands.put("removeAllDicTypes", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(Integer.TYPE, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("removeDecoration", listing);
 	}
 

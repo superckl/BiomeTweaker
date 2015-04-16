@@ -85,8 +85,8 @@ public class ScriptParser {
 		}
 		final String var = split[0].trim();
 		final String assign = split[1].trim();
-		if(assign.startsWith("\"")){
-			final String shortcut = assign.substring(1, assign.length()-1);
+		if(assign.startsWith("\"") && assign.endsWith("\"")){
+			final String shortcut = (String) ParameterType.STRING.tryParse(assign);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
 		}else if(assign.startsWith("forBiomes(")){
 			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
@@ -95,9 +95,12 @@ public class ScriptParser {
 				return null;
 			}
 			final int[] array = ScriptParser.parseBiomeIds(args, handler);
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new BasicBiomesPackage(array)));
+		}else if(assign.startsWith("forBiomesOfTypes(")){
+			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
+			//TODO keep them coupled?
 		}else if(assign.equals("forAllBiomes()"))
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(-1));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllBiomesPackage()));
 		else if(assign.startsWith("newBiomes(")){
 			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
 			if(args.length < 3){
@@ -115,9 +118,8 @@ public class ScriptParser {
 			}
 			final String type = ScriptParser.extractStringArg(args[args.length-2]);
 			final int weight = Integer.parseInt(args[args.length-1]);
-			for(final int i:array)
-				Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(i, type, weight));
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(new BasicBiomesPackage(array), type, weight));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new BasicBiomesPackage(array)));
 		}
 		return null;
 	}
@@ -133,7 +135,7 @@ public class ScriptParser {
 				final ScriptObject obj = handler.getObjects().get(arg);
 				if(obj instanceof BiomesScriptObject){
 					final BiomesScriptObject biomes = (BiomesScriptObject) obj;
-					return biomes.getBiomes();
+					ints.addAll(biomes.getPack().getRawIds());
 				}
 			}else if(arg.contains("-")){
 				final String[] split = arg.split("-");

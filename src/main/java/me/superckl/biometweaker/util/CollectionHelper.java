@@ -19,6 +19,14 @@ public class CollectionHelper {
 		return -1;
 	}
 
+	public static int find(final int toFind, final int[] in){
+		for(int i = 0; i < in.length; i++)
+			if(in[i] == toFind)
+				return i;
+		return -1;
+	}
+
+
 	public static int[] range(final int start, final int end){
 		final int[] values = new int[(end-start)+1];
 		for(int i = start; i <= end; i++)

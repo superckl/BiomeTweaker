@@ -18,6 +18,8 @@ import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.util.CollectionHelper;
 
+import com.google.common.collect.Lists;
+
 public class ScriptParser {
 
 	public static void parseScriptFile(final File file){
@@ -98,7 +100,15 @@ public class ScriptParser {
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new BasicBiomesPackage(array)));
 		}else if(assign.startsWith("forBiomesOfTypes(")){
 			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-			//TODO keep them coupled?
+			final List<String> types = Lists.newArrayList();
+			for(final String arg:args){
+				if(!arg.startsWith("\"") || !arg.startsWith("\"")){
+					ModBiomeTweakerCore.logger.error("Found non-String argument "+arg+" where a String is required: "+assign);
+					continue;
+				}
+				types.add((String) ParameterType.STRING.tryParse(arg));
+			}
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new TypeBiomesPackage(types.toArray(new String[types.size()]))));
 		}else if(assign.equals("forAllBiomes()"))
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllBiomesPackage()));
 		else if(assign.startsWith("newBiomes(")){

@@ -34,7 +34,7 @@ public class ScriptHandler {
 		while(this.it.hasNext()){
 			final String s = this.it.next().trim();
 			if(s.contains("=")){
-				final Map<String, Object> map = ScriptParser.parseAssignment(s);
+				final Map<String, Object> map = ScriptParser.parseAssignment(s, this);
 				if(map == null)
 					continue;
 				for(final Entry<String, Object> entry:map.entrySet())

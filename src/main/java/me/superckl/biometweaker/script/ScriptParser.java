@@ -15,6 +15,7 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 public class ScriptParser {
@@ -76,7 +77,7 @@ public class ScriptParser {
 		return split;
 	}
 
-	public static Map<String, Object> parseAssignment(final String script){
+	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler){
 		final String[] split = script.split("=");
 		if(split.length != 2){
 			ModBiomeTweakerCore.logger.error("Failed to parse object assignment: "+script);
@@ -93,7 +94,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final int[] array = ScriptParser.parseBiomeIds(args);
+			final int[] array = ScriptParser.parseBiomeIds(args, handler);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(array));
 		}else if(assign.equals("forAllBiomes()"))
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(-1));
@@ -103,7 +104,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final int[] array = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2));
+			final int[] array = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2), handler);
 			if(!ScriptParser.isStringArg(args[args.length-2])){
 				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[args.length-2]+" where a String is required: "+assign);
 				return null;
@@ -121,13 +122,19 @@ public class ScriptParser {
 		return null;
 	}
 
-	public static int[] parseBiomeIds(final String[] args){
+	public static int[] parseBiomeIds(final String[] args, final ScriptHandler handler){
 		final List<Integer> ints = new ArrayList<Integer>();
 		for(final String arg:args){
 			boolean parsed = false;
 			if(ScriptParser.isPositiveInteger(arg)){
 				ints.add(Integer.parseInt(arg));
 				parsed = true;
+			}else if(handler.getObjects().containsKey(arg)){
+				final ScriptObject obj = handler.getObjects().get(arg);
+				if(obj instanceof BiomesScriptObject){
+					final BiomesScriptObject biomes = (BiomesScriptObject) obj;
+					return biomes.getBiomes();
+				}
 			}else if(arg.contains("-")){
 				final String[] split = arg.split("-");
 				if((split.length == 2) && ScriptParser.isPositiveInteger(split[0]) && ScriptParser.isPositiveInteger(split[1])){

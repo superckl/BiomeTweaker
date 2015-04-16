@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ParameterType;
@@ -29,6 +30,7 @@ import com.google.gson.JsonElement;
 
 public class BiomesScriptObject extends ScriptObject{
 
+	@Getter
 	private final int[] biomes;
 
 	public BiomesScriptObject(final int ... biomes) {

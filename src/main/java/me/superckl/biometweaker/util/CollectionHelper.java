@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.util;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,6 +17,24 @@ public class CollectionHelper {
 			if((in[i] == toFind) || in[i].equals(toFind))
 				return i;
 		return -1;
+	}
+
+	public static int[] range(final int start, final int end){
+		final int[] values = new int[(end-start)+1];
+		for(int i = start; i <= end; i++)
+			values[i-start] = i;
+		return values;
+	}
+
+	public static void addAll(final Collection<Integer> coll, final int ... values){
+		for(final int i:values)
+			coll.add(i);
+	}
+
+	public static String[] trimAll(final String ... strings){
+		for(int i = 0; i < strings.length; i++)
+			strings[i] = strings[i].trim();
+		return strings;
 	}
 
 }

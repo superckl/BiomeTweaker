@@ -22,6 +22,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
+import me.superckl.biometweaker.util.CollectionHelper;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
@@ -42,7 +43,7 @@ public class BiomesScriptObject extends ScriptObject{
 			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
-		final String[] arguments = ScriptParser.trimAll(ScriptParser.parseArguments(call));
+		final String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
 		for(final Entry<List<ParameterType>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
 			if(arguments.length != entry.getKey().size())

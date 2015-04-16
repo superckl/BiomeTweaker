@@ -3,6 +3,7 @@ package me.superckl.biometweaker.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.CollectionHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 
@@ -155,7 +156,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			if(!fixed)
 				ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"!  If this is a server, you're fine. Otherwise ye who continue now abandon all hope.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
-		}else if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+		}else if(Config.INSTANCE.isForceModdedColor() && ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			for(final MethodNode mNode:cNode.methods)
 				if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeGrassColor)) != -1) && mNode.desc.equals("(III)I")){
 					boolean shouldCont = false;

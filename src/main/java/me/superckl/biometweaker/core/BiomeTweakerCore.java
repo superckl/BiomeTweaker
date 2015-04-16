@@ -14,7 +14,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @SortingIndex(1001)
 @MCVersion("1.7.10")
-@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker"})
+@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.biometweaker.script"})
 public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{
 
 	public static File mcLocation;

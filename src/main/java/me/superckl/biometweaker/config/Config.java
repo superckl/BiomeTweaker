@@ -25,7 +25,8 @@ public class Config {
 
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
-	private boolean outputSeperateFiles;
+	private boolean outputSeperateFiles = true;
+	private boolean forceModdedColor = true;
 	private boolean init;
 	private Config() {}
 
@@ -37,6 +38,8 @@ public class Config {
 		this.commandManager.reset();
 		if(obj.has("separate files"))
 			this.outputSeperateFiles = obj.get("separate files").getAsBoolean();
+		if(obj.has("force modded colors"))
+			this.forceModdedColor = obj.get("force modded colors").getAsBoolean();
 		if(obj.has("include")){
 			final JsonElement element = obj.get("include");
 			if(element.isJsonArray()){

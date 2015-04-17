@@ -1,9 +1,11 @@
 package me.superckl.biometweaker.core;
 
-import java.util.Arrays;
+import me.superckl.biometweaker.common.reference.ModData;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.ModMetadata;
@@ -17,9 +19,9 @@ public class ModBiomeTweakerCore extends DummyModContainer{
 		final ModMetadata meta = this.getMetadata();
 		meta.modId = "BiomeTweakerCore";
 		meta.name = "BiomeTweaker Core";
-		meta.parent = "BiomeTweaker";
-		meta.version = "0.1";
-		meta.authorList = Arrays.asList("superckl");
+		meta.parent = ModData.MOD_ID;
+		meta.version = ModData.VERSION;
+		meta.authorList = Lists.newArrayList("superckl");
 		meta.description = "";
 		meta.url = "";
 		meta.updateUrl = "";

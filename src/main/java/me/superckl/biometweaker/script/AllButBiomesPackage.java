@@ -3,24 +3,24 @@ package me.superckl.biometweaker.script;
 import java.util.Iterator;
 import java.util.List;
 
-import me.superckl.biometweaker.util.CollectionHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.google.common.collect.Lists;
 
 public class AllButBiomesPackage implements IBiomePackage{
 
-	private final int[] exclusions;
+	private final IBiomePackage exclusions;
 
-	public AllButBiomesPackage(final int ... exclusions) {
+	public AllButBiomesPackage(final IBiomePackage exclusions) {
 		this.exclusions = exclusions;
 	}
 
 	@Override
 	public Iterator<BiomeGenBase> getIterator() {
 		final List<BiomeGenBase> list = Lists.newArrayList();
+		final List<Integer> ints = this.exclusions.getRawIds();
 		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-			if((gen != null) && (CollectionHelper.find(gen.biomeID, this.exclusions) == -1))
+			if((gen != null) && !ints.contains(gen.biomeID))
 				list.add(gen);
 		return list.iterator();
 	}
@@ -28,8 +28,9 @@ public class AllButBiomesPackage implements IBiomePackage{
 	@Override
 	public List<Integer> getRawIds() {
 		final List<Integer> list = Lists.newArrayList();
+		final List<Integer> ints = this.exclusions.getRawIds();
 		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-			if((gen != null) && (CollectionHelper.find(gen.biomeID, this.exclusions) == -1))
+			if((gen != null) && !ints.contains(gen.biomeID))
 				list.add(gen.biomeID);
 		return list;
 	}

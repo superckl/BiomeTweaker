@@ -96,8 +96,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final int[] array = ScriptParser.parseBiomeIds(args, handler);
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new BasicBiomesPackage(array)));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(ScriptParser.parseBiomeIds(args, handler)));
 		}else if(assign.startsWith("forBiomesOfTypes(")){
 			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
 			final List<String> types = Lists.newArrayList();
@@ -115,8 +114,7 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final int[] array = ScriptParser.parseBiomeIds(args, handler);
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllButBiomesPackage(array)));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllButBiomesPackage(ScriptParser.parseBiomeIds(args, handler))));
 		}else if(assign.equals("forAllBiomes()"))
 			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllBiomesPackage()));
 		else if(assign.startsWith("newBiomes(")){
@@ -125,7 +123,6 @@ public class ScriptParser {
 				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
 				return null;
 			}
-			final int[] array = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2), handler);
 			if(!ScriptParser.isStringArg(args[args.length-2])){
 				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[args.length-2]+" where a String is required: "+assign);
 				return null;
@@ -136,14 +133,16 @@ public class ScriptParser {
 			}
 			final String type = ScriptParser.extractStringArg(args[args.length-2]);
 			final int weight = Integer.parseInt(args[args.length-1]);
-			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(new BasicBiomesPackage(array), type, weight));
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new BasicBiomesPackage(array)));
+			final IBiomePackage pack = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2), handler);
+			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(pack, type, weight));
+			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(pack));
 		}
 		return null;
 	}
 
-	public static int[] parseBiomeIds(final String[] args, final ScriptHandler handler){
-		final List<Integer> ints = new ArrayList<Integer>();
+	public static IBiomePackage parseBiomeIds(final String[] args, final ScriptHandler handler){
+		final List<Integer> ints = Lists.newArrayList();
+		final List<IBiomePackage> toMerge = Lists.newArrayList();
 		for(final String arg:args){
 			boolean parsed = false;
 			if(ScriptParser.isPositiveInteger(arg)){
@@ -153,11 +152,10 @@ public class ScriptParser {
 				final ScriptObject obj = handler.getObjects().get(arg);
 				if(obj instanceof BiomesScriptObject){
 					final BiomesScriptObject biomes = (BiomesScriptObject) obj;
-					if(!biomes.getPack().supportsEarlyRawIds()){
-						ModBiomeTweakerCore.logger.error("Tried to merge biome objects but biome object \""+arg+"\" does not support early raw IDs! (It is dependent on biome registration.)");
-						continue;
-					}
-					ints.addAll(biomes.getPack().getRawIds());
+					if(!biomes.getPack().supportsEarlyRawIds())
+						toMerge.add(biomes.getPack());
+					else
+						ints.addAll(biomes.getPack().getRawIds());
 					parsed = true;
 				}
 			}else if(arg.contains("-")){
@@ -173,10 +171,13 @@ public class ScriptParser {
 			if(!parsed)
 				ModBiomeTweakerCore.logger.error("Found invalid argument when parsing biome IDs. It will be ignored: "+arg);
 		}
-		final int[] array = new int[ints.size()];
-		for(int i = 0; i < array.length; i++)
-			array[i] = ints.get(i);
-		return array;
+		if(!ints.isEmpty()){
+			final int[] array = new int[ints.size()];
+			for(int i = 0; i < array.length; i++)
+				array[i] = ints.get(i);
+			toMerge.add(new BasicBiomesPackage(array));
+		}
+		return new MergedBiomesPackage(toMerge.toArray(new IBiomePackage[toMerge.size()]));
 	}
 
 }

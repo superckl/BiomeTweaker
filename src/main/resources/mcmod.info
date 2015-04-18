@@ -5,13 +5,13 @@
   "description": "Used to tweak various characteristics of biomes.",
   "version": "${mod_version}",
   "mcversion": "${minecraft_version}",
-  "url": "",
+  "url": "http://minecraft.curseforge.com/mc-mods/228895-biometweaker",
   "updateUrl": "",
   "authorList": [
     "superckl"
   ],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "logo.png",
   "screenshots": [
   ],
   "parent":"",

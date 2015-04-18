@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.IBiomePackage;
@@ -11,6 +12,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
+import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScriptCommandAddRemoveBiome implements IScriptCommand{
@@ -37,13 +39,15 @@ public class ScriptCommandAddRemoveBiome implements IScriptCommand{
 				for(final BiomeType type:BiomeType.values())
 					for(final BiomeEntry entry:BiomeManager.getBiomes(type))
 						if(entry.biome.biomeID == gen.biomeID)
-							BiomeManager.removeBiome(type, entry);
+							if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Remove(this, entry.biome, entry)))
+								BiomeManager.removeBiome(type, entry);
 				Config.INSTANCE.onTweak(gen.biomeID);
 			}
 		} else
 			for(final int i:this.pack.getRawIds()){
 				final BiomeTweakerBiome biome = new BiomeTweakerBiome(i);
-				BiomeManager.addBiome(BiomeType.getType(this.type), new BiomeEntry(biome, this.weight));
+				if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
+					BiomeManager.addBiome(BiomeType.getType(this.type), new BiomeEntry(biome, this.weight));
 				Config.INSTANCE.onTweak(i);
 			}
 	}

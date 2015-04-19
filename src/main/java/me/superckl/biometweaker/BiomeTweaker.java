@@ -16,6 +16,7 @@ import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandReload;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.biometweaker.util.ReflectionHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.google.gson.Gson;
@@ -27,6 +28,7 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
@@ -114,6 +116,35 @@ public class BiomeTweaker {
 	@EventHandler
 	public void onServerStarted(final FMLServerStartedEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
+	}
+
+
+
+	//Begin compat. e.g. load biome classes that get loaded too late.
+
+	private final String[] galactCoreClasses = new String[] {"micdoodle8.mods.galacticraft.core.world.gen.BiomeGenBaseMoon", "micdoodle8.mods.galacticraft.core.world.gen.BiomeGenBaseOrbit"};
+	private final String[] galactMarsClasses = new String[] {"micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeGenBaseMars"};
+
+	@Optional.Method(modid = "GalacticraftCore")
+	@EventHandler
+	public void GalactCoreCompat(final FMLPreInitializationEvent e){
+		LogHelper.info("Found GalacticraftCore. Attempting to load biome classes...");
+		this.loadCompatClasses(this.galactCoreClasses);
+	}
+
+	@Optional.Method(modid = "GalacticraftMars")
+	@EventHandler
+	public void GalactMarsCompat(final FMLPreInitializationEvent e){
+		LogHelper.info("Found GalacticraftMars. Attempting to load biome classes...");
+		this.loadCompatClasses(this.galactMarsClasses);
+	}
+
+	private void loadCompatClasses(final String ... classes){
+		int failures = 0;
+		for(final String clazz:classes)
+			if(ReflectionHelper.tryLoadClass(clazz) == null)
+				failures++;
+		LogHelper.debug("Failed to load "+failures+" classes!");
 	}
 
 }

@@ -5,11 +5,13 @@ import java.util.Iterator;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.IBiomePackage;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
@@ -43,6 +45,10 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();
 		while(it.hasNext()){
 			final BiomeGenBase gen = it.next();
+			if(this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveSpawn(this, gen, this.type, clazz)))
+				continue;
+			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, gen, entry)))
+				continue;
 			this.handleTypeSwitch(gen, entry, clazz);
 			Config.INSTANCE.onTweak(gen.biomeID);
 		}

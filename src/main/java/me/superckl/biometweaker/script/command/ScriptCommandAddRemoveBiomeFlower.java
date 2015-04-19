@@ -6,11 +6,13 @@ import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.IBiomePackage;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.FlowerEntry;
+import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
@@ -42,6 +44,8 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 			final Iterator<BiomeGenBase> it = this.pack.getIterator();
 			while(it.hasNext()){
 				final BiomeGenBase gen = it.next();
+				if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveFlower(this, gen, block, this.meta)))
+					continue;
 				final List<FlowerEntry> flowers = (List<FlowerEntry>) ScriptCommandAddRemoveBiomeFlower.field.get(gen);
 				final Iterator<FlowerEntry> itF = flowers.iterator();
 				while(itF.hasNext()){
@@ -56,6 +60,8 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 			final Iterator<BiomeGenBase> it = this.pack.getIterator();
 			while(it.hasNext()){
 				final BiomeGenBase gen = it.next();
+				if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddFlower(this, gen, block, this.meta, this.weight)))
+					continue;
 				gen.addFlower(block, this.meta, this.weight);
 				Config.INSTANCE.onTweak(gen.biomeID);
 			}

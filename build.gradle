@@ -73,6 +73,19 @@ processResources
     }
 }
 
+task devJar(type: Jar, dependsOn: 'classes') {
+    from(sourceSets.main.output) {
+        include '**'
+    }
+
+    extension = 'jar'
+    classifier = 'dev'
+}
+
+artifacts {
+    archives devJar
+}
+
 jar {
     manifest {
         attributes 'FMLCorePlugin': 'me.superckl.biometweaker.core.BiomeTweakerCore'

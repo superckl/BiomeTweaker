@@ -267,8 +267,12 @@ public class BiomeHelper {
 		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
 		if(remove)
 			set.remove(type);
-		else if(!set.contains(type))
-			set.add(type);
+		else if(!set.contains(type)){
+			final EnumSet<BiomeDictionary.Type> set2 = EnumSet.noneOf(BiomeDictionary.Type.class);
+			set2.addAll(set);
+			set2.add(type);
+			BiomeHelper.typeList.set(biomeInfo, set2);
+		}
 	}
 
 	public static void removeAllBiomeDicType(final BiomeGenBase gen) throws Exception{

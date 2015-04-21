@@ -5,22 +5,58 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import lombok.Cleanup;
-import me.superckl.biometweaker.config.Config;
+import lombok.Getter;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.ScriptObject;
+import me.superckl.biometweaker.script.pack.IBiomePackage;
+import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
+import me.superckl.biometweaker.script.util.ParameterType;
+import me.superckl.biometweaker.script.util.ParameterWrapper;
+import me.superckl.biometweaker.script.util.ScriptListing;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.mojang.realmsclient.util.Pair;
 
 public class ScriptParser {
+
+	@Getter
+	private static final Map<String, ScriptListing<ScriptObject>> validObjects = Maps.newHashMap();
+
+	static{
+		try{
+			ScriptListing<ScriptObject> listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("forBiomes", listing);
+
+			listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.TYPE_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("forBiomesOfTypes", listing);
+
+			listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getSimpleWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("forAllBiomes", listing);
+
+			listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("forAllBiomesExcept", listing);
+
+		}catch(final Exception e){
+			ModBiomeTweakerCore.logger.error("Something went wrong when filling the object mappings! Some objects may not work!");
+			e.printStackTrace();
+		}
+	}
 
 	public static void parseScriptFile(final File file){
 		try{
@@ -48,19 +84,8 @@ public class ScriptParser {
 		return arg.trim().startsWith("\"") && arg.endsWith("\"");
 	}
 
-	public static String extractStringArg(final String arg){
-		return arg.trim().substring(1, arg.length()-1);
-	}
-
 	public static boolean isPositiveInteger(final String arg){
 		return arg.matches("[0-9]+");
-	}
-
-	public static boolean isCommandCall(final String command){
-		if(!command.endsWith(")") || !command.contains("("))
-			return false;
-		final String call = command.substring(0, command.indexOf("("));
-		return call.equals(command);
 	}
 
 	public static String getCommandCalled(final String command){
@@ -90,94 +115,32 @@ public class ScriptParser {
 		if(assign.startsWith("\"") && assign.endsWith("\"")){
 			final String shortcut = (String) ParameterType.STRING.tryParse(assign);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
-		}else if(assign.startsWith("forBiomes(")){
-			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-			if(args.length < 1){
-				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
-				return null;
-			}
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(ScriptParser.parseBiomeIds(args, handler)));
-		}else if(assign.startsWith("forBiomesOfTypes(")){
-			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-			final List<String> types = Lists.newArrayList();
-			for(final String arg:args){
-				if(!arg.startsWith("\"") || !arg.startsWith("\"")){
-					ModBiomeTweakerCore.logger.error("Found non-String argument "+arg+" where a String is required: "+assign);
-					continue;
+		}else{
+			final String called = ScriptParser.getCommandCalled(assign);
+			if(ScriptParser.validObjects.containsKey(called)){
+				final ScriptListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
+				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
+				for(final Entry<List<ParameterWrapper>, Constructor<? extends ScriptObject>> entry:listing.getConstructors().entrySet()){
+					final List<Object> objs = Lists.newArrayList();
+					final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
+					final Iterator<ParameterWrapper> it = params.iterator();
+					while(it.hasNext()){
+						final ParameterWrapper wrap = it.next();
+						final Pair<Object[], String[]> parsed = wrap.parseArgs(arguments);
+						Collections.addAll(objs, parsed.first());
+						arguments = parsed.second();
+						it.remove();
+					}
+					if(!params.isEmpty() || (arguments.length != 0))
+						continue;
+					final IBiomePackage[] args = new IBiomePackage[objs.size()];
+					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
+					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new MergedBiomesPackage(args)));
 				}
-				types.add((String) ParameterType.STRING.tryParse(arg));
+				ModBiomeTweakerCore.logger.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 			}
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new TypeBiomesPackage(types.toArray(new String[types.size()]))));
-		}else if(assign.startsWith("forAllBiomesExcept(")){
-			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-			if(args.length < 1){
-				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
-				return null;
-			}
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllButBiomesPackage(ScriptParser.parseBiomeIds(args, handler))));
-		}else if(assign.equals("forAllBiomes()"))
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new AllBiomesPackage()));
-		else if(assign.startsWith("newBiomes(")){
-			final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-			if(args.length < 3){
-				ModBiomeTweakerCore.logger.error("Can't assign biomes object with empty argument list: "+assign);
-				return null;
-			}
-			if(!ScriptParser.isStringArg(args[args.length-2])){
-				ModBiomeTweakerCore.logger.error("Found non-String argument "+args[args.length-2]+" where a String is required: "+assign);
-				return null;
-			}
-			if(!ScriptParser.isPositiveInteger(args[args.length-1])){
-				ModBiomeTweakerCore.logger.error("Found non-integer argument where integer required: "+assign);
-				return null;
-			}
-			final String type = ScriptParser.extractStringArg(args[args.length-2]);
-			final int weight = Integer.parseInt(args[args.length-1]);
-			final IBiomePackage pack = ScriptParser.parseBiomeIds(Arrays.copyOfRange(args, 0, args.length-2), handler);
-			Config.INSTANCE.addCommand(new ScriptCommandAddRemoveBiome(pack, type, weight));
-			return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(pack));
 		}
 		return null;
-	}
-
-	public static IBiomePackage parseBiomeIds(final String[] args, final ScriptHandler handler){
-		final List<Integer> ints = Lists.newArrayList();
-		final List<IBiomePackage> toMerge = Lists.newArrayList();
-		for(final String arg:args){
-			boolean parsed = false;
-			if(ScriptParser.isPositiveInteger(arg)){
-				ints.add(Integer.parseInt(arg));
-				parsed = true;
-			}else if(handler.getObjects().containsKey(arg)){
-				final ScriptObject obj = handler.getObjects().get(arg);
-				if(obj instanceof BiomesScriptObject){
-					final BiomesScriptObject biomes = (BiomesScriptObject) obj;
-					if(!biomes.getPack().supportsEarlyRawIds())
-						toMerge.add(biomes.getPack());
-					else
-						ints.addAll(biomes.getPack().getRawIds());
-					parsed = true;
-				}
-			}else if(arg.contains("-")){
-				final String[] split = arg.split("-");
-				if((split.length == 2) && ScriptParser.isPositiveInteger(split[0]) && ScriptParser.isPositiveInteger(split[1])){
-					final int start = Integer.parseInt(split[0]);
-					final int end = Integer.parseInt(split[1]);
-					final int[] values = CollectionHelper.range(start, end);
-					CollectionHelper.addAll(ints, values);
-					parsed = true;
-				}
-			}
-			if(!parsed)
-				ModBiomeTweakerCore.logger.error("Found invalid argument when parsing biome IDs. It will be ignored: "+arg);
-		}
-		if(!ints.isEmpty()){
-			final int[] array = new int[ints.size()];
-			for(int i = 0; i < array.length; i++)
-				array[i] = ints.get(i);
-			toMerge.add(new BasicBiomesPackage(array));
-		}
-		return new MergedBiomesPackage(toMerge.toArray(new IBiomePackage[toMerge.size()]));
 	}
 
 }

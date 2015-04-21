@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
-import me.superckl.biometweaker.script.IBiomePackage;
+import me.superckl.biometweaker.script.pack.IBiomePackage;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 

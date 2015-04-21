@@ -2,15 +2,14 @@ package me.superckl.biometweaker.script.object;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
 import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.script.IBiomePackage;
-import me.superckl.biometweaker.script.ParameterType;
-import me.superckl.biometweaker.script.ScriptCommandListing;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
@@ -24,10 +23,15 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
+import me.superckl.biometweaker.script.pack.IBiomePackage;
+import me.superckl.biometweaker.script.util.ParameterType;
+import me.superckl.biometweaker.script.util.ParameterWrapper;
+import me.superckl.biometweaker.script.util.ScriptCommandListing;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
+import com.mojang.realmsclient.util.Pair;
 
 public class BiomesScriptObject extends ScriptObject{
 
@@ -46,26 +50,24 @@ public class BiomesScriptObject extends ScriptObject{
 			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
-		final String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
+		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
-		for(final Entry<List<ParameterType>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
-			if(arguments.length != entry.getKey().size())
-				continue;
-			final Object[] objs = new Object[arguments.length];
-			final List<ParameterType> list = entry.getKey();
-			boolean shouldCont = false;
-			for(int i = 0; i < arguments.length; i++){
-				objs[i] = list.get(i).tryParse(arguments[i]);
-				if(objs[i] == null){
-					shouldCont = true;
-					break;
-				}
+		for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+			final List<Object> objs = Lists.newArrayList();
+			final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
+			final Iterator<ParameterWrapper> it = params.iterator();
+			while(it.hasNext()){
+				final ParameterWrapper wrap = it.next();
+				final Pair<Object[], String[]> parsed = wrap.parseArgs(arguments);
+				Collections.addAll(objs, parsed.first());
+				arguments = parsed.second();
+				it.remove();
 			}
-			if(shouldCont)
+			if(!params.isEmpty() || (arguments.length != 0))
 				continue;
 			//ParamterType list does not contain BiomePackages, so insert them.
-			final Object[] args = new Object[objs.length+1];
-			System.arraycopy(objs, 0, args, 1, objs.length);
+			final Object[] args = new Object[objs.size()+1];
+			System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
 			args[0] = this.pack;
 			Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
 			return;
@@ -76,55 +78,61 @@ public class BiomesScriptObject extends ScriptObject{
 	@Override
 	public void populateCommands() throws Exception {
 		ScriptCommandListing listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterType>()
+		listing.addEntry(new ArrayList<ParameterWrapper>()
 				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
 		this.validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.SPAWN_TYPE.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper()
+				, ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
 		this.validCommands.put("addSpawn", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.SPAWN_TYPE)
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.SPAWN_TYPE.getSimpleWrapper())
 				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class));
 		this.validCommands.put("removeSpawn", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE)
+		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE.getSimpleWrapper())
 				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(IBiomePackage.class, Type.class));
 		this.validCommands.put("removeAllSpawns", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.NON_NEG_INTEGER, ParameterType.NON_NEG_INTEGER)
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, Integer.TYPE));
 		this.validCommands.put("addFlower", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.NON_NEG_INTEGER)
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		this.validCommands.put("removeFlower", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING, ParameterType.JSON_ELEMENT)
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.JSON_ELEMENT.getSimpleWrapper())
 				, ScriptCommandSetBiomeProperty.class.getDeclaredConstructor(IBiomePackage.class, String.class, JsonElement.class));
 		this.validCommands.put("set", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("addDicType", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("removeDicType", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterType>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
+		listing.addEntry(new ArrayList<ParameterWrapper>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
 		this.validCommands.put("removeAllDicTypes", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterType.STRING), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		this.validCommands.put("removeDecoration", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+		this.validCommands.put("create", listing);
 	}
 
 }

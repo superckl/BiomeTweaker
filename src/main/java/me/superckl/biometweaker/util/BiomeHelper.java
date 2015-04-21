@@ -6,7 +6,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.script.ScriptParser;
+import me.superckl.biometweaker.script.util.ParameterType;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -131,7 +131,7 @@ public class BiomeHelper {
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		BiomeHelper.checkFields();
 		if(prop.equals("name")){
-			final String toSet = ScriptParser.extractStringArg(value.getAsString());
+			final String toSet = (String) ParameterType.STRING.tryParse(value.getAsString());
 			biome.biomeName = toSet;
 		}else if(prop.equals("color")){
 			final int toSet = value.getAsInt();
@@ -143,7 +143,7 @@ public class BiomeHelper {
 			final float toSet = value.getAsFloat();
 			biome.heightVariation = toSet;
 		}else if(prop.equals("topBlock")){
-			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			final String blockName = (String) ParameterType.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				biome.topBlock = block;
@@ -151,7 +151,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 		}else if(prop.equals("fillerBlock")){
-			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			final String blockName = (String) ParameterType.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				biome.fillerBlock = block;
@@ -174,7 +174,7 @@ public class BiomeHelper {
 			final boolean toSet = value.getAsBoolean();
 			biome.enableSnow = toSet;
 		}else if(prop.equals("actualFillerBlock")){
-			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			final String blockName = (String) ParameterType.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				BiomeHelper.actualFillerBlock.set(biome, block);
@@ -182,7 +182,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 		}else if(prop.equals("liquidFillerBlock")){
-			final String blockName = ScriptParser.extractStringArg(value.getAsString());
+			final String blockName = (String) ParameterType.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
 				BiomeHelper.liquidFillerBlock.set(biome, block);

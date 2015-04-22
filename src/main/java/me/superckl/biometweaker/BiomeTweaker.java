@@ -13,6 +13,7 @@ import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
 import me.superckl.biometweaker.server.command.CommandInfo;
+import me.superckl.biometweaker.server.command.CommandOutput;
 import me.superckl.biometweaker.server.command.CommandReload;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
@@ -67,6 +68,10 @@ public class BiomeTweaker {
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.FINISHED_LOAD);
+		this.generateOutputFiles();
+	}
+
+	public void generateOutputFiles() throws IOException{
 		LogHelper.info("Generating biome status report...");
 		final JsonArray array = new JsonArray();
 		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
@@ -110,6 +115,7 @@ public class BiomeTweaker {
 	public void onServerStarting(final FMLServerStartingEvent e){
 		e.registerServerCommand(new CommandReload());
 		e.registerServerCommand(new CommandInfo());
+		e.registerServerCommand(new CommandOutput());
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 

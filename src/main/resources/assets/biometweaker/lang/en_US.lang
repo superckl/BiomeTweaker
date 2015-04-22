@@ -1,8 +1,11 @@
 biometweaker.cfg.reload.tooltip=Press to reload BiomeTweaker configuration and scripts.
 biometweaker.msg.reload.usage.text=Takes no arguments. Simply run '/btr'
 biometweaker.msg.info.usage.text=Takes no arguments. Simply run '/bti'
+biometweaker.msg.output.usage.text=Takes no arguments. Simply run '/bti'
 biometweaker.msg.info.output.text=Biome Status Report:
 biometweaker.msg.reload.success.text=Successfully reloaded scripts!
 biometweaker.msg.reload.failure.text=An error occurred while reloading scripts. Please check the log.
 biometweaker.msg.info.failure.text=An error occurred while retrieving biome info. Please check the log.
 biometweaker.msg.info.invalsender.text=Invalid command sender. Sender must have a position in a world!
+biometweaker.msg.output.success.text=Successfully regenerated output files!
+biometweaker.msg.output.failure.text=An error occurred while regenerating the output files. Please check the log.

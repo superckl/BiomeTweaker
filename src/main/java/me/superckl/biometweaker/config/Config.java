@@ -26,7 +26,8 @@ public class Config {
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles = true;
-	private boolean forceModdedColor = true;
+	private boolean lightASM = false;
+	private String[] asmBlacklist = new String[0];
 	private boolean init;
 	private Config() {}
 
@@ -38,8 +39,14 @@ public class Config {
 		this.commandManager.reset();
 		if(obj.has("separate files"))
 			this.outputSeperateFiles = obj.get("separate files").getAsBoolean();
-		if(obj.has("force modded colors"))
-			this.forceModdedColor = obj.get("force modded colors").getAsBoolean();
+		if(obj.has("enable light ASM"))
+			this.lightASM = obj.get("lightASM").getAsBoolean();
+		if(obj.has("asm blacklist")){
+			final JsonArray array = obj.get("asm blacklist").getAsJsonArray();
+			this.asmBlacklist = new String[array.size()];
+			for(int i = 0; i < this.asmBlacklist.length; i++)
+				this.asmBlacklist[i] = array.get(i).getAsString();
+		}
 		if(obj.has("include")){
 			final JsonElement element = obj.get("include");
 			if(element.isJsonArray()){

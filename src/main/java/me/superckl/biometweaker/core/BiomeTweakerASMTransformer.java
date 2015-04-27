@@ -13,7 +13,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
@@ -30,7 +29,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	@Override
 	public byte[] transform(final String name, final String transformedName,
 			final byte[] basicClass) {
-		if(basicClass == null)
+		if((basicClass == null) || (CollectionHelper.find(transformedName, Config.INSTANCE.getAsmBlacklist()) != -1))
 			return basicClass;
 		int index = -1;
 		final ClassReader reader = new ClassReader(basicClass);
@@ -38,15 +37,15 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		reader.accept(cNode, 0);
 		if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_biomeGenBase)) != -1){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
-			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
+			cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
-			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null));
+			cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);
-			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1));
+			cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
-			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1));
+			cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
-			cNode.fields.add(new FieldNode(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1));
+			cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
 			int fixed = 5;
 			for(final MethodNode node:cNode.methods)
@@ -128,7 +127,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
-		}else if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_blockOldLeaf)) != -1){
+		}else if(!Config.INSTANCE.isLightASM() && ((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_blockOldLeaf)) != -1)){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			boolean fixed = false;
 			for(final MethodNode mNode:cNode.methods)
@@ -156,7 +155,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			if(!fixed)
 				ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"!  If this is a server, you're fine. Otherwise ye who continue now abandon all hope.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
-		}else if(Config.INSTANCE.isForceModdedColor() && ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+		}else if(!Config.INSTANCE.isLightASM() && ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			for(final MethodNode mNode:cNode.methods)
 				if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeGrassColor)) != -1) && mNode.desc.equals("(III)I")){
 					boolean shouldCont = false;

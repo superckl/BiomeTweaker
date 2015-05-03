@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.List;
 
+import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.util.ParameterType;
 import net.minecraft.block.Block;
@@ -207,6 +208,28 @@ public class BiomeHelper {
 			BiomeHelper.waterColor.set(biome, toSet);
 		}else if(prop.equals("topBlockMeta"))
 			biome.field_150604_aj = value.getAsInt();
+		else if(prop.equals("waterliliesPerChunk"))
+			BiomeEventHandler.getWaterlilyPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("treesPerChunk"))
+			BiomeEventHandler.getTreesPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("flowersPerChunk"))
+			BiomeEventHandler.getFlowersPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("grassPerChunk"))
+			BiomeEventHandler.getGrassPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("deadbushesPerChunk"))
+			BiomeEventHandler.getDeadBushPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("muchroomsPerChunk"))
+			BiomeEventHandler.getMushroomPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("reedsPerChunk"))
+			BiomeEventHandler.getReedsPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("cactiPerChunk"))
+			BiomeEventHandler.getCactiPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("sandPerChunk"))
+			BiomeEventHandler.getSandPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("claylilyPerChunk"))
+			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("bigMushroomsPerChunk"))
+			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());
 	}
 
 	private static void checkFields(){

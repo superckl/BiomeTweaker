@@ -13,6 +13,9 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import net.minecraftforge.common.BiomeManager;
+import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
@@ -228,6 +231,15 @@ public class BiomeHelper {
 			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
 			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("genWeight")){
+			final int weight  = value.getAsInt();
+			for(final BiomeType type:BiomeType.values()){
+				final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
+				for(final BiomeEntry entry:entries)
+					if(entry.biome.biomeID == biome.biomeID)
+						entry.itemWeight = weight;
+			}
+		}
 	}
 
 	private static void checkFields(){

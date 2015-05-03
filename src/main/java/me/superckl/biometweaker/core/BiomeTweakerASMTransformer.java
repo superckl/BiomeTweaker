@@ -31,11 +31,10 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			final byte[] basicClass) {
 		if((basicClass == null) || (CollectionHelper.find(transformedName, Config.INSTANCE.getAsmBlacklist()) != -1))
 			return basicClass;
-		int index = -1;
 		final ClassReader reader = new ClassReader(basicClass);
 		final ClassNode cNode = new ClassNode();
 		reader.accept(cNode, 0);
-		if((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_biomeGenBase)) != -1){
+		if(name.equals(ASMNameHelper.class_biomeGenBase.get())){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
@@ -49,11 +48,11 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
 			int fixed = 5;
 			for(final MethodNode node:cNode.methods)
-				if((CollectionHelper.find(node.name, BiomeTweakerASMTransformer.method_genBiomeTerrain) != -1) && (CollectionHelper.find(node.desc, BiomeTweakerASMTransformer.desc_genBiomeTerrain) != -1)){
+				if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 					for(AbstractInsnNode aNode:node.instructions.toArray())
 						if(aNode instanceof FieldInsnNode){
 							final FieldInsnNode vNode = (FieldInsnNode) aNode;
-							if(CollectionHelper.find(vNode.name, BiomeTweakerASMTransformer.field_stone) != -1){
+							if(vNode.name.equals(ASMNameHelper.field_stone.get())){
 								aNode = vNode.getNext();
 								if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 12)){
 									final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
@@ -62,7 +61,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 									fixed++;
 									ModBiomeTweakerCore.logger.debug("Successfully redirected 'block1' to 'actualFillerBlock'");
 								}
-							}else if(CollectionHelper.find(vNode.name, BiomeTweakerASMTransformer.field_water) != -1){
+							}else if(vNode.name.equals(ASMNameHelper.field_water.get())){
 								aNode = vNode.getNext();
 								if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 10)){
 									final InsnList list = this.createGenBaseBlockFieldAccess("liquidFillerBlock");
@@ -76,7 +75,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 							final VarInsnNode vNode = (VarInsnNode) aNode;
 							if((vNode.var == 20) && (vNode.getOpcode() == Opcodes.ALOAD)){
 								aNode = vNode.getNext();
-								if((aNode instanceof FieldInsnNode) && (CollectionHelper.find(((FieldInsnNode)aNode).name, BiomeTweakerASMTransformer.field_stone) != -1)){
+								if((aNode instanceof FieldInsnNode) && ((FieldInsnNode)aNode).name.equals(ASMNameHelper.field_stone.get())){
 									final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
 									node.instructions.insertBefore(aNode, list);
 									node.instructions.remove(aNode);
@@ -88,14 +87,14 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 				}else if(node.name.equals("<init>") && node.desc.equals("(IZ)V")){
 					InsnList list = new InsnList();
 					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", BiomeTweakerASMTransformer.field_stone[index], "Lnet/minecraft/block/Block;"));
+					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
 					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
 					node.instructions.insert(list);
 					ModBiomeTweakerCore.logger.debug("Successfully inserted Stone into 'actualFillerBlock'");
 					fixed++;
 					list = new InsnList();
 					list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", BiomeTweakerASMTransformer.field_water[index], "Lnet/minecraft/block/Block;"));
+					list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_water.get(), "Lnet/minecraft/block/Block;"));
 					list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "liquidFillerBlock", "Lnet/minecraft/block/Block;"));
 					node.instructions.insert(list);
 					ModBiomeTweakerCore.logger.debug("Successfully inserted Water into 'liquidFillerBlock'");
@@ -127,16 +126,16 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
-		}else if(!Config.INSTANCE.isLightASM() && ((index = CollectionHelper.find(name, BiomeTweakerASMTransformer.class_blockOldLeaf)) != -1)){
+		}else if(!Config.INSTANCE.isLightASM() && name.equals(ASMNameHelper.class_blockOldLeaf.get())){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			boolean fixed = false;
 			for(final MethodNode mNode:cNode.methods)
-				if(CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_colorMultiplier) != -1){
+				if(mNode.name.equals(ASMNameHelper.method_colorMultiplier.get())){
 					final InsnList list = new InsnList();
 					list.add(new VarInsnNode(Opcodes.ALOAD, 1));
 					list.add(new VarInsnNode(Opcodes.ILOAD, 2));
 					list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", BiomeTweakerASMTransformer.method_getBiomeGenForCoords[index], "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
 					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
 					list.add(new InsnNode(Opcodes.ICONST_M1));
 					final LabelNode label = new LabelNode(new Label());
@@ -144,7 +143,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					list.add(new VarInsnNode(Opcodes.ALOAD, 1));
 					list.add(new VarInsnNode(Opcodes.ILOAD, 2));
 					list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", BiomeTweakerASMTransformer.method_getBiomeGenForCoords[index], "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+					list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
 					list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
 					list.add(new InsnNode(Opcodes.IRETURN));
 					list.add(label);
@@ -157,7 +156,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
 		}else if(!Config.INSTANCE.isLightASM() && ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			for(final MethodNode mNode:cNode.methods)
-				if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeGrassColor)) != -1) && mNode.desc.equals("(III)I")){
+				if(mNode.name.equals(ASMNameHelper.method_getBiomeGrassColor.get()) && mNode.desc.equals("(III)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
@@ -176,7 +175,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(((index = CollectionHelper.find(mNode.name, BiomeTweakerASMTransformer.method_getBiomeFoliageColor)) != -1) && mNode.desc.equals("(III)I")){
+				}else if(mNode.name.equals(ASMNameHelper.method_getBiomeFoliageColor.get()) && mNode.desc.equals("(III)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
@@ -203,8 +202,34 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
+				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ASMNameHelper.method_genTerrainBlocks.get()) && mNode.desc.equals(ASMNameHelper.desc_genTerrainBlocks.get())){
+					AbstractInsnNode node = ASMHelper.findFirstInstruction(mNode);
+					AbstractInsnNode nextNode = node;
+					int removed = 0;
+					do{
+						nextNode = node.getNext();
+						if((node instanceof FieldInsnNode) == false)
+							continue;
+						final FieldInsnNode fNode = (FieldInsnNode) node;
+						if((fNode.name.equals(ASMNameHelper.field_topBlock.get()) || fNode.name.equals(ASMNameHelper.field_fillerBlock.get())) && fNode.desc.equals("Lnet/minecraft/block/Block;")){
+							AbstractInsnNode prevNode = ASMHelper.findPreviousInstruction(fNode);
+							if((prevNode != null) && (prevNode instanceof FieldInsnNode) && (prevNode.getOpcode() == Opcodes.GETSTATIC)){
+								final FieldInsnNode prevFNode = (FieldInsnNode) prevNode;
+								if(prevFNode.owner.equals("net/minecraft/init/Blocks")){
+									prevNode = ASMHelper.findPreviousInstruction(prevFNode);
+									if((prevNode != null) && (prevNode instanceof VarInsnNode) && (prevNode.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode)prevNode).var == 0)){
+										ASMHelper.removeFromInsnListUntil(mNode.instructions, prevNode, nextNode);
+										removed++;
+									}
+								}
+							}
+						}
+					}while((node = ASMHelper.findNextInstructionWithOpcode(nextNode, Opcodes.PUTFIELD)) != null);
+					if(removed > 0){
+						ModBiomeTweakerCore.logger.warn("Found Biome subclass "+transformedName+" that was setting topBlock or fillerBlock in genTerrainBlocks! This is bad practice and breaks functionality in BiomeTweaker! "+removed+" items were removed. If this is not a vanilla biome, please let me (superckl) know.");
+						ModBiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");
+					}
 				}
-			//TODO force water color
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);
 		}
 		return basicClass;
@@ -224,20 +249,6 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 				list.add(instructions.get(i));
 		return list;
 	}
-
-	public static final String[] class_biomeGenBase = {"net.minecraft.world.biome.BiomeGenBase", "ahu"};
-	public static final String[] class_blockOldLeaf = {"net.minecraft.block.BlockOldLeaf", "aml"};
-
-	public static final String[] method_genBiomeTerrain = {"genBiomeTerrain", "func_150560_b"};
-	public static final String[] method_getBiomeGrassColor = {"getBiomeGrassColor", "func_150558_b"};
-	public static final String[] method_getBiomeFoliageColor = {"getBiomeFoliageColor", "func_150571_c"};
-	public static final String[] method_colorMultiplier = {"colorMultiplier", "func_149720_d"};
-	public static final String[] method_getBiomeGenForCoords = {"getBiomeGenForCoords","func_72807_a"};
-
-	public static final String[] field_stone = {"stone", "field_150348_b"};
-	public static final String[] field_water = {"water", "field_150355_j"};
-
-	public static final String[] desc_genBiomeTerrain = {"(Lnet/minecraft/world/World;Ljava/util/Random;[Lnet/minecraft/block/Block;[BIID)V", "(Lahb;Ljava/util/Random;[Laji;[BIID)V"};
 
 
 }

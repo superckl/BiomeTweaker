@@ -28,6 +28,7 @@ public class Config {
 	private boolean outputSeperateFiles = true;
 	private boolean lightASM = false;
 	private String[] asmBlacklist = new String[0];
+	private boolean removeLateAssignments = false;
 	private boolean init;
 	private Config() {}
 
@@ -47,6 +48,8 @@ public class Config {
 			for(int i = 0; i < this.asmBlacklist.length; i++)
 				this.asmBlacklist[i] = array.get(i).getAsString();
 		}
+		if(obj.has("remove late block assignments"))
+			this.removeLateAssignments = obj.get("remove late block assignments").getAsBoolean();
 		if(obj.has("include")){
 			final JsonElement element = obj.get("include");
 			if(element.isJsonArray()){

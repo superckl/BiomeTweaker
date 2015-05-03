@@ -7,6 +7,7 @@ import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.util.BiomeHelper;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -26,6 +27,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 			final BiomeGenBase gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
+			LogHelper.info("Setting "+this.key+" to "+this.value.getAsString()+" for "+gen.biomeID);
 			BiomeHelper.setBiomeProperty(this.key, this.value, gen);
 			Config.INSTANCE.onTweak(gen.biomeID);
 		}

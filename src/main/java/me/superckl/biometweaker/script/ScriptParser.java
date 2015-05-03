@@ -45,7 +45,7 @@ public class ScriptParser {
 			ScriptParser.validObjects.put("forBiomesOfTypes", listing);
 
 			listing = new ScriptListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getSimpleWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomes", listing);
 
 			listing = new ScriptListing<ScriptObject>();

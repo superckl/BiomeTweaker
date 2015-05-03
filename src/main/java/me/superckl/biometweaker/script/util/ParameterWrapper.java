@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
+import me.superckl.biometweaker.script.pack.AllBiomesPackage;
 
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.util.Pair;
@@ -19,6 +20,8 @@ public class ParameterWrapper {
 	private final boolean varArgs;
 
 	public Pair<Object[], String[]> parseArgs(String ... args){
+		if(this.type == ParameterType.ALL_BIOMES_PACKAGE)
+			return Pair.of(new Object[]{new AllBiomesPackage()}, new String[0]);
 		final List<Object> parsed = Lists.newArrayList();
 		for(int i = 0; ; i++){
 			Object obj;

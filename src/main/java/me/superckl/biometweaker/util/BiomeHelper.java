@@ -129,8 +129,6 @@ public class BiomeHelper {
 		return obj;
 	}
 
-
-
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		BiomeHelper.checkFields();
 		if(prop.equals("name")){

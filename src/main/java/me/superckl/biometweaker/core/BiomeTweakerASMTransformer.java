@@ -34,7 +34,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 		final ClassReader reader = new ClassReader(basicClass);
 		final ClassNode cNode = new ClassNode();
 		reader.accept(cNode, 0);
-		if(name.equals(ASMNameHelper.class_biomeGenBase.get())){
+		if(transformedName.equals(ASMNameHelper.class_biomeGenBase.get())){
 			ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 			cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);

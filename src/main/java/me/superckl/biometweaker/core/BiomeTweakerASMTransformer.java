@@ -40,6 +40,10 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);
+			cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlockMeta", "I", "I", null);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlockMeta' field into "+transformedName);
+			cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlockMeta", "I", "I", null);
+			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlockMeta' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);

@@ -27,6 +27,8 @@ public class BiomeEventHandler {
 
 	private Field actualFillerBlock;
 	private Field liquidFillerBlock;
+	private static Field actualFillerBlockMeta;
+	private static Field liquidFillerBlockMeta;
 	private Field grassColor;
 	private Field foliageColor;
 	private Field waterColor;
@@ -43,12 +45,19 @@ public class BiomeEventHandler {
 				this.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
 			if(this.liquidFillerBlock == null)
 				this.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");
+			if(BiomeEventHandler.actualFillerBlockMeta == null)
+				BiomeEventHandler.actualFillerBlockMeta = BiomeGenBase.class.getDeclaredField("actualFillerBlockMeta");
+			if(BiomeEventHandler.liquidFillerBlockMeta == null)
+				BiomeEventHandler.liquidFillerBlockMeta = BiomeGenBase.class.getDeclaredField("liquidFillerBlockMeta");
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
+					//TODO actual and liquid default to null. Can specify what block to replace with each.
 					final BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
 					final Block actualS = (Block) this.actualFillerBlock.get(biomegenbase);
 					final Block actualL = (Block) this.liquidFillerBlock.get(biomegenbase);
+					final int sM = BiomeEventHandler.actualFillerBlockMeta.getInt(biomegenbase) & 255;
+					final int lM = BiomeEventHandler.liquidFillerBlockMeta.getInt(biomegenbase) & 255;
 					if((actualS == Blocks.stone) && (actualL == Blocks.water))
 						continue;
 					final int i1 = k;
@@ -58,10 +67,15 @@ public class BiomeEventHandler {
 					{
 						final int i2 = (((j1 * 16) + i1) * k1) + l1;
 						final Block block2 = e.blockArray[i2];
-						if(block2 == Blocks.stone)
+						if(block2 == Blocks.stone){
 							e.blockArray[i2] = actualS;
-						else if(block2 == Blocks.water)
+							if(e.metaArray != null)
+								e.metaArray[i2] = (byte) sM;
+						}else if(block2 == Blocks.water){
 							e.blockArray[i2] = actualL;
+							if(e.metaArray != null)
+								e.metaArray[i2] = (byte) lM;
+						}
 					}
 				}
 		} catch (final Exception e1) {

@@ -26,6 +26,8 @@ public class BiomeHelper {
 
 	private static Field actualFillerBlock;
 	private static Field liquidFillerBlock;
+	private static Field actualFillerBlockMeta;
+	private static Field liquidFillerBlockMeta;
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
@@ -189,7 +191,12 @@ public class BiomeHelper {
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
-		}else if(prop.equals("grassColor")){
+
+		}else if(prop.equals("actualFillerBlockMeta"))
+			BiomeHelper.actualFillerBlockMeta.setInt(biome, value.getAsInt());
+		else if(prop.equals("liquidFillerBlockMeta"))
+			BiomeHelper.liquidFillerBlockMeta.setInt(biome, value.getAsInt());
+		else if(prop.equals("grassColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.grassColor.set(biome, toSet);
 		}else if(prop.equals("foliageColor")){
@@ -198,7 +205,8 @@ public class BiomeHelper {
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.waterColor.set(biome, toSet);
-		}
+		}else if(prop.equals("topBlockMeta"))
+			biome.field_150604_aj = value.getAsInt();
 	}
 
 	private static void checkFields(){
@@ -207,6 +215,10 @@ public class BiomeHelper {
 				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
 			if(BiomeHelper.liquidFillerBlock == null)
 				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");
+			if(BiomeHelper.actualFillerBlockMeta == null)
+				BiomeHelper.actualFillerBlockMeta = BiomeGenBase.class.getDeclaredField("actualFillerBlockMeta");
+			if(BiomeHelper.liquidFillerBlockMeta == null)
+				BiomeHelper.liquidFillerBlockMeta = BiomeGenBase.class.getDeclaredField("liquidFillerBlockMeta");
 			if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)

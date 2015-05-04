@@ -39,6 +39,8 @@ public class BiomeHelper {
 	private static Field biomeList;
 	private static Field typeInfoList;
 	private static Field typeList;
+	private static Field biomes;
+	private static Field isModded;
 
 	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
 		BiomeHelper.checkFields();
@@ -239,6 +241,7 @@ public class BiomeHelper {
 					if(entry.biome.biomeID == biome.biomeID)
 						entry.itemWeight = weight;
 			}
+			BiomeHelper.modTypeLists();
 		}
 	}
 
@@ -265,6 +268,10 @@ public class BiomeHelper {
 			if(BiomeHelper.typeInfoList == null){
 				BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
 				BiomeHelper.typeInfoList.setAccessible(true);
+			}
+			if(BiomeHelper.biomes == null){
+				BiomeHelper.biomes = BiomeManager.class.getDeclaredField("biomes");
+				BiomeHelper.biomes.setAccessible(true);
 			}
 		}catch(final Exception e){
 			LogHelper.info("Failed to find inserted fields!");
@@ -335,6 +342,26 @@ public class BiomeHelper {
 		for(final BiomeDictionary.Type type : set)
 			listArray[type.ordinal()].remove(gen);
 		set.clear();
+	}
+
+	private static boolean hasModded;
+
+	public static void modTypeLists() throws Exception{
+		BiomeHelper.checkFields();
+		if(BiomeHelper.hasModded)
+			return;
+		//LogHelper.info("Setting TrackedLists to modded...");
+		final Object array = BiomeHelper.biomes.get(null);
+		final int length = Array.getLength(array);
+		for(int i = 0; i < length; i++){
+			final Object list = Array.get(array, i);
+			if(BiomeHelper.isModded == null){
+				BiomeHelper.isModded = list.getClass().getDeclaredField("isModded");
+				BiomeHelper.isModded.setAccessible(true);
+			}
+			BiomeHelper.isModded.setBoolean(list, true);
+		}
+		BiomeHelper.hasModded = true;
 	}
 
 }

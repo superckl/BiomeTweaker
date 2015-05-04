@@ -27,7 +27,6 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 			final BiomeGenBase gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
-			LogHelper.info("Setting "+this.key+" to "+this.value.getAsString()+" for "+gen.biomeID);
 			BiomeHelper.setBiomeProperty(this.key, this.value, gen);
 			Config.INSTANCE.onTweak(gen.biomeID);
 		}

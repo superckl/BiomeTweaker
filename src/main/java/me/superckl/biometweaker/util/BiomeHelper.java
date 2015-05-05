@@ -221,7 +221,7 @@ public class BiomeHelper {
 			BiomeEventHandler.getGrassPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("deadbushesPerChunk"))
 			BiomeEventHandler.getDeadBushPerChunk().put(biome.biomeID, value.getAsInt());
-		else if(prop.equals("muchroomsPerChunk"))
+		else if(prop.equals("mushroomsPerChunk"))
 			BiomeEventHandler.getMushroomPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("reedsPerChunk"))
 			BiomeEventHandler.getReedsPerChunk().put(biome.biomeID, value.getAsInt());
@@ -229,7 +229,7 @@ public class BiomeHelper {
 			BiomeEventHandler.getCactiPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("sandPerChunk"))
 			BiomeEventHandler.getSandPerChunk().put(biome.biomeID, value.getAsInt());
-		else if(prop.equals("claylilyPerChunk"))
+		else if(prop.equals("clayPerChunk"))
 			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
 			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());

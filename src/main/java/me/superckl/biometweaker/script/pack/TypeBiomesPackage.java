@@ -10,17 +10,16 @@ import com.google.common.collect.Lists;
 
 public class TypeBiomesPackage implements IBiomePackage{
 
-	private final BiomeDictionary.Type[] types;
+	private final String[] sTypes;
+	private BiomeDictionary.Type[] types;
 
 	public TypeBiomesPackage(final String ... types) {
-		final BiomeDictionary.Type[] bTypes = new BiomeDictionary.Type[types.length];
-		for(int i = 0; i < types.length; i++)
-			bTypes[i] = BiomeDictionary.Type.getType(types[i]);
-		this.types = bTypes;
+		this.sTypes = types;
 	}
 
 	@Override
 	public Iterator<BiomeGenBase> getIterator() {
+		this.checkTypes();
 		final List<BiomeGenBase> list = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
 			final BiomeGenBase[] gens = BiomeDictionary.getBiomesForType(type);
@@ -33,6 +32,7 @@ public class TypeBiomesPackage implements IBiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
+		this.checkTypes();
 		final List<Integer> ints = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
 			final BiomeGenBase[] gens = BiomeDictionary.getBiomesForType(type);
@@ -45,6 +45,15 @@ public class TypeBiomesPackage implements IBiomePackage{
 	@Override
 	public boolean supportsEarlyRawIds() {
 		return false;
+	}
+
+	private void checkTypes(){
+		if(this.types == null){
+			final BiomeDictionary.Type[] bTypes = new BiomeDictionary.Type[this.sTypes.length];
+			for(int i = 0; i < this.sTypes.length; i++)
+				bTypes[i] = BiomeDictionary.Type.getType(this.sTypes[i]);
+			this.types = bTypes;
+		}
 	}
 
 }

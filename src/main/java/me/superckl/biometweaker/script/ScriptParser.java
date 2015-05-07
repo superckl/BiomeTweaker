@@ -137,8 +137,8 @@ public class ScriptParser {
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
 					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new MergedBiomesPackage(args)));
 				}
-				ModBiomeTweakerCore.logger.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 			}
+			ModBiomeTweakerCore.logger.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 		}
 		return null;
 	}

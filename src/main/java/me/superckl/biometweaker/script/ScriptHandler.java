@@ -33,7 +33,7 @@ public class ScriptHandler {
 
 		while(this.it.hasNext())
 			try {
-				final String s = this.it.next().trim();
+				final String s = this.it.next().trim().split("#", 2)[0]; //Cuts out comments at the end of a line
 				if(s.contains("=")){
 					final Map<String, Object> map = ScriptParser.parseAssignment(s, this);
 					if(map == null)

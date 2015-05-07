@@ -104,7 +104,7 @@ public class ScriptParser {
 		return split;
 	}
 
-	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler){
+	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler) throws Exception{
 		final String[] split = script.split("=");
 		if(split.length != 2){
 			ModBiomeTweakerCore.logger.error("Failed to parse object assignment: "+script);
@@ -113,7 +113,7 @@ public class ScriptParser {
 		final String var = split[0].trim();
 		final String assign = split[1].trim();
 		if(assign.startsWith("\"") && assign.endsWith("\"")){
-			final String shortcut = (String) ParameterType.STRING.tryParse(assign);
+			final String shortcut = (String) ParameterType.STRING.tryParse(assign, handler);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
 		}else{
 			final String called = ScriptParser.getCommandCalled(assign);
@@ -126,7 +126,7 @@ public class ScriptParser {
 					final Iterator<ParameterWrapper> it = params.iterator();
 					while(it.hasNext()){
 						final ParameterWrapper wrap = it.next();
-						final Pair<Object[], String[]> parsed = wrap.parseArgs(arguments);
+						final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
 						Collections.addAll(objs, parsed.first());
 						arguments = parsed.second();
 						it.remove();

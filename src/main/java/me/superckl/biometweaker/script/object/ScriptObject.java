@@ -49,7 +49,7 @@ public abstract class ScriptObject {
 			final Iterator<ParameterWrapper> it = params.iterator();
 			while(it.hasNext()){
 				final ParameterWrapper wrap = it.next();
-				final Pair<Object[], String[]> parsed = wrap.parseArgs(arguments);
+				final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
 				Collections.addAll(objs, parsed.first());
 				arguments = parsed.second();
 				it.remove();

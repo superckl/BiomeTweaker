@@ -34,11 +34,11 @@ public enum ParameterType {
 		this.varArgsWrapper = ParameterWrapper.builder().type(this).varArgs(true).build();
 	}
 
-	public Object tryParse(final String parameter){
+	public Object tryParse(final String parameter) throws Exception{
 		return this.tryParse(parameter, null);
 	}
 
-	public Object tryParse(final String parameter, final ScriptHandler handler){
+	public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception{
 		switch(this){
 		case FLOAT:{
 			return Floats.tryParse(parameter);
@@ -105,9 +105,9 @@ public enum ParameterType {
 				array[i] = ints.get(i);
 			return new BasicBiomesPackage(array);
 		}case TYPE_BIOMES_PACKAGE: {
-			return new TypeBiomesPackage((String) ParameterType.STRING.tryParse(parameter));
+			return new TypeBiomesPackage((String) ParameterType.STRING.tryParse(parameter, handler));
 		}case ALL_BUT_BIOMES_PACKAGE: {
-			return new AllButBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter));
+			return new AllButBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
 		}case ALL_BIOMES_PACKAGE: {
 			return new AllBiomesPackage();
 		}

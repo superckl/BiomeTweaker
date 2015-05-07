@@ -31,31 +31,35 @@ public class ScriptHandler {
 		if(!this.it.hasNext())
 			return;
 
-		while(this.it.hasNext()){
-			final String s = this.it.next().trim();
-			if(s.contains("=")){
-				final Map<String, Object> map = ScriptParser.parseAssignment(s, this);
-				if(map == null)
-					continue;
-				for(final Entry<String, Object> entry:map.entrySet())
-					if(entry.getValue() instanceof String)
-						this.shortcuts.put(entry.getKey(), (String) entry.getValue());
-					else if(entry.getValue() instanceof ScriptObject)
-						this.objects.put(entry.getKey(), (ScriptObject) entry.getValue());
-			}else if(s.contains(".")){
-				final String[] split = s.split("[.]", 2);
-				if(split.length != 2){
-					ModBiomeTweakerCore.logger.error("Found operator '.' in invalid context: "+s);
-					continue;
+		while(this.it.hasNext())
+			try {
+				final String s = this.it.next().trim();
+				if(s.contains("=")){
+					final Map<String, Object> map = ScriptParser.parseAssignment(s, this);
+					if(map == null)
+						continue;
+					for(final Entry<String, Object> entry:map.entrySet())
+						if(entry.getValue() instanceof String)
+							this.shortcuts.put(entry.getKey(), (String) entry.getValue());
+						else if(entry.getValue() instanceof ScriptObject)
+							this.objects.put(entry.getKey(), (ScriptObject) entry.getValue());
+				}else if(s.contains(".")){
+					final String[] split = s.split("[.]", 2);
+					if(split.length != 2){
+						ModBiomeTweakerCore.logger.error("Found operator '.' in invalid context: "+s);
+						continue;
+					}
+					if(!this.objects.containsKey(split[0])){
+						ModBiomeTweakerCore.logger.error("Object not found: "+split[0]);
+						continue;
+					}
+					final ScriptObject obj = this.objects.get(split[0]);
+					obj.handleCall(split[1], this);
 				}
-				if(!this.objects.containsKey(split[0])){
-					ModBiomeTweakerCore.logger.error("Object not found: "+split[0]);
-					continue;
-				}
-				final ScriptObject obj = this.objects.get(split[0]);
-				obj.handleCall(split[1], this);
+			} catch (final Exception e) {
+				ModBiomeTweakerCore.logger.error("Failed to handle a script line!");
+				e.printStackTrace();
 			}
-		}
 	}
 
 }

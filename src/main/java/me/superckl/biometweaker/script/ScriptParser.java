@@ -42,15 +42,15 @@ public class ScriptParser {
 			ScriptParser.validObjects.put("forBiomes", listing);
 
 			listing = new ScriptListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.TYPE_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(ParameterType.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forBiomesOfTypes", listing);
 
 			listing = new ScriptListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomes", listing);
 
 			listing = new ScriptListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomesExcept", listing);
 
 		}catch(final Exception e){
@@ -136,7 +136,7 @@ public class ScriptParser {
 						continue;
 					final IBiomePackage[] args = new IBiomePackage[objs.size()];
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
-					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(new MergedBiomesPackage(args)));
+					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)));
 				}
 			}
 			ModBiomeTweakerCore.logger.error("Failed to find meaning in object assignment "+script+". It will be ignored.");

@@ -14,7 +14,5 @@ public interface IBiomePackage{
 	public Iterator<BiomeGenBase> getIterator();
 	public boolean supportsEarlyRawIds();
 	public List<Integer> getRawIds();
-	public List<Integer> getMergeIDExclusions();
-	public Iterator<BiomeGenBase> getExclusionsIterator();
 
 }

@@ -24,14 +24,21 @@ import com.google.gson.JsonPrimitive;
 @Getter
 public enum ParameterType {
 
-	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE, ALL_BIOMES_PACKAGE, ALL_BUT_BIOMES_PACKAGE;
+	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE(new TypesPackParameterWrapper()),
+	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper());
 
 	private final ParameterWrapper simpleWrapper;
 	private final ParameterWrapper varArgsWrapper;
+	private ParameterWrapper specialWrapper = null;
 
 	private ParameterType() {
 		this.simpleWrapper = ParameterWrapper.builder().type(this).minNum(1).maxNum(1).build();
 		this.varArgsWrapper = ParameterWrapper.builder().type(this).varArgs(true).build();
+	}
+
+	private ParameterType(final ParameterWrapper wrapper){
+		this();
+		this.specialWrapper = wrapper;
 	}
 
 	public Object tryParse(final String parameter) throws Exception{
@@ -115,6 +122,10 @@ public enum ParameterType {
 			break;
 		}
 		return null;
+	}
+
+	public boolean hasSpecialWrapper(){
+		return this.specialWrapper != null;
 	}
 
 }

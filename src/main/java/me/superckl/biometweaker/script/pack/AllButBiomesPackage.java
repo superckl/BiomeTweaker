@@ -40,14 +40,4 @@ public class AllButBiomesPackage implements IBiomePackage{
 		return false;
 	}
 
-	@Override
-	public List<Integer> getMergeIDExclusions() {
-		return this.exclusions.getRawIds();
-	}
-
-	@Override
-	public Iterator<BiomeGenBase> getExclusionsIterator() {
-		return this.exclusions.getIterator();
-	}
-
 }

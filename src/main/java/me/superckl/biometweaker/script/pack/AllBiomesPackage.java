@@ -1,10 +1,12 @@
 package me.superckl.biometweaker.script.pack;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.world.biome.BiomeGenBase;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 public class AllBiomesPackage implements IBiomePackage{
@@ -30,6 +32,16 @@ public class AllBiomesPackage implements IBiomePackage{
 	@Override
 	public boolean supportsEarlyRawIds() {
 		return false;
+	}
+
+	@Override
+	public List<Integer> getMergeIDExclusions() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public Iterator<BiomeGenBase> getExclusionsIterator() {
+		return Iterators.emptyIterator();
 	}
 
 }

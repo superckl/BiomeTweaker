@@ -22,6 +22,10 @@ public class MergedBiomesPackage implements IBiomePackage{
 		final List<BiomeGenBase> gens = Lists.newArrayList();
 		for(final IBiomePackage pack:this.packs)
 			Iterators.addAll(gens, pack.getIterator());
+		final List<BiomeGenBase> exc = Lists.newArrayList();
+		for(final IBiomePackage pack:this.packs)
+			Iterators.addAll(exc, pack.getExclusionsIterator());
+		gens.removeAll(exc);
 		return gens.iterator();
 	}
 
@@ -38,7 +42,19 @@ public class MergedBiomesPackage implements IBiomePackage{
 		final List<Integer> ints = Lists.newArrayList();
 		for(final IBiomePackage pack:this.packs)
 			ints.addAll(pack.getRawIds());
+		for(final IBiomePackage pack:this.packs)
+			ints.removeAll(pack.getMergeIDExclusions());
 		return ints;
+	}
+
+	@Override
+	public List<Integer> getMergeIDExclusions() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public Iterator<BiomeGenBase> getExclusionsIterator() {
+		return Iterators.emptyIterator();
 	}
 
 }

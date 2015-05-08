@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.pack;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import me.superckl.biometweaker.util.CollectionHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 public class BasicBiomesPackage implements IBiomePackage{
@@ -43,6 +45,14 @@ public class BasicBiomesPackage implements IBiomePackage{
 		return true;
 	}
 
+	@Override
+	public List<Integer> getMergeIDExclusions() {
+		return Collections.EMPTY_LIST;
+	}
 
+	@Override
+	public Iterator<BiomeGenBase> getExclusionsIterator() {
+		return Iterators.emptyIterator();
+	}
 
 }

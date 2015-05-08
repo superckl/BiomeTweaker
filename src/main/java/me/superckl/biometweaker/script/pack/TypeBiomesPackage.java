@@ -1,11 +1,13 @@
 package me.superckl.biometweaker.script.pack;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 public class TypeBiomesPackage implements IBiomePackage{
@@ -54,6 +56,16 @@ public class TypeBiomesPackage implements IBiomePackage{
 				bTypes[i] = BiomeDictionary.Type.getType(this.sTypes[i]);
 			this.types = bTypes;
 		}
+	}
+
+	@Override
+	public List<Integer> getMergeIDExclusions() {
+		return Collections.EMPTY_LIST;
+	}
+
+	@Override
+	public Iterator<BiomeGenBase> getExclusionsIterator() {
+		return Iterators.emptyIterator();
 	}
 
 }

@@ -11,6 +11,7 @@ import me.superckl.biometweaker.script.util.ParameterType;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.WorldChunkManager;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
@@ -247,6 +248,14 @@ public class BiomeHelper {
 				BiomeManager.addVillageBiome(biome, true);
 			else
 				BiomeManager.removeVillageBiome(biome);
+		else if(prop.equals("isSpawnBiome"))
+			if(value.getAsBoolean())
+				BiomeManager.addSpawnBiome(biome);
+			else{
+				BiomeManager.removeSpawnBiome(biome);
+				if(WorldChunkManager.allowedBiomes.size() == 0)
+					LogHelper.warn("Upon removal of biome "+biome.biomeID+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
+			}
 	}
 
 	private static void checkFields(){

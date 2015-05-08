@@ -25,9 +25,10 @@ import me.superckl.biometweaker.script.util.ParameterWrapper;
 import me.superckl.biometweaker.script.util.ScriptListing;
 import me.superckl.biometweaker.util.CollectionHelper;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.realmsclient.util.Pair;
 
 public class ScriptParser {
 
@@ -127,8 +128,8 @@ public class ScriptParser {
 					while(it.hasNext()){
 						final ParameterWrapper wrap = it.next();
 						final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-						Collections.addAll(objs, parsed.first());
-						arguments = parsed.second();
+						Collections.addAll(objs, parsed.getKey());
+						arguments = parsed.getValue();
 						it.remove();
 					}
 					if(!params.isEmpty() || (arguments.length != 0))

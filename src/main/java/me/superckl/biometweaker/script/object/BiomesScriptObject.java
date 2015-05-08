@@ -29,9 +29,10 @@ import me.superckl.biometweaker.script.util.ParameterWrapper;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
 import me.superckl.biometweaker.util.CollectionHelper;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
 import com.google.gson.JsonElement;
-import com.mojang.realmsclient.util.Pair;
 
 public class BiomesScriptObject extends ScriptObject{
 
@@ -59,8 +60,8 @@ public class BiomesScriptObject extends ScriptObject{
 			while(it.hasNext()){
 				final ParameterWrapper wrap = it.next();
 				final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-				Collections.addAll(objs, parsed.first());
-				arguments = parsed.second();
+				Collections.addAll(objs, parsed.getKey());
+				arguments = parsed.getValue();
 				it.remove();
 			}
 			if(!params.isEmpty() || (arguments.length != 0))

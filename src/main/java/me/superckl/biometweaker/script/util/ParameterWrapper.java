@@ -8,8 +8,9 @@ import lombok.Getter;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.pack.AllBiomesPackage;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.google.common.collect.Lists;
-import com.mojang.realmsclient.util.Pair;
 
 @Getter
 @Builder

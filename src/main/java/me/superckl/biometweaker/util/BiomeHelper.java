@@ -242,7 +242,11 @@ public class BiomeHelper {
 						entry.itemWeight = weight;
 			}
 			BiomeHelper.modTypeLists();
-		}
+		}else if(prop.equals("genVillages"))
+			if(value.getAsBoolean())
+				BiomeManager.addVillageBiome(biome, true);
+			else
+				BiomeManager.removeVillageBiome(biome);
 	}
 
 	private static void checkFields(){

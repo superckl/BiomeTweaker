@@ -31,6 +31,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -38,7 +39,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*")
+@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT)
 public class BiomeTweaker {
 
 	@Instance(ModData.MOD_ID)
@@ -49,6 +50,12 @@ public class BiomeTweaker {
 	@Getter
 	private static IProxy proxy;
 
+	@EventHandler
+	public void onFingerprintViolation(FMLFingerprintViolationEvent e){
+		LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
+		LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
+	}
+	
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
 		BiomeTweaker.proxy.registerHandlers();

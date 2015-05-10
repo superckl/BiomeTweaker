@@ -46,16 +46,20 @@ public class BiomeTweaker {
 	@Getter
 	private static BiomeTweaker instance;
 
+	@Getter
+	private boolean signed = true;
+
 	@SidedProxy(clientSide=ModData.CLIENT_PROXY, serverSide=ModData.SERVER_PROXY)
 	@Getter
 	private static IProxy proxy;
 
 	@EventHandler
-	public void onFingerprintViolation(FMLFingerprintViolationEvent e){
+	public void onFingerprintViolation(final FMLFingerprintViolationEvent e){
+		this.signed = false;
 		LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
 		LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
 	}
-	
+
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
 		BiomeTweaker.proxy.registerHandlers();

@@ -45,6 +45,7 @@ minecraft {
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
+    replace "@FINGERPRINT@", "${System.env.sha1_fingerprint ?: "N/A"}"
     runDir = "eclipse"
 }
 

@@ -57,6 +57,10 @@ public class ScriptParser {
 			listing.addEntry(Lists.newArrayList(ParameterType.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("intersectionOf", listing);
 
+			listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("subtractFrom", listing);
+
 		}catch(final Exception e){
 			ModBiomeTweakerCore.logger.error("Something went wrong when filling the object mappings! Some objects may not work!");
 			e.printStackTrace();

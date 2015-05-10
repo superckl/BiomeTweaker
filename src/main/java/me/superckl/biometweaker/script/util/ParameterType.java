@@ -14,11 +14,13 @@ import me.superckl.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.biometweaker.script.pack.BasicBiomesPackage;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.script.pack.IntersectBiomesPackage;
+import me.superckl.biometweaker.script.pack.SubtractBiomesPackage;
 import me.superckl.biometweaker.script.pack.TypeBiomesPackage;
 import me.superckl.biometweaker.script.util.wrapper.AllButPackParameterWrapper;
 import me.superckl.biometweaker.script.util.wrapper.AllPackParameterWrapper;
 import me.superckl.biometweaker.script.util.wrapper.IntersectPackParameterWrapper;
 import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
+import me.superckl.biometweaker.script.util.wrapper.SubtractPackParameterWrapper;
 import me.superckl.biometweaker.script.util.wrapper.TypesPackParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
@@ -31,7 +33,8 @@ import com.google.gson.JsonPrimitive;
 public enum ParameterType {
 
 	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE(new TypesPackParameterWrapper()),
-	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper()), INTERSECT_BIOMES_PACKAGE(new IntersectPackParameterWrapper());
+	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper()), INTERSECT_BIOMES_PACKAGE(new IntersectPackParameterWrapper()),
+	SUBTRACT_BIOMES_PACKAGE(new SubtractPackParameterWrapper());
 
 	private final ParameterWrapper simpleWrapper;
 	private final ParameterWrapper varArgsWrapper;
@@ -47,10 +50,18 @@ public enum ParameterType {
 		this.specialWrapper = wrapper;
 	}
 
+	/**
+	 * Attempts to parse the given string argument into a type given by this ParameterType instance.
+	 * This should not be used for biome packs. Use their special wrapper instead.
+	 */
 	public Object tryParse(final String parameter) throws Exception{
 		return this.tryParse(parameter, null);
 	}
 
+	/**
+	 * Attempts to parse the given string argument into a type given by this ParameterType instance.
+	 * This should not be used for biome packs. Use their special wrapper instead.
+	 */
 	public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception{
 		switch(this){
 		case FLOAT:{
@@ -125,6 +136,8 @@ public enum ParameterType {
 			return new AllBiomesPackage();
 		}case INTERSECT_BIOMES_PACKAGE: {
 			return new IntersectBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
+		}case SUBTRACT_BIOMES_PACKAGE: {
+			return new SubtractBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler), new BasicBiomesPackage());
 		}
 		default:
 			break;

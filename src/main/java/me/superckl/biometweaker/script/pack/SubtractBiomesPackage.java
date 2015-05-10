@@ -1,0 +1,38 @@
+package me.superckl.biometweaker.script.pack;
+
+import java.util.Iterator;
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+import net.minecraft.world.biome.BiomeGenBase;
+
+import com.google.common.collect.Lists;
+
+@RequiredArgsConstructor
+public class SubtractBiomesPackage implements IBiomePackage{
+
+	private final IBiomePackage main;
+	private final IBiomePackage subtract;
+
+	@Override
+	public Iterator<BiomeGenBase> getIterator() {
+		final List<BiomeGenBase> list = Lists.newArrayList(this.main.getIterator());
+		final Iterator<BiomeGenBase> it = this.subtract.getIterator();
+		while(it.hasNext())
+			list.remove(it.next());
+		return list.iterator();
+	}
+
+	@Override
+	public List<Integer> getRawIds() {
+		final List<Integer> ints = Lists.newArrayList(this.main.getRawIds());
+		ints.removeAll(this.subtract.getRawIds());
+		return ints;
+	}
+
+	@Override
+	public boolean supportsEarlyRawIds() {
+		return this.main.supportsEarlyRawIds() && this.subtract.supportsEarlyRawIds();
+	}
+
+}

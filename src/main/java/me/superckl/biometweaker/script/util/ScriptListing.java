@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
+import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 
 import com.google.common.collect.Maps;
 

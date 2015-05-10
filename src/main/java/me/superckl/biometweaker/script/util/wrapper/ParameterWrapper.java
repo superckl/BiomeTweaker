@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.util;
+package me.superckl.biometweaker.script.util.wrapper;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.pack.AllBiomesPackage;
+import me.superckl.biometweaker.script.util.ParameterType;
 
 import org.apache.commons.lang3.tuple.Pair;
 

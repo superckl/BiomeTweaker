@@ -1,9 +1,10 @@
-package me.superckl.biometweaker.script.util;
+package me.superckl.biometweaker.script.util.wrapper;
 
 import java.util.List;
 
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.pack.TypeBiomesPackage;
+import me.superckl.biometweaker.script.util.ParameterType;
 
 import org.apache.commons.lang3.tuple.Pair;
 

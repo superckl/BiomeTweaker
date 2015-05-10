@@ -13,7 +13,13 @@ import me.superckl.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.biometweaker.script.pack.BasicBiomesPackage;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
+import me.superckl.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.biometweaker.script.pack.TypeBiomesPackage;
+import me.superckl.biometweaker.script.util.wrapper.AllButPackParameterWrapper;
+import me.superckl.biometweaker.script.util.wrapper.AllPackParameterWrapper;
+import me.superckl.biometweaker.script.util.wrapper.IntersectPackParameterWrapper;
+import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
+import me.superckl.biometweaker.script.util.wrapper.TypesPackParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import com.google.common.collect.Lists;
@@ -25,7 +31,7 @@ import com.google.gson.JsonPrimitive;
 public enum ParameterType {
 
 	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE(new TypesPackParameterWrapper()),
-	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper());
+	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper()), INTERSECT_BIOMES_PACKAGE(new IntersectPackParameterWrapper());
 
 	private final ParameterWrapper simpleWrapper;
 	private final ParameterWrapper varArgsWrapper;
@@ -117,6 +123,8 @@ public enum ParameterType {
 			return new AllButBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
 		}case ALL_BIOMES_PACKAGE: {
 			return new AllBiomesPackage();
+		}case INTERSECT_BIOMES_PACKAGE: {
+			return new IntersectBiomesPackage((IBiomePackage) ParameterType.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
 		}
 		default:
 			break;

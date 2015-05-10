@@ -39,6 +39,13 @@ public class CollectionHelper {
 			coll.add(i);
 	}
 
+	public static <T> boolean allContains(final T element, final Collection<T> ... colls){
+		for(final Collection<T> coll:colls)
+			if(!coll.contains(element))
+				return false;
+		return true;
+	}
+
 	public static String[] trimAll(final String ... strings){
 		for(int i = 0; i < strings.length; i++)
 			strings[i] = strings[i].trim();

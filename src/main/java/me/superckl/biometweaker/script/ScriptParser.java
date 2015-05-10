@@ -21,8 +21,8 @@ import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
 import me.superckl.biometweaker.script.util.ParameterType;
-import me.superckl.biometweaker.script.util.ParameterWrapper;
 import me.superckl.biometweaker.script.util.ScriptListing;
+import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -52,6 +52,10 @@ public class ScriptParser {
 			listing = new ScriptListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomesExcept", listing);
+
+			listing = new ScriptListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterType.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.validObjects.put("intersectionOf", listing);
 
 		}catch(final Exception e){
 			ModBiomeTweakerCore.logger.error("Something went wrong when filling the object mappings! Some objects may not work!");

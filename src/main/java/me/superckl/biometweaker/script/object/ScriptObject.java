@@ -14,8 +14,8 @@ import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
-import me.superckl.biometweaker.script.util.ParameterWrapper;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
+import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import org.apache.commons.lang3.tuple.Pair;

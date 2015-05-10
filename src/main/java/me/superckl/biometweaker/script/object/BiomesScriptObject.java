@@ -25,8 +25,8 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.script.util.ParameterType;
-import me.superckl.biometweaker.script.util.ParameterWrapper;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
+import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
 import org.apache.commons.lang3.tuple.Pair;

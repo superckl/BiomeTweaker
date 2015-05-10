@@ -92,3 +92,41 @@ jar {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
+
+tasks.build.dependsOn('signJar')
+
+if (!project.hasProperty("keystore_loc")) // keystore stuff
+    ext.keystore_location = "."
+if (!project.hasProperty("keystore_pass")) // keystore stuff
+    ext.keystore_password = ""
+if (!project.hasProperty("keystore_user")) // keystore stuff
+    ext.keystore_alias = ""
+
+task signJar(dependsOn: ["reobf", "devJar"]) {
+    inputs.dir jar.destinationDir
+    inputs.file keystore_location
+    inputs.property "keystore_alias", keystore_alias
+    inputs.property "keystore_password", keystore_password
+    outputs.dir devJar.destinationDir
+
+    // only sign if the keystore exists
+    onlyIf {
+        return keystore_location != "." && keystore_password != ""
+    }
+    // the actual action.. sign the jar.
+    doLast {
+        jar.destinationDir.eachFile { file ->
+            if (!file.getPath().endsWith(".jar"))
+                return; // skip non-jars
+
+            logger.lifecycle "signing $file"
+            ant.signjar(
+                    destDir: file.getParentFile(), // same place it came from
+                    jar: file,
+                    keystore: keystore_location,
+                    alias: keystore_alias,
+                    storepass: keystore_password
+            )
+        }
+    }
+}

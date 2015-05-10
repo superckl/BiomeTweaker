@@ -95,9 +95,9 @@ jar {
 
 tasks.build.dependsOn('signJar')
 
-ext.keystore_location = ${System.env.keystore_location ?: "."}
-ext.keystore_password = ${System.env.keystore_password ?: ""}
-ext.keystore_alias = ${System.env.keystore_alias ?: ""}
+ext.keystore_location = "${System.getenv("keystore_location") ?: "."}"
+ext.keystore_password = "${System.getenv("keystore_password") ?: ""}"
+ext.keystore_alias = "${System.getenv("keystore_alias") ?: ""}"
 
 task signJar(dependsOn: ["reobf", "devJar"]) {
     inputs.dir jar.destinationDir

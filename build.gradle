@@ -123,7 +123,7 @@ task signJar(dependsOn: ["reobf", "devJar"]) {
                     jar: file,
                     keystore: keystore_location,
                     alias: keystore_alias,
-                    storepass: keystore_password
+                    storepass: keystore_password,
                     digestalg: "SHA1"
             )
         }

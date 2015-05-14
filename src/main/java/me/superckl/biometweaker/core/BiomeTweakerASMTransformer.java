@@ -127,6 +127,8 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 				}
 			if(fixed < 14)
 				ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
+			else if(fixed > 14)
+				ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 14. Is something else also patching this class?");
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);

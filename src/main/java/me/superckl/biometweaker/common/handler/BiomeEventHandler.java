@@ -69,6 +69,8 @@ public class BiomeEventHandler {
 				for (int l = 0; l < 16; ++l)
 				{
 					final BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
+					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
+						continue;
 					final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.blockReplacements.get(biomegenbase.biomeID);
 					final int i1 = k;
 					final int j1 = l;

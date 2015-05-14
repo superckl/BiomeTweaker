@@ -53,6 +53,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 				continue;
 			if(!BiomeEventHandler.getBlockReplacements().containsKey(gen.biomeID))
 				BiomeEventHandler.getBlockReplacements().put(gen.biomeID, new ArrayList<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>());
+			//LogHelper.info("Registering replacement for "+gen.biomeID+":"+gen.biomeName);
 			final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.getBlockReplacements().get(gen.biomeID);
 			list.add(Pair.of(Pair.of(toReplace, this.toReplaceMeta), Pair.of(replaceWith, this.replaceWithMeta)));
 			Config.INSTANCE.onTweak(gen.biomeID);

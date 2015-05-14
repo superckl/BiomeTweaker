@@ -6,7 +6,6 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import me.superckl.biometweaker.script.ScriptHandler;
-import me.superckl.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.biometweaker.script.util.ParameterType;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,8 +22,6 @@ public class ParameterWrapper {
 	private final boolean varArgs;
 
 	public Pair<Object[], String[]> parseArgs(final ScriptHandler handler, String ... args) throws Exception{
-		if(this.type == ParameterType.ALL_BIOMES_PACKAGE)
-			return Pair.of(new Object[]{new AllBiomesPackage()}, new String[0]);
 		final List<Object> parsed = Lists.newArrayList();
 		for(int i = 0; ; i++){
 			Object obj;
@@ -36,19 +33,24 @@ public class ParameterWrapper {
 			}
 			if(obj instanceof Collection)
 				parsed.addAll((Collection<? extends Object>) obj);
-			else
+			else if(obj != null)
 				parsed.add(obj);
 		}
 		return Pair.of(parsed.toArray(), args);
 	}
 
 	private boolean shouldCont(final int index, final int argsLength){
-		if(!this.varArgs)
+		if(!this.varArgs && (index < argsLength))
 			if(index < this.minNum)
 				return true;
 			else if(index >= this.maxNum)
 				return false;
 		return index < argsLength;
+	}
+
+	//Placeholder to be passed off to something else at a later time
+	public boolean canReturnNothing(){
+		return false;
 	}
 
 }

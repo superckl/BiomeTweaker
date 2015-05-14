@@ -2,8 +2,8 @@ package me.superckl.biometweaker.script.object;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +25,7 @@ import com.google.common.collect.Lists;
 public abstract class ScriptObject {
 
 	@Getter
-	protected final Map<String, ScriptCommandListing> validCommands = new HashMap<String, ScriptCommandListing>();
+	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<String, ScriptCommandListing>();
 
 	public ScriptObject() {
 		try {
@@ -44,26 +44,30 @@ public abstract class ScriptObject {
 		}
 		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
-		for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
-			final List<Object> objs = Lists.newArrayList();
-			final List<ParameterWrapper> params = entry.getKey();
-			final Iterator<ParameterWrapper> it = params.iterator();
-			while(it.hasNext()){
-				final ParameterWrapper wrap = it.next();
-				final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-				Collections.addAll(objs, parsed.getKey());
-				arguments = parsed.getValue();
-				it.remove();
+		outer:
+			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+				final List<Object> objs = Lists.newArrayList();
+				final List<ParameterWrapper> params = entry.getKey();
+				final Iterator<ParameterWrapper> it = params.iterator();
+				while(it.hasNext()){
+					final ParameterWrapper wrap = it.next();
+					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+						//ModBiomeTweakerCore.logger.info("length was 0 for "+wrap.getType());
+						continue outer;
+					Collections.addAll(objs, parsed.getKey());
+					arguments = parsed.getValue();
+					it.remove();
+				}
+				if(!params.isEmpty() || (arguments.length != 0))
+					continue;
+				final IScriptCommand sCommand = entry.getValue().newInstance(objs.toArray());
+				if(listing.isPerformInst())
+					sCommand.perform();
+				else
+					Config.INSTANCE.addCommand(sCommand);
+				return;
 			}
-			if(!params.isEmpty() || (arguments.length != 0))
-				continue;
-			final IScriptCommand sCommand = entry.getValue().newInstance(objs.toArray());
-			if(listing.isPerformInst())
-				sCommand.perform();
-			else
-				Config.INSTANCE.addCommand(sCommand);
-			return;
-		}
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 	public abstract void populateCommands() throws Exception;

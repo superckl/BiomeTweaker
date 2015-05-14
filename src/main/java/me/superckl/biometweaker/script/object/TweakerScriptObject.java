@@ -5,6 +5,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
+import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
@@ -87,13 +88,13 @@ public class TweakerScriptObject extends ScriptObject{
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
 		this.validCommands.put("registerGenBlockRep", listing);
 	}
 

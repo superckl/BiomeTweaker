@@ -18,6 +18,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
+import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
@@ -51,28 +52,33 @@ public class BiomesScriptObject extends ScriptObject{
 			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
-		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
-		for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
-			final List<Object> objs = Lists.newArrayList();
-			final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
-			final Iterator<ParameterWrapper> it = params.iterator();
-			while(it.hasNext()){
-				final ParameterWrapper wrap = it.next();
-				final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-				Collections.addAll(objs, parsed.getKey());
-				arguments = parsed.getValue();
-				it.remove();
+		outer:
+			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
+				final List<Object> objs = Lists.newArrayList();
+				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
+				//ModBiomeTweakerCore.logger.info(Arrays.toString(params.toArray()));
+				final Iterator<ParameterWrapper> it = params.iterator();
+				while(it.hasNext()){
+					final ParameterWrapper wrap = it.next();
+					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+						//ModBiomeTweakerCore.logger.info("length was 0 for "+wrap.getType());
+						continue outer;
+					Collections.addAll(objs, parsed.getKey());
+					arguments = parsed.getValue();
+					it.remove();
+				}
+				if(!params.isEmpty() || (arguments.length != 0))
+					continue;
+				//ParamterType list does not contain BiomePackages, so insert them.
+				final Object[] args = new Object[objs.size()+1];
+				System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
+				args[0] = this.pack;
+				Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
+				return;
 			}
-			if(!params.isEmpty() || (arguments.length != 0))
-				continue;
-			//ParamterType list does not contain BiomePackages, so insert them.
-			final Object[] args = new Object[objs.size()+1];
-			System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
-			args[0] = this.pack;
-			Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
-			return;
-		}
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
@@ -137,13 +143,13 @@ public class BiomesScriptObject extends ScriptObject{
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
 		this.validCommands.put("registerGenBlockRep", listing);
 	}
 

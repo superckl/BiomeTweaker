@@ -84,6 +84,17 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		this.validCommands.put("create", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
+		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
+		this.validCommands.put("registerGenBlockRep", listing);
 	}
 
 }

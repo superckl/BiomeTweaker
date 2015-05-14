@@ -40,17 +40,13 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);
-			cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlockMeta", "I", "I", null);
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlockMeta' field into "+transformedName);
-			cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlockMeta", "I", "I", null);
-			ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlockMeta' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
 			cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
 			ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
-			int fixed = 5;
+			int fixed = 3;
 			for(final MethodNode node:cNode.methods)
 				if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 					for(AbstractInsnNode aNode:node.instructions.toArray())
@@ -125,10 +121,10 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 					ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
 					fixed++;
 				}
-			if(fixed < 14)
+			if(fixed < 12)
 				ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-			else if(fixed > 14)
-				ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 14. Is something else also patching this class?");
+			else if(fixed > 12)
+				ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 12. Is something else also patching this class?");
 			else
 				ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
 			return ASMHelper.writeClassToBytesNoDeobf(cNode);

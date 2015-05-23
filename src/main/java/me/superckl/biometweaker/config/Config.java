@@ -40,8 +40,8 @@ public class Config {
 		this.commandManager.reset();
 		if(obj.has("separate files"))
 			this.outputSeperateFiles = obj.get("separate files").getAsBoolean();
-		if(obj.has("enable light ASM"))
-			this.lightASM = obj.get("lightASM").getAsBoolean();
+		if(obj.has("enable light asm"))
+			this.lightASM = obj.get("enable light asm").getAsBoolean();
 		if(obj.has("asm blacklist")){
 			final JsonArray array = obj.get("asm blacklist").getAsJsonArray();
 			this.asmBlacklist = new String[array.size()];

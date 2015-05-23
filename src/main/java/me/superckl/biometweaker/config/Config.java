@@ -23,6 +23,16 @@ public class Config {
 
 	public static final Config INSTANCE = new Config();
 
+	public static class Fields{
+		
+		public static final String SEPERATE_FILES = "seperate files";
+		public static final String ENABLE_LIGHT_ASM = "enable light asm";
+		public static final String ASM_BLACKLIST = "asm blacklist";
+		public static final String REMOVE_LATE_BLOCK_ASSIGN = "remove late block assignments";
+		public static final String INCLUDE = "include";
+		
+	}
+	
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles = true;
@@ -38,20 +48,20 @@ public class Config {
 		if(this.init)
 			log.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
 		this.commandManager.reset();
-		if(obj.has("separate files"))
-			this.outputSeperateFiles = obj.get("separate files").getAsBoolean();
-		if(obj.has("enable light asm"))
-			this.lightASM = obj.get("enable light asm").getAsBoolean();
-		if(obj.has("asm blacklist")){
-			final JsonArray array = obj.get("asm blacklist").getAsJsonArray();
+		if(obj.has(Fields.SEPERATE_FILES))
+			this.outputSeperateFiles = obj.get(Fields.SEPERATE_FILES).getAsBoolean();
+		if(obj.has(Fields.ENABLE_LIGHT_ASM))
+			this.lightASM = obj.get(Fields.ENABLE_LIGHT_ASM).getAsBoolean();
+		if(obj.has(Fields.ASM_BLACKLIST)){
+			final JsonArray array = obj.get(Fields.ASM_BLACKLIST).getAsJsonArray();
 			this.asmBlacklist = new String[array.size()];
 			for(int i = 0; i < this.asmBlacklist.length; i++)
 				this.asmBlacklist[i] = array.get(i).getAsString();
 		}
-		if(obj.has("remove late block assignments"))
-			this.removeLateAssignments = obj.get("remove late block assignments").getAsBoolean();
-		if(obj.has("include")){
-			final JsonElement element = obj.get("include");
+		if(obj.has(Fields.REMOVE_LATE_BLOCK_ASSIGN))
+			this.removeLateAssignments = obj.get(Fields.REMOVE_LATE_BLOCK_ASSIGN).getAsBoolean();
+		if(obj.has(Fields.INCLUDE)){
+			final JsonElement element = obj.get(Fields.INCLUDE);
 			if(element.isJsonArray()){
 				final JsonArray array = (JsonArray) element;
 				for(final JsonElement listElement:array){

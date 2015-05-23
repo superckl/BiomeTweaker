@@ -48,9 +48,8 @@ public class ParameterWrapper {
 		return index < argsLength;
 	}
 
-	//Placeholder to be passed off to something else at a later time
 	public boolean canReturnNothing(){
-		return false;
+		return this.minNum <= 0;
 	}
 
 }

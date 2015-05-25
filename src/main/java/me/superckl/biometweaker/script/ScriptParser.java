@@ -20,8 +20,8 @@ import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
+import me.superckl.biometweaker.script.util.ConstructorListing;
 import me.superckl.biometweaker.script.util.ParameterType;
-import me.superckl.biometweaker.script.util.ScriptListing;
 import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
 
@@ -33,31 +33,31 @@ import com.google.common.collect.Maps;
 public class ScriptParser {
 
 	@Getter
-	private static final Map<String, ScriptListing<ScriptObject>> validObjects = Maps.newHashMap();
+	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = Maps.newHashMap();
 
 	static{
 		try{
-			ScriptListing<ScriptObject> listing = new ScriptListing<ScriptObject>();
+			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forBiomes", listing);
 
-			listing = new ScriptListing<ScriptObject>();
+			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forBiomesOfTypes", listing);
 
-			listing = new ScriptListing<ScriptObject>();
+			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomes", listing);
 
-			listing = new ScriptListing<ScriptObject>();
+			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("forAllBiomesExcept", listing);
 
-			listing = new ScriptListing<ScriptObject>();
+			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("intersectionOf", listing);
 
-			listing = new ScriptListing<ScriptObject>();
+			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(ParameterType.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
 			ScriptParser.validObjects.put("subtractFrom", listing);
 
@@ -127,7 +127,7 @@ public class ScriptParser {
 		}else{
 			final String called = ScriptParser.getCommandCalled(assign);
 			if(ScriptParser.validObjects.containsKey(called)){
-				final ScriptListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
+				final ConstructorListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
 				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
 				for(final Entry<List<ParameterWrapper>, Constructor<? extends ScriptObject>> entry:listing.getConstructors().entrySet()){
 					final List<Object> objs = Lists.newArrayList();

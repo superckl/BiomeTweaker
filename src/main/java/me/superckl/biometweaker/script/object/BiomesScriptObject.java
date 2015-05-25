@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
@@ -33,6 +34,7 @@ import me.superckl.biometweaker.util.CollectionHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 public class BiomesScriptObject extends ScriptObject{
@@ -82,64 +84,65 @@ public class BiomesScriptObject extends ScriptObject{
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
-	@Override
-	public void populateCommands() throws Exception {
+	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {
+		final Map<String, ScriptCommandListing> validCommands = Maps.newLinkedHashMap();
+
 		ScriptCommandListing listing = new ScriptCommandListing();
 		listing.addEntry(new ArrayList<ParameterWrapper>()
 				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
-		this.validCommands.put("remove", listing);
+		validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.SPAWN_TYPE.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper()
 				, ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
-		this.validCommands.put("addSpawn", listing);
+		validCommands.put("addSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.SPAWN_TYPE.getSimpleWrapper())
 				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class));
-		this.validCommands.put("removeSpawn", listing);
+		validCommands.put("removeSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.SPAWN_TYPE.getSimpleWrapper())
 				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(IBiomePackage.class, Type.class));
-		this.validCommands.put("removeAllSpawns", listing);
+		validCommands.put("removeAllSpawns", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, Integer.TYPE));
-		this.validCommands.put("addFlower", listing);
+		validCommands.put("addFlower", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
-		this.validCommands.put("removeFlower", listing);
+		validCommands.put("removeFlower", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.JSON_ELEMENT.getSimpleWrapper())
 				, ScriptCommandSetBiomeProperty.class.getDeclaredConstructor(IBiomePackage.class, String.class, JsonElement.class));
-		this.validCommands.put("set", listing);
+		validCommands.put("set", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-		this.validCommands.put("addDicType", listing);
+		validCommands.put("addDicType", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-		this.validCommands.put("removeDicType", listing);
+		validCommands.put("removeDicType", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(new ArrayList<ParameterWrapper>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
-		this.validCommands.put("removeAllDicTypes", listing);
+		validCommands.put("removeAllDicTypes", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-		this.validCommands.put("removeDecoration", listing);
+		validCommands.put("removeDecoration", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
-		this.validCommands.put("create", listing);
+		validCommands.put("create", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
@@ -150,7 +153,9 @@ public class BiomesScriptObject extends ScriptObject{
 				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper())
 				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
-		this.validCommands.put("registerGenBlockRep", listing);
+		validCommands.put("registerGenBlockRep", listing);
+
+		return validCommands;
 	}
 
 }

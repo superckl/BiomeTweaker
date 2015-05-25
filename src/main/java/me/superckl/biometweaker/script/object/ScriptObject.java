@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.script.ScriptCommandRegistry;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
@@ -28,12 +29,7 @@ public abstract class ScriptObject {
 	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<String, ScriptCommandListing>();
 
 	public ScriptObject() {
-		try {
-			this.populateCommands();
-		} catch (final Exception e) {
-			ModBiomeTweakerCore.logger.error("Failed to populate command listings! Some tweaks may not be applied.");
-			e.printStackTrace();
-		}
+		this.validCommands.putAll(ScriptCommandRegistry.INSTANCE.getListings(this.getClass()));
 	}
 
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
@@ -70,6 +66,5 @@ public abstract class ScriptObject {
 			}
 		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
-	public abstract void populateCommands() throws Exception;
 
 }

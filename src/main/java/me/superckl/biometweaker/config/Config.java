@@ -24,15 +24,15 @@ public class Config {
 	public static final Config INSTANCE = new Config();
 
 	public static class Fields{
-		
+
 		public static final String SEPERATE_FILES = "seperate files";
 		public static final String ENABLE_LIGHT_ASM = "enable light asm";
 		public static final String ASM_BLACKLIST = "asm blacklist";
 		public static final String REMOVE_LATE_BLOCK_ASSIGN = "remove late block assignments";
 		public static final String INCLUDE = "include";
-		
+
 	}
-	
+
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles = true;

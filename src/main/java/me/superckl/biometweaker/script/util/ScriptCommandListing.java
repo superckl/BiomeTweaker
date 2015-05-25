@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 
-public class ScriptCommandListing extends ScriptListing<IScriptCommand>{
+/**
+ * A subclass of ConstructorListing that allows tracking of multiple possible parameter lists for the same command name.
+ */
+public class ScriptCommandListing extends ConstructorListing<IScriptCommand>{
 
 	@Getter
 	@Setter

@@ -37,7 +37,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 						byte[] newBytes = module.transform(name, transformedName, basicClass);
 						basicClass = newBytes;
 					}catch(Exception e){
-						ModBiomeTweakerCore.logger.error("Caught an error from module "+module.getModuleName());
+						ModBiomeTweakerCore.logger.error("Caught an exception from module "+module.getModuleName());
 						e.printStackTrace();
 					}
 		}

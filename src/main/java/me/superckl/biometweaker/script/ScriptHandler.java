@@ -31,9 +31,9 @@ public class ScriptHandler {
 		if(!this.it.hasNext())
 			return;
 
-		while(this.it.hasNext())
+		while(this.it.hasNext()){
+			final String s = this.it.next().trim().split("#", 2)[0]; //Cuts out comments at the end of a line
 			try {
-				final String s = this.it.next().trim().split("#", 2)[0]; //Cuts out comments at the end of a line
 				if(s.contains("=")){
 					final Map<String, Object> map = ScriptParser.parseAssignment(s, this);
 					if(map == null)
@@ -57,9 +57,10 @@ public class ScriptHandler {
 					obj.handleCall(split[1], this);
 				}
 			} catch (final Exception e) {
-				ModBiomeTweakerCore.logger.error("Failed to handle a script line!");
+				ModBiomeTweakerCore.logger.error("Failed to handle a script line! "+s);
 				e.printStackTrace();
 			}
+		}
 	}
 
 }

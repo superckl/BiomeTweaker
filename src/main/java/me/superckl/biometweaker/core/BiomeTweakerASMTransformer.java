@@ -30,7 +30,10 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	public byte[] transform(final String name, final String transformedName, byte[] basicClass) {
 		if((basicClass == null) || (CollectionHelper.find(transformedName, Config.INSTANCE.getAsmBlacklist()) != -1))
 			return basicClass;
+		boolean lightASM = Config.INSTANCE.isLightASM();
 		for(IClassTransformerModule module:this.modules){
+			if(lightASM && !module.isRequired())
+				continue;
 			for(String clazz:module.getClassesToTransform())
 				if(clazz.equals("*") || clazz.equals(transformedName))
 					try{
@@ -40,6 +43,7 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 						ModBiomeTweakerCore.logger.error("Caught an exception from module "+module.getModuleName());
 						e.printStackTrace();
 					}
+
 		}
 		return basicClass;
 	}

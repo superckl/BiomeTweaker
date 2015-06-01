@@ -9,6 +9,7 @@ import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.util.ParameterType;
 import net.minecraft.block.Block;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.biome.WorldChunkManager;
@@ -235,6 +236,9 @@ public class BiomeHelper {
 				for(final BiomeEntry entry:entries)
 					if(entry.biome.biomeID == biome.biomeID)
 						entry.itemWeight = weight;
+				if(WeightedRandom.getTotalWeight(entries) <= 0){
+					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
+				}
 			}
 			BiomeHelper.modTypeLists();
 		}else if(prop.equals("genVillages"))

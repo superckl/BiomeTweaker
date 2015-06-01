@@ -8,6 +8,7 @@ import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
@@ -39,8 +40,11 @@ public class ScriptCommandAddRemoveBiome implements IScriptCommand{
 				for(final BiomeType type:BiomeType.values())
 					for(final BiomeEntry entry:BiomeManager.getBiomes(type))
 						if(entry.biome.biomeID == gen.biomeID)
-							if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Remove(this, entry.biome, entry)))
+							if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Remove(this, entry.biome, entry))){
 								BiomeManager.removeBiome(type, entry);
+								if(BiomeManager.getBiomes(type).isEmpty())
+									LogHelper.warn("Viable generation biomes for type "+type+" is empty! This will cause Vanilla generation to crash! You've been warned!");
+							}
 				Config.INSTANCE.onTweak(gen.biomeID);
 			}
 		} else

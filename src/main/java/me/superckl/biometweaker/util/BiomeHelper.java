@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
@@ -134,6 +135,9 @@ public class BiomeHelper {
 		return obj;
 	}
 
+	private static Set<BiomeManager.BiomeType> logged = EnumSet.noneOf(BiomeManager.BiomeType.class);
+	private static boolean loggedSpawn;
+	
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		BiomeHelper.checkFields();
 		if(prop.equals("name")){
@@ -236,8 +240,9 @@ public class BiomeHelper {
 				for(final BiomeEntry entry:entries)
 					if(entry.biome.biomeID == biome.biomeID)
 						entry.itemWeight = weight;
-				if(WeightedRandom.getTotalWeight(entries) <= 0){
+				if(!logged.contains(type) && WeightedRandom.getTotalWeight(entries) <= 0){
 					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
+					logged.add(type);
 				}
 			}
 			BiomeHelper.modTypeLists();
@@ -251,8 +256,10 @@ public class BiomeHelper {
 				BiomeManager.addSpawnBiome(biome);
 			else{
 				BiomeManager.removeSpawnBiome(biome);
-				if(WorldChunkManager.allowedBiomes.size() == 0)
+				if(!loggedSpawn && WorldChunkManager.allowedBiomes.size() == 0){
 					LogHelper.warn("Upon removal of biome "+biome.biomeID+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
+					loggedSpawn = true;
+				}
 			}
 	}
 

@@ -43,7 +43,7 @@ public abstract class ScriptObject {
 		outer:
 			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
 				final List<Object> objs = Lists.newArrayList();
-				final List<ParameterWrapper> params = entry.getKey();
+				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
 				final Iterator<ParameterWrapper> it = params.iterator();
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();

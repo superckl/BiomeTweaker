@@ -240,7 +240,7 @@ public class BiomeHelper {
 				for(final BiomeEntry entry:entries)
 					if(entry.biome.biomeID == biome.biomeID)
 						entry.itemWeight = weight;
-				if(!logged.contains(type) && WeightedRandom.getTotalWeight(entries) <= 0){
+				if(type != BiomeManager.BiomeType.DESERT && !logged.contains(type) && WeightedRandom.getTotalWeight(entries) <= 0){
 					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
 					logged.add(type);
 				}

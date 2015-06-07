@@ -7,7 +7,7 @@ import java.io.FileReader;
 import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.google.common.collect.Lists;
@@ -59,11 +59,11 @@ public class ReloadScriptsConfigEntry extends ButtonEntry{
 				BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
 				final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
 				if(obj.entrySet().isEmpty())
-					ModBiomeTweakerCore.logger.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
+					LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 				Config.INSTANCE.init(operateIn, obj);
 				this.pressedCounter = 200;
 			} catch (final Exception e) {
-				ModBiomeTweakerCore.logger.error("Failed to reload scripts!");
+				LogHelper.error("Failed to reload scripts!");
 				e.printStackTrace();
 			}
 		this.youSure = !this.youSure;

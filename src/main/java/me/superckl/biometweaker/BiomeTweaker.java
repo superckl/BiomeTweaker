@@ -4,13 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
+import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandOutput;
@@ -61,6 +61,26 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
+		LogHelper.info("Beginning script parsing...");
+		long time = System.currentTimeMillis();
+		for(final JsonElement listElement:Config.INSTANCE.getIncludes()){
+			File subFile = null;
+			try {
+				final String item = listElement.getAsString();
+				subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
+				if(!subFile.exists()){
+					LogHelper.debug("Included subfile not found. A blank one will be generated.");
+					subFile.createNewFile();
+				}
+				ScriptParser.parseScriptFile(subFile);
+				Config.INSTANCE.getCommandManager().setCurrentStage(ApplicationStage.FINISHED_LOAD);
+			} catch (Exception e1) {
+				LogHelper.error("Failed to parse a script file! File: "+subFile);
+				e1.printStackTrace();
+			}
+		}
+		long diff = System.currentTimeMillis()-time;
+		LogHelper.debug("Script parsing took "+diff+"ms.");
 		BiomeTweaker.proxy.registerHandlers();
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
 	}

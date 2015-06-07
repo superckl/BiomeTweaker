@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.util.LogHelper;
 
 @Getter
 public class ScriptHandler {
@@ -46,18 +46,18 @@ public class ScriptHandler {
 				}else if(s.contains(".")){
 					final String[] split = s.split("[.]", 2);
 					if(split.length != 2){
-						ModBiomeTweakerCore.logger.error("Found operator '.' in invalid context: "+s);
+						LogHelper.error("Found operator '.' in invalid context: "+s);
 						continue;
 					}
 					if(!this.objects.containsKey(split[0])){
-						ModBiomeTweakerCore.logger.error("Object not found: "+split[0]);
+						LogHelper.error("Object not found: "+split[0]);
 						continue;
 					}
 					final ScriptObject obj = this.objects.get(split[0]);
 					obj.handleCall(split[1], this);
 				}
 			} catch (final Exception e) {
-				ModBiomeTweakerCore.logger.error("Failed to handle a script line! "+s);
+				LogHelper.error("Failed to handle a script line! "+s);
 				e.printStackTrace();
 			}
 		}

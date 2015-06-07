@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptCommandRegistry;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
@@ -18,6 +17,7 @@ import me.superckl.biometweaker.script.command.IScriptCommand;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
 import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
+import me.superckl.biometweaker.util.LogHelper;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,7 +35,7 @@ public abstract class ScriptObject {
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
 		final String command = ScriptParser.getCommandCalled(call);
 		if(!this.validCommands.containsKey(command)){
-			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
+			LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
 		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
@@ -49,7 +49,6 @@ public abstract class ScriptObject {
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
 					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
-						//ModBiomeTweakerCore.logger.info("length was 0 for "+wrap.getType());
 						continue outer;
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
@@ -64,7 +63,7 @@ public abstract class ScriptObject {
 					Config.INSTANCE.addCommand(sCommand);
 				return;
 			}
-		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
+		LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
 }

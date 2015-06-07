@@ -15,7 +15,6 @@ import java.util.Map.Entry;
 
 import lombok.Cleanup;
 import lombok.Getter;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
@@ -24,6 +23,7 @@ import me.superckl.biometweaker.script.util.ConstructorListing;
 import me.superckl.biometweaker.script.util.ParameterType;
 import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
+import me.superckl.biometweaker.util.LogHelper;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -62,7 +62,7 @@ public class ScriptParser {
 			ScriptParser.validObjects.put("subtractFrom", listing);
 
 		}catch(final Exception e){
-			ModBiomeTweakerCore.logger.error("Something went wrong when filling the object mappings! Some objects may not work!");
+			LogHelper.error("Something went wrong when filling the object mappings! Some objects may not work!");
 			e.printStackTrace();
 		}
 	}
@@ -72,7 +72,7 @@ public class ScriptParser {
 			final List<String> scriptLines = ScriptParser.parseScriptLines(file);
 			new ScriptHandler(scriptLines).parse();
 		}catch(final Exception e){
-			ModBiomeTweakerCore.logger.error("Failed to parse a script file: "+file.getPath());
+			LogHelper.error("Failed to parse a script file: "+file.getPath());
 			e.printStackTrace();
 		}
 	}
@@ -105,7 +105,7 @@ public class ScriptParser {
 
 	public static String[] parseArguments(final String script){
 		if(!script.endsWith(")") || !script.contains("(")){
-			ModBiomeTweakerCore.logger.error("Tried to parse an invalid argument array!");
+			LogHelper.error("Tried to parse an invalid argument array!");
 			return new String[0];
 		}
 		final String args = script.substring(script.indexOf("(")+1, script.length()-1).trim();
@@ -116,7 +116,7 @@ public class ScriptParser {
 	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler) throws Exception{
 		final String[] split = script.split("=");
 		if(split.length != 2){
-			ModBiomeTweakerCore.logger.error("Failed to parse object assignment: "+script);
+			LogHelper.error("Failed to parse object assignment: "+script);
 			return null;
 		}
 		final String var = split[0].trim();
@@ -147,7 +147,7 @@ public class ScriptParser {
 					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)));
 				}
 			}
-			ModBiomeTweakerCore.logger.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
+			LogHelper.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 		}
 		return null;
 	}

@@ -3,11 +3,11 @@ package me.superckl.biometweaker.script;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.ScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
+import me.superckl.biometweaker.util.LogHelper;
 
 import com.google.common.collect.Maps;
 
@@ -22,7 +22,7 @@ public class ScriptCommandRegistry {
 			this.commands.put(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
 			this.commands.put(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
 		} catch (final Exception e) {
-			ModBiomeTweakerCore.logger.error("Failed to populate command listings! Some tweaks may not be applied.");
+			LogHelper.error("Failed to populate command listings! Some tweaks may not be applied.");
 			e.printStackTrace();
 		}
 

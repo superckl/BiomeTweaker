@@ -9,7 +9,7 @@ import java.util.List;
 import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -58,12 +58,12 @@ public class CommandReload implements ICommand{
 			BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
 			final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
 			if(obj.entrySet().isEmpty())
-				ModBiomeTweakerCore.logger.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
+				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 			Config.INSTANCE.init(operateIn, obj);
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.success.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
 		} catch (final Exception e) {
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.failure.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-			ModBiomeTweakerCore.logger.error("Failed to reload scripts!");
+			LogHelper.error("Failed to reload scripts!");
 			e.printStackTrace();
 		}
 	}

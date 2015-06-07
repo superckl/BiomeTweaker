@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -47,7 +47,7 @@ public class CommandOutput implements ICommand{
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.output.success.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
 		} catch (final IOException e) {
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.output.failure.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-			ModBiomeTweakerCore.logger.error("Failed to regenerate output files!");
+			LogHelper.error("Failed to regenerate output files!");
 			e.printStackTrace();
 		}
 	}

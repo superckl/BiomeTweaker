@@ -1,7 +1,7 @@
 package me.superckl.biometweaker.client.gui;
 
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.google.common.collect.Lists;
@@ -47,7 +47,7 @@ public class RegenerateOutputConfigEntry extends ButtonEntry{
 				BiomeTweaker.getInstance().generateOutputFiles();
 				this.pressedCounter = 200;
 			} catch (final Exception e) {
-				ModBiomeTweakerCore.logger.error("Failed to regenerate output files!");
+				LogHelper.error("Failed to regenerate output files!");
 				e.printStackTrace();
 			}
 		this.youSure = !this.youSure;

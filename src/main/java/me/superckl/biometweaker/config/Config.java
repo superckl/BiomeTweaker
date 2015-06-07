@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptCommandManager;
-import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
-import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 
 import org.apache.logging.log4j.Logger;
@@ -39,12 +37,15 @@ public class Config {
 	private boolean lightASM = false;
 	private String[] asmBlacklist = new String[0];
 	private boolean removeLateAssignments = false;
+	private JsonArray includes = new JsonArray();
 	private boolean init;
+	private File whereAreWe;
 	private Config() {}
 
 	@SneakyThrows
 	public void init(final File whereAreWe, final JsonObject obj){
 		final Logger log = ModBiomeTweakerCore.logger;
+		this.whereAreWe = whereAreWe;
 		if(this.init)
 			log.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
 		this.commandManager.reset();
@@ -64,21 +65,12 @@ public class Config {
 			final JsonElement element = obj.get(Fields.INCLUDE);
 			if(element.isJsonArray()){
 				final JsonArray array = (JsonArray) element;
-				for(final JsonElement listElement:array){
-					final String item = listElement.getAsString();
-					final File subFile = new File(whereAreWe, item);
-					if(!subFile.exists()){
-						log.debug("Included subfile not found. A blank one will be generated.");
-						subFile.createNewFile();
-					}
-					ScriptParser.parseScriptFile(subFile);
-					this.commandManager.setCurrentStage(ApplicationStage.FINISHED_LOAD);
-				}
+				this.includes = array;
 			} else
 				log.warn("Failed to parse include array! Check your formatting!");
 		}
 		this.init = true;
-		ModBiomeTweakerCore.logger.info("Finished script parsing. Ready to tweak.");
+		ModBiomeTweakerCore.logger.info("Finished config parsing.");
 	}
 
 	public void addCommand(final IScriptCommand command){

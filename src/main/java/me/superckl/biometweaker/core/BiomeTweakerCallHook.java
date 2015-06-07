@@ -24,7 +24,7 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 	@Override
 	public Void call() throws Exception {
 		final Logger log = ModBiomeTweakerCore.logger;
-		log.info("Beginning early script parsing...");
+		log.info("Beginning early config parsing...");
 		final File operateIn = new File(BiomeTweakerCore.mcLocation, "config/BiomeTweaker/");
 		log.debug("We are operating in "+operateIn.getAbsolutePath());
 		final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");

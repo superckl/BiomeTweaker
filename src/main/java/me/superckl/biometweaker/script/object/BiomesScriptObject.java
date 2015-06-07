@@ -10,7 +10,6 @@ import java.util.Map.Entry;
 
 import lombok.Getter;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.script.ScriptHandler;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.command.IScriptCommand;
@@ -31,6 +30,7 @@ import me.superckl.biometweaker.script.util.ParameterType;
 import me.superckl.biometweaker.script.util.ScriptCommandListing;
 import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 import me.superckl.biometweaker.util.CollectionHelper;
+import me.superckl.biometweaker.util.LogHelper;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -52,7 +52,7 @@ public class BiomesScriptObject extends ScriptObject{
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
 		final String command = ScriptParser.getCommandCalled(call);
 		if(!this.validCommands.containsKey(command)){
-			ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
+			LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
 		final ScriptCommandListing listing = this.validCommands.get(command);
@@ -61,13 +61,11 @@ public class BiomesScriptObject extends ScriptObject{
 				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 				final List<Object> objs = Lists.newArrayList();
 				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
-				//ModBiomeTweakerCore.logger.info(Arrays.toString(params.toArray()));
 				final Iterator<ParameterWrapper> it = params.iterator();
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
 					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
-						//ModBiomeTweakerCore.logger.info("length was 0 for "+wrap.getType());
 						continue outer;
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
@@ -82,7 +80,7 @@ public class BiomesScriptObject extends ScriptObject{
 				Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
 				return;
 			}
-		ModBiomeTweakerCore.logger.error("Failed to find meaning in command "+call+". It will be ignored.");
+		LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
 	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {

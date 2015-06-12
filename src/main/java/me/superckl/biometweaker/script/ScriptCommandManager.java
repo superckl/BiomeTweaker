@@ -3,14 +3,15 @@ package me.superckl.biometweaker.script;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.IScriptCommand;
 import me.superckl.biometweaker.util.LogHelper;
 
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 @Getter
 public class ScriptCommandManager {
@@ -23,11 +24,12 @@ public class ScriptCommandManager {
 	private ApplicationStage currentStage = ApplicationStage.FINISHED_LOAD;
 
 	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
+	private final Set<ApplicationStage> appliedStages = Sets.newHashSet();
 
 	public boolean addCommand(final IScriptCommand command){
 		if(!this.commands.containsKey(this.currentStage))
 			this.commands.put(this.currentStage, new ArrayList<IScriptCommand>());
-		if(Config.INSTANCE.isInit())
+		if(this.appliedStages.contains(this.currentStage))
 			try {
 				command.perform();
 			} catch (final Exception e) {
@@ -40,6 +42,7 @@ public class ScriptCommandManager {
 	public void applyCommandsFor(final ApplicationStage stage){
 		if(!this.commands.containsKey(stage))
 			return;
+		this.appliedStages.add(stage);
 		final List<IScriptCommand> commands = this.commands.get(stage);
 		LogHelper.info("Found "+commands.size()+" tweak"+(commands.size() > 1 ? "s":"")+" to apply for stage "+stage.toString()+". Applying...");
 		for(final IScriptCommand command:commands)

@@ -261,6 +261,8 @@ public class BiomeHelper {
 					loggedSpawn = true;
 				}
 			}
+		else
+			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was found for biomes. Value: "+value.getAsString());
 	}
 
 	private static void checkFields(){

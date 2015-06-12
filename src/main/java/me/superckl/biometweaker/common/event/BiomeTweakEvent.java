@@ -61,6 +61,24 @@ public abstract class BiomeTweakEvent extends Event{
 		}
 
 	}
+	
+	/**
+	 * Note: The corresponding BiomeGenBase may be null for this event! The biomeID is given for that case.
+	 */
+	@Cancelable
+	@Getter
+	public static class RemoveFeature extends BiomeTweakEvent{
+
+		private final int biomeID;
+		private final String type;
+
+		public RemoveFeature(final IScriptCommand command, final BiomeGenBase biome, final int biomeID, final String type) {
+			super(command, biome);
+			this.biomeID = biomeID;
+			this.type = type;
+		}
+
+	}
 
 	@Cancelable
 	@Getter

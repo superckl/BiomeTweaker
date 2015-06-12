@@ -13,6 +13,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryT
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
+import me.superckl.biometweaker.script.command.ScriptCommandRemoveFeature;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.script.command.ScriptCommandSetStage;
 import me.superckl.biometweaker.script.pack.IBiomePackage;
@@ -85,6 +86,10 @@ public class TweakerScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("removeDecoration", listing);
+		
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper()), ScriptCommandRemoveFeature.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		validCommands.put("removeFeature", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())

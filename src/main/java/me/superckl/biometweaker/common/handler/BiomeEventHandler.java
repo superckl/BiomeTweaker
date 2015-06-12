@@ -15,6 +15,7 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
+import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -30,6 +31,8 @@ public class BiomeEventHandler {
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> blockReplacements = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
+	@Getter
+	private static final Map<Integer, List<String>> populateTypes = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, Integer> waterlilyPerChunk = Maps.newHashMap();
 	@Getter
@@ -171,8 +174,18 @@ public class BiomeEventHandler {
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
+		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all"))){
 			e.setResult(Result.DENY);
+		}
+	}
+	
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
+		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
+		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
+		if((isAll || BiomeEventHandler.populateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains("all"))){
+			e.setResult(Result.DENY);
+		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

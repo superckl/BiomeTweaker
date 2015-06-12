@@ -6,7 +6,7 @@ public class BiomeTweakerBiome extends BiomeGenBase{
 
 	public BiomeTweakerBiome(final int id) {
 		super(id);
-		this.biomeName = "Biome Tweaker Biome";
+		this.biomeName = "BiomeTweaker Biome";
 	}
 
 }

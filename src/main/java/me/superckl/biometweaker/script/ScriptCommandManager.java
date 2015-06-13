@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,7 +12,6 @@ import me.superckl.biometweaker.script.command.IScriptCommand;
 import me.superckl.biometweaker.util.LogHelper;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 @Getter
 public class ScriptCommandManager {
@@ -24,7 +24,7 @@ public class ScriptCommandManager {
 	private ApplicationStage currentStage = ApplicationStage.FINISHED_LOAD;
 
 	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
-	private final Set<ApplicationStage> appliedStages = Sets.newHashSet();
+	private final Set<ApplicationStage> appliedStages = EnumSet.noneOf(ApplicationStage.class);
 
 	public boolean addCommand(final IScriptCommand command){
 		if(!this.commands.containsKey(this.currentStage))

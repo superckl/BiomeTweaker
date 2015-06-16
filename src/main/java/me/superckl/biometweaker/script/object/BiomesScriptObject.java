@@ -78,7 +78,11 @@ public class BiomesScriptObject extends ScriptObject{
 				final Object[] args = new Object[objs.size()+1];
 				System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
 				args[0] = this.pack;
-				Config.INSTANCE.addCommand(entry.getValue().newInstance(args));
+				IScriptCommand sCommand = entry.getValue().newInstance(args);
+				if(listing.isPerformInst())
+					sCommand.perform();
+				else
+					Config.INSTANCE.addCommand(sCommand);
 				return;
 			}
 		LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");

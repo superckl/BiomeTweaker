@@ -61,6 +61,12 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
+		this.parseScripts();
+		BiomeTweaker.proxy.registerHandlers();
+		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
+	}
+
+	public void parseScripts(){
 		LogHelper.info("Beginning script parsing...");
 		long time = System.currentTimeMillis();
 		for(final JsonElement listElement:Config.INSTANCE.getIncludes()){
@@ -81,10 +87,8 @@ public class BiomeTweaker {
 		}
 		long diff = System.currentTimeMillis()-time;
 		LogHelper.debug("Script parsing took "+diff+"ms.");
-		BiomeTweaker.proxy.registerHandlers();
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
 	}
-
+	
 	@EventHandler
 	public void onInit(final FMLInitializationEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import lombok.Cleanup;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
@@ -60,6 +61,7 @@ public class CommandReload implements ICommand{
 			if(obj.entrySet().isEmpty())
 				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 			Config.INSTANCE.init(operateIn, obj);
+			BiomeTweaker.getInstance().parseScripts();
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.success.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
 		} catch (final Exception e) {
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.failure.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));

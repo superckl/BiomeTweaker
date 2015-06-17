@@ -12,7 +12,6 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 
@@ -95,7 +94,6 @@ public class CommandSetBiome implements ICommand{
 						Chunk chunk = world.getChunkFromBlockCoords(x, z);
 						chunk.getBiomeArray()[realZ*16+realX] = (byte) gen.biomeID;
 						chunk.setChunkModified();
-						((WorldServer)world).markBlocksDirtyVertical(x, z, 0, world.getActualHeight());
 						count++;
 					}
 				sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.biomeName).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));

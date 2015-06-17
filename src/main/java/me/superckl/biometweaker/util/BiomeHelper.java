@@ -65,8 +65,8 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getBiomeGrassColor(x, y, z):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not Set":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getBiomeFoliageColor(x, y, z):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not Set":i));
+			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getBiomeGrassColor(x, y, z):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getBiomeFoliageColor(x, y, z):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
@@ -81,6 +81,18 @@ public class BiomeHelper {
 		for(final Type type: BiomeDictionary.getTypesForBiome(gen))
 			array.add(new JsonPrimitive(type.toString()));
 		obj.add("Dictionary Types", array);
+		
+		JsonObject managerWeights = new JsonObject();
+		for(BiomeManager.BiomeType type:BiomeManager.BiomeType.values()){
+			JsonArray subArray = new JsonArray();
+			List<BiomeEntry> entries = BiomeManager.getBiomes(type);
+			for(BiomeEntry entry:entries)
+				if(entry.biome == gen)
+					subArray.add(new JsonPrimitive(entry.itemWeight));
+			if(subArray.size() > 0)
+				managerWeights.add(type.name()+" Weights", subArray);
+		}
+		obj.add("BiomeManager Entries", managerWeights);
 
 		array = new JsonArray();
 		for(final Object entity:gen.spawnableCreatureList){

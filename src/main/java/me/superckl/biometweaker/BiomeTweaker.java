@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.biometweaker.common.reference.ModData;
@@ -13,8 +14,10 @@ import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.ScriptParser;
 import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
 import me.superckl.biometweaker.server.command.CommandInfo;
+import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
 import me.superckl.biometweaker.server.command.CommandReload;
+import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.ReflectionHelper;
@@ -150,6 +153,8 @@ public class BiomeTweaker {
 		e.registerServerCommand(new CommandReload());
 		e.registerServerCommand(new CommandInfo());
 		e.registerServerCommand(new CommandOutput());
+		e.registerServerCommand(new CommandListBiomes());
+		e.registerServerCommand(new CommandSetBiome());
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 

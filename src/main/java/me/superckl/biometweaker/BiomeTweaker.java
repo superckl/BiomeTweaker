@@ -89,6 +89,7 @@ public class BiomeTweaker {
 			}
 		}
 		long diff = System.currentTimeMillis()-time;
+		LogHelper.info("Finished script parsing.");
 		LogHelper.debug("Script parsing took "+diff+"ms.");
 	}
 	

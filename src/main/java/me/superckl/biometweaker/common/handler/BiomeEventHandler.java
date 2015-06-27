@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
@@ -16,6 +17,7 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
+import net.minecraftforge.event.terraingen.WorldTypeEvent;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,6 +29,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeEventHandler {
 
+	public static byte globalSize = -1;
+	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
+	
 	@Getter
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> blockReplacements = Maps.newHashMap();
 	@Getter
@@ -213,6 +218,14 @@ public class BiomeEventHandler {
 			e.newBiomeDecorator.clayPerChunk = BiomeEventHandler.clayPerChunk.get(id);
 		if(BiomeEventHandler.bigMushroomsPerChunk.containsKey(id))
 			e.newBiomeDecorator.bigMushroomsPerChunk = BiomeEventHandler.bigMushroomsPerChunk.get(id);
+	}
+	
+	@SubscribeEvent
+	public void onGetBiomeSize(WorldTypeEvent.BiomeSize e){
+		if(globalSize != -1)
+			e.newSize = globalSize;
+		else if(sizes.containsKey(e.worldType))
+			e.newSize = sizes.get(e.worldType);
 	}
 
 }

@@ -32,7 +32,7 @@ import com.google.gson.JsonPrimitive;
 @Getter
 public enum ParameterType {
 
-	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE(new TypesPackParameterWrapper()),
+	STRING, INTEGER, INTEGERS, NON_NEG_INTEGER, NON_NEG_INTEGERS, FLOAT, BYTE, NON_NEG_BYTE, SPAWN_TYPE, JSON_ELEMENT, BASIC_BIOMES_PACKAGE, TYPE_BIOMES_PACKAGE(new TypesPackParameterWrapper()),
 	ALL_BIOMES_PACKAGE(new AllPackParameterWrapper()), ALL_BUT_BIOMES_PACKAGE(new AllButPackParameterWrapper()), INTERSECT_BIOMES_PACKAGE(new IntersectPackParameterWrapper()),
 	SUBTRACT_BIOMES_PACKAGE(new SubtractPackParameterWrapper());
 
@@ -69,6 +69,14 @@ public enum ParameterType {
 		}
 		case INTEGER:{
 			return Ints.tryParse(parameter);
+		}
+		case NON_NEG_BYTE:{
+			Integer i = (Integer) ParameterType.NON_NEG_INTEGER.tryParse(parameter, handler);
+			return i == null || i > Byte.MAX_VALUE || i < Byte.MIN_VALUE ? null:i.byteValue();
+		}
+		case BYTE:{
+			Integer i = (Integer) ParameterType.INTEGER.tryParse(parameter, handler);
+			return i == null || i > Byte.MAX_VALUE || i < Byte.MIN_VALUE ? null:i.byteValue();
 		}
 		case INTEGERS:{
 			final List<Integer> ints = Lists.newArrayList();

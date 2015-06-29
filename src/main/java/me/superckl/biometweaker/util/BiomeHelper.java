@@ -274,7 +274,7 @@ public class BiomeHelper {
 				}
 			}
 		else
-			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was found for biomes. Value: "+value.getAsString());
+			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
 
 	private static void checkFields(){
@@ -302,7 +302,7 @@ public class BiomeHelper {
 				BiomeHelper.biomes.setAccessible(true);
 			}
 		}catch(final Exception e){
-			LogHelper.info("Failed to find inserted fields!");
+			LogHelper.error("Failed to find inserted fields!");
 			e.printStackTrace();
 		}
 	}

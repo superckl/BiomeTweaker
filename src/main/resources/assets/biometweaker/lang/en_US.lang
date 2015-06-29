@@ -15,3 +15,5 @@ biometweaker.msg.setbiome.usage.text='/bts <biome id|name> <radius> (block|chunk
 biometweaker.msg.setbiome.invalargs.text=Invalid arguments. Please check the command usage.
 biometweaker.msg.setbiome.blocksuccess.text=Set %d block column(s) to biome '%s'.
 biometweaker.msg.setbiome.chunksuccess.text=Set %d chunk(s) to biome '%s'.
+biometweaker.msg.update.text=A new version of BiomeTweaker is available: %s
+biometweaker.msg.linkopen.text=Click to open the project page.

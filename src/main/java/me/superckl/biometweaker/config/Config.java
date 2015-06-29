@@ -24,6 +24,7 @@ public class Config {
 	public static class Fields{
 
 		public static final String SEPERATE_FILES = "seperate files";
+		public static final String VERSION_CHECK = "version check";
 		public static final String ENABLE_LIGHT_ASM = "enable light asm";
 		public static final String ASM_BLACKLIST = "asm blacklist";
 		public static final String REMOVE_LATE_BLOCK_ASSIGN = "remove late block assignments";
@@ -34,6 +35,7 @@ public class Config {
 	private final ScriptCommandManager commandManager = new ScriptCommandManager();
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles = true;
+	private boolean versionCheck = false;
 	private boolean lightASM = false;
 	private String[] asmBlacklist = new String[0];
 	private boolean removeLateAssignments = false;
@@ -51,6 +53,8 @@ public class Config {
 		this.commandManager.reset();
 		if(obj.has(Fields.SEPERATE_FILES))
 			this.outputSeperateFiles = obj.get(Fields.SEPERATE_FILES).getAsBoolean();
+		if(obj.has(Fields.VERSION_CHECK))
+			this.versionCheck = obj.get(Fields.VERSION_CHECK).getAsBoolean();
 		if(obj.has(Fields.ENABLE_LIGHT_ASM))
 			this.lightASM = obj.get(Fields.ENABLE_LIGHT_ASM).getAsBoolean();
 		if(obj.has(Fields.ASM_BLACKLIST)){

@@ -35,6 +35,8 @@ public class BiomeEventHandler {
 	@Getter
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> blockReplacements = Maps.newHashMap();
 	@Getter
+	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
+	@Getter
 	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> populateTypes = Maps.newHashMap();
@@ -76,7 +78,12 @@ public class BiomeEventHandler {
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
-					final BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
+					BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
+					if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
+						int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
+						biomegenbase = BiomeGenBase.getBiome(id);
+						e.biomeArray[l + (k * 16)] = biomegenbase;
+					}
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
 					final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.blockReplacements.get(biomegenbase.biomeID);

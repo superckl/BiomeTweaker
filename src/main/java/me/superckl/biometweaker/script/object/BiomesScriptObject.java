@@ -19,6 +19,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandAddToGeneration;
+import me.superckl.biometweaker.script.command.ScriptCommandRegisterBiomeReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
@@ -167,6 +168,11 @@ public class BiomesScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterType.STRING.getSimpleWrapper(), ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddToGeneration.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("addToGeneration", listing);
+		
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterType.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
+		validCommands.put("registerGenBiomeRep", listing);
 		
 		return validCommands;
 	}

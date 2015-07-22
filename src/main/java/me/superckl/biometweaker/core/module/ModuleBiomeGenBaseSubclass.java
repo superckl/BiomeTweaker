@@ -41,7 +41,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					}
 					if(shouldCont)
 						continue;
-					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden grass color method and no event call. Attempting to force modded color event call...");
+					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden grass color method and no event call. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -60,7 +60,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					}
 					if(shouldCont)
 						continue;
-					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden foliage color method and no event call. Attempting to force modded color event call...");
+					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden foliage color method and no event call. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -68,7 +68,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(mNode.name.equals("getWaterColorMultiplier") && mNode.desc.equals("()I")){
-					ModBiomeTweakerCore.logger.info("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
+					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));

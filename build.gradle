@@ -45,6 +45,7 @@ minecraft {
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
+    replace "@FINGERPRINT@", "${System.env.sha1_fingerprint ?: "N/A"}"
     runDir = "eclipse"
 }
 
@@ -90,5 +91,40 @@ jar {
     manifest {
         attributes 'FMLCorePlugin': 'me.superckl.biometweaker.core.BiomeTweakerCore'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
+tasks.build.dependsOn('signJar')
+
+ext.keystore_location = "${System.env.keystore_location ?: "."}"
+ext.keystore_password = "${System.env.keystore_password ?: ""}"
+ext.keystore_alias = "${System.env.keystore_alias ?: ""}"
+
+task signJar(dependsOn: ["reobf", "devJar"]) {
+    inputs.dir jar.destinationDir
+    inputs.file keystore_location
+    inputs.property "keystore_alias", keystore_alias
+    inputs.property "keystore_password", keystore_password
+    outputs.dir devJar.destinationDir
+
+    // only sign if the keystore exists
+    onlyIf {
+        return keystore_location != "." && keystore_password != ""
+    }
+    // the actual action.. sign the jar.
+    doLast {
+        jar.destinationDir.eachFile { file ->
+            if (!file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}.jar") && !file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}-dev.jar"))
+                return; // skip non-jars
+
+            logger.lifecycle "signing $file"
+            ant.signjar(
+                    destDir: file.getParentFile(), // same place it came from
+                    jar: file,
+                    keystore: keystore_location,
+                    alias: keystore_alias,
+                    storepass: keystore_password
+            )
+        }
     }
 }

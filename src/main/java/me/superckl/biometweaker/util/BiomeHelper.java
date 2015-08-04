@@ -263,6 +263,11 @@ public class BiomeHelper {
 				BiomeManager.addVillageBiome(biome, true);
 			else
 				BiomeManager.removeVillageBiome(biome);
+		else if(prop.equals("genStrongholds"))
+			if(value.getAsBoolean())
+				BiomeManager.removeStrongholdBiome(biome);
+			else
+				BiomeManager.addStrongholdBiome(biome);
 		else if(prop.equals("isSpawnBiome"))
 			if(value.getAsBoolean())
 				BiomeManager.addSpawnBiome(biome);

@@ -35,7 +35,7 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 				int readBytes;
 				final byte[] buffer = new byte[4096];
 				@Cleanup
-				final InputStream stream = BiomeTweaker.class.getResourceAsStream("/BiomeTweaker.cfg");
+				final InputStream stream = this.getClass().getResourceAsStream("/BiomeTweaker.cfg");
 				@Cleanup
 				final OutputStream outStream = new FileOutputStream(mainConfig);
 				while ((readBytes = stream.read(buffer)) > 0)
@@ -47,7 +47,7 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 				int readBytes;
 				final byte[] buffer = new byte[4096];
 				@Cleanup
-				final InputStream stream = BiomeTweaker.class.getResourceAsStream("/ExampleTweaks.cfg");
+				final InputStream stream = this.getClass().getResourceAsStream("/ExampleTweaks.cfg");
 				@Cleanup
 				final OutputStream outStream = new FileOutputStream(exampleTweaks);
 				while ((readBytes = stream.read(buffer)) > 0)

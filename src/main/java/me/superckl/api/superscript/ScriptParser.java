@@ -30,16 +30,6 @@ public class ScriptParser {
 
 	@Getter
 	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = Maps.newHashMap();
-
-	static{
-		try{
-			
-
-		}catch(final Exception e){
-			APIInfo.log.error("Something went wrong when filling the object mappings! Some objects may not work!");
-			e.printStackTrace();
-		}
-	}
 	
 	/**
 	 * Registers a new way to instantiate a ScriptObject.<br>

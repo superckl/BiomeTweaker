@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script;
+package me.superckl.api.superscript;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -8,8 +8,7 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.superckl.biometweaker.script.command.IScriptCommand;
-import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.api.superscript.command.IScriptCommand;
 
 import com.google.common.collect.Maps;
 
@@ -20,6 +19,10 @@ public class ScriptCommandManager {
 		PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
 	}
 
+	private static Map<String, ScriptCommandManager> instances = Maps.newHashMap();
+	
+	protected ScriptCommandManager() {}
+	
 	@Setter
 	private ApplicationStage currentStage = ApplicationStage.FINISHED_LOAD;
 
@@ -33,7 +36,7 @@ public class ScriptCommandManager {
 			try {
 				command.perform();
 			} catch (final Exception e) {
-				LogHelper.error("Failed to execute script command: "+command);
+				APIInfo.log.error("Failed to execute script command: "+command);
 				e.printStackTrace();
 			}
 		return this.commands.get(this.currentStage).add(command);
@@ -44,12 +47,12 @@ public class ScriptCommandManager {
 			return;
 		this.appliedStages.add(stage);
 		final List<IScriptCommand> commands = this.commands.get(stage);
-		LogHelper.info("Found "+commands.size()+" tweak"+(commands.size() > 1 ? "s":"")+" to apply for stage "+stage.toString()+". Applying...");
+		APIInfo.log.info("Found "+commands.size()+" tweak"+(commands.size() > 1 ? "s":"")+" to apply for stage "+stage.toString()+". Applying...");
 		for(final IScriptCommand command:commands)
 			try{
 				command.perform();
 			}catch(final Exception e){
-				LogHelper.error("Failed to execute script command: "+command);
+				APIInfo.log.error("Failed to execute script command: "+command);
 				e.printStackTrace();
 			}
 	}
@@ -57,6 +60,16 @@ public class ScriptCommandManager {
 	public void reset(){
 		this.commands.clear();
 		this.currentStage = ApplicationStage.FINISHED_LOAD;
+	}
+	
+	public static ScriptCommandManager newInstance(String owner){
+		ScriptCommandManager manager = new ScriptCommandManager();
+		instances.put(owner, manager);
+		return manager;
+	}
+	
+	public static ScriptCommandManager getManagerFor(String owner){
+		return instances.get(owner);
 	}
 
 }

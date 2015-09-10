@@ -1,15 +1,15 @@
 package me.superckl.biometweaker.script.util.wrapper;
 
-import me.superckl.biometweaker.script.ScriptHandler;
+import me.superckl.api.superscript.ScriptHandler;
+import me.superckl.api.superscript.util.ParameterWrapper;
 import me.superckl.biometweaker.script.pack.AllBiomesPackage;
-import me.superckl.biometweaker.script.util.ParameterType;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 public class AllPackParameterWrapper extends ParameterWrapper{
 
 	public AllPackParameterWrapper() {
-		super(ParameterType.ALL_BIOMES_PACKAGE, 1, 1, false);
+		super(BTParameterTypes.ALL_BIOMES_PACKAGE, 1, 1, false);
 	}
 
 	@Override

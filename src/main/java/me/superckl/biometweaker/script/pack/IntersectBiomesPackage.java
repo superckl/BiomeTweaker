@@ -4,11 +4,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import me.superckl.biometweaker.util.CollectionHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+
+import me.superckl.api.superscript.util.CollectionHelper;
 
 public class IntersectBiomesPackage implements IBiomePackage{
 

@@ -1,12 +1,13 @@
-package me.superckl.biometweaker.script.util.wrapper;
+package me.superckl.api.superscript.util;
 
 import java.util.Collection;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import me.superckl.biometweaker.script.ScriptHandler;
-import me.superckl.biometweaker.script.util.ParameterType;
+import lombok.RequiredArgsConstructor;
+import me.superckl.api.superscript.ScriptHandler;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -14,6 +15,7 @@ import com.google.common.collect.Lists;
 
 @Getter
 @Builder
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParameterWrapper {
 
 	private final ParameterType type;

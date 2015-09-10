@@ -2,12 +2,12 @@ package me.superckl.biometweaker.core;
 
 import java.util.Set;
 
+import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.module.IClassTransformerModule;
 import me.superckl.biometweaker.core.module.ModuleBiomeGenBase;
 import me.superckl.biometweaker.core.module.ModuleBiomeGenBaseSubclass;
 import me.superckl.biometweaker.core.module.ModuleBlockOldLeaf;
-import me.superckl.biometweaker.util.CollectionHelper;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 import com.google.common.collect.Sets;

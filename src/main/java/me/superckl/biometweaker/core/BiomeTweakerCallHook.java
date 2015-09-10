@@ -9,7 +9,6 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import lombok.Cleanup;
-import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.config.Config;
 
 import org.apache.logging.log4j.Logger;

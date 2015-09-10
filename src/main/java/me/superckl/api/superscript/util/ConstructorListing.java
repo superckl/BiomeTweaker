@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.util;
+package me.superckl.api.superscript.util;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
-import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
 
 import com.google.common.collect.Maps;
 

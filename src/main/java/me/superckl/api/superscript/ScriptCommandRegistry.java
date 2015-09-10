@@ -1,13 +1,10 @@
-package me.superckl.biometweaker.script;
+package me.superckl.api.superscript;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import me.superckl.biometweaker.script.object.BiomesScriptObject;
-import me.superckl.biometweaker.script.object.ScriptObject;
-import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.script.util.ScriptCommandListing;
-import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.api.superscript.command.ScriptCommandListing;
+import me.superckl.api.superscript.object.ScriptObject;
 
 import com.google.common.collect.Maps;
 
@@ -17,23 +14,12 @@ public class ScriptCommandRegistry {
 
 	private final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> commands = Maps.newHashMap();
 
-	public ScriptCommandRegistry() {
-		try {
-			this.commands.put(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
-			this.commands.put(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
-		} catch (final Exception e) {
-			LogHelper.error("Failed to populate command listings! Some tweaks may not be applied.");
-			e.printStackTrace();
-		}
-
-	}
-
 	public Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> getCommandsMap(){
 		return Maps.newHashMap(this.commands);
 	}
 
 	/**
-	 * Registers a new listing for the given command and for the given ScriptObject classes. This will override any existing listings.
+	 * Registers a new listing for the given command and for the given ScriptObject classes. This will override any existing listing for the passed name.
 	 * In most cases, you should use {@link #getListing(Class, String) getListing} instead of this method, so that you don't override anything you don't mean to.
 	 * @param command The command that should be recognized by the script parser.
 	 * @param listing The command listing that should be used to parse the command.
@@ -45,6 +31,15 @@ public class ScriptCommandRegistry {
 				this.commands.put(clazz, new LinkedHashMap<String, ScriptCommandListing>());
 			this.commands.get(clazz).put(command, listing);
 		}
+	}
+	
+	/**
+	 * Registers a new Class listing. This will override any existing listing for the Class.
+	 * @param clazz The ScriptObject class this listing should be for.
+	 * @param listing The listing to register.
+	 */
+	public void registerClassListing(Class<? extends ScriptObject> clazz, Map<String, ScriptCommandListing> listing){
+		this.commands.put(clazz, listing);
 	}
 
 	/**

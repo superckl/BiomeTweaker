@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.command;
 
+import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.WorldType;

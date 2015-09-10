@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command;
+package me.superckl.api.superscript.command;
 
 public interface IScriptCommand {
 

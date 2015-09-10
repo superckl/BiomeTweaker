@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script;
+package me.superckl.api.superscript;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,15 +15,11 @@ import java.util.Map.Entry;
 
 import lombok.Cleanup;
 import lombok.Getter;
-import me.superckl.biometweaker.script.object.BiomesScriptObject;
-import me.superckl.biometweaker.script.object.ScriptObject;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
-import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
-import me.superckl.biometweaker.script.util.ConstructorListing;
-import me.superckl.biometweaker.script.util.ParameterType;
-import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
-import me.superckl.biometweaker.util.CollectionHelper;
-import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.util.CollectionHelper;
+import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.util.ParameterWrapper;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -37,34 +33,21 @@ public class ScriptParser {
 
 	static{
 		try{
-			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("forBiomes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("forBiomesOfTypes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("forAllBiomes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("forAllBiomesExcept", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("intersectionOf", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(ParameterType.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
-			ScriptParser.validObjects.put("subtractFrom", listing);
+			
 
 		}catch(final Exception e){
-			LogHelper.error("Something went wrong when filling the object mappings! Some objects may not work!");
+			APIInfo.log.error("Something went wrong when filling the object mappings! Some objects may not work!");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Registers a new way to instantiate a ScriptObject.
+	 * @param name The name of the way to instantiate the object. Example: "forBiomes" from BiomeTweaker.
+	 * @param listing The ConstructorListing to use.
+	 */
+	public static void registerValidObjectInst(String name, ConstructorListing<ScriptObject> listing){
+		validObjects.put(name, listing);
 	}
 
 	public static void parseScriptFile(final File file){
@@ -72,7 +55,7 @@ public class ScriptParser {
 			final List<String> scriptLines = ScriptParser.parseScriptLines(file);
 			new ScriptHandler(scriptLines).parse();
 		}catch(final Exception e){
-			LogHelper.error("Failed to parse a script file: "+file.getPath());
+			APIInfo.log.error("Failed to parse a script file: "+file.getPath());
 			e.printStackTrace();
 		}
 	}
@@ -105,7 +88,7 @@ public class ScriptParser {
 
 	public static String[] parseArguments(final String script){
 		if(!script.endsWith(")") || !script.contains("(")){
-			LogHelper.error("Tried to parse an invalid argument array!");
+			APIInfo.log.error("Tried to parse an invalid argument array!");
 			return new String[0];
 		}
 		final String args = script.substring(script.indexOf("(")+1, script.length()-1).trim();
@@ -116,13 +99,13 @@ public class ScriptParser {
 	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler) throws Exception{
 		final String[] split = script.split("=");
 		if(split.length != 2){
-			LogHelper.error("Failed to parse object assignment: "+script);
+			APIInfo.log.error("Failed to parse object assignment: "+script);
 			return null;
 		}
 		final String var = split[0].trim();
 		final String assign = split[1].trim();
 		if(assign.startsWith("\"") && assign.endsWith("\"")){
-			final String shortcut = (String) ParameterType.STRING.tryParse(assign, handler);
+			final String shortcut = (String) ParameterTypes.STRING.tryParse(assign, handler);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
 		}else{
 			final String called = ScriptParser.getCommandCalled(assign);
@@ -142,12 +125,12 @@ public class ScriptParser {
 					}
 					if(!params.isEmpty() || (arguments.length != 0))
 						continue;
-					final IBiomePackage[] args = new IBiomePackage[objs.size()];
+					final Object[] args = new Object[objs.size()];
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
-					return CollectionHelper.linkedMapWithEntry(var, (Object) new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)));
+					return CollectionHelper.linkedMapWithEntry(var, (Object) entry.getValue().newInstance(args)/*new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)*/);
 				}
 			}
-			LogHelper.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
+			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 		}
 		return null;
 	}

@@ -6,9 +6,10 @@ import java.util.Set;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
+import me.superckl.api.superscript.ScriptCommandManager;
+import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.script.ScriptCommandManager;
-import me.superckl.biometweaker.script.command.IScriptCommand;
 
 import org.apache.logging.log4j.Logger;
 
@@ -32,7 +33,7 @@ public class Config {
 
 	}
 
-	private final ScriptCommandManager commandManager = new ScriptCommandManager();
+	private final ScriptCommandManager commandManager = ScriptCommandManager.newInstance(ModData.MOD_ID);
 	private final Set<Integer> tweakedBiomes = new HashSet<Integer>();
 	private boolean outputSeperateFiles = true;
 	private boolean versionCheck = false;

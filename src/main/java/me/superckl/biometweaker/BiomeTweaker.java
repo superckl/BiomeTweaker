@@ -7,12 +7,20 @@ import java.io.IOException;
 
 import lombok.Cleanup;
 import lombok.Getter;
+import me.superckl.api.superscript.ScriptParser;
+import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
+import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.api.superscript.ScriptCommandRegistry;
+import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
-import me.superckl.biometweaker.script.ScriptParser;
-import me.superckl.biometweaker.script.ScriptCommandManager.ApplicationStage;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.script.pack.IBiomePackage;
+import me.superckl.biometweaker.script.util.wrapper.BTParameterTypes;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
@@ -25,6 +33,7 @@ import me.superckl.biometweaker.util.VersionChecker;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -69,6 +78,40 @@ public class BiomeTweaker {
 	public void onPreInit(final FMLPreInitializationEvent e){
 		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
 			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
+		ScriptHandler.registerStaticObject("Tweaker", new TweakerScriptObject());
+		
+		try {
+			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("forBiomes", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("forBiomesOfTypes", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("forAllBiomes", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("forAllBiomesExcept", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("intersectionOf", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			ScriptParser.registerValidObjectInst("subtractFrom", listing);
+			
+			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
+			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
+		} catch (final Exception e1) {
+			LogHelper.error("Failed to populate object and command listings! Some tweaks may not be applied.");
+			e1.printStackTrace();
+		}
+		
 		this.parseScripts();
 		BiomeTweaker.proxy.registerHandlers();
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);

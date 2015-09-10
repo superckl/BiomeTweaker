@@ -2,7 +2,7 @@ package me.superckl.biometweaker.common.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import me.superckl.biometweaker.script.command.IScriptCommand;
+import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;

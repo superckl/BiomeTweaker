@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.object;
+package me.superckl.api.superscript.object;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;
@@ -9,15 +9,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lombok.Getter;
-import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.script.ScriptCommandRegistry;
-import me.superckl.biometweaker.script.ScriptHandler;
-import me.superckl.biometweaker.script.ScriptParser;
-import me.superckl.biometweaker.script.command.IScriptCommand;
-import me.superckl.biometweaker.script.util.ScriptCommandListing;
-import me.superckl.biometweaker.script.util.wrapper.ParameterWrapper;
-import me.superckl.biometweaker.util.CollectionHelper;
-import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.api.superscript.APIInfo;
+import me.superckl.api.superscript.ScriptCommandRegistry;
+import me.superckl.api.superscript.ScriptHandler;
+import me.superckl.api.superscript.ScriptParser;
+import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.command.ScriptCommandListing;
+import me.superckl.api.superscript.util.CollectionHelper;
+import me.superckl.api.superscript.util.ParameterWrapper;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -35,7 +34,7 @@ public abstract class ScriptObject {
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
 		final String command = ScriptParser.getCommandCalled(call);
 		if(!this.validCommands.containsKey(command)){
-			LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
+			APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
 		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
@@ -60,10 +59,12 @@ public abstract class ScriptObject {
 				if(listing.isPerformInst())
 					sCommand.perform();
 				else
-					Config.INSTANCE.addCommand(sCommand);
+					this.addCommand(sCommand);
 				return;
 			}
-		LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
+		APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
+	
+	public abstract void addCommand(IScriptCommand command);
 
 }

@@ -3,7 +3,7 @@ package me.superckl.biometweaker.script.pack;
 import java.util.Iterator;
 import java.util.List;
 
-import me.superckl.biometweaker.util.CollectionHelper;
+import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.pack.IBiomePackage;

@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.util;
+package me.superckl.api.superscript.util;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

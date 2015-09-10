@@ -3,6 +3,7 @@ package me.superckl.biometweaker.script.command;
 import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;

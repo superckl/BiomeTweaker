@@ -47,14 +47,16 @@ public abstract class ScriptObject {
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing()){
 						continue outer;
+					}
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
 					it.remove();
 				}
-				if(!params.isEmpty() || (arguments.length != 0))
+				if(!params.isEmpty() || (arguments.length != 0)){
 					continue;
+				}
 				final IScriptCommand sCommand = entry.getValue().newInstance(objs.toArray());
 				if(listing.isPerformInst())
 					sCommand.perform();
@@ -63,6 +65,15 @@ public abstract class ScriptObject {
 				return;
 			}
 		APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
+	}
+	
+	/**
+	 * You should implement to read any arguments you expetced to receive in scripts.
+	 * @param args The args parsed from the script.
+	 * @throws Exception An exception that arised from incorrect arguments or other parsing problems.
+	 */
+	public void readArgs(Object ... args) throws Exception{
+		
 	}
 	
 	public abstract void addCommand(IScriptCommand command);

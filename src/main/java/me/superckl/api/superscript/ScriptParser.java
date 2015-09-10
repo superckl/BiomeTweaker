@@ -42,7 +42,9 @@ public class ScriptParser {
 	}
 	
 	/**
-	 * Registers a new way to instantiate a ScriptObject.
+	 * Registers a new way to instantiate a ScriptObject.<br>
+	 * NOTE: The constructor listing in this method does not care what the actual constructors are.
+	 *  It will always call the constructor of the same class that takes no arguments, and then call {@link ScriptObject#readArgs(Object...)}.
 	 * @param name The name of the way to instantiate the object. Example: "forBiomes" from BiomeTweaker.
 	 * @param listing The ConstructorListing to use.
 	 */
@@ -127,7 +129,9 @@ public class ScriptParser {
 						continue;
 					final Object[] args = new Object[objs.size()];
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
-					return CollectionHelper.linkedMapWithEntry(var, (Object) entry.getValue().newInstance(args)/*new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)*/);
+					ScriptObject obj = entry.getValue().getDeclaringClass().newInstance();
+					obj.readArgs(args);
+					return CollectionHelper.linkedMapWithEntry(var, (Object) obj/*new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)*/);
 				}
 			}
 			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");

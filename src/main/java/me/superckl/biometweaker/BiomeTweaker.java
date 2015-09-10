@@ -19,7 +19,6 @@ import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.script.util.wrapper.BTParameterTypes;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
@@ -78,38 +77,45 @@ public class BiomeTweaker {
 	public void onPreInit(final FMLPreInitializationEvent e){
 		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
 			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
+		
+		try {
+			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
+			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
+		} catch (Exception e2) {
+			LogHelper.error("Failed to populate command listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
+		}
+		
 		ScriptHandler.registerStaticObject("Tweaker", new TweakerScriptObject());
 		
 		try {
 			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomes", listing);
 
 			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomesOfTypes", listing);
 
 			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forAllBiomes", listing);
 
 			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forAllBiomesExcept", listing);
 
 			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("intersectionOf", listing);
 
 			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("subtractFrom", listing);
 			
-			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
-			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
-		} catch (final Exception e1) {
-			LogHelper.error("Failed to populate object and command listings! Some tweaks may not be applied.");
-			e1.printStackTrace();
+		} catch (final Exception e2) {
+			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
 		}
 		
 		this.parseScripts();

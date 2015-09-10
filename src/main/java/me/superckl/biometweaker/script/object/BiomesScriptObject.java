@@ -46,15 +46,7 @@ import com.google.gson.JsonElement;
 public class BiomesScriptObject extends ScriptObject{
 
 	@Getter
-	private final IBiomePackage pack;
-
-	public BiomesScriptObject(final IBiomePackage ... packs) {
-		super();
-		if(packs.length == 1)
-			this.pack = packs[0];
-		else
-			this.pack = new MergedBiomesPackage(packs);
-	}
+	private IBiomePackage pack;
 
 	@Override
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
@@ -73,14 +65,16 @@ public class BiomesScriptObject extends ScriptObject{
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing()){
 						continue outer;
+					}
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
 					it.remove();
 				}
-				if(!params.isEmpty() || (arguments.length != 0))
+				if(!params.isEmpty() || (arguments.length != 0)){
 					continue;
+				}
 				//ParamterType list does not contain BiomePackages, so insert them.
 				final Object[] args = new Object[objs.size()+1];
 				System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
@@ -187,5 +181,17 @@ public class BiomesScriptObject extends ScriptObject{
 	public void addCommand(IScriptCommand command) {
 		Config.INSTANCE.addCommand(command);
 	}
+
+	@Override
+	public void readArgs(Object... packs) throws Exception {
+		IBiomePackage[] bPacks = new IBiomePackage[packs.length];
+		System.arraycopy(packs, 0, bPacks, 0, packs.length);
+		if(bPacks.length == 1)
+			this.pack = bPacks[0];
+		else
+			this.pack = new MergedBiomesPackage(bPacks);
+	}
+	
+	
 
 }

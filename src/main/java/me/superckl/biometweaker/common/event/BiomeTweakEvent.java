@@ -2,8 +2,8 @@ package me.superckl.biometweaker.common.event;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -119,10 +119,10 @@ public abstract class BiomeTweakEvent extends Event{
 	@Getter
 	public static class RemoveSpawn extends BiomeTweakEvent{
 
-		private final ScriptCommandAddRemoveSpawn.Type type;
+		private final SpawnListType type;
 		private final Class<?> entityClass;
 
-		public RemoveSpawn(final IScriptCommand command, final BiomeGenBase biome, final ScriptCommandAddRemoveSpawn.Type type, final Class<?> entityClass) {
+		public RemoveSpawn(final IScriptCommand command, final BiomeGenBase biome, final SpawnListType type, final Class<?> entityClass) {
 			super(command, biome);
 			this.type = type;
 			this.entityClass = entityClass;
@@ -134,9 +134,9 @@ public abstract class BiomeTweakEvent extends Event{
 	@Getter
 	public static class RemoveAllSpawns extends BiomeTweakEvent{
 
-		private final ScriptCommandAddRemoveSpawn.Type type;
+		private final SpawnListType type;
 
-		public RemoveAllSpawns(final IScriptCommand command, final BiomeGenBase biome, final ScriptCommandAddRemoveSpawn.Type type) {
+		public RemoveAllSpawns(final IScriptCommand command, final BiomeGenBase biome, final SpawnListType type) {
 			super(command, biome);
 			this.type = type;
 		}

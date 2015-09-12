@@ -11,6 +11,7 @@ import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.biometweaker.common.reference.ModData;
@@ -19,7 +20,6 @@ import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.script.util.wrapper.BTParameterTypes;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
@@ -44,6 +44,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLConstructionEvent;
 import cpw.mods.fml.common.event.FMLFingerprintViolationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
@@ -72,12 +73,9 @@ public class BiomeTweaker {
 		LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
 		LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
 	}
-
+	
 	@EventHandler
-	public void onPreInit(final FMLPreInitializationEvent e){
-		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
-			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
-		
+	public void onConstruction(FMLConstructionEvent e){
 		try {
 			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
 			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
@@ -117,8 +115,15 @@ public class BiomeTweaker {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
 		}
+	}
+
+	@EventHandler
+	public void onPreInit(final FMLPreInitializationEvent e){
+		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
+			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
 		
 		this.parseScripts();
+		
 		BiomeTweaker.proxy.registerHandlers();
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
 	}

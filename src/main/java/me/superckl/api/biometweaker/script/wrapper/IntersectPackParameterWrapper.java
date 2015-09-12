@@ -1,21 +1,20 @@
-package me.superckl.biometweaker.script.util.wrapper;
+package me.superckl.api.biometweaker.script.wrapper;
 
 import java.util.List;
 
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.util.ParameterWrapper;
-import me.superckl.biometweaker.script.pack.AllButBiomesPackage;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
-import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
-public class AllButPackParameterWrapper extends ParameterWrapper{
+public class IntersectPackParameterWrapper extends ParameterWrapper{
 
-	public AllButPackParameterWrapper() {
-		super(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE, 1, 1, false);
+	public IntersectPackParameterWrapper() {
+		super(BTParameterTypes.INTERSECT_BIOMES_PACKAGE, 1, 1, false);
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class AllButPackParameterWrapper extends ParameterWrapper{
 			}
 			parsed.add(obj);
 		}
-		return Pair.of(new Object[] {new AllButBiomesPackage(new MergedBiomesPackage(parsed.toArray(new IBiomePackage[parsed.size()])))}, toReturn);
+		return Pair.of(new Object[] {new IntersectBiomesPackage(parsed.toArray(new IBiomePackage[parsed.size()]))}, toReturn);
 	}
 
 }

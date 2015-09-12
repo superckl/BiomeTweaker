@@ -6,8 +6,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
 
 @RequiredArgsConstructor
 public class ScriptCommandAddToGeneration implements IScriptCommand{

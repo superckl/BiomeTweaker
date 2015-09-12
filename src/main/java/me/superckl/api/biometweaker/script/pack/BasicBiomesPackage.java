@@ -1,10 +1,10 @@
-package me.superckl.biometweaker.script.pack;
+package me.superckl.api.biometweaker.script.pack;
 
 import java.util.Iterator;
 import java.util.List;
 
+import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.CollectionHelper;
-import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.google.common.collect.Lists;
@@ -23,7 +23,7 @@ public class BasicBiomesPackage implements IBiomePackage{
 		for(final int i:this.ids){
 			final BiomeGenBase gen = BiomeGenBase.getBiome(i);
 			if(gen == null){
-				LogHelper.info("Error applying tweaks. Biome ID "+i+" does not correspond to a biome! Check the output files for the correct ID!");
+				APIInfo.log.info("Error applying tweaks. Biome ID "+i+" does not correspond to a biome! Check the output files for the correct ID!");
 				continue;
 			}
 			list.add(gen);

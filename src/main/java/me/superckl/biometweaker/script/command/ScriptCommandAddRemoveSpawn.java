@@ -5,10 +5,11 @@ import java.util.Iterator;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -17,21 +18,17 @@ import net.minecraftforge.common.MinecraftForge;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
-	public static enum Type{
-		CREATURE, MONSTER, CAVE_CREATURE, WATER_CREATURE;
-	}
-
 	private final IBiomePackage pack;
 	private final boolean remove;
-	private final Type type;
+	private final SpawnListType type;
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final Type type, final int weight, final int minCount, final int maxCount) {
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type, final int weight, final int minCount, final int maxCount) {
 		this(pack, false, type, entityClass, weight, minCount, maxCount);
 	}
 
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final Type type) {
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type) {
 		this(pack, true, type, entityClass, 0, 0, 0);
 	}
 

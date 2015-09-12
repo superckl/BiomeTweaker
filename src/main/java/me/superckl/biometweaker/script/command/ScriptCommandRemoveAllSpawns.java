@@ -3,11 +3,11 @@ package me.superckl.biometweaker.script.command;
 import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -15,7 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ScriptCommandRemoveAllSpawns implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final Type type;
+	private final SpawnListType type;
 
 	@Override
 	public void perform() throws Exception {
@@ -29,7 +29,7 @@ public class ScriptCommandRemoveAllSpawns implements IScriptCommand{
 		}
 	}
 
-	private void removeEntries(final BiomeGenBase gen, final Type type){
+	private void removeEntries(final BiomeGenBase gen, final SpawnListType type){
 		switch(this.type){
 		case CAVE_CREATURE:{
 			gen.spawnableCaveCreatureList.clear();

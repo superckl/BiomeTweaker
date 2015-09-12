@@ -1,20 +1,20 @@
-package me.superckl.biometweaker.script.util.wrapper;
+package me.superckl.api.biometweaker.script.wrapper;
 
 import java.util.List;
 
+import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
+import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.BasicBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
+import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.biometweaker.script.object.BiomesScriptObject;
-import me.superckl.biometweaker.script.pack.AllBiomesPackage;
-import me.superckl.biometweaker.script.pack.AllButBiomesPackage;
-import me.superckl.biometweaker.script.pack.BasicBiomesPackage;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
-import me.superckl.biometweaker.script.pack.IntersectBiomesPackage;
-import me.superckl.biometweaker.script.pack.SubtractBiomesPackage;
-import me.superckl.biometweaker.script.pack.TypeBiomesPackage;
-import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 
 public class BTParameterTypes {
 
@@ -24,7 +24,7 @@ public class BTParameterTypes {
 		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
 			final String extracted = (String) ParameterTypes.STRING.tryParse(parameter, handler);
 			if(extracted != null)
-				return Type.valueOf(extracted);
+				return SpawnListType.valueOf(extracted);
 			return null;
 		}
 	};
@@ -36,9 +36,9 @@ public class BTParameterTypes {
 			final List<Integer> ints = (List<Integer>) ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler);
 			if(ints.isEmpty()){
 				final ScriptObject obj = handler.getObjects().get(parameter);
-				if((obj == null) || !(obj instanceof BiomesScriptObject))
+				if((obj == null) || !(obj instanceof BiomePackScriptObject))
 					return null;
-				return ((BiomesScriptObject)obj).getPack();
+				return ((BiomePackScriptObject)obj).getPack();
 			}
 			final int[] array = new int[ints.size()];
 			for(int i = 0; i < array.length; i++)

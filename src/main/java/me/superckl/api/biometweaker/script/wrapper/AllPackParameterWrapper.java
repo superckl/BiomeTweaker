@@ -1,8 +1,8 @@
-package me.superckl.biometweaker.script.util.wrapper;
+package me.superckl.api.biometweaker.script.wrapper;
 
+import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.util.ParameterWrapper;
-import me.superckl.biometweaker.script.pack.AllBiomesPackage;
 
 import org.apache.commons.lang3.tuple.Pair;
 

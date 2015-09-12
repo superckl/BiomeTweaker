@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
+import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
+import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
+import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
@@ -22,7 +25,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
-import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn.Type;
 import me.superckl.biometweaker.script.command.ScriptCommandAddToGeneration;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBiomeReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
@@ -32,9 +34,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveFeature;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
-import me.superckl.biometweaker.script.pack.IBiomePackage;
-import me.superckl.biometweaker.script.pack.MergedBiomesPackage;
-import me.superckl.biometweaker.script.util.wrapper.BTParameterTypes;
 import me.superckl.biometweaker.util.LogHelper;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -43,10 +42,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
-public class BiomesScriptObject extends ScriptObject{
-
-	@Getter
-	private IBiomePackage pack;
+public class BiomesScriptObject extends BiomePackScriptObject{
 
 	@Override
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
@@ -100,17 +96,17 @@ public class BiomesScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), BTParameterTypes.SPAWN_TYPE.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()
 				, ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, SpawnListType.class, Integer.TYPE, Integer.TYPE, Integer.TYPE));
 		validCommands.put("addSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), BTParameterTypes.SPAWN_TYPE.getSimpleWrapper())
-				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, Type.class));
+				, ScriptCommandAddRemoveSpawn.class.getDeclaredConstructor(IBiomePackage.class, String.class, SpawnListType.class));
 		validCommands.put("removeSpawn", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.SPAWN_TYPE.getSimpleWrapper())
-				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(IBiomePackage.class, Type.class));
+				, ScriptCommandRemoveAllSpawns.class.getDeclaredConstructor(IBiomePackage.class, SpawnListType.class));
 		validCommands.put("removeAllSpawns", listing);
 
 		listing = new ScriptCommandListing();

@@ -60,18 +60,25 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand([
         'mod_version': project.config.mod_version,
         'minecraft_version': project.config.minecraft_version,
         ])
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from ('build/sources/java') {
+        include "**/api/**/*"
+    }
+    version = "API${project.config.api_version}"
 }
 
 task devJar(type: Jar, dependsOn: 'classes') {
@@ -84,7 +91,8 @@ task devJar(type: Jar, dependsOn: 'classes') {
 }
 
 artifacts {
-    archives devJar
+  archives devJar
+	archives apiJar
 }
 
 jar {

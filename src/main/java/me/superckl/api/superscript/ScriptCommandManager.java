@@ -6,13 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.superckl.api.superscript.command.IScriptCommand;
 
 import com.google.common.collect.Maps;
 
-@Getter
 public class ScriptCommandManager {
 
 	public static enum ApplicationStage{
@@ -22,8 +19,7 @@ public class ScriptCommandManager {
 	private static Map<String, ScriptCommandManager> instances = Maps.newHashMap();
 	
 	protected ScriptCommandManager() {}
-	
-	@Setter
+
 	private ApplicationStage currentStage = ApplicationStage.FINISHED_LOAD;
 
 	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
@@ -70,6 +66,22 @@ public class ScriptCommandManager {
 	
 	public static ScriptCommandManager getManagerFor(String owner){
 		return instances.get(owner);
+	}
+
+	public ApplicationStage getCurrentStage() {
+		return currentStage;
+	}
+
+	public void setCurrentStage(ApplicationStage currentStage) {
+		this.currentStage = currentStage;
+	}
+
+	public Map<ApplicationStage, List<IScriptCommand>> getCommands() {
+		return commands;
+	}
+
+	public Set<ApplicationStage> getAppliedStages() {
+		return appliedStages;
 	}
 
 }

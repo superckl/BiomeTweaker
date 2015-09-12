@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Cleanup;
-import lombok.Getter;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ConstructorListing;
@@ -28,7 +26,6 @@ import com.google.common.collect.Maps;
 
 public class ScriptParser {
 
-	@Getter
 	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = Maps.newHashMap();
 	
 	/**
@@ -54,13 +51,12 @@ public class ScriptParser {
 
 	public static List<String> parseScriptLines(final File file) throws IOException{
 		final List<String> array = new ArrayList<String>();
-		@Cleanup
-		final
-		BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+		try(final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)))){
 		String line;
 		while((line = r.readLine()) != null)
 			if(!line.isEmpty() && !line.startsWith("#"))
 				array.add(line);
+		}
 		return array;
 	}
 
@@ -127,6 +123,10 @@ public class ScriptParser {
 			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 		}
 		return null;
+	}
+
+	public static Map<String, ConstructorListing<ScriptObject>> getValidobjects() {
+		return validObjects;
 	}
 
 }

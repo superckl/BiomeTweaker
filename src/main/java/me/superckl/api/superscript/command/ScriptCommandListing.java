@@ -1,7 +1,5 @@
 package me.superckl.api.superscript.command;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.superckl.api.superscript.util.ConstructorListing;
 
 /**
@@ -9,8 +7,14 @@ import me.superckl.api.superscript.util.ConstructorListing;
  */
 public class ScriptCommandListing extends ConstructorListing<IScriptCommand>{
 
-	@Getter
-	@Setter
 	private boolean performInst;
+
+	public boolean isPerformInst() {
+		return performInst;
+	}
+
+	public void setPerformInst(boolean performInst) {
+		this.performInst = performInst;
+	}
 
 }

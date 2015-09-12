@@ -3,16 +3,19 @@ package me.superckl.api.biometweaker.script.pack;
 import java.util.Iterator;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
 import net.minecraft.world.biome.BiomeGenBase;
 
 import com.google.common.collect.Lists;
 
-@RequiredArgsConstructor
 public class SubtractBiomesPackage implements IBiomePackage{
 
 	private final IBiomePackage main;
 	private final IBiomePackage subtract;
+	
+	public SubtractBiomesPackage(IBiomePackage main, IBiomePackage subtract) {
+		this.main = main;
+		this.subtract = subtract;
+	}
 
 	@Override
 	public Iterator<BiomeGenBase> getIterator() {

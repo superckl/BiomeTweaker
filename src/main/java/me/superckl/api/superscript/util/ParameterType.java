@@ -1,9 +1,7 @@
 package me.superckl.api.superscript.util;
 
-import lombok.Getter;
 import me.superckl.api.superscript.ScriptHandler;
 
-@Getter
 public abstract class ParameterType {
 
 	private final ParameterWrapper simpleWrapper;
@@ -36,6 +34,18 @@ public abstract class ParameterType {
 
 	public boolean hasSpecialWrapper(){
 		return this.specialWrapper != null;
+	}
+
+	public ParameterWrapper getSimpleWrapper() {
+		return simpleWrapper;
+	}
+
+	public ParameterWrapper getVarArgsWrapper() {
+		return varArgsWrapper;
+	}
+
+	public ParameterWrapper getSpecialWrapper() {
+		return specialWrapper;
 	}
 
 }

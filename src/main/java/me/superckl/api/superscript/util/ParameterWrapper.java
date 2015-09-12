@@ -3,19 +3,12 @@ package me.superckl.api.superscript.util;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.superckl.api.superscript.ScriptHandler;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 
-@Getter
-@Builder
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ParameterWrapper {
 
 	private final ParameterType type;
@@ -23,6 +16,13 @@ public class ParameterWrapper {
 	private final int maxNum;
 	private final boolean varArgs;
 
+	protected ParameterWrapper(ParameterType type, int minNum, int maxNum, boolean varArgs) {
+		this.type = type;
+		this.minNum = minNum;
+		this.maxNum = maxNum;
+		this.varArgs = varArgs;
+	}
+	
 	public Pair<Object[], String[]> parseArgs(final ScriptHandler handler, String ... args) throws Exception{
 		final List<Object> parsed = Lists.newArrayList();
 		for(int i = 0; ; i++){
@@ -52,6 +52,77 @@ public class ParameterWrapper {
 
 	public boolean canReturnNothing(){
 		return this.minNum <= 0;
+	}
+
+	public ParameterType getType() {
+		return type;
+	}
+
+	public int getMinNum() {
+		return minNum;
+	}
+
+	public int getMaxNum() {
+		return maxNum;
+	}
+
+	public boolean isVarArgs() {
+		return varArgs;
+	}
+	
+	public static Builder builder(){
+		return new Builder();
+	}
+	
+	public static class Builder{
+		
+		private ParameterType type;
+		private int minNum;
+		private int maxNum;
+		private boolean varArgs;
+		
+		private Builder(){}
+
+		public ParameterType type() {
+			return type;
+		}
+
+		public Builder type(ParameterType type) {
+			this.type = type;
+			return this;
+		}
+
+		public int minNum() {
+			return minNum;
+		}
+
+		public Builder minNum(int minNum) {
+			this.minNum = minNum;
+			return this;
+		}
+
+		public int maxNum() {
+			return maxNum;
+		}
+
+		public Builder maxNum(int maxNum) {
+			this.maxNum = maxNum;
+			return this;
+		}
+
+		public boolean varArgs() {
+			return varArgs;
+		}
+
+		public Builder varArgs(boolean varArgs) {
+			this.varArgs = varArgs;
+			return this;
+		}
+		
+		public ParameterWrapper build(){
+			return new ParameterWrapper(this.type, this.minNum, this.maxNum, this.varArgs);
+		}
+		
 	}
 
 }

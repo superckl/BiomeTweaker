@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.ScriptHandler;
@@ -24,7 +23,6 @@ import com.google.common.collect.Lists;
 
 public abstract class ScriptObject {
 
-	@Getter
 	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<String, ScriptCommandListing>();
 
 	public ScriptObject() {
@@ -77,5 +75,9 @@ public abstract class ScriptObject {
 	}
 	
 	public abstract void addCommand(IScriptCommand command);
+
+	public Map<String, ScriptCommandListing> getValidCommands() {
+		return validCommands;
+	}
 
 }

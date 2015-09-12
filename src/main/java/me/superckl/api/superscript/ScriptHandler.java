@@ -8,10 +8,8 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
-import lombok.Getter;
 import me.superckl.api.superscript.object.ScriptObject;
 
-@Getter
 public class ScriptHandler {
 
 	private final static Map<String, ScriptObject> staticObjects = Maps.newHashMap();
@@ -72,6 +70,22 @@ public class ScriptHandler {
 	 */
 	public static void registerStaticObject(String name, ScriptObject object){
 		staticObjects.put(name, object);
+	}
+
+	public List<String> getLines() {
+		return lines;
+	}
+
+	public Iterator<String> getIt() {
+		return it;
+	}
+
+	public Map<String, String> getShortcuts() {
+		return shortcuts;
+	}
+
+	public Map<String, ScriptObject> getObjects() {
+		return objects;
 	}
 	
 }

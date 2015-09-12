@@ -5,13 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
-
 import com.google.common.collect.Maps;
 
 public class ConstructorListing<T> {
 
-	@Getter
 	protected final Map<List<ParameterWrapper>, Constructor<? extends T>> constructors = Maps.newHashMap();
 
 	public ConstructorListing() {}
@@ -27,6 +24,10 @@ public class ConstructorListing<T> {
 
 	public void addEntry(final List<ParameterWrapper> list, final Constructor<? extends T> construct){
 		this.constructors.put(list, construct);
+	}
+
+	public Map<List<ParameterWrapper>, Constructor<? extends T>> getConstructors() {
+		return constructors;
 	}
 
 }

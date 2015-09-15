@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import me.superckl.api.superscript.command.IScriptCommand;
+import net.minecraftforge.common.util.EnumHelper;
 
 import com.google.common.collect.Maps;
 
@@ -14,6 +15,11 @@ public class ScriptCommandManager {
 
 	public static enum ApplicationStage{
 		PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
+		
+		public static ApplicationStage newStage(String name){
+			return EnumHelper.addEnum(ApplicationStage.class, name);
+		}
+		
 	}
 
 	private static Map<String, ScriptCommandManager> instances = Maps.newHashMap();

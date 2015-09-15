@@ -1,12 +1,10 @@
 package me.superckl.biometweaker.server.command;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
 
-import lombok.Cleanup;
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
@@ -17,14 +15,9 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+public class CommandReloadScript implements ICommand{
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
-
-public class CommandReload implements ICommand{
-
-	private final List<String> aliases = Arrays.asList("btreload", "biometweakerreload", "btr", "biometweakerr");
+	private final List<String> aliases = Arrays.asList("btreloadscript", "biometweakerreloadscript", "btrs", "btrscript", "biometweakerrs");
 
 	@Override
 	public int compareTo(final Object o) {
@@ -35,12 +28,12 @@ public class CommandReload implements ICommand{
 
 	@Override
 	public String getCommandName() {
-		return "BTReload";
+		return "BTReloadScript";
 	}
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return LanguageRegistry.instance().getStringLocalization("biometweaker.msg.reload.usage.text");
+		return LanguageRegistry.instance().getStringLocalization("biometweaker.msg.reloadscript.usage.text");
 	}
 
 	@Override
@@ -49,22 +42,23 @@ public class CommandReload implements ICommand{
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] p_71515_2_) {
+	public void processCommand(final ICommandSender sender, final String[] args) {
+		if(args.length != 1){
+			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reloadscript.usage.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			return;
+		}
 		try {
 			final File operateIn = Config.INSTANCE.getWhereAreWe();
-			final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");
-			@Cleanup
-			final
-			BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
-			final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
-			if(obj.entrySet().isEmpty())
-				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
-			Config.INSTANCE.init(operateIn, obj);
-			BiomeTweaker.getInstance().parseScripts();
-			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.success.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
+			final File scriptFile = new File(operateIn, args[0]);
+			if(!scriptFile.exists() || !scriptFile.isFile()){
+				sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+				return;
+			}
+			BiomeTweaker.getInstance().parseScript(scriptFile);
+			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reloadscript.success.text", scriptFile.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
 		} catch (final Exception e) {
-			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reload.failure.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-			LogHelper.error("Failed to reload scripts!");
+			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.reloadscript.failure.text", args[0]).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			LogHelper.error(String.format("Failed to reload script %s!", args[0]));
 			e.printStackTrace();
 		}
 	}
@@ -83,5 +77,5 @@ public class CommandReload implements ICommand{
 	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
 		return false;
 	}
-
+	
 }

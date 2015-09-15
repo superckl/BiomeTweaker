@@ -24,6 +24,7 @@ import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
 import me.superckl.biometweaker.server.command.CommandReload;
+import me.superckl.biometweaker.server.command.CommandReloadScript;
 import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
@@ -136,12 +137,7 @@ public class BiomeTweaker {
 			try {
 				final String item = listElement.getAsString();
 				subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
-				if(!subFile.exists()){
-					LogHelper.debug("Included subfile not found. A blank one will be generated.");
-					subFile.createNewFile();
-				}
-				ScriptParser.parseScriptFile(subFile);
-				Config.INSTANCE.getCommandManager().setCurrentStage(ApplicationStage.FINISHED_LOAD);
+				this.parseScript(subFile);
 			} catch (Exception e1) {
 				LogHelper.error("Failed to parse a script file! File: "+subFile);
 				e1.printStackTrace();
@@ -150,6 +146,15 @@ public class BiomeTweaker {
 		long diff = System.currentTimeMillis()-time;
 		LogHelper.info("Finished script parsing.");
 		LogHelper.debug("Script parsing took "+diff+"ms.");
+	}
+	
+	public void parseScript(File file) throws IOException{
+		if(!file.exists()){
+			LogHelper.debug(String.format("Subfile %s not found. A blank one will be generated.", file.getName()));
+			file.createNewFile();
+		}
+		ScriptParser.parseScriptFile(file);
+		Config.INSTANCE.getCommandManager().setCurrentStage(ApplicationStage.FINISHED_LOAD);
 	}
 	
 	@EventHandler
@@ -215,6 +220,7 @@ public class BiomeTweaker {
 		e.registerServerCommand(new CommandOutput());
 		e.registerServerCommand(new CommandListBiomes());
 		e.registerServerCommand(new CommandSetBiome());
+		e.registerServerCommand(new CommandReloadScript());
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 

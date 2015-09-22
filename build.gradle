@@ -48,6 +48,13 @@ minecraft {
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
     replace "@FINGERPRINT@", "${System.env.sha1_fingerprint ?: "N/A"}"
+
+    replaceIn "biometweaker/APIInfo.java"
+    replace "@APIVERSION@", "${config.api_version}.${System.env.BUILD_NUMBER ?: 0}"
+
+    replaceIn "superscript/APIInfo.java"
+    replace "@SSVERSION@", "${config.ss_version}.${System.env.BUILD_NUMBER ?: 0}"
+
     runDir = "eclipse"
 }
 
@@ -80,7 +87,14 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
     from ('build/sources/java') {
         include "**/api/**/*"
     }
-    version = "API${project.config.api_version}"
+    version = "${config.minecraft_version}-API-${project.config.api_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
+}
+
+task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from ('build/sources/java') {
+        include "**/api/superscript/**/"
+    }
+    version = "${config.minecraft_version}-SSAPI-${project.config.ss_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
 }
 
 task devJar(type: Jar, dependsOn: 'classes') {
@@ -95,6 +109,7 @@ task devJar(type: Jar, dependsOn: 'classes') {
 artifacts {
   archives devJar
 	archives apiJar
+  archives ssJar
 }
 
 jar {

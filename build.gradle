@@ -88,6 +88,7 @@ task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
         include "**/api/**/*"
     }
     version = "${config.minecraft_version}-API-${project.config.api_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
+    extension = 'zip'
 }
 
 task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
@@ -95,6 +96,7 @@ task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
         include "**/api/superscript/**/"
     }
     version = "${config.minecraft_version}-SSAPI-${project.config.ss_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
+    extension = 'zip'
 }
 
 task devJar(type: Jar, dependsOn: 'classes') {

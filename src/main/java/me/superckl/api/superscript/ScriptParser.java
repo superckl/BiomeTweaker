@@ -13,21 +13,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
 public class ScriptParser {
 
 	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = Maps.newHashMap();
-	
+
 	/**
 	 * Registers a new way to instantiate a ScriptObject.<br>
 	 * NOTE: The constructor listing in this method does not care what the actual constructors are.
@@ -35,8 +35,8 @@ public class ScriptParser {
 	 * @param name The name of the way to instantiate the object. Example: "forBiomes" from BiomeTweaker.
 	 * @param listing The ConstructorListing to use.
 	 */
-	public static void registerValidObjectInst(String name, ConstructorListing<ScriptObject> listing){
-		validObjects.put(name, listing);
+	public static void registerValidObjectInst(final String name, final ConstructorListing<ScriptObject> listing){
+		ScriptParser.validObjects.put(name, listing);
 	}
 
 	public static void parseScriptFile(final File file){
@@ -52,10 +52,10 @@ public class ScriptParser {
 	public static List<String> parseScriptLines(final File file) throws IOException{
 		final List<String> array = new ArrayList<String>();
 		try(final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)))){
-		String line;
-		while((line = r.readLine()) != null)
-			if(!line.isEmpty() && !line.startsWith("#"))
-				array.add(line);
+			String line;
+			while((line = r.readLine()) != null)
+				if(!line.isEmpty() && !line.startsWith("#"))
+					array.add(line);
 		}
 		return array;
 	}
@@ -115,7 +115,7 @@ public class ScriptParser {
 						continue;
 					final Object[] args = new Object[objs.size()];
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
-					ScriptObject obj = entry.getValue().getDeclaringClass().newInstance();
+					final ScriptObject obj = entry.getValue().getDeclaringClass().newInstance();
 					obj.readArgs(args);
 					return CollectionHelper.linkedMapWithEntry(var, (Object) obj/*new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)*/);
 				}
@@ -126,7 +126,7 @@ public class ScriptParser {
 	}
 
 	public static Map<String, ConstructorListing<ScriptObject>> getValidobjects() {
-		return validObjects;
+		return ScriptParser.validObjects;
 	}
 
 }

@@ -10,10 +10,10 @@ public class ScriptCommandListing extends ConstructorListing<IScriptCommand>{
 	private boolean performInst;
 
 	public boolean isPerformInst() {
-		return performInst;
+		return this.performInst;
 	}
 
-	public void setPerformInst(boolean performInst) {
+	public void setPerformInst(final boolean performInst) {
 		this.performInst = performInst;
 	}
 

@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import lombok.Cleanup;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.config.Config;
@@ -16,11 +20,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class CommandReload implements ICommand{
 

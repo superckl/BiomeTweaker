@@ -3,10 +3,10 @@ package me.superckl.api.superscript;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
-
-import com.google.common.collect.Maps;
 
 public class ScriptCommandRegistry {
 
@@ -32,13 +32,13 @@ public class ScriptCommandRegistry {
 			this.commands.get(clazz).put(command, listing);
 		}
 	}
-	
+
 	/**
 	 * Registers a new Class listing. This will override any existing listing for the Class.
 	 * @param clazz The ScriptObject class this listing should be for.
 	 * @param listing The listing to register.
 	 */
-	public void registerClassListing(Class<? extends ScriptObject> clazz, Map<String, ScriptCommandListing> listing){
+	public void registerClassListing(final Class<? extends ScriptObject> clazz, final Map<String, ScriptCommandListing> listing){
 		this.commands.put(clazz, listing);
 	}
 

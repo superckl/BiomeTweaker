@@ -27,7 +27,7 @@ public class ConstructorListing<T> {
 	}
 
 	public Map<List<ParameterWrapper>, Constructor<? extends T>> getConstructors() {
-		return constructors;
+		return this.constructors;
 	}
 
 }

@@ -3,12 +3,12 @@ package me.superckl.biometweaker.client.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.superckl.biometweaker.common.reference.ModData;
-import net.minecraft.client.gui.GuiScreen;
 import cpw.mods.fml.client.config.ConfigGuiType;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
+import me.superckl.biometweaker.common.reference.ModData;
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiScreenConfig extends GuiConfig{
 

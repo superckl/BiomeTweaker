@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Lists;
+
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.ScriptHandler;
@@ -16,10 +20,6 @@ import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ParameterWrapper;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 public abstract class ScriptObject {
 
@@ -45,16 +45,14 @@ public abstract class ScriptObject {
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing()){
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
 						continue outer;
-					}
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
 					it.remove();
 				}
-				if(!params.isEmpty() || (arguments.length != 0)){
+				if(!params.isEmpty() || (arguments.length != 0))
 					continue;
-				}
 				final IScriptCommand sCommand = entry.getValue().newInstance(objs.toArray());
 				if(listing.isPerformInst())
 					sCommand.perform();
@@ -64,20 +62,20 @@ public abstract class ScriptObject {
 			}
 		APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
-	
+
 	/**
 	 * You should implement to read any arguments you expetced to receive in scripts.
 	 * @param args The args parsed from the script.
 	 * @throws Exception An exception that arised from incorrect arguments or other parsing problems.
 	 */
-	public void readArgs(Object ... args) throws Exception{
-		
+	public void readArgs(final Object ... args) throws Exception{
+
 	}
-	
+
 	public abstract void addCommand(IScriptCommand command);
 
 	public Map<String, ScriptCommandListing> getValidCommands() {
-		return validCommands;
+		return this.validCommands;
 	}
 
 }

@@ -6,27 +6,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Maps;
+
 import me.superckl.api.superscript.command.IScriptCommand;
 import net.minecraftforge.common.util.EnumHelper;
-
-import com.google.common.collect.Maps;
 
 public class ScriptCommandManager {
 
 	public static enum ApplicationStage{
 		PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
-		
-		public static ApplicationStage newStage(String name){
+
+		public static ApplicationStage newStage(final String name){
 			return EnumHelper.addEnum(ApplicationStage.class, name);
 		}
-		
+
 	}
 
 	private static Map<String, ScriptCommandManager> instances = Maps.newHashMap();
-	
+	private static ApplicationStage defaultStage = ApplicationStage.FINISHED_LOAD;
+
 	protected ScriptCommandManager() {}
 
-	private ApplicationStage currentStage = ApplicationStage.FINISHED_LOAD;
+	private ApplicationStage currentStage = ScriptCommandManager.defaultStage;
 
 	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
 	private final Set<ApplicationStage> appliedStages = EnumSet.noneOf(ApplicationStage.class);
@@ -61,33 +62,41 @@ public class ScriptCommandManager {
 
 	public void reset(){
 		this.commands.clear();
-		this.currentStage = ApplicationStage.FINISHED_LOAD;
+		this.currentStage = ScriptCommandManager.defaultStage;
 	}
-	
-	public static ScriptCommandManager newInstance(String owner){
-		ScriptCommandManager manager = new ScriptCommandManager();
-		instances.put(owner, manager);
+
+	public static ScriptCommandManager newInstance(final String owner){
+		final ScriptCommandManager manager = new ScriptCommandManager();
+		ScriptCommandManager.instances.put(owner, manager);
 		return manager;
 	}
-	
-	public static ScriptCommandManager getManagerFor(String owner){
-		return instances.get(owner);
+
+	public static ScriptCommandManager getManagerFor(final String owner){
+		return ScriptCommandManager.instances.get(owner);
 	}
 
 	public ApplicationStage getCurrentStage() {
-		return currentStage;
+		return this.currentStage;
 	}
 
-	public void setCurrentStage(ApplicationStage currentStage) {
+	public void setCurrentStage(final ApplicationStage currentStage) {
 		this.currentStage = currentStage;
 	}
 
 	public Map<ApplicationStage, List<IScriptCommand>> getCommands() {
-		return commands;
+		return this.commands;
 	}
 
 	public Set<ApplicationStage> getAppliedStages() {
-		return appliedStages;
+		return this.appliedStages;
+	}
+
+	public static ApplicationStage getDefaultStage() {
+		return ScriptCommandManager.defaultStage;
+	}
+
+	public static void setDefaultStage(final ApplicationStage defaultStage) {
+		ScriptCommandManager.defaultStage = defaultStage;
 	}
 
 }

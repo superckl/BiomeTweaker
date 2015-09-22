@@ -5,6 +5,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Maps;
+
+import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
@@ -19,19 +26,11 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Maps;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-
 public class BiomeEventHandler {
 
 	public static byte globalSize = -1;
 	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
-	
+
 	@Getter
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> blockReplacements = Maps.newHashMap();
 	@Getter
@@ -80,7 +79,7 @@ public class BiomeEventHandler {
 				{
 					BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
 					if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
-						int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
+						final int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
 						biomegenbase = BiomeGenBase.getBiome(id);
 						e.biomeArray[l + (k * 16)] = biomegenbase;
 					}
@@ -186,18 +185,16 @@ public class BiomeEventHandler {
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all"))){
+		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
 			e.setResult(Result.DENY);
-		}
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.populateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains("all"))){
+		if((isAll || BiomeEventHandler.populateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
 			e.setResult(Result.DENY);
-		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -226,13 +223,13 @@ public class BiomeEventHandler {
 		if(BiomeEventHandler.bigMushroomsPerChunk.containsKey(id))
 			e.newBiomeDecorator.bigMushroomsPerChunk = BiomeEventHandler.bigMushroomsPerChunk.get(id);
 	}
-	
+
 	@SubscribeEvent
-	public void onGetBiomeSize(WorldTypeEvent.BiomeSize e){
-		if(globalSize != -1)
-			e.newSize = globalSize;
-		else if(sizes.containsKey(e.worldType))
-			e.newSize = sizes.get(e.worldType);
+	public void onGetBiomeSize(final WorldTypeEvent.BiomeSize e){
+		if(BiomeEventHandler.globalSize != -1)
+			e.newSize = BiomeEventHandler.globalSize;
+		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
+			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
 	}
 
 }

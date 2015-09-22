@@ -2,6 +2,7 @@ package me.superckl.biometweaker.server.command;
 
 import java.util.Arrays;
 import java.util.List;
+
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -40,15 +41,14 @@ public class CommandListBiomes implements ICommand{
 
 	@Override
 	public void processCommand(final ICommandSender sender, final String[] p_71515_2_) {
-		
+
 		sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.listbiomes.output.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
-		
-		for(BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
+
+		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
 			if(gen != null){
-				String message = new StringBuilder().append(gen.biomeID).append(" - ").append(gen.biomeName).toString();
+				final String message = new StringBuilder().append(gen.biomeID).append(" - ").append(gen.biomeName).toString();
 				sender.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
 			}
-		}
 	}
 
 	@Override
@@ -65,5 +65,5 @@ public class CommandListBiomes implements ICommand{
 	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
 		return false;
 	}
-	
+
 }

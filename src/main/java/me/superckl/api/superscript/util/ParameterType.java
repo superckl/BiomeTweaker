@@ -37,15 +37,15 @@ public abstract class ParameterType {
 	}
 
 	public ParameterWrapper getSimpleWrapper() {
-		return simpleWrapper;
+		return this.simpleWrapper;
 	}
 
 	public ParameterWrapper getVarArgsWrapper() {
-		return varArgsWrapper;
+		return this.varArgsWrapper;
 	}
 
 	public ParameterWrapper getSpecialWrapper() {
-		return specialWrapper;
+		return this.specialWrapper;
 	}
 
 }

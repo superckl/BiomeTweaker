@@ -10,49 +10,48 @@ public class BiomeTweakerAPI {
 	private static Class<? extends ScriptObject> biomesScriptObjectClass;
 	private static Class<? extends ScriptObject> tweakerScriptObjectClass;
 	private static boolean foundBiomeTweaker;
-	
+
 	static{
 		boolean found = false;
-		if(Loader.isModLoaded("BiomeTweaker")){
+		if(Loader.isModLoaded("BiomeTweaker"))
 			try {
-				biomesScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.BiomesScriptObject");
-				tweakerScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.TweakerScriptObject");
+				BiomeTweakerAPI.biomesScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.BiomesScriptObject");
+				BiomeTweakerAPI.tweakerScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.TweakerScriptObject");
 				found = true;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				found = false;
 				APIInfo.log.debug("Failed to find BiomeTweaker. BiomeTweakerAPI will do nothing.");
 				e.printStackTrace();
 			}
-		}
-		foundBiomeTweaker = found;
+		BiomeTweakerAPI.foundBiomeTweaker = found;
 	}
-	
+
 	public static boolean foundBiomeTweaker(){
-		return foundBiomeTweaker;
+		return BiomeTweakerAPI.foundBiomeTweaker;
 	}
-	
+
 	public static Class<? extends ScriptObject> getBiomesScriptObjectClass(){
-		return biomesScriptObjectClass;
+		return BiomeTweakerAPI.biomesScriptObjectClass;
 	}
-	
+
 	public static Class<? extends ScriptObject> getTweakerScriptObjectClass(){
-		return tweakerScriptObjectClass;
+		return BiomeTweakerAPI.tweakerScriptObjectClass;
 	}
-	
-	public static boolean registerBiomesScriptCommand(String name, ScriptCommandListing listing){
-		if(foundBiomeTweaker){
-			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, biomesScriptObjectClass);
+
+	public static boolean registerBiomesScriptCommand(final String name, final ScriptCommandListing listing){
+		if(BiomeTweakerAPI.foundBiomeTweaker){
+			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, BiomeTweakerAPI.biomesScriptObjectClass);
 			return true;
 		}
 		return false;
 	}
-	
-	public static boolean registerTweakerScriptCommand(String name, ScriptCommandListing listing){
-		if(foundBiomeTweaker){
-			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, tweakerScriptObjectClass);
+
+	public static boolean registerTweakerScriptCommand(final String name, final ScriptCommandListing listing){
+		if(BiomeTweakerAPI.foundBiomeTweaker){
+			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, BiomeTweakerAPI.tweakerScriptObjectClass);
 			return true;
 		}
 		return false;
 	}
-	
+
 }

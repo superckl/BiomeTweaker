@@ -8,15 +8,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import lombok.Cleanup;
-import me.superckl.biometweaker.config.Config;
-
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import cpw.mods.fml.relauncher.IFMLCallHook;
+import lombok.Cleanup;
+import me.superckl.biometweaker.config.Config;
 
 public class BiomeTweakerCallHook implements IFMLCallHook{
 

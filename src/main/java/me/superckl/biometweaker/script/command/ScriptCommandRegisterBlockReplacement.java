@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
@@ -12,8 +14,6 @@ import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 

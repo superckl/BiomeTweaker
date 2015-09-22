@@ -1,7 +1,5 @@
 package me.superckl.biometweaker.core;
 
-import me.superckl.biometweaker.common.reference.ModData;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +7,7 @@ import com.google.common.collect.Lists;
 
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.ModMetadata;
+import me.superckl.biometweaker.common.reference.ModData;
 
 public class ModBiomeTweakerCore extends DummyModContainer{
 

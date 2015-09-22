@@ -3,10 +3,6 @@ package me.superckl.biometweaker.core.module;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.ASMNameHelper;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -17,13 +13,16 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
+import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.core.ASMNameHelper;
+import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
 public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 
 	@Override
-	public byte[] transform(String name, String transformedName, byte[] basicClass) {
+	public byte[] transform(final String name, final String transformedName, final byte[] basicClass) {
 		final ClassReader reader = new ClassReader(basicClass);
 		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			final ClassNode cNode = new ClassNode();
@@ -122,7 +121,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 	public boolean isRequired() {
 		return false;
 	}
-	
+
 	private List<AbstractInsnNode> findReturnNodes(final InsnList instructions){
 		final List<AbstractInsnNode> list = new ArrayList<AbstractInsnNode>();
 		for(int i = instructions.size()-1; i >= 0; i--)

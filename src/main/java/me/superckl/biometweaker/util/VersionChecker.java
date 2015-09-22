@@ -9,14 +9,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.HoverEvent;
-import net.minecraft.event.HoverEvent.Action;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,6 +19,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import lombok.Cleanup;
 import lombok.Getter;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.event.HoverEvent.Action;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 
 @Getter
 public class VersionChecker {
@@ -61,7 +60,7 @@ public class VersionChecker {
 							final String nVersion = obj.get("version").getAsString();
 							final String[] split2 = nVersion.split("[.]");
 							final int major2 = Integer.parseInt(split2[0]), minor2 = Integer.parseInt(split2[1]), build2 = Integer.parseInt(split2[2]);
-							if(major2 < major || major2 == major && minor2 < minor || major2 == major && minor2 == minor && build2 <= build)
+							if((major2 < major) || ((major2 == major) && (minor2 < minor)) || ((major2 == major) && (minor2 == minor) && (build2 <= build)))
 								break;
 							checker.needsUpdates.set(true);
 							checker.newVersion.set(nVersion);
@@ -96,5 +95,5 @@ public class VersionChecker {
 		e.player.addChatMessage(chat);
 		this.notified.add(e.player.getGameProfile().getId());
 	}
-	
+
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.ICommand;
@@ -12,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class CommandOutput implements ICommand{
 

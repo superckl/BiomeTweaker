@@ -1,10 +1,10 @@
 package me.superckl.api.biometweaker.script.wrapper;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.util.ParameterWrapper;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 public class AllPackParameterWrapper extends ParameterWrapper{
 

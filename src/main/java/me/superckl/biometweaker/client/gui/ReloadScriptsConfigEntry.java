@@ -4,12 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
-import lombok.Cleanup;
-import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.BiomeTweakerCore;
-import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.util.EnumChatFormatting;
-
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,6 +12,11 @@ import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.config.GuiConfigEntries.ButtonEntry;
 import cpw.mods.fml.client.config.IConfigElement;
+import lombok.Cleanup;
+import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
+import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.util.EnumChatFormatting;
 
 public class ReloadScriptsConfigEntry extends ButtonEntry{
 

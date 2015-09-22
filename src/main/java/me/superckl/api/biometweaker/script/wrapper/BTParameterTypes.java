@@ -19,20 +19,20 @@ import me.superckl.api.superscript.util.ParameterTypes;
 public class BTParameterTypes {
 
 	public static final ParameterType SPAWN_TYPE = new ParameterType() {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final String extracted = (String) ParameterTypes.STRING.tryParse(parameter, handler);
 			if(extracted != null)
 				return SpawnListType.valueOf(extracted);
 			return null;
 		}
 	};
-	
+
 	public static final ParameterType BASIC_BIOMES_PACKAGE = new ParameterType() {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final List<Integer> ints = (List<Integer>) ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler);
 			if(ints.isEmpty()){
 				final ScriptObject obj = handler.getObjects().get(parameter);
@@ -46,45 +46,45 @@ public class BTParameterTypes {
 			return new BasicBiomesPackage(array);
 		}
 	};
-	
+
 	public static final ParameterType TYPE_BIOMES_PACKAGE = new ParameterType(new TypesPackParameterWrapper()) {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			return new TypeBiomesPackage((String) ParameterTypes.STRING.tryParse(parameter, handler));
 		}
 	};
-	
+
 	public static final ParameterType ALL_BIOMES_PACKAGE = new ParameterType(new AllPackParameterWrapper()) {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) {
+		public Object tryParse(final String parameter, final ScriptHandler handler) {
 			return new AllBiomesPackage();
 		}
 	};
-	
+
 	public static final ParameterType ALL_BUT_BIOMES_PACKAGE = new ParameterType(new AllButPackParameterWrapper()) {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
-			return new AllButBiomesPackage((IBiomePackage) BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return new AllButBiomesPackage((IBiomePackage) BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
 		}
 	};
-	
+
 	public static final ParameterType INTERSECT_BIOMES_PACKAGE = new ParameterType(new IntersectPackParameterWrapper()) {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
-			return new IntersectBiomesPackage((IBiomePackage) BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return new IntersectBiomesPackage((IBiomePackage) BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler));
 		}
 	};
-	
+
 	public static final ParameterType SUBTRACT_BIOMES_PACKAGE = new ParameterType(new SubtractPackParameterWrapper()) {
-		
+
 		@Override
-		public Object tryParse(String parameter, ScriptHandler handler) throws Exception {
-			return new SubtractBiomesPackage((IBiomePackage) BASIC_BIOMES_PACKAGE.tryParse(parameter, handler), new BasicBiomesPackage());
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return new SubtractBiomesPackage((IBiomePackage) BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(parameter, handler), new BasicBiomesPackage());
 		}
 	};
-	
+
 }

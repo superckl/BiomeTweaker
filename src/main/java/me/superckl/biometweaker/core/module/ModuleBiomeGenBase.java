@@ -9,14 +9,14 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 import me.superckl.biometweaker.core.ASMNameHelper;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
 public class ModuleBiomeGenBase implements IClassTransformerModule{
 
 	@Override
-	public byte[] transform(String name, String transformedName, byte[] bytes) {
+	public byte[] transform(final String name, final String transformedName, final byte[] bytes) {
 		final ClassNode cNode = ASMHelper.readClassFromBytes(bytes);
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
@@ -122,7 +122,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 	public String getModuleName() {
 		return "moduleTransformBiomeGenBase";
 	}
-	
+
 	private InsnList createGenBaseBlockFieldAccess(final String fieldName){
 		final InsnList list = new InsnList();
 		list.add(new VarInsnNode(Opcodes.ALOAD, 0));

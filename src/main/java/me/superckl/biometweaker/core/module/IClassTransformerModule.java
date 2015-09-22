@@ -7,5 +7,5 @@ public interface IClassTransformerModule extends IClassTransformer{
 	public String[] getClassesToTransform();
 	public String getModuleName();
 	public boolean isRequired();
-	
+
 }

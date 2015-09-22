@@ -6,6 +6,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
@@ -23,11 +28,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 public class BiomeHelper {
 
@@ -81,12 +81,12 @@ public class BiomeHelper {
 		for(final Type type: BiomeDictionary.getTypesForBiome(gen))
 			array.add(new JsonPrimitive(type.toString()));
 		obj.add("Dictionary Types", array);
-		
-		JsonObject managerWeights = new JsonObject();
-		for(BiomeManager.BiomeType type:BiomeManager.BiomeType.values()){
-			JsonArray subArray = new JsonArray();
-			List<BiomeEntry> entries = BiomeManager.getBiomes(type);
-			for(BiomeEntry entry:entries)
+
+		final JsonObject managerWeights = new JsonObject();
+		for(final BiomeManager.BiomeType type:BiomeManager.BiomeType.values()){
+			final JsonArray subArray = new JsonArray();
+			final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
+			for(final BiomeEntry entry:entries)
 				if(entry.biome == gen)
 					subArray.add(new JsonPrimitive(entry.itemWeight));
 			if(subArray.size() > 0)
@@ -149,7 +149,7 @@ public class BiomeHelper {
 
 	private static Set<BiomeManager.BiomeType> logged = EnumSet.noneOf(BiomeManager.BiomeType.class);
 	private static boolean loggedSpawn;
-	
+
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		BiomeHelper.checkFields();
 		if(prop.equals("name")){
@@ -252,9 +252,9 @@ public class BiomeHelper {
 				for(final BiomeEntry entry:entries)
 					if(entry.biome.biomeID == biome.biomeID)
 						entry.itemWeight = weight;
-				if(type != BiomeManager.BiomeType.DESERT && !logged.contains(type) && WeightedRandom.getTotalWeight(entries) <= 0){
+				if((type != BiomeManager.BiomeType.DESERT) && !BiomeHelper.logged.contains(type) && (WeightedRandom.getTotalWeight(entries) <= 0)){
 					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
-					logged.add(type);
+					BiomeHelper.logged.add(type);
 				}
 			}
 			BiomeHelper.modTypeLists();
@@ -273,9 +273,9 @@ public class BiomeHelper {
 				BiomeManager.addSpawnBiome(biome);
 			else{
 				BiomeManager.removeSpawnBiome(biome);
-				if(!loggedSpawn && WorldChunkManager.allowedBiomes.size() == 0){
+				if(!BiomeHelper.loggedSpawn && (WorldChunkManager.allowedBiomes.size() == 0)){
 					LogHelper.warn("Upon removal of biome "+biome.biomeID+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
-					loggedSpawn = true;
+					BiomeHelper.loggedSpawn = true;
 				}
 			}
 		else

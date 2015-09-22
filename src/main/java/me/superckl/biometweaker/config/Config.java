@@ -4,18 +4,18 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.Logger;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 import me.superckl.api.superscript.ScriptCommandManager;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-
-import org.apache.logging.log4j.Logger;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 @Getter
 public class Config {

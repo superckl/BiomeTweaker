@@ -2,6 +2,10 @@ package me.superckl.biometweaker.script.object;
 
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.util.SpawnListType;
@@ -25,10 +29,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveDictionaryType
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveFeature;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.script.command.ScriptCommandSetStage;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
 
 public class TweakerScriptObject extends ScriptObject{
 
@@ -92,7 +92,7 @@ public class TweakerScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("removeDecoration", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveFeature.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("removeFeature", listing);
@@ -117,22 +117,22 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddToGeneration.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("addToGeneration", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_BYTE.getSimpleWrapper()), ScriptCommandAverageBiomeSize.class.getDeclaredConstructor(String.class, Byte.TYPE));
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_BYTE.getSimpleWrapper()), ScriptCommandAverageBiomeSize.class.getDeclaredConstructor(Byte.TYPE));
 		validCommands.put("setAverageBiomeSize", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
 		validCommands.put("registerGenBiomeRep", listing);
-		
+
 		return validCommands;
 	}
 
 	@Override
-	public void addCommand(IScriptCommand command) {
+	public void addCommand(final IScriptCommand command) {
 		Config.INSTANCE.addCommand(command);
 	}
 

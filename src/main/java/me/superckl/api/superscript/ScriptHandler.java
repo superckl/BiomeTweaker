@@ -13,7 +13,7 @@ import me.superckl.api.superscript.object.ScriptObject;
 public class ScriptHandler {
 
 	private final static Map<String, ScriptObject> staticObjects = Maps.newHashMap();
-	
+
 	private final List<String> lines;
 
 	private Iterator<String> it;
@@ -23,7 +23,7 @@ public class ScriptHandler {
 
 	public ScriptHandler(final List<String> lines) {
 		this.lines = lines;
-		this.objects.putAll(staticObjects);
+		this.objects.putAll(ScriptHandler.staticObjects);
 	}
 
 	public void parse() throws Exception{
@@ -68,24 +68,24 @@ public class ScriptHandler {
 	 * @param name The name to be used in scripts. Example: The "Tweaker" object from BiomeTweaker.
 	 * @param object The actual ScriptObject to reference.
 	 */
-	public static void registerStaticObject(String name, ScriptObject object){
-		staticObjects.put(name, object);
+	public static void registerStaticObject(final String name, final ScriptObject object){
+		ScriptHandler.staticObjects.put(name, object);
 	}
 
 	public List<String> getLines() {
-		return lines;
+		return this.lines;
 	}
 
 	public Iterator<String> getIt() {
-		return it;
+		return this.it;
 	}
 
 	public Map<String, String> getShortcuts() {
-		return shortcuts;
+		return this.shortcuts;
 	}
 
 	public Map<String, ScriptObject> getObjects() {
-		return objects;
+		return this.objects;
 	}
-	
+
 }

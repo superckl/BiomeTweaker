@@ -8,7 +8,7 @@ public abstract class BiomePackScriptObject extends ScriptObject{
 	protected IBiomePackage pack;
 
 	public IBiomePackage getPack() {
-		return pack;
+		return this.pack;
 	}
-	
+
 }

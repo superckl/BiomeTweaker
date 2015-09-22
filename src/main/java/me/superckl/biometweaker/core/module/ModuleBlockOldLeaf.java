@@ -12,14 +12,14 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 import me.superckl.biometweaker.core.ASMNameHelper;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
 public class ModuleBlockOldLeaf implements IClassTransformerModule{
 
 	@Override
-	public byte[] transform(String name, String transformedName, byte[] bytes) {
+	public byte[] transform(final String name, final String transformedName, final byte[] bytes) {
 		final ClassNode cNode = ASMHelper.readClassFromBytes(bytes);
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 		boolean fixed = false;

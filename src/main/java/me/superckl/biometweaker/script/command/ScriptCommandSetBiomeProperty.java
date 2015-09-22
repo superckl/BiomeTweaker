@@ -2,6 +2,8 @@ package me.superckl.biometweaker.script.command;
 
 import java.util.Iterator;
 
+import com.google.gson.JsonElement;
+
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
@@ -10,8 +12,6 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.BiomeHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
-
-import com.google.gson.JsonElement;
 
 @RequiredArgsConstructor
 public class ScriptCommandSetBiomeProperty implements IScriptCommand{

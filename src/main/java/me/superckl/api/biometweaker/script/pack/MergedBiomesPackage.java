@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.world.biome.BiomeGenBase;
-
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class MergedBiomesPackage implements IBiomePackage{
 

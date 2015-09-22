@@ -77,5 +77,5 @@ public class CommandReloadScript implements ICommand{
 	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
 		return false;
 	}
-	
+
 }

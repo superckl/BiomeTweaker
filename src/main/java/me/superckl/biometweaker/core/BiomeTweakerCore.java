@@ -7,14 +7,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import me.superckl.biometweaker.common.reference.ModData;
-import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
+import me.superckl.biometweaker.common.reference.ModData;
+import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
 @SortingIndex(1001)
 @MCVersion("1.7.10")

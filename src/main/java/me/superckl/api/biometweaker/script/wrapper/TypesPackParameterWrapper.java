@@ -2,14 +2,14 @@ package me.superckl.api.biometweaker.script.wrapper;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Lists;
+
 import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 public class TypesPackParameterWrapper extends ParameterWrapper{
 

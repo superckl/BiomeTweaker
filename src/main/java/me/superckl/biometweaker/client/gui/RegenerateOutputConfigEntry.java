@@ -1,15 +1,14 @@
 package me.superckl.biometweaker.client.gui;
 
-import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.util.EnumChatFormatting;
-
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
 import cpw.mods.fml.client.config.GuiConfigEntries.ButtonEntry;
 import cpw.mods.fml.client.config.IConfigElement;
+import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.util.EnumChatFormatting;
 
 public class RegenerateOutputConfigEntry extends ButtonEntry{
 

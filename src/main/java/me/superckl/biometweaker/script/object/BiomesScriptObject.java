@@ -8,6 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.gson.JsonElement;
+
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
@@ -36,12 +42,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandRemoveFeature;
 import me.superckl.biometweaker.script.command.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.util.LogHelper;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
-
 public class BiomesScriptObject extends BiomePackScriptObject{
 
 	@Override
@@ -61,21 +61,19 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 				while(it.hasNext()){
 					final ParameterWrapper wrap = it.next();
 					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing()){
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
 						continue outer;
-					}
 					Collections.addAll(objs, parsed.getKey());
 					arguments = parsed.getValue();
 					it.remove();
 				}
-				if(!params.isEmpty() || (arguments.length != 0)){
+				if(!params.isEmpty() || (arguments.length != 0))
 					continue;
-				}
 				//ParamterType list does not contain BiomePackages, so insert them.
 				final Object[] args = new Object[objs.size()+1];
 				System.arraycopy(objs.toArray(), 0, args, 1, objs.size());
 				args[0] = this.pack;
-				IScriptCommand sCommand = entry.getValue().newInstance(args);
+				final IScriptCommand sCommand = entry.getValue().newInstance(args);
 				if(listing.isPerformInst())
 					sCommand.perform();
 				else
@@ -139,7 +137,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveDecoration.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("removeDecoration", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveFeature.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("removeFeature", listing);
@@ -164,30 +162,30 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddToGeneration.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("addToGeneration", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
 		validCommands.put("registerGenBiomeRep", listing);
-		
+
 		return validCommands;
 	}
 
 	@Override
-	public void addCommand(IScriptCommand command) {
+	public void addCommand(final IScriptCommand command) {
 		Config.INSTANCE.addCommand(command);
 	}
 
 	@Override
-	public void readArgs(Object... packs) throws Exception {
-		IBiomePackage[] bPacks = new IBiomePackage[packs.length];
+	public void readArgs(final Object... packs) throws Exception {
+		final IBiomePackage[] bPacks = new IBiomePackage[packs.length];
 		System.arraycopy(packs, 0, bPacks, 0, packs.length);
 		if(bPacks.length == 1)
 			this.pack = bPacks[0];
 		else
 			this.pack = new MergedBiomesPackage(bPacks);
 	}
-	
-	
+
+
 
 }

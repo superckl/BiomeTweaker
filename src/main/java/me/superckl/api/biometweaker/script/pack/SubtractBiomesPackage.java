@@ -3,16 +3,16 @@ package me.superckl.api.biometweaker.script.pack;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.world.biome.BiomeGenBase;
-
 import com.google.common.collect.Lists;
+
+import net.minecraft.world.biome.BiomeGenBase;
 
 public class SubtractBiomesPackage implements IBiomePackage{
 
 	private final IBiomePackage main;
 	private final IBiomePackage subtract;
-	
-	public SubtractBiomesPackage(IBiomePackage main, IBiomePackage subtract) {
+
+	public SubtractBiomesPackage(final IBiomePackage main, final IBiomePackage subtract) {
 		this.main = main;
 		this.subtract = subtract;
 	}

@@ -3,10 +3,10 @@ package me.superckl.api.biometweaker.script.pack;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
-
-import com.google.common.collect.Lists;
 
 public class TypeBiomesPackage implements IBiomePackage{
 

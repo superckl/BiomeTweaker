@@ -1,5 +1,9 @@
 package me.superckl.biometweaker.common.event;
 
+import com.google.gson.JsonElement;
+
+import cpw.mods.fml.common.eventhandler.Cancelable;
+import cpw.mods.fml.common.eventhandler.Event;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.util.SpawnListType;
@@ -9,11 +13,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
-
-import com.google.gson.JsonElement;
-
-import cpw.mods.fml.common.eventhandler.Cancelable;
-import cpw.mods.fml.common.eventhandler.Event;
 
 @RequiredArgsConstructor
 @Getter
@@ -61,7 +60,7 @@ public abstract class BiomeTweakEvent extends Event{
 		}
 
 	}
-	
+
 	/**
 	 * Note: The corresponding BiomeGenBase may be null for this event! The biomeID is given for that case.
 	 */

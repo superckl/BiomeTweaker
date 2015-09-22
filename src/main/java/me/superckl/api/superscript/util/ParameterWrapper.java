@@ -3,11 +3,11 @@ package me.superckl.api.superscript.util;
 import java.util.Collection;
 import java.util.List;
 
-import me.superckl.api.superscript.ScriptHandler;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
+
+import me.superckl.api.superscript.ScriptHandler;
 
 public class ParameterWrapper {
 
@@ -16,13 +16,13 @@ public class ParameterWrapper {
 	private final int maxNum;
 	private final boolean varArgs;
 
-	protected ParameterWrapper(ParameterType type, int minNum, int maxNum, boolean varArgs) {
+	protected ParameterWrapper(final ParameterType type, final int minNum, final int maxNum, final boolean varArgs) {
 		this.type = type;
 		this.minNum = minNum;
 		this.maxNum = maxNum;
 		this.varArgs = varArgs;
 	}
-	
+
 	public Pair<Object[], String[]> parseArgs(final ScriptHandler handler, String ... args) throws Exception{
 		final List<Object> parsed = Lists.newArrayList();
 		for(int i = 0; ; i++){
@@ -55,74 +55,74 @@ public class ParameterWrapper {
 	}
 
 	public ParameterType getType() {
-		return type;
+		return this.type;
 	}
 
 	public int getMinNum() {
-		return minNum;
+		return this.minNum;
 	}
 
 	public int getMaxNum() {
-		return maxNum;
+		return this.maxNum;
 	}
 
 	public boolean isVarArgs() {
-		return varArgs;
+		return this.varArgs;
 	}
-	
+
 	public static Builder builder(){
 		return new Builder();
 	}
-	
+
 	public static class Builder{
-		
+
 		private ParameterType type;
 		private int minNum;
 		private int maxNum;
 		private boolean varArgs;
-		
+
 		private Builder(){}
 
 		public ParameterType type() {
-			return type;
+			return this.type;
 		}
 
-		public Builder type(ParameterType type) {
+		public Builder type(final ParameterType type) {
 			this.type = type;
 			return this;
 		}
 
 		public int minNum() {
-			return minNum;
+			return this.minNum;
 		}
 
-		public Builder minNum(int minNum) {
+		public Builder minNum(final int minNum) {
 			this.minNum = minNum;
 			return this;
 		}
 
 		public int maxNum() {
-			return maxNum;
+			return this.maxNum;
 		}
 
-		public Builder maxNum(int maxNum) {
+		public Builder maxNum(final int maxNum) {
 			this.maxNum = maxNum;
 			return this;
 		}
 
 		public boolean varArgs() {
-			return varArgs;
+			return this.varArgs;
 		}
 
-		public Builder varArgs(boolean varArgs) {
+		public Builder varArgs(final boolean varArgs) {
 			this.varArgs = varArgs;
 			return this;
 		}
-		
+
 		public ParameterWrapper build(){
 			return new ParameterWrapper(this.type, this.minNum, this.maxNum, this.varArgs);
 		}
-		
+
 	}
 
 }

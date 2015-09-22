@@ -4,6 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import me.superckl.biometweaker.util.BiomeHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -14,13 +20,6 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
 public class CommandInfo implements ICommand{
 

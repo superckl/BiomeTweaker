@@ -5,34 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import lombok.Cleanup;
-import lombok.Getter;
-import me.superckl.api.superscript.ScriptParser;
-import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
-import me.superckl.api.superscript.object.ScriptObject;
-import me.superckl.api.superscript.util.ConstructorListing;
-import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.ScriptHandler;
-import me.superckl.biometweaker.common.reference.ModData;
-import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.BiomeTweakerCore;
-import me.superckl.biometweaker.proxy.IProxy;
-import me.superckl.biometweaker.script.object.BiomesScriptObject;
-import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.server.command.CommandInfo;
-import me.superckl.biometweaker.server.command.CommandListBiomes;
-import me.superckl.biometweaker.server.command.CommandOutput;
-import me.superckl.biometweaker.server.command.CommandReload;
-import me.superckl.biometweaker.server.command.CommandReloadScript;
-import me.superckl.biometweaker.server.command.CommandSetBiome;
-import me.superckl.biometweaker.util.BiomeHelper;
-import me.superckl.biometweaker.util.LogHelper;
-import me.superckl.biometweaker.util.ReflectionHelper;
-import me.superckl.biometweaker.util.VersionChecker;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.MinecraftForge;
-
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +25,33 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import lombok.Cleanup;
+import lombok.Getter;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
+import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
+import me.superckl.api.superscript.ScriptCommandRegistry;
+import me.superckl.api.superscript.ScriptHandler;
+import me.superckl.api.superscript.ScriptParser;
+import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.biometweaker.common.reference.ModData;
+import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
+import me.superckl.biometweaker.proxy.IProxy;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.server.command.CommandInfo;
+import me.superckl.biometweaker.server.command.CommandListBiomes;
+import me.superckl.biometweaker.server.command.CommandOutput;
+import me.superckl.biometweaker.server.command.CommandReload;
+import me.superckl.biometweaker.server.command.CommandReloadScript;
+import me.superckl.biometweaker.server.command.CommandSetBiome;
+import me.superckl.biometweaker.util.BiomeHelper;
+import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.biometweaker.util.ReflectionHelper;
+import me.superckl.biometweaker.util.VersionChecker;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT)
 public class BiomeTweaker {
@@ -74,19 +73,19 @@ public class BiomeTweaker {
 		LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
 		LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
 	}
-	
+
 	@EventHandler
-	public void onConstruction(FMLConstructionEvent e){
+	public void onConstruction(final FMLConstructionEvent e){
 		try {
 			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
 			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
-		} catch (Exception e2) {
+		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate command listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
 		}
-		
+
 		ScriptHandler.registerStaticObject("Tweaker", new TweakerScriptObject());
-		
+
 		try {
 			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
@@ -111,7 +110,7 @@ public class BiomeTweaker {
 			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("subtractFrom", listing);
-			
+
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
@@ -122,33 +121,33 @@ public class BiomeTweaker {
 	public void onPreInit(final FMLPreInitializationEvent e){
 		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
 			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
-		
+
 		this.parseScripts();
-		
+
 		BiomeTweaker.proxy.registerHandlers();
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
 	}
 
 	public void parseScripts(){
 		LogHelper.info("Beginning script parsing...");
-		long time = System.currentTimeMillis();
+		final long time = System.currentTimeMillis();
 		for(final JsonElement listElement:Config.INSTANCE.getIncludes()){
 			File subFile = null;
 			try {
 				final String item = listElement.getAsString();
 				subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
 				this.parseScript(subFile);
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				LogHelper.error("Failed to parse a script file! File: "+subFile);
 				e1.printStackTrace();
 			}
 		}
-		long diff = System.currentTimeMillis()-time;
+		final long diff = System.currentTimeMillis()-time;
 		LogHelper.info("Finished script parsing.");
 		LogHelper.debug("Script parsing took "+diff+"ms.");
 	}
-	
-	public void parseScript(File file) throws IOException{
+
+	public void parseScript(final File file) throws IOException{
 		if(!file.exists()){
 			LogHelper.debug(String.format("Subfile %s not found. A blank one will be generated.", file.getName()));
 			file.createNewFile();
@@ -156,7 +155,7 @@ public class BiomeTweaker {
 		ScriptParser.parseScriptFile(file);
 		Config.INSTANCE.getCommandManager().setCurrentStage(ApplicationStage.FINISHED_LOAD);
 	}
-	
+
 	@EventHandler
 	public void onInit(final FMLInitializationEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);

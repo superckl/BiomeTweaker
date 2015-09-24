@@ -23,6 +23,8 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);
+		cNode.visitField(Opcodes.ACC_PUBLIC, "fillerBlockMeta", "B", "B", 0);
+		ModBiomeTweakerCore.logger.debug("Successfully inserted 'fillerBlockMeta' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);
@@ -67,6 +69,39 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 							}
 						}
 					}
+				final InsnList toFind = new InsnList();
+				toFind.add(new VarInsnNode(Opcodes.ALOAD, 3));
+				toFind.add(new VarInsnNode(Opcodes.ILOAD, 19));
+				toFind.add(new VarInsnNode(Opcodes.ALOAD, 12));
+				toFind.add(new InsnNode(Opcodes.AASTORE));
+				AbstractInsnNode aNode = ASMHelper.find(node.instructions, toFind);
+				if(aNode != null){
+					final AbstractInsnNode aaNode = ASMHelper.findNextInstructionWithOpcode(aNode, Opcodes.AASTORE);
+					if(aaNode != null){
+						final InsnList toInsert = new InsnList();
+						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 4));
+						toInsert.add(new VarInsnNode(Opcodes.ILOAD, 19));
+						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "fillerBlockMeta", "B"));
+						toInsert.add(new InsnNode(Opcodes.BASTORE));
+						node.instructions.insert(aaNode, toInsert);
+						fixed++;
+					}
+				}
+				aNode = ASMHelper.find(aNode.getNext(), toFind);
+				if(aNode != null){
+					final AbstractInsnNode aaNode = ASMHelper.findNextInstructionWithOpcode(aNode, Opcodes.AASTORE);
+					if(aaNode != null){
+						final InsnList toInsert = new InsnList();
+						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 4));
+						toInsert.add(new VarInsnNode(Opcodes.ILOAD, 19));
+						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "fillerBlockMeta", "B"));
+						toInsert.add(new InsnNode(Opcodes.BASTORE));
+						node.instructions.insert(aaNode, toInsert);
+						fixed++;
+					}
+				}
 			}else if(node.name.equals("<init>") && node.desc.equals("(IZ)V")){
 				InsnList list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -103,11 +138,18 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
 				fixed++;
+				list = new InsnList();
+				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				list.add(new InsnNode(Opcodes.ICONST_0));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "fillerBlockMeta", "B"));
+				node.instructions.insert(list);
+				ModBiomeTweakerCore.logger.debug("Successfully inserted 0 into 'fillerBlockMeta'");
+				fixed++;
 			}
-		if(fixed < 14)
+		if(fixed < 17)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 14)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 14. Is something else also patching this class?");
+		else if(fixed > 17)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 17. Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
 		return ASMHelper.writeClassToBytesNoDeobf(cNode);

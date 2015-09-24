@@ -36,6 +36,7 @@ public class BiomeHelper {
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
+	private static Field fillerBlockMeta;
 
 	private static Field biomeList;
 	private static Field typeInfoList;
@@ -221,6 +222,9 @@ public class BiomeHelper {
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.waterColor.set(biome, toSet);
+		}else if(prop.equals("fillerBlockMeta")){
+			final byte toSet = value.getAsByte();
+			BiomeHelper.fillerBlockMeta.set(biome, toSet);
 		}else if(prop.equals("topBlockMeta"))
 			biome.field_150604_aj = value.getAsInt();
 		else if(prop.equals("waterliliesPerChunk"))
@@ -294,6 +298,8 @@ public class BiomeHelper {
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
 			if(BiomeHelper.waterColor == null)
 				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
+			if(BiomeHelper.fillerBlockMeta == null)
+				BiomeHelper.fillerBlockMeta = BiomeGenBase.class.getDeclaredField("fillerBlockMeta");
 			if(BiomeHelper.biomeList == null){
 				BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
 				BiomeHelper.biomeList.setAccessible(true);

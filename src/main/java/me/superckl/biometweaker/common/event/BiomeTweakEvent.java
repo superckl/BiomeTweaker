@@ -206,13 +206,15 @@ public abstract class BiomeTweakEvent extends Event{
 	@Getter
 	public static class RegisterGenBlockReplacement extends BiomeTweakEvent{
 
+		private final int weight;
 		private final Block toReplace;
 		private final Integer toReplaceMeta;
 		private final Block replaceWith;
 		private final Integer replaceWithMeta;
 
-		public RegisterGenBlockReplacement(final IScriptCommand command, final BiomeGenBase biome, final Block toReplace, final Integer toReplaceMeta, final Block replaceWith, final Integer replaceWithMeta) {
+		public RegisterGenBlockReplacement(final IScriptCommand command, final int weight, final BiomeGenBase biome, final Block toReplace, final Integer toReplaceMeta, final Block replaceWith, final Integer replaceWithMeta) {
 			super(command, biome);
+			this.weight = weight;
 			this.toReplace = toReplace;
 			this.toReplaceMeta = toReplaceMeta;
 			this.replaceWith = replaceWith;

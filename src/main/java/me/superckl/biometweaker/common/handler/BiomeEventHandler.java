@@ -2,8 +2,10 @@ package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,6 +17,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
@@ -32,7 +35,7 @@ public class BiomeEventHandler {
 	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
 
 	@Getter
-	private static final Map<Integer, List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> blockReplacements = Maps.newHashMap();
+	private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
 	@Getter
@@ -66,6 +69,7 @@ public class BiomeEventHandler {
 	private Field foliageColor;
 	private Field waterColor;
 	private final int[] colorCache = new int[768];
+	private final Random random = new Random();
 
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
@@ -74,6 +78,7 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
+			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = Maps.newHashMap();
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
@@ -85,7 +90,10 @@ public class BiomeEventHandler {
 					}
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
-					final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.blockReplacements.get(biomegenbase.biomeID);
+					if(!shouldDoBMap.containsKey(biomegenbase.biomeID))
+						shouldDoBMap.put(biomegenbase.biomeID, Maps.<Block, Map<Integer, WeightedBlockEntry>>newIdentityHashMap());
+					final Map<Block, Map<Integer, WeightedBlockEntry>> shouldDoMap = shouldDoBMap.get(biomegenbase.biomeID);
+					final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.blockReplacements.get(biomegenbase.biomeID);
 					final int i1 = k;
 					final int j1 = l;
 					final int k1 = e.blockArray.length / 256;
@@ -93,17 +101,33 @@ public class BiomeEventHandler {
 					{
 						final int i2 = (((j1 * 16) + i1) * k1) + l1;
 						final Block block2 = e.blockArray[i2];
+						WeightedBlockEntry toUse = null;
+						if(shouldDoMap.containsKey(block2)){
+							final Map<Integer, WeightedBlockEntry> map = shouldDoMap.get(block2);
+							if(map.containsKey(e.metaArray == null ? 0:e.metaArray[i2]))
+								toUse = map.get(e.metaArray == null ? 0:e.metaArray[i2]);
+							else if(map.containsKey(-1))
+								toUse = map.get(-1);
+						}
 						Integer meta;
-						for(final Pair<Pair<Block, Integer>, Pair<Block, Integer>> pair:list)
-							if(pair.getKey().getKey() == block2){
-								meta = pair.getKey().getValue();
-								final boolean shouldDo = (meta == null) || ((e.metaArray == null) && (meta == 0)) || (e.metaArray[i2] == meta);
-								if(shouldDo){
-									e.blockArray[i2] = pair.getValue().getKey();
-									if(e.metaArray != null)
-										e.metaArray[i2] = (byte) ((meta = pair.getValue().getValue()) == null ? 0:meta);
+						if(toUse == null)
+							for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
+								if(pair.getKey().getKey() == block2){
+									meta = pair.getKey().getValue();
+									final boolean shouldDo = (meta == null) || ((e.metaArray == null) && (meta == 0)) || (e.metaArray[i2] == meta);
+									if(shouldDo){
+										toUse = (WeightedBlockEntry) WeightedRandom.getRandomItem(this.random, pair.getValue());
+										if(!shouldDoMap.containsKey(block2))
+											shouldDoMap.put(block2, new HashMap<Integer, WeightedBlockEntry>());
+										final Map<Integer, WeightedBlockEntry> map = shouldDoMap.get(block2);
+										map.put(meta == null ? -1:meta, toUse);
+									}
 								}
-							}
+						if(toUse != null){
+							e.blockArray[i2] = toUse.block.getKey();
+							if(e.metaArray != null)
+								e.metaArray[i2] = (byte) ((meta = toUse.block.getValue()) == null ? 0:meta);
+						}
 					}
 				}
 		} catch (final Exception e1) {
@@ -230,6 +254,18 @@ public class BiomeEventHandler {
 			e.newSize = BiomeEventHandler.globalSize;
 		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
+	}
+
+	@Getter
+	public static class WeightedBlockEntry extends WeightedRandom.Item{
+
+		private final Pair<Block, Integer> block;
+
+		public WeightedBlockEntry(final int weight, final Pair<Block, Integer> block) {
+			super(weight);
+			this.block = block;
+		}
+
 	}
 
 }

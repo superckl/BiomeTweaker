@@ -3,6 +3,7 @@ package me.superckl.biometweaker.common.handler;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -18,6 +19,8 @@ import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
@@ -36,6 +39,8 @@ public class BiomeEventHandler {
 
 	@Getter
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
+	@Getter
+	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
 	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
 	@Getter
@@ -71,6 +76,8 @@ public class BiomeEventHandler {
 	private final int[] colorCache = new int[768];
 	private final Random random = new Random();
 
+	private final Map<World, Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
+
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
 	}
@@ -78,7 +85,9 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
-			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = Maps.newHashMap();
+			if(!this.replacedBiomes.containsKey(e.world))
+				this.replacedBiomes.put(e.world, Maps.<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>newHashMap());
+			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.chunkX, e.chunkZ));
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
@@ -130,6 +139,11 @@ public class BiomeEventHandler {
 						}
 					}
 				}
+			final Iterator<Integer> it = shouldDoBMap.keySet().iterator();
+			while(it.hasNext())
+				if(!BiomeEventHandler.contigReplaces[it.next()])
+					it.remove();
+			this.replacedBiomes.get(e.world).put(new ChunkCoordIntPair(e.chunkX, e.chunkZ), shouldDoBMap);
 		} catch (final Exception e1) {
 			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
@@ -254,6 +268,45 @@ public class BiomeEventHandler {
 			e.newSize = BiomeEventHandler.globalSize;
 		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
+	}
+
+	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
+		Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> map = null;
+		final Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>> replacedBiomes = this.replacedBiomes.get(world);
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos+1));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos, pair.chunkZPos+1));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos+1));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos-1));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos, pair.chunkZPos-1));
+		if(map != null)
+			return map;
+
+		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos-1));
+		if(map != null)
+			return map;
+
+		return Maps.newHashMap();
 	}
 
 	@Getter

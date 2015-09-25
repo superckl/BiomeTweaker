@@ -14,7 +14,6 @@ import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler.WeightedBlockEntry;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,15 +79,11 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 			final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.getBlockReplacements().get(gen.biomeID);
 			final Pair<Block, Integer> toReplacePair = Pair.of(toReplace, this.toReplaceMeta);
 			List<WeightedBlockEntry> entries = null;
-			for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list){
-				LogHelper.info(pair);
-				LogHelper.info(" - "+toReplacePair);
+			for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
 				if(pair.getKey().equals(toReplacePair)){
-					LogHelper.info("found it");
 					entries = pair.getValue();
 					break;
 				}
-			}
 			if(entries == null){
 				entries = Lists.newArrayList();
 				list.add(Pair.of(toReplacePair, entries));

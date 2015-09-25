@@ -249,6 +249,8 @@ public class BiomeHelper {
 			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
 			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());
+		else if(prop.equals("contiguousReplacement"))
+			BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();
 		else if(prop.equals("genWeight")){
 			final int weight  = value.getAsInt();
 			for(final BiomeType type:BiomeType.values()){

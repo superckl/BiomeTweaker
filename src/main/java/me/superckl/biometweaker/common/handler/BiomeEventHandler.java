@@ -17,6 +17,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -271,40 +272,13 @@ public class BiomeEventHandler {
 	}
 
 	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
-		Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> map = null;
-		final Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>> replacedBiomes = this.replacedBiomes.get(world);
+		final Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
 
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos));
-		if(map != null)
-			return map;
+		final ChunkCoordIntPair[] pairs = NumberHelper.fillGrid(4, pair);
 
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos+1));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos, pair.chunkZPos+1));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos+1));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos-1, pair.chunkZPos-1));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos, pair.chunkZPos-1));
-		if(map != null)
-			return map;
-
-		map = replacedBiomes.get(new ChunkCoordIntPair(pair.chunkXPos+1, pair.chunkZPos-1));
-		if(map != null)
-			return map;
+		for(final ChunkCoordIntPair search:pairs)
+			if(map.containsKey(search))
+				return map.get(search);
 
 		return Maps.newHashMap();
 	}

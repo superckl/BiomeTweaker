@@ -24,7 +24,7 @@ public class Config {
 
 	public static class Fields{
 
-		public static final String SEPERATE_FILES = "seperate files";
+		public static final String SEPARATE_FILES = "separate files";
 		public static final String VERSION_CHECK = "version check";
 		public static final String ENABLE_LIGHT_ASM = "enable light asm";
 		public static final String ASM_BLACKLIST = "asm blacklist";
@@ -52,8 +52,8 @@ public class Config {
 		if(this.init)
 			log.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
 		this.commandManager.reset();
-		if(obj.has(Fields.SEPERATE_FILES))
-			this.outputSeperateFiles = obj.get(Fields.SEPERATE_FILES).getAsBoolean();
+		if(obj.has(Fields.SEPARATE_FILES))
+			this.outputSeperateFiles = obj.get(Fields.SEPARATE_FILES).getAsBoolean();
 		if(obj.has(Fields.VERSION_CHECK))
 			this.versionCheck = obj.get(Fields.VERSION_CHECK).getAsBoolean();
 		if(obj.has(Fields.ENABLE_LIGHT_ASM))

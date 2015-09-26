@@ -184,7 +184,8 @@ public class BiomeTweaker {
 		final File dir = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/");
 		dir.mkdirs();
 		for(final File file:dir.listFiles())
-			file.delete();
+			if(file.getName().endsWith(".json"))
+				file.delete();
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement element:array){
 				final JsonObject obj = (JsonObject) element;

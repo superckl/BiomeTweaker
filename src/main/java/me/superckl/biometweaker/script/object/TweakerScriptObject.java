@@ -14,6 +14,7 @@ import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.script.command.ScriptCommandAddActualFillerBlock;
 import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
@@ -80,6 +81,10 @@ public class TweakerScriptObject extends ScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("addDicType", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		validCommands.put("addActualFillerBlock", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));

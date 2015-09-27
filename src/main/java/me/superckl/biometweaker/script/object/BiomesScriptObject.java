@@ -27,6 +27,7 @@ import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.script.command.ScriptCommandAddActualFillerBlock;
 import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
@@ -125,6 +126,10 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));
 		validCommands.put("addDicType", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		validCommands.put("addActualFillerBlock", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String.class));

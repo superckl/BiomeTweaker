@@ -31,8 +31,8 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
 
-	private static Field actualFillerBlock;
-	private static Field liquidFillerBlock;
+	//private static Field actualFillerBlock;
+	//private static Field liquidFillerBlock;
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
@@ -57,8 +57,8 @@ public class BiomeHelper {
 		obj.addProperty("Filler Block", gen.fillerBlock.delegate.name());
 		try {
 			int i = -1;
-			obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
-			obj.addProperty("Liquid Filler Block", ((Block) BiomeHelper.liquidFillerBlock.get(gen)).delegate.name());
+			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
+			//obj.addProperty("Liquid Filler Block", ((Block) BiomeHelper.liquidFillerBlock.get(gen)).delegate.name());
 			final boolean hasCoords = (coords != null) && (coords.length == 3);
 			int x = 0, y = 0, z = 0;
 			if(hasCoords){
@@ -196,7 +196,7 @@ public class BiomeHelper {
 		}else if(prop.equals("enableSnow")){
 			final boolean toSet = value.getAsBoolean();
 			biome.enableSnow = toSet;
-		}else if(prop.equals("actualFillerBlock")){
+		}/*else if(prop.equals("actualFillerBlock")){
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
@@ -213,7 +213,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 
-		}else if(prop.equals("grassColor")){
+		}*/else if(prop.equals("grassColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.grassColor.set(biome, toSet);
 		}else if(prop.equals("foliageColor")){
@@ -290,10 +290,10 @@ public class BiomeHelper {
 
 	private static void checkFields(){
 		try{
-			if(BiomeHelper.actualFillerBlock == null)
-				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");
-			if(BiomeHelper.liquidFillerBlock == null)
-				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");
+			/*if(BiomeHelper.actualFillerBlock == null)
+				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");*/
+			/*if(BiomeHelper.liquidFillerBlock == null)
+				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");*/
 			if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)

@@ -15,8 +15,6 @@ import org.objectweb.asm.tree.VarInsnNode;
 import me.superckl.biometweaker.core.ASMNameHelper;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
 public class ModuleBiomeGenBase implements IClassTransformerModule{

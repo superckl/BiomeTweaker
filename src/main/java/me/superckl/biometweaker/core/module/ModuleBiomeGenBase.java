@@ -15,6 +15,8 @@ import org.objectweb.asm.tree.VarInsnNode;
 import me.superckl.biometweaker.core.ASMNameHelper;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
 public class ModuleBiomeGenBase implements IClassTransformerModule{
@@ -44,12 +46,9 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				toFind.add(new VarInsnNode(Opcodes.ALOAD, 20));
 				toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
 				final AbstractInsnNode found = ASMHelper.find(node.instructions, toFind);
-				LogHelper.info("found 0");
 				if(found != null){
-					LogHelper.info("found 1");
 					final AbstractInsnNode someNode = found.getNext().getNext();
 					if((someNode instanceof JumpInsnNode) && (someNode.getOpcode() == Opcodes.IF_ACMPNE)){
-						LogHelper.info("found 2");
 						((JumpInsnNode)someNode).setOpcode(Opcodes.IFEQ);
 						final InsnList toInsert = new InsnList();
 						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -145,8 +144,12 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				fixed++;*/
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				list.add(new InsnNode(Opcodes.ICONST_0));
+				list.add(new InsnNode(Opcodes.ICONST_1));
 				list.add(new TypeInsnNode(Opcodes.ANEWARRAY, "net/minecraft/block/Block"));
+				list.add(new InsnNode(Opcodes.DUP));
+				list.add(new InsnNode(Opcodes.ICONST_0));
+				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
+				list.add(new InsnNode(Opcodes.AASTORE));
 				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/Block;"));
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted empty array into 'actualFillerBlocks'");

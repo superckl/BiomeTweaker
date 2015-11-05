@@ -14,7 +14,6 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.core.ASMNameHelper;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
-import me.superckl.biometweaker.util.LogHelper;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
 public class ModuleBiomeGenBase implements IClassTransformerModule{
@@ -25,10 +24,6 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlocks", "[Lnet/minecraft/block/Block;", "[Lnet/minecraft/block/Block;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlocks' field into "+transformedName);
-		/*cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
-		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlock' field into "+transformedName);*/
-		/*cNode.visitField(Opcodes.ACC_PUBLIC, "liquidFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
-		ModBiomeTweakerCore.logger.debug("Successfully inserted 'liquidFillerBlock' field into "+transformedName);*/
 		cNode.visitField(Opcodes.ACC_PUBLIC, "fillerBlockMeta", "B", "B", 0);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'fillerBlockMeta' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
@@ -37,7 +32,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
-		int fixed = 7;
+		int fixed = 5;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 				InsnList toFind = new InsnList();
@@ -55,7 +50,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						toInsert.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/BiomeHooks", "contains", "([Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)Z", false));
 						//toInsert.add(new JumpInsnNode(Opcodes.IFEQ, ln));
 						if(ASMHelper.findAndReplace(node.instructions, toFind, toInsert) != null){
-							LogHelper.info("fixed");
+							ModBiomeTweakerCore.logger.debug("Successfully redirected 'Stone' check to 'contains' method.");
 							fixed++;
 						}
 					}
@@ -113,6 +108,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "fillerBlockMeta", "B"));
 						toInsert.add(new InsnNode(Opcodes.BASTORE));
 						node.instructions.insert(aaNode, toInsert);
+						ModBiomeTweakerCore.logger.debug("Successfully inserted 'fillerBlockMeta' instructions.");
 						fixed++;
 					}
 
@@ -127,6 +123,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 							toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "fillerBlockMeta", "B"));
 							toInsert.add(new InsnNode(Opcodes.BASTORE));
 							node.instructions.insert(aaNode, toInsert);
+							ModBiomeTweakerCore.logger.debug("Successfully inserted 'fillerBlockMeta' instructions.");
 							fixed++;
 						}
 					}
@@ -189,10 +186,10 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				fixed++;
 
 			}
-		if(fixed < 15)
+		if(fixed < 13)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 15)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 15"
+		else if(fixed > 13)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 13"
 					+ ". Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");

@@ -8,22 +8,22 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.GuiConfigEntries;
-import cpw.mods.fml.client.config.GuiConfigEntries.ButtonEntry;
-import cpw.mods.fml.client.config.IConfigElement;
 import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.client.config.GuiConfig;
+import net.minecraftforge.fml.client.config.GuiConfigEntries;
+import net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry;
+import net.minecraftforge.fml.client.config.IConfigElement;
 
 public class ReloadScriptsConfigEntry extends ButtonEntry{
 
 	private boolean youSure;
 	private int pressedCounter;
 
-	public ReloadScriptsConfigEntry(final GuiConfig owningScreen, final GuiConfigEntries owningEntryList, final IConfigElement<?> configElement) {
+	public ReloadScriptsConfigEntry(final GuiConfig owningScreen, final GuiConfigEntries owningEntryList, final IConfigElement configElement) {
 		super(owningScreen, owningEntryList, configElement);
 		this.btnValue.displayString = "Reload Scripts";
 	}
@@ -104,5 +104,14 @@ public class ReloadScriptsConfigEntry extends ButtonEntry{
 	public Object[] getCurrentValues() {
 		return null;
 	}
+
+	@Override
+	public void setSelected(final int p_178011_1_, final int p_178011_2_, final int p_178011_3_) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void drawEntry(final int slotIndex, final int x, final int y, final int listWidth, final int slotHeight, final int mouseX, final int mouseY, final boolean isSelected) {}
 
 }

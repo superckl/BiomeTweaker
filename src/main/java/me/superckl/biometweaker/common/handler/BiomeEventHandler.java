@@ -12,13 +12,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Maps;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.Getter;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
@@ -32,18 +30,21 @@ import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BiomeEventHandler {
 
 	public static byte globalSize = -1;
 	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
 
-	@Getter
-	private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
-	@Getter
-	private static final boolean[] contigReplaces = new boolean[256];
-	@Getter
-	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
+	//@Getter
+	//private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
+	//@Getter
+	//private static final boolean[] contigReplaces = new boolean[256];
+	//@Getter
+	//private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
 	@Getter
@@ -77,18 +78,19 @@ public class BiomeEventHandler {
 	private final int[] colorCache = new int[768];
 	private final Random random = new Random();
 
-	private final Map<World, Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
+	//private final Map<World, Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
 
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
 	}
-
-	@SubscribeEvent(priority = EventPriority.LOW)
+	
+	//TODO Biome array is no longer exposed. Look into another way to do this
+	/*@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
 			if(!this.replacedBiomes.containsKey(e.world))
 				this.replacedBiomes.put(e.world, Maps.<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>newHashMap());
-			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.chunkX, e.chunkZ));
+			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.x, e.z));
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
@@ -149,9 +151,11 @@ public class BiomeEventHandler {
 			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
 		}
-	}
+	}*/
 
-	@SubscribeEvent(priority = EventPriority.HIGH)
+	//TODO Broken color methods
+	
+	/*@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
 		try {
 			if(this.grassColor == null)
@@ -218,11 +222,11 @@ public class BiomeEventHandler {
 			LogHelper.error("Failed to process getWaterColor event!");
 			e1.printStackTrace();
 		}
-	}
+	}*/
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
-		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
+		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.pos);
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
 			e.setResult(Result.DENY);
@@ -230,12 +234,13 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
-		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
+		final BiomeGenBase gen = e.world.getBiomeGenForCoords(new BlockPos(e.chunkX, 0, e.chunkZ));
 		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.populateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
 			e.setResult(Result.DENY);
 	}
 
+	//TODO are there more now?
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onCreateBiomeDecorator(final BiomeEvent.CreateDecorator e){
 		final int id = e.biome.biomeID;
@@ -271,7 +276,7 @@ public class BiomeEventHandler {
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
 	}
 
-	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
+	/*private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
 		final Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
 
 		final ChunkCoordIntPair[] pairs = NumberHelper.fillGrid(4, pair);
@@ -281,7 +286,7 @@ public class BiomeEventHandler {
 				return map.get(search);
 
 		return Maps.newHashMap();
-	}
+	}*/
 
 	@Getter
 	public static class WeightedBlockEntry extends WeightedRandom.Item{

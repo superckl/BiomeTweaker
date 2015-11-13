@@ -4,15 +4,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class CommandOutput implements ICommand{
 
@@ -58,13 +59,13 @@ public class CommandOutput implements ICommand{
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender p_71516_1_, final String[] p_71516_2_) {
-		return null;
+	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
+		return false;
 	}
 
 	@Override
-	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
-		return false;
+	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+		return null;
 	}
 
 }

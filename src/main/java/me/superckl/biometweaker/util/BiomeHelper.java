@@ -15,6 +15,7 @@ import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -30,13 +31,12 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
-
-	//private static Field actualFillerBlock;
-	//private static Field liquidFillerBlock;
+	//Broken because broken ASM
+	/*
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
-	private static Field fillerBlockMeta;
+	*/
 
 	private static Field biomeList;
 	private static Field typeInfoList;
@@ -51,10 +51,10 @@ public class BiomeHelper {
 		obj.addProperty("Name", gen.biomeName);
 		obj.addProperty("Class", gen.getClass().getName());
 		obj.addProperty("Color", gen.color);
-		obj.addProperty("Root Height", gen.rootHeight);
-		obj.addProperty("Height Variation", gen.heightVariation);
-		obj.addProperty("Top Block", gen.topBlock.delegate.name());
-		obj.addProperty("Filler Block", gen.fillerBlock.delegate.name());
+		obj.addProperty("Root Height", gen.minHeight);
+		obj.addProperty("Height Variation", gen.maxHeight);
+		obj.addProperty("Top Block", gen.topBlock.getBlock().delegate.name());
+		obj.addProperty("Filler Block", gen.fillerBlock.getBlock().delegate.name());
 		try {
 			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
@@ -66,8 +66,8 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getBiomeGrassColor(x, y, z):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getBiomeFoliageColor(x, y, z):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			//obj.addProperty("Grass Color", ""+(hasCoords ? gen.func_180627_b(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			//obj.addProperty("Foliage Color", ""+(hasCoords ? gen.func_180625_c(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
@@ -161,15 +161,15 @@ public class BiomeHelper {
 			biome.color = toSet;
 		}else if(prop.equals("height")){
 			final float toSet = value.getAsFloat();
-			biome.rootHeight = toSet;
+			biome.minHeight = toSet;
 		}else if(prop.equals("heightVariation")){
 			final float toSet = value.getAsFloat();
-			biome.heightVariation = toSet;
+			biome.maxHeight = toSet;
 		}else if(prop.equals("topBlock")){
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
-				biome.topBlock = block;
+				biome.topBlock = block.getDefaultState();
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
@@ -177,7 +177,7 @@ public class BiomeHelper {
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
-				biome.fillerBlock = block;
+				biome.fillerBlock = block.getDefaultState();
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
@@ -213,7 +213,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 
-		}*/else if(prop.equals("grassColor")){
+		}*//*else if(prop.equals("grassColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.grassColor.set(biome, toSet);
 		}else if(prop.equals("foliageColor")){
@@ -222,12 +222,15 @@ public class BiomeHelper {
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.waterColor.set(biome, toSet);
-		}else if(prop.equals("fillerBlockMeta")){
-			final byte toSet = value.getAsByte();
-			BiomeHelper.fillerBlockMeta.set(biome, toSet);
-		}else if(prop.equals("topBlockMeta"))
-			biome.field_150604_aj = value.getAsInt();
-		else if(prop.equals("waterliliesPerChunk"))
+		}*/else if(prop.equals("fillerBlockMeta")){
+			biome.setFillerBlockMetadata(value.getAsInt());
+			if(biome.fillerBlock != null)
+				biome.fillerBlock = biome.fillerBlock.getBlock().getStateFromMeta(value.getAsInt());
+		}else if(prop.equals("topBlockMeta")){
+			if(biome.topBlock != null)
+				biome.topBlock = biome.topBlock.getBlock().getStateFromMeta(value.getAsInt());
+		}
+		else if(prop.equals("waterliliesPerChunk")) //TODO check these in event handler
 			BiomeEventHandler.getWaterlilyPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("treesPerChunk"))
 			BiomeEventHandler.getTreesPerChunk().put(biome.biomeID, value.getAsInt());
@@ -249,8 +252,8 @@ public class BiomeHelper {
 			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
 			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());
-		else if(prop.equals("contiguousReplacement"))
-			BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();
+		/*else if(prop.equals("contiguousReplacement"))
+			BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();*/
 		else if(prop.equals("genWeight")){
 			final int weight  = value.getAsInt();
 			for(final BiomeType type:BiomeType.values()){
@@ -294,14 +297,12 @@ public class BiomeHelper {
 				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");*/
 			/*if(BiomeHelper.liquidFillerBlock == null)
 				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");*/
-			if(BiomeHelper.grassColor == null)
+			/*if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
 			if(BiomeHelper.waterColor == null)
-				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
-			if(BiomeHelper.fillerBlockMeta == null)
-				BiomeHelper.fillerBlockMeta = BiomeGenBase.class.getDeclaredField("fillerBlockMeta");
+				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");*/
 			if(BiomeHelper.biomeList == null){
 				BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
 				BiomeHelper.biomeList.setAccessible(true);
@@ -360,12 +361,8 @@ public class BiomeHelper {
 		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
 		if(remove)
 			set.remove(type);
-		else if(!set.contains(type)){
-			final EnumSet<BiomeDictionary.Type> set2 = EnumSet.noneOf(BiomeDictionary.Type.class);
-			set2.addAll(set);
-			set2.add(type);
-			BiomeHelper.typeList.set(biomeInfo, set2);
-		}
+		else if(!set.contains(type))
+			set.add(type);
 	}
 
 	public static void removeAllBiomeDicType(final BiomeGenBase gen) throws Exception{

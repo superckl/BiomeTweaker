@@ -9,17 +9,17 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import me.superckl.biometweaker.util.BiomeHelper;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class CommandInfo implements ICommand{
 
@@ -49,10 +49,10 @@ public class CommandInfo implements ICommand{
 
 	@Override
 	public void processCommand(final ICommandSender sender, final String[] p_71515_2_) {
-		final ChunkCoordinates coord = sender.getPlayerCoordinates();
+		final BlockPos coord = sender.getPosition();
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
-			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiomeGenForCoords(coord.posX, coord.posZ), coord.posX, coord.posY, coord.posZ);
+			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiomeGenForCoords(coord), coord.getX(), coord.getY(), coord.getZ());
 			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.info.output.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
 			final ChatStyle gold = new ChatStyle().setColor(EnumChatFormatting.GOLD);
 			final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -71,13 +71,13 @@ public class CommandInfo implements ICommand{
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender p_71516_1_, final String[] p_71516_2_) {
-		return null;
+	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
+		return false;
 	}
 
 	@Override
-	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
-		return false;
+	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+		return null;
 	}
 
 }

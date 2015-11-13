@@ -17,9 +17,10 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 	private final Set<IClassTransformerModule> modules = Sets.newIdentityHashSet();
 
 	public BiomeTweakerASMTransformer() {
-		this.registerModule(new ModuleBiomeGenBase());
-		this.registerModule(new ModuleBlockOldLeaf());
-		this.registerModule(new ModuleBiomeGenBaseSubclass());
+		//TODO this is broke
+		//this.registerModule(new ModuleBiomeGenBase());
+		//this.registerModule(new ModuleBlockOldLeaf());
+		//this.registerModule(new ModuleBiomeGenBaseSubclass());
 	}
 
 	public void registerModule(final IClassTransformerModule module){

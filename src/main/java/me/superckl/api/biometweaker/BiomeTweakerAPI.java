@@ -1,9 +1,9 @@
 package me.superckl.api.biometweaker;
 
-import cpw.mods.fml.common.Loader;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
+import net.minecraftforge.fml.common.Loader;
 
 public class BiomeTweakerAPI {
 

@@ -5,9 +5,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 
-import cpw.mods.fml.common.DummyModContainer;
-import cpw.mods.fml.common.ModMetadata;
 import me.superckl.biometweaker.common.reference.ModData;
+import net.minecraftforge.fml.common.DummyModContainer;
+import net.minecraftforge.fml.common.ModMetadata;
 
 public class ModBiomeTweakerCore extends DummyModContainer{
 

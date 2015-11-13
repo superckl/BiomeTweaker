@@ -9,12 +9,12 @@ public enum ASMNameHelper {
 	class_biomeGenBase("net.minecraft.world.biome.BiomeGenBase", "net.minecraft.world.biome.BiomeGenBase"),
 	class_blockOldLeaf("net.minecraft.block.BlockOldLeaf", "net.minecraft.block.BlockOldLeaf"),
 
-	method_genBiomeTerrain("genBiomeTerrain", "func_150560_b"),
-	method_genTerrainBlocks("genTerrainBlocks", "func_150573_a"),
-	method_getBiomeGrassColor("getBiomeGrassColor", "func_150558_b"),
-	method_getBiomeFoliageColor("getBiomeFoliageColor", "func_150571_c"),
-	method_colorMultiplier("colorMultiplier", "func_149720_d"),
-	method_getBiomeGenForCoords("getBiomeGenForCoords","func_72807_a"),
+	method_genBiomeTerrain("func_180628_b", "func_180628_b"),
+	method_genTerrainBlocks("genTerrainBlocks", "func_180622_a"),
+	method_getBiomeGrassColor("func_180627_b", "func_180627_b"),
+	method_getBiomeFoliageColor("func_180625_c", "func_180625_c"),
+	method_colorMultiplier("colorMultiplier", "func_180662_a"),
+	method_getBiomeGenForCoords("getBiomeGenForCoords","func_180494_b"),
 
 	field_stone("stone", "field_150348_b"),
 	field_water("water", "field_150355_j"),

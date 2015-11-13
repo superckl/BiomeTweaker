@@ -7,17 +7,17 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import cpw.mods.fml.common.asm.transformers.AccessTransformer;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.Name;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import me.superckl.biometweaker.common.reference.ModData;
+import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.SortingIndex;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
 @SortingIndex(1001)
-@MCVersion("1.7.10")
+@MCVersion("1.8")
 @Name("BiomeTweakerCore")
 @TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
 public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{

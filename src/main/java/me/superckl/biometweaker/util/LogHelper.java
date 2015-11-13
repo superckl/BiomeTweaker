@@ -2,8 +2,8 @@ package me.superckl.biometweaker.util;
 
 import org.apache.logging.log4j.Level;
 
-import cpw.mods.fml.common.FMLLog;
 import me.superckl.biometweaker.common.reference.ModData;
+import net.minecraftforge.fml.common.FMLLog;
 
 public class LogHelper {
 

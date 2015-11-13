@@ -43,7 +43,7 @@ group= "me.superckl.biometweaker"
 archivesBaseName = "BiomeTweaker"
 
 minecraft {
-    version = config.forge_version+ "-" + config.minecraft_version
+    version = config.minecraft_version + "-" + config.forge_version
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"

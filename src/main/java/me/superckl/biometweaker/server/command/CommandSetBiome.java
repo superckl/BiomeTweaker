@@ -5,17 +5,17 @@ import java.util.List;
 
 import com.google.common.primitives.Ints;
 
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class CommandSetBiome implements ICommand{
 
@@ -45,7 +45,7 @@ public class CommandSetBiome implements ICommand{
 
 	@Override
 	public void processCommand(final ICommandSender sender, final String[] args) {
-		final ChunkCoordinates coord = sender.getPlayerCoordinates();
+		final BlockPos coord = sender.getPosition();
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
 			if((args.length < 2) || (args.length > 3)){
@@ -83,15 +83,15 @@ public class CommandSetBiome implements ICommand{
 				}
 			int count = 0;
 			if(blocks){
-				for(int x = coord.posX-i; x <= (coord.posX+i); x++)
-					for(int z = coord.posZ-i; z <= (coord.posZ+i); z++){
+				for(int x = coord.getX()-i; x <= (coord.getX()+i); x++)
+					for(int z = coord.getZ()-i; z <= (coord.getZ()+i); z++){
 						final int realX = x & 15;
 						final int realZ = z & 15;
 						/*if(x < 0)
 							realX = 15-realX;
 						if(z < 0)
 							realZ = 15-realZ;*/
-						final Chunk chunk = world.getChunkFromBlockCoords(x, z);
+						final Chunk chunk = world.getChunkFromBlockCoords(new BlockPos(x, 0, z));
 						chunk.getBiomeArray()[(realZ*16)+realX] = (byte) gen.biomeID;
 						chunk.setChunkModified();
 						count++;
@@ -100,8 +100,8 @@ public class CommandSetBiome implements ICommand{
 			}else{
 				final byte[] biomeArray = new byte[256];
 				Arrays.fill(biomeArray, (byte) gen.biomeID);
-				final int chunkX = coord.posX >> 4;
-					final int chunkZ = coord.posZ >> 4;
+				final int chunkX = coord.getX() >> 4;
+					final int chunkZ = coord.getZ() >> 4;
 					for(int x = chunkX-i; x <= (chunkX+i); x++)
 						for(int z = chunkZ-i; z <= (chunkZ+i); z++){
 							final Chunk chunk = world.getChunkFromChunkCoords(x, z);
@@ -121,13 +121,13 @@ public class CommandSetBiome implements ICommand{
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender sender, final String[] args) {
-		return null;
+	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
+		return false;
 	}
 
 	@Override
-	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
-		return false;
+	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+		return null;
 	}
 
 }

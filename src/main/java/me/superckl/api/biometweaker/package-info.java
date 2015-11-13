@@ -1,4 +1,4 @@
 @API(owner = "BiomeTweaker", provides = APIInfo.NAME, apiVersion = APIInfo.VERSION)
 package me.superckl.api.biometweaker;
 
-import cpw.mods.fml.common.API;
+import net.minecraftforge.fml.common.API;

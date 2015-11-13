@@ -228,7 +228,7 @@ public class BiomeHelper {
 			if(biome.topBlock != null)
 				biome.topBlock = biome.topBlock.getBlock().getStateFromMeta(value.getAsInt());
 		}
-		else if(prop.equals("waterliliesPerChunk")) //TODO check these in event handler
+		else if(prop.equals("waterliliesPerChunk"))
 			BiomeEventHandler.getWaterlilyPerChunk().put(biome.biomeID, value.getAsInt());
 		else if(prop.equals("treesPerChunk"))
 			BiomeEventHandler.getTreesPerChunk().put(biome.biomeID, value.getAsInt());

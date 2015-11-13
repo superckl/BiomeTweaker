@@ -24,6 +24,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
+import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
@@ -113,7 +116,6 @@ public class BiomeEventHandler {
 					for (int l1 = k1-1; l1 >= 0; --l1)
 					{
 						final int i2 = (((j1 << 4) + i1) * k1) + l1;
-						//TODO can have blockstates now
 						final IBlockState state = e.primer.getBlockState(i2);
 						final Block block = state.getBlock();
 						WeightedBlockEntry toUse = null;
@@ -156,9 +158,7 @@ public class BiomeEventHandler {
 		}
 	}
 
-	//TODO Broken color methods
-
-	/*@SubscribeEvent(priority = EventPriority.HIGH)
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
 		try {
 			if(this.grassColor == null)
@@ -225,7 +225,7 @@ public class BiomeEventHandler {
 			LogHelper.error("Failed to process getWaterColor event!");
 			e1.printStackTrace();
 		}
-	}*/
+	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
@@ -243,7 +243,7 @@ public class BiomeEventHandler {
 			e.setResult(Result.DENY);
 	}
 
-	//TODO are there more now?
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onCreateBiomeDecorator(final BiomeEvent.CreateDecorator e){
 		final int id = e.biome.biomeID;

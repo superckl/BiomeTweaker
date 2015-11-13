@@ -54,8 +54,6 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 					}
 				}
 
-				//Not needed anymore
-				//TODO add command to allow metadata while setting top block
 				/*toFind = new InsnList();
 				toFind.add(new VarInsnNode(Opcodes.ALOAD, 3));
 				toFind.add(new VarInsnNode(Opcodes.ILOAD, 19));

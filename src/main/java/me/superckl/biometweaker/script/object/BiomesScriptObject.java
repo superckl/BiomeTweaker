@@ -33,6 +33,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddToGeneration;
+import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
@@ -150,7 +151,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("create", listing);
 
-		/*listing = new ScriptCommandListing();
+		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
@@ -168,7 +169,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
 				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, String.class, String.class));
 		validCommands.put("registerGenBlockRep", listing);
-		 */
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddToGeneration.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));

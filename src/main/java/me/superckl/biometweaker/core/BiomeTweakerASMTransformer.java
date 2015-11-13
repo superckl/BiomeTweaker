@@ -7,6 +7,9 @@ import com.google.common.collect.Sets;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.module.IClassTransformerModule;
+import me.superckl.biometweaker.core.module.ModuleBiomeGenBase;
+import me.superckl.biometweaker.core.module.ModuleBiomeGenBaseSubclass;
+import me.superckl.biometweaker.core.module.ModuleBlockOldLeaf;
 import net.minecraft.launchwrapper.IClassTransformer;
 
 public class BiomeTweakerASMTransformer implements IClassTransformer{
@@ -15,9 +18,9 @@ public class BiomeTweakerASMTransformer implements IClassTransformer{
 
 	public BiomeTweakerASMTransformer() {
 		//TODO this is broke
-		//this.registerModule(new ModuleBiomeGenBase());
-		//this.registerModule(new ModuleBlockOldLeaf());
-		//this.registerModule(new ModuleBiomeGenBaseSubclass());
+		this.registerModule(new ModuleBiomeGenBase());
+		this.registerModule(new ModuleBlockOldLeaf());
+		this.registerModule(new ModuleBiomeGenBaseSubclass());
 	}
 
 	public void registerModule(final IClassTransformerModule module){

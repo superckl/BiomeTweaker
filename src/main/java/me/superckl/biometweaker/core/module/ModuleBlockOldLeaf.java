@@ -27,17 +27,15 @@ public class ModuleBlockOldLeaf implements IClassTransformerModule{
 			if(mNode.name.equals(ASMNameHelper.method_colorMultiplier.get())){
 				final InsnList list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-				list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-				list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+				list.add(new VarInsnNode(Opcodes.ALOAD, 2));
+				list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(Lnet/minecraft/util/BlockPos;)Lnet/minecraft/world/biome/BiomeGenBase;", true));
 				list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
 				list.add(new InsnNode(Opcodes.ICONST_M1));
 				final LabelNode label = new LabelNode(new Label());
 				list.add(new JumpInsnNode(Opcodes.IF_ICMPEQ, label));
 				list.add(new VarInsnNode(Opcodes.ALOAD, 1));
-				list.add(new VarInsnNode(Opcodes.ILOAD, 2));
-				list.add(new VarInsnNode(Opcodes.ILOAD, 4));
-				list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(II)Lnet/minecraft/world/biome/BiomeGenBase;", true));
+				list.add(new VarInsnNode(Opcodes.ALOAD, 2));
+				list.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/world/IBlockAccess", ASMNameHelper.method_getBiomeGenForCoords.get(), "(Lnet/minecraft/util/BlockPos;)Lnet/minecraft/world/biome/BiomeGenBase;", true));
 				list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "foliageColor", "I"));
 				list.add(new InsnNode(Opcodes.IRETURN));
 				list.add(label);

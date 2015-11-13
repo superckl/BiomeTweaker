@@ -15,6 +15,7 @@ import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -30,12 +31,10 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
-	//Broken because broken ASM
-	/*
+
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
-	 */
 
 	private static Field biomeList;
 	private static Field typeInfoList;
@@ -55,7 +54,7 @@ public class BiomeHelper {
 		obj.addProperty("Top Block", gen.topBlock.getBlock().delegate.name());
 		obj.addProperty("Filler Block", gen.fillerBlock.getBlock().delegate.name());
 		try {
-			final int i = -1;
+			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
 			//obj.addProperty("Liquid Filler Block", ((Block) BiomeHelper.liquidFillerBlock.get(gen)).delegate.name());
 			final boolean hasCoords = (coords != null) && (coords.length == 3);
@@ -65,8 +64,8 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			//obj.addProperty("Grass Color", ""+(hasCoords ? gen.func_180627_b(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
-			//obj.addProperty("Foliage Color", ""+(hasCoords ? gen.func_180625_c(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Grass Color", ""+(hasCoords ? gen.func_180627_b(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.func_180625_c(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
@@ -212,7 +211,7 @@ public class BiomeHelper {
 				LogHelper.info("Failed to parse block: "+blockName);
 			}
 
-		}*//*else if(prop.equals("grassColor")){
+		}*/else if(prop.equals("grassColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.grassColor.set(biome, toSet);
 		}else if(prop.equals("foliageColor")){
@@ -221,7 +220,7 @@ public class BiomeHelper {
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.waterColor.set(biome, toSet);
-		}*/else if(prop.equals("fillerBlockMeta")){
+		}else if(prop.equals("fillerBlockMeta")){
 			biome.setFillerBlockMetadata(value.getAsInt());
 			if(biome.fillerBlock != null)
 				biome.fillerBlock = biome.fillerBlock.getBlock().getStateFromMeta(value.getAsInt());
@@ -296,12 +295,12 @@ public class BiomeHelper {
 				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");*/
 			/*if(BiomeHelper.liquidFillerBlock == null)
 				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");*/
-			/*if(BiomeHelper.grassColor == null)
+			if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
 			if(BiomeHelper.waterColor == null)
-				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");*/
+				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
 			if(BiomeHelper.biomeList == null){
 				BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
 				BiomeHelper.biomeList.setAccessible(true);

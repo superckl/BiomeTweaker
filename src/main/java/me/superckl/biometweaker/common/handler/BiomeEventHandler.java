@@ -2,8 +2,6 @@ package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -13,20 +11,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Maps;
 
 import lombok.Getter;
-import me.superckl.biometweaker.util.LogHelper;
-import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
-import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
@@ -83,7 +73,7 @@ public class BiomeEventHandler {
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
 	}
-	
+
 	//TODO Biome array is no longer exposed. Look into another way to do this
 	/*@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
@@ -154,7 +144,7 @@ public class BiomeEventHandler {
 	}*/
 
 	//TODO Broken color methods
-	
+
 	/*@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
 		try {

@@ -15,7 +15,6 @@ import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
@@ -36,7 +35,7 @@ public class BiomeHelper {
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
-	*/
+	 */
 
 	private static Field biomeList;
 	private static Field typeInfoList;
@@ -56,7 +55,7 @@ public class BiomeHelper {
 		obj.addProperty("Top Block", gen.topBlock.getBlock().delegate.name());
 		obj.addProperty("Filler Block", gen.fillerBlock.getBlock().delegate.name());
 		try {
-			int i = -1;
+			final int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
 			//obj.addProperty("Liquid Filler Block", ((Block) BiomeHelper.liquidFillerBlock.get(gen)).delegate.name());
 			final boolean hasCoords = (coords != null) && (coords.length == 3);

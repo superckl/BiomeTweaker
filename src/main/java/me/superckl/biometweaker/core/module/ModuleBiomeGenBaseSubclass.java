@@ -75,6 +75,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ASMNameHelper.method_genTerrainBlocks.get()) && mNode.desc.equals(ASMNameHelper.desc_genTerrainBlocks.get())){
+					//TODO broken
 					AbstractInsnNode node = ASMHelper.findFirstInstruction(mNode);
 					AbstractInsnNode nextNode = node;
 					int removed = 0;

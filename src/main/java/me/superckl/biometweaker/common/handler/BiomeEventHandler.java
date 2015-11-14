@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Maps;
 
 import lombok.Getter;
+import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
@@ -44,8 +45,8 @@ public class BiomeEventHandler {
 	private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
 	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
-	//@Getter
-	//private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
+	@Getter
+	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
 	@Getter
@@ -97,12 +98,6 @@ public class BiomeEventHandler {
 				{
 
 					final BiomeGenBase biomegenbase = e.world.getBiomeGenForCoords(new BlockPos(e.x << 4, 0, e.z << 4));//e.biomeArray[l + (k * 16)];
-					LogHelper.info(biomegenbase.biomeName);
-					/*if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
-						final int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
-						biomegenbase = BiomeGenBase.getBiome(id);
-						e.biomeArray[l + (k * 16)] = biomegenbase;
-					}*/
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
 					if(!shouldDoBMap.containsKey(biomegenbase.biomeID))
@@ -277,6 +272,12 @@ public class BiomeEventHandler {
 			e.newSize = BiomeEventHandler.globalSize;
 		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public void onInitBiomeGens(final WorldTypeEvent.InitBiomeGens e){
+		e.newBiomeGens[0] = new GenLayerReplacement(e.newBiomeGens[0]);
+		e.newBiomeGens[1] = new GenLayerReplacement(e.newBiomeGens[1]);
 	}
 
 	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){

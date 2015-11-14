@@ -92,7 +92,4 @@ public class RegenerateOutputConfigEntry extends ButtonEntry{
 	@Override
 	public void setSelected(final int p_178011_1_, final int p_178011_2_, final int p_178011_3_) {}
 
-	@Override
-	public void drawEntry(final int slotIndex, final int x, final int y, final int listWidth, final int slotHeight, final int mouseX, final int mouseY, final boolean isSelected) {}
-
 }

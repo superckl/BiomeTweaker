@@ -24,7 +24,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 	@Override
 	public byte[] transform(final String name, final String transformedName, final byte[] basicClass) {
 		final ClassReader reader = new ClassReader(basicClass);
-		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ahu":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "arm":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)

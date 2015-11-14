@@ -36,10 +36,7 @@ import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.ReflectionHelper;
-import me.superckl.biometweaker.util.VersionChecker;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -119,9 +116,6 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
-		if(Config.INSTANCE.isVersionCheck() && !ModData.VERSION.equals("@VERSION@"))
-			FMLCommonHandler.instance().bus().register(VersionChecker.start(ModData.MOD_ID, ModData.VERSION, MinecraftForge.MC_VERSION));
-
 		this.parseScripts();
 
 		BiomeTweaker.proxy.registerHandlers();

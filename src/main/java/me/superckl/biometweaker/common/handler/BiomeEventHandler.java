@@ -16,6 +16,7 @@ import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import lombok.Getter;
+import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
@@ -93,11 +94,11 @@ public class BiomeEventHandler {
 				for (int l = 0; l < 16; ++l)
 				{
 					BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
-					if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
+					/*if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
 						final int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
 						biomegenbase = BiomeGenBase.getBiome(id);
 						e.biomeArray[l + (k * 16)] = biomegenbase;
-					}
+					}*/
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
 					if(!shouldDoBMap.containsKey(biomegenbase.biomeID))
@@ -269,6 +270,12 @@ public class BiomeEventHandler {
 			e.newSize = BiomeEventHandler.globalSize;
 		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
+	}
+	
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public void onInitBiomeGens(WorldTypeEvent.InitBiomeGens e){
+		e.newBiomeGens[0] = new GenLayerReplacement(e.newBiomeGens[0]);
+		e.newBiomeGens[1] = new GenLayerReplacement(e.newBiomeGens[1]);
 	}
 
 	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){

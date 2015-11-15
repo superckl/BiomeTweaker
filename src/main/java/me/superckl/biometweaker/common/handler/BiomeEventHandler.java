@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Maps;
 
+import gnu.trove.map.hash.TIntIntHashMap;
 import lombok.Getter;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
@@ -46,33 +47,33 @@ public class BiomeEventHandler {
 	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
-	private static final Map<Integer, Integer> biomeReplacements = Maps.newHashMap();
+	private static final TIntIntHashMap biomeReplacements = new TIntIntHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
 	@Getter
 	private static final Map<Integer, List<String>> populateTypes = Maps.newHashMap();
 	@Getter
-	private static final Map<Integer, Integer> waterlilyPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap waterlilyPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> treesPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap treesPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> flowersPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap flowersPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> grassPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap grassPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> deadBushPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap deadBushPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> mushroomPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap mushroomPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> reedsPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap reedsPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> cactiPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap cactiPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> sandPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap sandPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> clayPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap clayPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, Integer> bigMushroomsPerChunk = Maps.newHashMap();
+	private static final TIntIntHashMap bigMushroomsPerChunk = new TIntIntHashMap();
 
 	private Field grassColor;
 	private Field foliageColor;

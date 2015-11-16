@@ -15,7 +15,10 @@ import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
@@ -41,37 +44,37 @@ public class BiomeEventHandler {
 	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
 
 	@Getter
-	private static final Map<Integer, List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = Maps.newHashMap();
+	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>>();
 	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
-	private static final TIntIntHashMap biomeReplacements = new TIntIntHashMap();
+	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
 	@Getter
-	private static final Map<Integer, List<String>> decorateTypes = Maps.newHashMap();
+	private static final TIntObjectMap<List<String>> decorateTypes = new TIntObjectHashMap<List<String>>();
 	@Getter
-	private static final Map<Integer, List<String>> populateTypes = Maps.newHashMap();
+	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<List<String>>();
 	@Getter
-	private static final TIntIntHashMap waterlilyPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap waterlilyPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap treesPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap treesPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap flowersPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap flowersPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap grassPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap grassPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap deadBushPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap deadBushPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap mushroomPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap mushroomPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap reedsPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap reedsPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap cactiPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap cactiPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap sandPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap sandPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap clayPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap clayPerChunk = new TIntIntHashMap();
 	@Getter
-	private static final TIntIntHashMap bigMushroomsPerChunk = new TIntIntHashMap();
+	private static final TIntIntMap bigMushroomsPerChunk = new TIntIntHashMap();
 
 	private Field grassColor;
 	private Field foliageColor;

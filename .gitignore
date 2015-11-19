@@ -9,6 +9,7 @@ config/*
 saves/*
 screenshots/*
 logs/*
+crash-reports/*
 options.txt
 usernamecache.json
 Logo/*

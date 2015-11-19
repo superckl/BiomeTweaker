@@ -48,6 +48,8 @@ public class BiomeEventHandler {
 	@Getter
 	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>>();
 	@Getter
+	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>>();
+	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
 	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
@@ -100,8 +102,8 @@ public class BiomeEventHandler {
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
-
 					final BiomeGenBase biomegenbase = e.world.getBiomeGenForCoords(new BlockPos(e.x << 4, 0, e.z << 4));//e.biomeArray[l + (k * 16)];
+
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
 					if(!shouldDoBMap.containsKey(biomegenbase.biomeID))
@@ -282,6 +284,28 @@ public class BiomeEventHandler {
 	public void onInitBiomeGens(final WorldTypeEvent.InitBiomeGens e){
 		e.newBiomeGens[0] = new GenLayerReplacement(e.newBiomeGens[0]);
 		e.newBiomeGens[1] = new GenLayerReplacement(e.newBiomeGens[1]);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH, receiveCanceled = true)
+	public void onReplaceVillageBlockID(final BiomeEvent.GetVillageBlockID e){
+		if((e.biome == null) || (e.original == null))
+			return;
+		final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(e.biome.biomeID);
+		if(list == null)
+			return;
+		for(final Pair<Pair<Block, Integer>, Pair<Block, Integer>> fPair:list)
+			if(fPair.getKey().getKey() == (e.replacement == null ? e.original.getBlock():e.replacement.getBlock())){
+				Integer meta = fPair.getKey().getValue();
+				boolean shouldDo = meta == null;
+				if(!shouldDo)
+					shouldDo = meta == fPair.getKey().getKey().getMetaFromState(e.replacement == null ? e.original:e.replacement);
+				if(shouldDo){
+					meta = fPair.getValue().getValue();
+					e.replacement = fPair.getValue().getKey().getStateFromMeta(meta == null ? 0:meta);
+					e.setResult(Result.DENY);
+					break;
+				}
+			}
 	}
 
 	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){

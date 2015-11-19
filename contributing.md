@@ -7,6 +7,8 @@ So, looks like you want to contribute to BiomeTweaker. Awesome! Here's what to d
   * Issues regarding MCPC+/Cauldron that are not reproducible with forge only are **not accepted**;
   * Duplicate issues or issues that have been solved already (use the search feature!) will be closed.
   * Do not tag your issues' names. "Something Broke" is prefered to "[Bug] Something Broke"  because there's a proper label system in place.
+  * Include the version of BiomeTweaker **and** Forge you are running. This includes the "1.8" or "1.7.10".
+  * Include pictures if relevant! A good example would be reporting issues with a script command not behaving properly.
 
 [Report the Issue](https://github.com/superckl/BiomeTweaker/issues)!
 

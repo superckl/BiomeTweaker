@@ -5,6 +5,13 @@
 eclipse/*
 bin/*
 Techne/*
+config/*
+saves/*
+screenshots/*
+logs/*
+crash-reports/*
+options.txt
+usernamecache.json
 Logo/*
 /bin/
 build.bat

@@ -46,6 +46,8 @@ public class BiomeEventHandler {
 	@Getter
 	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>>();
 	@Getter
+	private static final TIntObjectMap<List<Pair<Block, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<List<Pair<Block, Pair<Block, Integer>>>>();
+	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
 	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
@@ -97,7 +99,7 @@ public class BiomeEventHandler {
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
-					BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
+					final BiomeGenBase biomegenbase = e.biomeArray[l + (k * 16)];
 					/*if(BiomeEventHandler.biomeReplacements.containsKey(biomegenbase.biomeID)){
 						final int id = BiomeEventHandler.biomeReplacements.get(biomegenbase.biomeID);
 						biomegenbase = BiomeGenBase.getBiome(id);
@@ -275,11 +277,42 @@ public class BiomeEventHandler {
 		else if(BiomeEventHandler.sizes.containsKey(e.worldType))
 			e.newSize = BiomeEventHandler.sizes.get(e.worldType);
 	}
-	
+
 	@SubscribeEvent(priority = EventPriority.LOW)
-	public void onInitBiomeGens(WorldTypeEvent.InitBiomeGens e){
+	public void onInitBiomeGens(final WorldTypeEvent.InitBiomeGens e){
 		e.newBiomeGens[0] = new GenLayerReplacement(e.newBiomeGens[0]);
 		e.newBiomeGens[1] = new GenLayerReplacement(e.newBiomeGens[1]);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH, receiveCanceled = true)
+	public void onReplaceVillageBlockID(final BiomeEvent.GetVillageBlockID e){
+		if((e.biome == null) || (e.original == null))
+			return;
+		final List<Pair<Block, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(e.biome.biomeID);
+		if(list == null)
+			return;
+		for(final Pair<Block, Pair<Block, Integer>> fPair:list)
+			if(fPair.getKey() == (e.replacement == null ? e.original:e.replacement)){
+				e.replacement = fPair.getValue().getKey();
+				e.setResult(Result.DENY);
+				break;
+			}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH, receiveCanceled = true)
+	public void onReplaceVillageBlockMeta(final BiomeEvent.GetVillageBlockMeta e){
+		if((e.biome == null) || (e.original == null))
+			return;
+		final List<Pair<Block, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(e.biome.biomeID);
+		if(list == null)
+			return;
+		for(final Pair<Block, Pair<Block, Integer>> fPair:list)
+			if(fPair.getKey() == e.original){
+				final Integer i = fPair.getValue().getValue();
+				e.replacement = i == null ? 0:i;
+				e.setResult(Result.DENY);
+				break;
+			}
 	}
 
 	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){

@@ -6,6 +6,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -343,7 +344,11 @@ public class BiomeHelper {
 			return;
 		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
 		if(listArray.length > type.ordinal()){
-			final List<BiomeGenBase> list = listArray[type.ordinal()];
+			List<BiomeGenBase> list = listArray[type.ordinal()];
+			if(list == null){
+				list = Lists.newArrayList();
+				listArray[type.ordinal()] = list;
+			}
 			if(remove)
 				list.remove(gen);
 			else if(!list.contains(gen))

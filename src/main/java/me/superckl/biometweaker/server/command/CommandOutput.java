@@ -20,10 +20,8 @@ public class CommandOutput implements ICommand{
 	private final List<String> aliases = Arrays.asList("btoutput", "biometweakeroutput", "bto", "biometweakero");
 
 	@Override
-	public int compareTo(final Object o) {
-		if((o instanceof ICommand) == false)
-			return 0;
-		return this.getCommandName().compareTo(((ICommand)o).getCommandName());
+	public int compareTo(final ICommand c) {
+		return this.getCommandName().compareTo(c.getCommandName());
 	}
 
 	@Override

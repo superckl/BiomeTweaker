@@ -65,8 +65,8 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? gen.func_180627_b(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.func_180625_c(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");

@@ -11,6 +11,7 @@ import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,7 +35,7 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Class<?> clazz = Class.forName(this.entityClass);
+		final Class<? extends EntityLiving> clazz = (Class<? extends EntityLiving>) Class.forName(this.entityClass);
 		if(clazz == null){
 			LogHelper.info("Failed to load entity class: "+this.entityClass);
 			return;

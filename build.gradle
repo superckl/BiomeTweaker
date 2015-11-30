@@ -119,14 +119,14 @@ jar {
     }
 }
 
-/*
+
 tasks.build.dependsOn('signJar')
 
 ext.keystore_location = "${System.env.keystore_location ?: "."}"
 ext.keystore_password = "${System.env.keystore_password ?: ""}"
 ext.keystore_alias = "${System.env.keystore_alias ?: ""}"
 
-task signJar(dependsOn: ["reobf", "devJar"]) {
+task signJar(dependsOn: ["reobfJar", "devJar"]) {
     inputs.dir jar.destinationDir
     inputs.file keystore_location
     inputs.property "keystore_alias", keystore_alias
@@ -153,4 +153,4 @@ task signJar(dependsOn: ["reobf", "devJar"]) {
             )
         }
     }
-}*/
+}

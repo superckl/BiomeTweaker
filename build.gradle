@@ -119,6 +119,7 @@ jar {
     }
 }
 
+/*
 tasks.build.dependsOn('signJar')
 
 ext.keystore_location = "${System.env.keystore_location ?: "."}"
@@ -152,4 +153,4 @@ task signJar(dependsOn: ["reobf", "devJar"]) {
             )
         }
     }
-}
+}*/

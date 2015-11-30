@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.core.module;
 
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -13,6 +14,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.core.ASMNameHelper;
+import me.superckl.biometweaker.core.MinecraftClassWriter;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
@@ -45,7 +47,9 @@ public class ModuleBlockOldLeaf implements IClassTransformerModule{
 			}
 		if(!fixed)
 			ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"!  If this is a server, you're fine. Otherwise ye who continue now abandon all hope.");
-		return ASMHelper.writeClassToBytesNoDeobf(cNode);
+		ClassWriter writer = new MinecraftClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		cNode.accept(writer);
+		return writer.toByteArray();
 	}
 
 	@Override

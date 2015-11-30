@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -15,6 +16,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ASMNameHelper;
+import me.superckl.biometweaker.core.MinecraftClassWriter;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
@@ -24,7 +26,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 	@Override
 	public byte[] transform(final String name, final String transformedName, final byte[] basicClass) {
 		final ClassReader reader = new ClassReader(basicClass);
-		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "arm":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "ady":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)
@@ -102,8 +104,10 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						ModBiomeTweakerCore.logger.warn("Found Biome subclass "+transformedName+" that was setting topBlock or fillerBlock in genTerrainBlocks! This is bad practice and breaks functionality in BiomeTweaker! "+removed+" items were removed. If this is not a vanilla biome, please let me (superckl) know.");
 						ModBiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");
 					}
-				}
-			return ASMHelper.writeClassToBytesNoDeobf(cNode);
+			}
+			ClassWriter writer = new MinecraftClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+			cNode.accept(writer);
+			return writer.toByteArray();
 		}
 		return basicClass;
 	}

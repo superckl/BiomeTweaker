@@ -14,12 +14,14 @@ import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraft.world.biome.WorldChunkManager;
+import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
@@ -285,6 +287,9 @@ public class BiomeHelper {
 					BiomeHelper.loggedSpawn = true;
 				}
 			}
+		else if(prop.equals("genTallPlants")){
+			biome.genTallFlowers = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
+		}
 		else
 			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}

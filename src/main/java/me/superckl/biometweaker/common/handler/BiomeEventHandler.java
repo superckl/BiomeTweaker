@@ -92,7 +92,6 @@ public class BiomeEventHandler {
 		Arrays.fill(this.colorCache, -2);
 	}
 
-	//TODO Biome array is no longer exposed. Look into another way to replace biomes
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {

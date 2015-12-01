@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -102,7 +103,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						ModBiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");
 					}
 				}
-			return ASMHelper.writeClassToBytesNoDeobf(cNode);
+			return ASMHelper.writeClassToBytes(cNode, ClassWriter.COMPUTE_MAXS);
 		}
 		return basicClass;
 	}

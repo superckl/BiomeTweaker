@@ -2,16 +2,15 @@ package me.superckl.biometweaker.common.world.gen.feature;
 
 import java.util.Random;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 
 public class WorldGenDoublePlantBlank extends WorldGenDoublePlant{
 
 	@Override
-	public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_)
-    {
-        return true;
-    }
-	
+	public boolean generate(final World p_76484_1_, final Random p_76484_2_, final int p_76484_3_, final int p_76484_4_, final int p_76484_5_)
+	{
+		return true;
+	}
+
 }

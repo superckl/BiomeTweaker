@@ -287,11 +287,10 @@ public class BiomeHelper {
 					BiomeHelper.loggedSpawn = true;
 				}
 			}
-		else if(prop.equals("genTallPlants")){
-			biome.genTallFlowers = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
-		}
-		else
-			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
+		else if(prop.equals("genTallPlants"))
+			BiomeGenBase.genTallFlowers = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
+			else
+				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
 
 	private static void checkFields(){

@@ -1,6 +1,5 @@
 package me.superckl.biometweaker.core.module;
 
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -14,7 +13,6 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.core.ASMNameHelper;
-import me.superckl.biometweaker.core.MinecraftClassWriter;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
@@ -150,9 +148,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 					+ ". Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
-		ClassWriter writer = new MinecraftClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-		cNode.accept(writer);
-		return writer.toByteArray();
+		return ASMHelper.writeClassToBytesNoDeobf(cNode);
 	}
 
 	@Override

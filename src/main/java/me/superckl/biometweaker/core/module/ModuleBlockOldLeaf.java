@@ -45,7 +45,7 @@ public class ModuleBlockOldLeaf implements IClassTransformerModule{
 			}
 		if(!fixed)
 			ModBiomeTweakerCore.logger.error("Failed to patch "+transformedName+"!  If this is a server, you're fine. Otherwise ye who continue now abandon all hope.");
-		return ASMHelper.writeClassToBytesNoDeobf(cNode);
+		return ASMHelper.writeClassToBytes(cNode);
 	}
 
 	@Override

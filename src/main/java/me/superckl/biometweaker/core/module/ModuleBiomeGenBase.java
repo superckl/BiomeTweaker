@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.core.module;
 
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -148,7 +149,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 					+ ". Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
-		return ASMHelper.writeClassToBytesNoDeobf(cNode);
+		return ASMHelper.writeClassToBytes(cNode, ClassWriter.COMPUTE_MAXS);
 	}
 
 	@Override

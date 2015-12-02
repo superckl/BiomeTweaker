@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -82,7 +81,6 @@ public class BiomeEventHandler {
 	private Field foliageColor;
 	private Field waterColor;
 	private final int[] colorCache = new int[768];
-	private final Random random = new Random();
 
 	private final Map<World, Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
 
@@ -95,6 +93,8 @@ public class BiomeEventHandler {
 		try {
 			if(!this.replacedBiomes.containsKey(e.world))
 				this.replacedBiomes.put(e.world, Maps.<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>newHashMap());
+			if(BiomeEventHandler.blockReplacements.isEmpty())
+				return;
 			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.chunkX, e.chunkZ));
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
@@ -133,7 +133,7 @@ public class BiomeEventHandler {
 									meta = pair.getKey().getValue();
 									final boolean shouldDo = (meta == null) || ((e.metaArray == null) && (meta == 0)) || (e.metaArray[i2] == meta);
 									if(shouldDo){
-										toUse = (WeightedBlockEntry) WeightedRandom.getRandomItem(this.random, pair.getValue());
+										toUse = (WeightedBlockEntry) WeightedRandom.getRandomItem(e.world.rand, pair.getValue());
 										if(!shouldDoMap.containsKey(block2))
 											shouldDoMap.put(block2, new HashMap<Integer, WeightedBlockEntry>());
 										final Map<Integer, WeightedBlockEntry> map = shouldDoMap.get(block2);
@@ -229,6 +229,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
+		if(BiomeEventHandler.decorateTypes.isEmpty())
+			return;
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.decorateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
@@ -237,6 +239,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
+		if(BiomeEventHandler.populateTypes.isEmpty())
+			return;
 		final BiomeGenBase gen = e.world.getBiomeGenForCoords(e.chunkX, e.chunkZ);
 		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.populateTypes.containsKey(gen.biomeID)) && (BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains(e.type.name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:gen.biomeID).contains("all")))
@@ -289,7 +293,7 @@ public class BiomeEventHandler {
 		if((e.biome == null) || (e.original == null))
 			return;
 		final List<Pair<Block, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(e.biome.biomeID);
-		if(list == null)
+		if((list == null) || list.isEmpty())
 			return;
 		for(final Pair<Block, Pair<Block, Integer>> fPair:list)
 			if(fPair.getKey() == (e.replacement == null ? e.original:e.replacement)){
@@ -304,7 +308,7 @@ public class BiomeEventHandler {
 		if((e.biome == null) || (e.original == null))
 			return;
 		final List<Pair<Block, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(e.biome.biomeID);
-		if(list == null)
+		if((list == null) || list.isEmpty())
 			return;
 		for(final Pair<Block, Pair<Block, Integer>> fPair:list)
 			if(fPair.getKey() == e.original){

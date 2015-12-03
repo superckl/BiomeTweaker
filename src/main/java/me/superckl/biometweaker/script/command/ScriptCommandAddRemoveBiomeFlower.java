@@ -42,6 +42,8 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 				ScriptCommandAddRemoveBiomeFlower.field.setAccessible(true);
 			}
 			final Block block = Block.getBlockFromName(this.block);
+			if(block == null)
+				throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
 			final Iterator<BiomeGenBase> it = this.pack.getIterator();
 			while(it.hasNext()){
 				final BiomeGenBase gen = it.next();
@@ -58,6 +60,8 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 			}
 		}else{
 			final Block block = Block.getBlockFromName(this.block);
+			if(block == null)
+				throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
 			final Iterator<BiomeGenBase> it = this.pack.getIterator();
 			while(it.hasNext()){
 				final BiomeGenBase gen = it.next();

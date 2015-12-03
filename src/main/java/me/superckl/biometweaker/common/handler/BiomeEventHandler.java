@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntIntHashMap;
@@ -82,7 +83,7 @@ public class BiomeEventHandler {
 	private Field waterColor;
 	private final int[] colorCache = new int[768];
 
-	private final Map<World, Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
+	private final Map<World, Map<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
 
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
@@ -92,10 +93,10 @@ public class BiomeEventHandler {
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
 			if(!this.replacedBiomes.containsKey(e.world))
-				this.replacedBiomes.put(e.world, Maps.<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>>newHashMap());
+				this.replacedBiomes.put(e.world, Maps.<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>newHashMap());
 			if(BiomeEventHandler.blockReplacements.isEmpty())
 				return;
-			final Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.chunkX, e.chunkZ));
+			final TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.world, new ChunkCoordIntPair(e.chunkX, e.chunkZ));
 			for (int k = 0; k < 16; ++k)
 				for (int l = 0; l < 16; ++l)
 				{
@@ -108,8 +109,8 @@ public class BiomeEventHandler {
 					if(!BiomeEventHandler.blockReplacements.containsKey(biomegenbase.biomeID))
 						continue;
 					if(!shouldDoBMap.containsKey(biomegenbase.biomeID))
-						shouldDoBMap.put(biomegenbase.biomeID, Maps.<Block, Map<Integer, WeightedBlockEntry>>newIdentityHashMap());
-					final Map<Block, Map<Integer, WeightedBlockEntry>> shouldDoMap = shouldDoBMap.get(biomegenbase.biomeID);
+						shouldDoBMap.put(biomegenbase.biomeID, Maps.<Block, TIntObjectMap<WeightedBlockEntry>>newIdentityHashMap());
+					final Map<Block, TIntObjectMap<WeightedBlockEntry>> shouldDoMap = shouldDoBMap.get(biomegenbase.biomeID);
 					final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.blockReplacements.get(biomegenbase.biomeID);
 					final int i1 = k;
 					final int j1 = l;
@@ -120,7 +121,7 @@ public class BiomeEventHandler {
 						final Block block2 = e.blockArray[i2];
 						WeightedBlockEntry toUse = null;
 						if(shouldDoMap.containsKey(block2)){
-							final Map<Integer, WeightedBlockEntry> map = shouldDoMap.get(block2);
+							final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block2);
 							if(map.containsKey(e.metaArray == null ? 0:e.metaArray[i2]))
 								toUse = map.get(e.metaArray == null ? 0:e.metaArray[i2]);
 							else if(map.containsKey(-1))
@@ -135,8 +136,8 @@ public class BiomeEventHandler {
 									if(shouldDo){
 										toUse = (WeightedBlockEntry) WeightedRandom.getRandomItem(e.world.rand, pair.getValue());
 										if(!shouldDoMap.containsKey(block2))
-											shouldDoMap.put(block2, new HashMap<Integer, WeightedBlockEntry>());
-										final Map<Integer, WeightedBlockEntry> map = shouldDoMap.get(block2);
+											shouldDoMap.put(block2, new TIntObjectHashMap<WeightedBlockEntry>());
+										final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block2);
 										map.put(meta == null ? -1:meta, toUse);
 									}
 								}
@@ -147,7 +148,7 @@ public class BiomeEventHandler {
 						}
 					}
 				}
-			final Iterator<Integer> it = shouldDoBMap.keySet().iterator();
+			final TIntIterator it = shouldDoBMap.keySet().iterator();
 			while(it.hasNext())
 				if(!BiomeEventHandler.contigReplaces[it.next()])
 					it.remove();
@@ -319,8 +320,8 @@ public class BiomeEventHandler {
 			}
 	}
 
-	private Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
-		final Map<ChunkCoordIntPair, Map<Integer, Map<Block, Map<Integer, WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
+	private TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
+		final Map<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
 
 		final ChunkCoordIntPair[] pairs = NumberHelper.fillGrid(4, pair);
 
@@ -328,7 +329,7 @@ public class BiomeEventHandler {
 			if(map.containsKey(search))
 				return map.get(search);
 
-		return Maps.newHashMap();
+		return new TIntObjectHashMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>();
 	}
 
 	@Getter

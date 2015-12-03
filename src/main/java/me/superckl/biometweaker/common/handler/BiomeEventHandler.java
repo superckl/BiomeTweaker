@@ -2,8 +2,6 @@ package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 

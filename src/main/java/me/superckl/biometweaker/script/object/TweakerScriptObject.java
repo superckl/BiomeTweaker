@@ -21,6 +21,7 @@ import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.ScriptCommandAddToGeneration;
 import me.superckl.biometweaker.script.command.ScriptCommandAverageBiomeSize;
+import me.superckl.biometweaker.script.command.ScriptCommandMaxSpawnPackSize;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBiomeReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterVillageBlockReplacement;
@@ -138,6 +139,13 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandAddToGeneration.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("addToGeneration", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandMaxSpawnPackSize.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandMaxSpawnPackSize.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
+		validCommands.put("setMaxSpawnPackSize", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_BYTE.getSimpleWrapper()), ScriptCommandAverageBiomeSize.class.getDeclaredConstructor(String.class, Byte.TYPE));

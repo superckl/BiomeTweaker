@@ -1,7 +1,5 @@
 package me.superckl.biometweaker.common.handler;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -9,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EntityEventHandler {
 
@@ -27,7 +27,7 @@ public class EntityEventHandler {
 		}
 		if(EntityEventHandler.packSizes.isEmpty())
 			return;
-		final BiomeGenBase biome = e.entityLiving.worldObj.getBiomeGenForCoords((int) e.entityLiving.posX, (int) e.entityLiving.posZ);
+		final BiomeGenBase biome = e.entityLiving.worldObj.getBiomeGenForCoords(e.entityLiving.getPosition());
 		final String clazz = e.entityLiving.getClass().getName();
 		if(EntityEventHandler.packSizes.containsKey(biome.biomeID)){
 			final TObjectIntMap<String> sizes = EntityEventHandler.packSizes.get(biome.biomeID);

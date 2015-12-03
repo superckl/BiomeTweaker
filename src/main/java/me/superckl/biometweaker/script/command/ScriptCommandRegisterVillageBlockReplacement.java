@@ -43,7 +43,11 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 	public void perform() throws Exception {
 		final Iterator<BiomeGenBase > it = this.pack.getIterator();
 		final Block toReplace = Block.getBlockFromName(this.toReplace);
+		if(toReplace == null)
+			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		final Block replaceWith = Block.getBlockFromName(this.replaceWith);
+		if(replaceWith == null)
+			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		while(it.hasNext()){
 			final BiomeGenBase gen = it.next();
 			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(gen.biomeID))

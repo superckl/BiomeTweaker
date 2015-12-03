@@ -23,6 +23,8 @@ public class ScriptCommandAddActualFillerBlock implements IScriptCommand{
 		if(ScriptCommandAddActualFillerBlock.actualFillerBlocks == null)
 			ScriptCommandAddActualFillerBlock.actualFillerBlocks = BiomeGenBase.class.getDeclaredField("actualFillerBlocks");
 		final Block toAdd = Block.getBlockFromName(this.block);
+		if(toAdd == null)
+			throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();
 		while(it.hasNext()){
 			final BiomeGenBase biome = it.next();

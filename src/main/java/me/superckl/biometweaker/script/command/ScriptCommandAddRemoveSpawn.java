@@ -35,10 +35,11 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Class<? extends EntityLiving> clazz = (Class<? extends EntityLiving>) Class.forName(this.entityClass);
-		if(clazz == null){
-			LogHelper.info("Failed to load entity class: "+this.entityClass);
-			return;
+		Class<? extends EntityLiving> clazz;
+		try{
+			clazz = (Class<? extends EntityLiving>) Class.forName(this.entityClass);
+		}catch(final Exception e){
+			throw new IllegalArgumentException("Failed to load entity class: "+this.entityClass, e);
 		}
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();

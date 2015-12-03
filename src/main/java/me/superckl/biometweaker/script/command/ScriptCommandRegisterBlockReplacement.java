@@ -68,7 +68,11 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 	public void perform() throws Exception {
 		final Iterator<BiomeGenBase > it = this.pack.getIterator();
 		final Block toReplace = Block.getBlockFromName(this.toReplace);
+		if(toReplace == null)
+			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		final Block replaceWith = Block.getBlockFromName(this.replaceWith);
+		if(replaceWith == null)
+			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		while(it.hasNext()){
 			final BiomeGenBase gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RegisterGenBlockReplacement(this, this.weight, gen, toReplace, this.toReplaceMeta, replaceWith, this.replaceWithMeta)))

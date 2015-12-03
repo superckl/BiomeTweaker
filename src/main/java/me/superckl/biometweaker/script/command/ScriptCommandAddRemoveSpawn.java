@@ -10,7 +10,6 @@ import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.event.BiomeTweakEvent;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,10 +33,11 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Class<?> clazz = Class.forName(this.entityClass);
-		if(clazz == null){
-			LogHelper.info("Failed to load entity class: "+this.entityClass);
-			return;
+		Class<?> clazz;
+		try{
+			clazz = Class.forName(this.entityClass);
+		}catch(final Exception e){
+			throw new IllegalArgumentException("Failed to load entity class: "+this.entityClass, e);
 		}
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();

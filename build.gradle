@@ -58,7 +58,7 @@ minecraft {
 version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
 
 dependencies {
-    compile "org.projectlombok:lombok:1.16.4"
+    compile "org.projectlombok:lombok:1.16.6"
 }
 
 processResources

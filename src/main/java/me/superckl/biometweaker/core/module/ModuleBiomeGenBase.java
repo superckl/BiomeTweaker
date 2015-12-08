@@ -25,6 +25,8 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlocks", "[Lnet/minecraft/block/Block;", "[Lnet/minecraft/block/Block;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlocks' field into "+transformedName);
+		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
+		ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanBlock' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "fillerBlockMeta", "B", "B", 0);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'fillerBlockMeta' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
@@ -33,7 +35,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
-		int fixed = 5;
+		int fixed = 6;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 				InsnList toFind = new InsnList();
@@ -49,49 +51,12 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/Block;"));
 						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 20));
 						toInsert.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/BiomeHooks", "contains", "([Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)Z", false));
-						//toInsert.add(new JumpInsnNode(Opcodes.IFEQ, ln));
 						if(ASMHelper.findAndReplace(node.instructions, toFind, toInsert) != null){
 							ModBiomeTweakerCore.logger.debug("Successfully redirected 'Stone' check to 'contains' method.");
 							fixed++;
 						}
 					}
 				}
-
-				/*for(AbstractInsnNode aNode:node.instructions.toArray())
-					if(aNode instanceof FieldInsnNode){
-						final FieldInsnNode vNode = (FieldInsnNode) aNode;
-						if(vNode.name.equals(ASMNameHelper.field_stone.get())){
-							aNode = vNode.getNext();
-							if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 12)){
-								final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
-								node.instructions.insertBefore(vNode, list);
-								node.instructions.remove(vNode);
-								fixed++;
-								ModBiomeTweakerCore.logger.debug("Successfully redirected 'block1' to 'actualFillerBlock'");
-							}
-						}else if(vNode.name.equals(ASMNameHelper.field_water.get())){
-							aNode = vNode.getNext();
-							if((aNode instanceof VarInsnNode) && (((VarInsnNode)aNode).var == 10)){
-								final InsnList list = this.createGenBaseBlockFieldAccess("liquidFillerBlock");
-								node.instructions.insertBefore(vNode, list);
-								node.instructions.remove(vNode);
-								fixed++;
-								ModBiomeTweakerCore.logger.debug("Successfully redirected 'block' to 'liquidFillerBlock'");
-							}
-						}
-					}else if(aNode instanceof VarInsnNode){
-						final VarInsnNode vNode = (VarInsnNode) aNode;
-						if((vNode.var == 20) && (vNode.getOpcode() == Opcodes.ALOAD)){
-							aNode = vNode.getNext();
-							if((aNode instanceof FieldInsnNode) && ((FieldInsnNode)aNode).name.equals(ASMNameHelper.field_stone.get())){
-								final InsnList list = this.createGenBaseBlockFieldAccess("actualFillerBlock");
-								node.instructions.insertBefore(aNode, list);
-								node.instructions.remove(aNode);
-								fixed++;
-								ModBiomeTweakerCore.logger.debug("Successfully redirected 'block2' to 'actualFillerBlock'");
-							}
-						}
-					}*/
 
 				toFind = new InsnList();
 				toFind.add(new VarInsnNode(Opcodes.ALOAD, 3));
@@ -129,15 +94,27 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						}
 					}
 				}
+				toFind = new InsnList();
+				toFind.add(new VarInsnNode(Opcodes.ALOAD, 3));
+				toFind.add(new VarInsnNode(Opcodes.ILOAD, 19));
+				toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_gravel.get(), "Lnet/minecraft/block/Block;"));
+				toFind.add(new InsnNode(Opcodes.AASTORE));
+				aNode = ASMHelper.find(node.instructions, toFind);
+				if(aNode != null){
+					final AbstractInsnNode aaNode = ASMHelper.findNextInstructionWithOpcode(aNode, Opcodes.GETSTATIC);
+					if(aaNode != null){
+						final InsnList toInsert = new InsnList();
+						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
+						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanBlock", "Lnet/minecraft/block/Block;"));
+						node.instructions.insert(aaNode, toInsert);
+						node.instructions.remove(aaNode);
+						ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanBlock' instructions.");
+						fixed++;
+					}
+				}
 
 			}else if(node.name.equals("<init>") && node.desc.equals("(IZ)V")){
 				InsnList list = new InsnList();
-				/*list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlock", "Lnet/minecraft/block/Block;"));
-				node.instructions.insert(list);
-				ModBiomeTweakerCore.logger.debug("Successfully inserted Stone into 'actualFillerBlock'");
-				fixed++;*/
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				list.add(new InsnNode(Opcodes.ICONST_1));
@@ -150,13 +127,13 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted empty array into 'actualFillerBlocks'");
 				fixed++;
-				/*list = new InsnList();
+				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_water.get(), "Lnet/minecraft/block/Block;"));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "liquidFillerBlock", "Lnet/minecraft/block/Block;"));
+				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_gravel.get(), "Lnet/minecraft/block/Block;"));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanBlock", "Lnet/minecraft/block/Block;"));
 				node.instructions.insert(list);
-				ModBiomeTweakerCore.logger.debug("Successfully inserted Water into 'liquidFillerBlock'");
-				fixed++;*/
+				ModBiomeTweakerCore.logger.debug("Successfully inserted gravel into 'oceanBlock'");
+				fixed++;
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				list.add(new InsnNode(Opcodes.ICONST_M1));
@@ -185,12 +162,11 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted 0 into 'fillerBlockMeta'");
 				fixed++;
-
 			}
-		if(fixed < 13)
+		if(fixed < 16)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 13)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 13"
+		else if(fixed > 16)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 16"
 					+ ". Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");

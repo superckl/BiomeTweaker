@@ -18,6 +18,7 @@ public enum ASMNameHelper {
 
 	field_stone("stone", "field_150348_b"),
 	field_water("water", "field_150355_j"),
+	field_gravel("gravel", "field_150351_n"),
 	field_topBlock("topBlock", "field_76752_A"),
 	field_fillerBlock("fillerBlock", "field_76753_B"),
 

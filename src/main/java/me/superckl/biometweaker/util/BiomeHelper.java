@@ -35,6 +35,7 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
 
+	private static Field oceanBlock;
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
@@ -170,6 +171,8 @@ public class BiomeHelper {
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
+				if(block == null)
+					throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
 				biome.topBlock = block.getDefaultState();
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
@@ -178,6 +181,8 @@ public class BiomeHelper {
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
 				final Block block = Block.getBlockFromName(blockName);
+				if(block == null)
+					throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
 				biome.fillerBlock = block.getDefaultState();
 			} catch (final Exception e) {
 				LogHelper.info("Failed to parse block: "+blockName);
@@ -288,19 +293,27 @@ public class BiomeHelper {
 					BiomeHelper.loggedSpawn = true;
 				}
 			}
-		else if(prop.equals("genTallPlants")){
-			biome.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
-		}
-		else
-			LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
+		else if(prop.equals("genTallPlants"))
+			BiomeGenBase.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
+			else if(prop.equals("oceanBlock")){
+				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
+				try {
+					final Block block = Block.getBlockFromName(blockName);
+					if(block == null)
+						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
+					BiomeHelper.oceanBlock.set(biome, block);
+				} catch (final Exception e) {
+					LogHelper.info("Failed to parse block: "+blockName);
+				}
+			}
+			else
+				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
 
 	private static void checkFields(){
 		try{
-			/*if(BiomeHelper.actualFillerBlock == null)
-				BiomeHelper.actualFillerBlock = BiomeGenBase.class.getDeclaredField("actualFillerBlock");*/
-			/*if(BiomeHelper.liquidFillerBlock == null)
-				BiomeHelper.liquidFillerBlock = BiomeGenBase.class.getDeclaredField("liquidFillerBlock");*/
+			if(BiomeHelper.oceanBlock == null)
+				BiomeHelper.oceanBlock = BiomeGenBase.class.getDeclaredField("oceanBlock");
 			if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)

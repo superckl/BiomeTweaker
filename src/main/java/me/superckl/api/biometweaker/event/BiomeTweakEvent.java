@@ -1,9 +1,7 @@
-package me.superckl.biometweaker.common.event;
+package me.superckl.api.biometweaker.event;
 
 import com.google.gson.JsonElement;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import net.minecraft.block.Block;
@@ -14,12 +12,23 @@ import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-@RequiredArgsConstructor
-@Getter
 public abstract class BiomeTweakEvent extends Event{
 
 	private final IScriptCommand command;
 	private final BiomeGenBase biome;
+
+	public BiomeTweakEvent(final IScriptCommand command, final BiomeGenBase biome) {
+		this.command = command;
+		this.biome = biome;
+	}
+
+	public IScriptCommand getCommand() {
+		return this.command;
+	}
+
+	public BiomeGenBase getBiome() {
+		return this.biome;
+	}
 
 	@Cancelable
 	public static class Create extends BiomeTweakEvent{
@@ -31,7 +40,6 @@ public abstract class BiomeTweakEvent extends Event{
 	}
 
 	@Cancelable
-	@Getter
 	public static class Remove extends BiomeTweakEvent{
 
 		private final BiomeEntry entry;
@@ -41,13 +49,16 @@ public abstract class BiomeTweakEvent extends Event{
 			this.entry = entry;
 		}
 
+		public BiomeEntry getEntry() {
+			return this.entry;
+		}
+
 	}
 
 	/**
 	 * Note: The corresponding BiomeGenBase may be null for this event! The biomeID is given for that case.
 	 */
 	@Cancelable
-	@Getter
 	public static class RemoveDecoration extends BiomeTweakEvent{
 
 		private final int biomeID;
@@ -59,13 +70,20 @@ public abstract class BiomeTweakEvent extends Event{
 			this.type = type;
 		}
 
+		public int getBiomeID() {
+			return this.biomeID;
+		}
+
+		public String getType() {
+			return this.type;
+		}
+
 	}
 
 	/**
 	 * Note: The corresponding BiomeGenBase may be null for this event! The biomeID is given for that case.
 	 */
 	@Cancelable
-	@Getter
 	public static class RemoveFeature extends BiomeTweakEvent{
 
 		private final int biomeID;
@@ -77,10 +95,17 @@ public abstract class BiomeTweakEvent extends Event{
 			this.type = type;
 		}
 
+		public int getBiomeID() {
+			return this.biomeID;
+		}
+
+		public String getType() {
+			return this.type;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class AddDictionaryType extends BiomeTweakEvent{
 
 		private final BiomeDictionary.Type type;
@@ -90,10 +115,13 @@ public abstract class BiomeTweakEvent extends Event{
 			this.type = type;
 		}
 
+		public BiomeDictionary.Type getType() {
+			return this.type;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class RemoveDictionaryType extends BiomeTweakEvent{
 
 		private final BiomeDictionary.Type type;
@@ -101,6 +129,10 @@ public abstract class BiomeTweakEvent extends Event{
 		public RemoveDictionaryType(final IScriptCommand command, final BiomeGenBase biome, final BiomeDictionary.Type type) {
 			super(command, biome);
 			this.type = type;
+		}
+
+		public BiomeDictionary.Type getType() {
+			return this.type;
 		}
 
 	}
@@ -115,7 +147,6 @@ public abstract class BiomeTweakEvent extends Event{
 	}
 
 	@Cancelable
-	@Getter
 	public static class RemoveSpawn extends BiomeTweakEvent{
 
 		private final SpawnListType type;
@@ -127,10 +158,17 @@ public abstract class BiomeTweakEvent extends Event{
 			this.entityClass = entityClass;
 		}
 
+		public SpawnListType getType() {
+			return this.type;
+		}
+
+		public Class<?> getEntityClass() {
+			return this.entityClass;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class RemoveAllSpawns extends BiomeTweakEvent{
 
 		private final SpawnListType type;
@@ -140,10 +178,13 @@ public abstract class BiomeTweakEvent extends Event{
 			this.type = type;
 		}
 
+		public SpawnListType getType() {
+			return this.type;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class AddSpawn extends BiomeTweakEvent{
 
 		private final SpawnListEntry spawnEntry;
@@ -153,10 +194,13 @@ public abstract class BiomeTweakEvent extends Event{
 			this.spawnEntry = spawnEntry;
 		}
 
+		public SpawnListEntry getSpawnEntry() {
+			return this.spawnEntry;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class SetProperty extends BiomeTweakEvent{
 
 		private final String property;
@@ -168,10 +212,17 @@ public abstract class BiomeTweakEvent extends Event{
 			this.value = value;
 		}
 
+		public String getProperty() {
+			return this.property;
+		}
+
+		public JsonElement getValue() {
+			return this.value;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class AddFlower extends BiomeTweakEvent{
 
 		private final Block block;
@@ -185,10 +236,21 @@ public abstract class BiomeTweakEvent extends Event{
 			this.weight = weight;
 		}
 
+		public Block getBlock() {
+			return this.block;
+		}
+
+		public int getMetdata() {
+			return this.metdata;
+		}
+
+		public int getWeight() {
+			return this.weight;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class RemoveFlower extends BiomeTweakEvent{
 
 		private final Block block;
@@ -200,10 +262,17 @@ public abstract class BiomeTweakEvent extends Event{
 			this.metdata = meta;
 		}
 
+		public Block getBlock() {
+			return this.block;
+		}
+
+		public int getMetdata() {
+			return this.metdata;
+		}
+
 	}
 
 	@Cancelable
-	@Getter
 	public static class RegisterGenBlockReplacement extends BiomeTweakEvent{
 
 		private final int weight;
@@ -219,6 +288,26 @@ public abstract class BiomeTweakEvent extends Event{
 			this.toReplaceMeta = toReplaceMeta;
 			this.replaceWith = replaceWith;
 			this.replaceWithMeta = replaceWithMeta;
+		}
+
+		public int getWeight() {
+			return this.weight;
+		}
+
+		public Block getToReplace() {
+			return this.toReplace;
+		}
+
+		public Integer getToReplaceMeta() {
+			return this.toReplaceMeta;
+		}
+
+		public Block getReplaceWith() {
+			return this.replaceWith;
+		}
+
+		public Integer getReplaceWithMeta() {
+			return this.replaceWithMeta;
 		}
 
 	}

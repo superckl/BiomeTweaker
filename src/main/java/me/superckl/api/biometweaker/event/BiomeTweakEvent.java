@@ -40,6 +40,21 @@ public abstract class BiomeTweakEvent extends Event{
 	}
 
 	@Cancelable
+	public static class AddToGeneration extends BiomeTweakEvent{
+
+		private final BiomeEntry entry;
+
+		public AddToGeneration(final IScriptCommand command, final BiomeGenBase biome, final BiomeEntry entry) {
+			super(command, biome);
+			this.entry = entry;
+		}
+
+		public BiomeEntry getEntry() {
+			return this.entry;
+		}
+	}
+
+	@Cancelable
 	public static class Remove extends BiomeTweakEvent{
 
 		private final BiomeEntry entry;

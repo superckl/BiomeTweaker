@@ -35,7 +35,8 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
 
-	private static Field oceanBlock;
+	private static Field oceanTopBlock;
+	private static Field oceanFillerBlock;
 	private static Field grassColor;
 	private static Field foliageColor;
 	private static Field waterColor;
@@ -295,13 +296,24 @@ public class BiomeHelper {
 			}
 		else if(prop.equals("genTallPlants"))
 			BiomeGenBase.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
-			else if(prop.equals("oceanBlock")){
+			else if(prop.equals("oceanTopBlock")){
 				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 				try {
 					final Block block = Block.getBlockFromName(blockName);
 					if(block == null)
 						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-					BiomeHelper.oceanBlock.set(biome, block);
+					BiomeHelper.oceanTopBlock.set(biome, block);
+				} catch (final Exception e) {
+					LogHelper.info("Failed to parse block: "+blockName);
+				}
+			}
+			else if(prop.equals("oceanFillerBlock")){
+				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
+				try {
+					final Block block = Block.getBlockFromName(blockName);
+					if(block == null)
+						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
+					BiomeHelper.oceanFillerBlock.set(biome, block);
 				} catch (final Exception e) {
 					LogHelper.info("Failed to parse block: "+blockName);
 				}
@@ -312,8 +324,10 @@ public class BiomeHelper {
 
 	private static void checkFields(){
 		try{
-			if(BiomeHelper.oceanBlock == null)
-				BiomeHelper.oceanBlock = BiomeGenBase.class.getDeclaredField("oceanBlock");
+			if(BiomeHelper.oceanTopBlock == null)
+				BiomeHelper.oceanTopBlock = BiomeGenBase.class.getDeclaredField("oceanTopBlock");
+			if(BiomeHelper.oceanFillerBlock == null)
+				BiomeHelper.oceanFillerBlock = BiomeGenBase.class.getDeclaredField("oceanFillerBlock");
 			if(BiomeHelper.grassColor == null)
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)

@@ -3,11 +3,13 @@ package me.superckl.biometweaker.script.command;
 import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor
 public class ScriptCommandAddToGeneration implements IScriptCommand{
@@ -20,8 +22,13 @@ public class ScriptCommandAddToGeneration implements IScriptCommand{
 	public void perform() throws Exception {
 		final BiomeManager.BiomeType type = BiomeManager.BiomeType.valueOf(this.type);
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();
-		while(it.hasNext())
-			BiomeManager.addBiome(type, new BiomeEntry(it.next(), this.weight));
+		while(it.hasNext()){
+			final BiomeGenBase biome = it.next();
+			final BiomeTweakEvent.AddToGeneration event = new BiomeTweakEvent.AddToGeneration(this, biome, new BiomeEntry(biome, this.weight));
+			if(MinecraftForge.EVENT_BUS.post(event))
+				continue;
+			BiomeManager.addBiome(type, event.getEntry());
+		}
 	}
 
 }

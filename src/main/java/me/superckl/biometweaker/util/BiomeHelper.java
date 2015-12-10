@@ -145,7 +145,7 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Cave Creatures", array);
-
+		obj.add("Spawn Biome", new JsonPrimitive(WorldChunkManager.allowedBiomes.contains(gen)));
 		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(gen.biomeID));
 
 		return obj;

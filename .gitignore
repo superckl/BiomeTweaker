@@ -19,3 +19,7 @@ desktop.ini
 eclipse.bat
 setup.bat
 src/main/resources/nei_at.cfg
+build/*
+run/*
+BiomeTweaker 1.8_Client.launch
+BiomeTweaker 1.8_Server.launch

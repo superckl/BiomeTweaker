@@ -15,6 +15,9 @@ public enum ASMNameHelper {
 	method_getBiomeFoliageColor("getFoliageColorAtPos", "func_180625_c"),
 	method_colorMultiplier("colorMultiplier", "func_180662_a"),
 	method_getBiomeGenForCoords("getBiomeGenForCoords","func_180494_b"),
+	method_getBlock("getBlock", "func_177230_c"),
+	method_getDefaultState("getDefaultState", "func_176223_P"),
+	method_setBlockState("setBlockState", "func_177855_a"),
 
 	field_stone("stone", "field_150348_b"),
 	field_water("water", "field_150355_j"),

@@ -134,7 +134,7 @@ public class BiomeEventHandler {
 									meta = pair.getKey().getValue();
 									final boolean shouldDo = (meta == null) || (block.getMetaFromState(state) == meta);
 									if(shouldDo){
-										toUse = (WeightedBlockEntry) WeightedRandom.getRandomItem(e.world.rand, pair.getValue());
+										toUse = WeightedRandom.getRandomItem(e.world.rand, pair.getValue());
 										if(!shouldDoMap.containsKey(block))
 											shouldDoMap.put(block, new TIntObjectHashMap<WeightedBlockEntry>());
 										final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);

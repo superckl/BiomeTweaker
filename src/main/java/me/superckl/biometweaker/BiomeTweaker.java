@@ -53,7 +53,7 @@ import me.superckl.biometweaker.util.VersionChecker;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = "before:BiomesOPlenty")
+@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = "before:BiomesOPlenty; after:GalacticraftCore")
 public class BiomeTweaker {
 
 	@Instance(ModData.MOD_ID)

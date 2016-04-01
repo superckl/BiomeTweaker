@@ -56,8 +56,10 @@ public class BiomeHelper {
 		obj.addProperty("Color", gen.color);
 		obj.addProperty("Root Height", gen.minHeight);
 		obj.addProperty("Height Variation", gen.maxHeight);
-		obj.addProperty("Top Block", gen.topBlock.getBlock().delegate.name());
-		obj.addProperty("Filler Block", gen.fillerBlock.getBlock().delegate.name());
+		final boolean topNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
+		final boolean bottomNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
+		obj.addProperty("Top Block", topNull ? "ERROR":gen.topBlock.getBlock().delegate.name());
+		obj.addProperty("Filler Block", bottomNull ? "ERROR":gen.fillerBlock.getBlock().delegate.name());
 		try {
 			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());

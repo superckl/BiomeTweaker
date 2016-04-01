@@ -7,7 +7,6 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.util.BiomeHelper;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -27,7 +26,7 @@ public class ScriptCommandAddDictionaryType implements IScriptCommand{
 			final BiomeGenBase gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddDictionaryType(this, gen, bType)))
 				continue;
-			BiomeHelper.modifyBiomeDicType(gen, bType, false);
+			BiomeDictionary.registerBiomeType(gen, bType);
 			Config.INSTANCE.onTweak(gen.biomeID);
 		}
 	}

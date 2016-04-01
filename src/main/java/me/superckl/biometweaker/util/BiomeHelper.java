@@ -372,7 +372,7 @@ public class BiomeHelper {
 		return e.newColor;
 	}
 
-	public static void modifyBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
+	public static void removeBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type) throws Exception{
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
@@ -383,23 +383,19 @@ public class BiomeHelper {
 				list = Lists.newArrayList();
 				listArray[type.ordinal()] = list;
 			}
-			if(remove)
-				list.remove(gen);
-			else if(!list.contains(gen))
-				list.add(gen);
+			list.remove(gen);
 		}
 		//Okay, here we go. REFLECTION OVERLOAD!!!1! (It's really not that bad.)
 		final Object array = BiomeHelper.biomeList.get(null);
 		final Object biomeInfo = Array.get(array, gen.biomeID);
+		if(biomeInfo == null)
+			return;
 		if(BiomeHelper.typeList == null){
 			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeList.setAccessible(true);
 		}
 		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
-		if(remove)
-			set.remove(type);
-		else if(!set.contains(type))
-			set.add(type);
+		set.remove(type);
 	}
 
 	public static void removeAllBiomeDicType(final BiomeGenBase gen) throws Exception{

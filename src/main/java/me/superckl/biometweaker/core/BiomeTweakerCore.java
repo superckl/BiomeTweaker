@@ -1,11 +1,8 @@
 package me.superckl.biometweaker.core;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
-import me.superckl.biometweaker.common.reference.ModData;
-import net.minecraftforge.fml.common.asm.transformers.AccessTransformer;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
@@ -17,13 +14,9 @@ import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 @MCVersion("1.8.9")
 @Name("BiomeTweakerCore")
 @TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
-public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPlugin{
+public class BiomeTweakerCore implements IFMLLoadingPlugin{
 
 	public static File mcLocation;
-
-	public BiomeTweakerCore() throws IOException {
-		super(ModData.MOD_ID.toLowerCase()+"_at.cfg");
-	}
 
 	@Override
 	public String[] getASMTransformerClass() {
@@ -49,7 +42,7 @@ public class BiomeTweakerCore extends AccessTransformer implements IFMLLoadingPl
 
 	@Override
 	public String getAccessTransformerClass() {
-		return this.getClass().getName();
+		return null;
 	}
 
 }

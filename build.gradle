@@ -40,7 +40,7 @@ archivesBaseName = "BiomeTweaker"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "snapshot_20151122"
+    mappings = "stable_18"
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
@@ -96,17 +96,7 @@ task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
     extension = 'zip'
 }
 
-task devJar(type: Jar, dependsOn: 'classes') {
-    from(sourceSets.main.output) {
-        include '**'
-    }
-
-    extension = 'jar'
-    classifier = 'dev'
-}
-
 artifacts {
-  archives devJar
 	archives apiJar
   archives ssJar
 }
@@ -115,6 +105,7 @@ jar {
     manifest {
         attributes 'FMLCorePlugin': 'me.superckl.biometweaker.core.BiomeTweakerCore'
         attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLAT': 'biometweaker_at.cfg'
     }
 }
 
@@ -124,12 +115,12 @@ ext.keystore_location = "${System.env.keystore_location ?: "."}"
 ext.keystore_password = "${System.env.keystore_password ?: ""}"
 ext.keystore_alias = "${System.env.keystore_alias ?: ""}"
 
-task signJar(dependsOn: ["reobfJar", "devJar"]) {
+task signJar(dependsOn: ["reobfJar"]) {
     inputs.dir jar.destinationDir
     inputs.file keystore_location
     inputs.property "keystore_alias", keystore_alias
     inputs.property "keystore_password", keystore_password
-    outputs.dir devJar.destinationDir
+    outputs.dir jar.destinationDir
 
     // only sign if the keystore exists
     onlyIf {
@@ -138,7 +129,7 @@ task signJar(dependsOn: ["reobfJar", "devJar"]) {
     // the actual action.. sign the jar.
     doLast {
         jar.destinationDir.eachFile { file ->
-            if (!file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}.jar") && !file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}-dev.jar"))
+            if (!file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}.jar"))
                 return; // skip non-jars
 
             logger.lifecycle "signing $file"

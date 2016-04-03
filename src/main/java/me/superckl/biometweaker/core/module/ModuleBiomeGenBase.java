@@ -24,16 +24,16 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
 		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlocks", "[Lnet/minecraft/block/Block;", "[Lnet/minecraft/block/Block;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlocks' field into "+transformedName);
-		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanTopBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
+		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanTopBlock", "Lnet/minecraft/block/state/IBlockState;", "Lnet/minecraft/block/state/IBlockState;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanTopBlock' field into "+transformedName);
-		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanFillerBlock", "Lnet/minecraft/block/Block;", "Lnet/minecraft/block/Block;", null);
+		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanFillerBlock", "Lnet/minecraft/block/state/IBlockState;", "Lnet/minecraft/block/state/IBlockState;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanFillerBlock' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "grassColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
-		cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
-		ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);
+		/*		cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
+		ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);*/
 		int fixed = 6;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
@@ -64,8 +64,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				toFind.add(new VarInsnNode(Opcodes.ILOAD, 14));
 				toFind.add(new VarInsnNode(Opcodes.ILOAD, 16));
 				toFind.add(new VarInsnNode(Opcodes.ILOAD, 13));
-				toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_gravel.get(), "Lnet/minecraft/block/Block;"));
-				toFind.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/block/Block", ASMNameHelper.method_getDefaultState.get(), "()Lnet/minecraft/block/state/IBlockState;", false));
+				toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/world/biome/BiomeGenBase", ASMNameHelper.field_GRAVEL.get(), "Lnet/minecraft/block/state/IBlockState;"));
 				toFind.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/world/chunk/ChunkPrimer", ASMNameHelper.method_setBlockState.get(), "(IIILnet/minecraft/block/state/IBlockState;)V", false));
 				AbstractInsnNode aNode = ASMHelper.find(node.instructions, toFind);
 				if(aNode != null){
@@ -73,7 +72,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 					if(aaNode != null){
 						final InsnList toInsert = new InsnList();
 						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanTopBlock", "Lnet/minecraft/block/Block;"));
+						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanTopBlock", "Lnet/minecraft/block/state/IBlockState;"));
 						node.instructions.insert(aaNode, toInsert);
 						node.instructions.remove(aaNode);
 						ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanTopBlock' instructions.");
@@ -88,7 +87,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						if(aNode != null){
 							final InsnList toInsert1 = new InsnList();
 							toInsert1.add(new VarInsnNode(Opcodes.ALOAD, 0));
-							toInsert1.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanFillerBlock", "Lnet/minecraft/block/Block;"));
+							toInsert1.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanFillerBlock", "Lnet/minecraft/block/state/IBlockState;"));
 							node.instructions.insert(aNode, toInsert1);
 							node.instructions.remove(aNode);
 							ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanFillerBlock' instructions.");
@@ -97,7 +96,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 					}
 				}
 
-			}else if(node.name.equals("<init>") && node.desc.equals("(IZ)V")){
+			}else if(node.name.equals("<init>") && node.desc.equals("(Lnet/minecraft/world/biome/BiomeGenBase$BiomeProperties;)V")){
 				InsnList list = new InsnList();
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -113,15 +112,15 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				fixed++;
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanFillerBlock", "Lnet/minecraft/block/Block;"));
+				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/world/biome/BiomeGenBase", ASMNameHelper.field_STONE.get(), "Lnet/minecraft/block/state/IBlockState;"));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanFillerBlock", "Lnet/minecraft/block/state/IBlockState;"));
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted stone into 'oceanFillerBlock'");
 				fixed++;
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_gravel.get(), "Lnet/minecraft/block/Block;"));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanTopBlock", "Lnet/minecraft/block/Block;"));
+				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/world/biome/BiomeGenBase", ASMNameHelper.field_GRAVEL.get(), "Lnet/minecraft/block/state/IBlockState;"));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "oceanTopBlock", "Lnet/minecraft/block/state/IBlockState;"));
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted gravel into 'oceanTopBlock'");
 				fixed++;
@@ -139,17 +138,17 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'foliageColor'");
 				fixed++;
-				list = new InsnList();
+				/*list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				list.add(new InsnNode(Opcodes.ICONST_M1));
 				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "waterColor", "I"));
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
-				fixed++;
+				fixed++;*/
 			}
-		if(fixed < 15)
+		if(fixed < 13)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 15)
+		else if(fixed > 13)
 			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 15"
 					+ ". Is something else also patching this class?");
 		else

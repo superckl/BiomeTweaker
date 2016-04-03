@@ -32,13 +32,14 @@ public class ScriptCommandDisableBonemealUse implements IScriptCommand{
 		while(it.hasNext()){
 			final BiomeGenBase biome = it.next();
 			final TIntObjectMap<List<Block>> map = EntityEventHandler.getNoBonemeals();
+			final int id = BiomeGenBase.getIdForBiome(biome);
 			if(block == null){
-				map.put(biome.biomeID, null);
+				map.put(id, null);
 				continue;
 			}
-			if(!map.containsKey(biome.biomeID))
-				map.put(biome.biomeID, Lists.<Block>newArrayList());
-			final List<Block> list = map.get(biome.biomeID);
+			if(!map.containsKey(id))
+				map.put(id, Lists.<Block>newArrayList());
+			final List<Block> list = map.get(id);
 			if(list != null)
 				list.add(block);
 		}

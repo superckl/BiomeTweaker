@@ -24,7 +24,7 @@ public class ScriptCommandRemoveAllDictionaryTypes implements IScriptCommand{
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveAllDictionaryTypes(this, gen)))
 				continue;
 			BiomeHelper.removeAllBiomeDicType(gen);
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

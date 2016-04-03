@@ -77,10 +77,10 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 			final BiomeGenBase gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RegisterGenBlockReplacement(this, this.weight, gen, toReplace, this.toReplaceMeta, replaceWith, this.replaceWithMeta)))
 				continue;
-			if(!BiomeEventHandler.getBlockReplacements().containsKey(gen.biomeID))
-				BiomeEventHandler.getBlockReplacements().put(gen.biomeID, new ArrayList<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>());
+			if(!BiomeEventHandler.getBlockReplacements().containsKey(BiomeGenBase.getIdForBiome(gen)))
+				BiomeEventHandler.getBlockReplacements().put(BiomeGenBase.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>());
 			//LogHelper.info("Registering replacement for "+gen.biomeID+":"+gen.biomeName);
-			final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.getBlockReplacements().get(gen.biomeID);
+			final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.getBlockReplacements().get(BiomeGenBase.getIdForBiome(gen));
 			final Pair<Block, Integer> toReplacePair = Pair.of(toReplace, this.toReplaceMeta);
 			List<WeightedBlockEntry> entries = null;
 			for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
@@ -93,7 +93,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 				list.add(Pair.of(toReplacePair, entries));
 			}
 			entries.add(new WeightedBlockEntry(this.weight, Pair.of(replaceWith, this.replaceWithMeta)));
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

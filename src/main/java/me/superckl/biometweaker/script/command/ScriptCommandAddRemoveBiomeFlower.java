@@ -56,7 +56,7 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 					if((entry.state.getBlock() == block) && (block.getMetaFromState(entry.state) == this.meta))
 						itF.remove();
 				}
-				Config.INSTANCE.onTweak(gen.biomeID);
+				Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 			}
 		}else{
 			final Block block = Block.getBlockFromName(this.block);
@@ -68,7 +68,7 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 				if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddFlower(this, gen, block, this.meta, this.weight)))
 					continue;
 				gen.addFlower(block.getStateFromMeta(this.meta), this.weight);
-				Config.INSTANCE.onTweak(gen.biomeID);
+				Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 			}
 		}
 	}

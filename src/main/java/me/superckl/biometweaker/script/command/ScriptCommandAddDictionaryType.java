@@ -28,7 +28,7 @@ public class ScriptCommandAddDictionaryType implements IScriptCommand{
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddDictionaryType(this, gen, bType)))
 				continue;
 			BiomeHelper.modifyBiomeDicType(gen, bType, false);
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

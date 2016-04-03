@@ -40,8 +40,8 @@ group= "me.superckl.biometweaker"
 archivesBaseName = "BiomeTweaker"
 
 minecraft {
-    version = config.minecraft_version + "-" + config.forge_version
-    mappings = "stable_22"
+    version = config.minecraft_version + "-" + config.forge_version + "-" + config.minecraft_version
+    mappings = "snapshot_20160312"
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
@@ -79,6 +79,8 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 task apiJar(type: Jar, dependsOn: 'sourceMainJava') {

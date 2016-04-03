@@ -12,7 +12,7 @@ import lombok.Cleanup;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry;
@@ -40,7 +40,7 @@ public class ReloadScriptsConfigEntry extends ButtonEntry{
 	@Override
 	public void drawToolTip(final int mouseX, final int mouseY) {
 		if(this.pressedCounter-- > 0)
-			this.owningScreen.drawToolTip(Lists.newArrayList(EnumChatFormatting.AQUA+"Scripts reloaded.", EnumChatFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
+			this.owningScreen.drawToolTip(Lists.newArrayList(TextFormatting.AQUA+"Scripts reloaded.", TextFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
 		else
 			super.drawToolTip(mouseX, mouseY);
 	}

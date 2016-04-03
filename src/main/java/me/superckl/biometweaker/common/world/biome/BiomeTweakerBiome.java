@@ -4,9 +4,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 public class BiomeTweakerBiome extends BiomeGenBase{
 
-	public BiomeTweakerBiome(final int id) {
-		super(id);
-		this.biomeName = "BiomeTweaker Biome";
+	public BiomeTweakerBiome(final BiomeProperties properties) {
+		super(properties);
 	}
 
 }

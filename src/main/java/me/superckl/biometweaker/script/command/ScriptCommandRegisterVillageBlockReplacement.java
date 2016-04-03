@@ -50,9 +50,9 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		while(it.hasNext()){
 			final BiomeGenBase gen = it.next();
-			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(gen.biomeID))
-				BiomeEventHandler.getVillageBlockReplacements().put(gen.biomeID, new ArrayList<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>());
-			final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.getVillageBlockReplacements().get(gen.biomeID);
+			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(BiomeGenBase.getIdForBiome(gen)))
+				BiomeEventHandler.getVillageBlockReplacements().put(BiomeGenBase.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>());
+			final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.getVillageBlockReplacements().get(BiomeGenBase.getIdForBiome(gen));
 			final Iterator<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> it2 = list.iterator();
 			final Pair<Block, Integer> toReplacePair = Pair.of(toReplace, this.toReplaceMeta);
 			while(it2.hasNext()){
@@ -63,7 +63,7 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 				}
 			}
 			list.add(Pair.of(toReplacePair, Pair.of(replaceWith, this.replaceWithMeta)));
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

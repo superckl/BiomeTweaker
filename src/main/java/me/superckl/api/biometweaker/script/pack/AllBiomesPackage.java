@@ -12,18 +12,24 @@ public class AllBiomesPackage implements IBiomePackage{
 	@Override
 	public Iterator<BiomeGenBase> getIterator() {
 		final List<BiomeGenBase> list = Lists.newArrayList();
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
 			if(gen != null)
 				list.add(gen);
+		}
 		return list.iterator();
 	}
 
 	@Override
 	public List<Integer> getRawIds() {
 		final List<Integer> list = Lists.newArrayList();
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
 			if(gen != null)
-				list.add(gen.biomeID);
+				list.add(BiomeGenBase.getIdForBiome(gen));
+		}
 		return list;
 	}
 

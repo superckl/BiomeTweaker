@@ -19,9 +19,12 @@ public class AllButBiomesPackage implements IBiomePackage{
 	public Iterator<BiomeGenBase> getIterator() {
 		final List<BiomeGenBase> list = Lists.newArrayList();
 		final List<Integer> ints = this.exclusions.getRawIds();
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-			if((gen != null) && !ints.contains(gen.biomeID))
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
+			if((gen != null) && !ints.contains(BiomeGenBase.getIdForBiome(gen)))
 				list.add(gen);
+		}
 		return list.iterator();
 	}
 
@@ -29,9 +32,15 @@ public class AllButBiomesPackage implements IBiomePackage{
 	public List<Integer> getRawIds() {
 		final List<Integer> list = Lists.newArrayList();
 		final List<Integer> ints = this.exclusions.getRawIds();
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-			if((gen != null) && !ints.contains(gen.biomeID))
-				list.add(gen.biomeID);
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
+			if(gen == null)
+				continue;
+			final int id = BiomeGenBase.getIdForBiome(gen);
+			if(!ints.contains(id))
+				list.add(id);
+		}
 		return list;
 	}
 

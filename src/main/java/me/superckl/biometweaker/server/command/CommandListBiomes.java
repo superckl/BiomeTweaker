@@ -1,18 +1,21 @@
 package me.superckl.biometweaker.server.command;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
+import com.sun.org.apache.xml.internal.security.utils.I18n;
+
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
 
 public class CommandListBiomes implements ICommand{
 
@@ -30,7 +33,7 @@ public class CommandListBiomes implements ICommand{
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return LanguageRegistry.instance().getStringLocalization("biometweaker.msg.listbiomes.usage.text");
+		return I18n.translate("biometweaker.msg.listbiomes.usage.text");
 	}
 
 	@Override
@@ -39,29 +42,31 @@ public class CommandListBiomes implements ICommand{
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] p_71515_2_) {
-
-		sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.listbiomes.output.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
-
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray())
-			if(gen != null){
-				final String message = new StringBuilder().append(gen.biomeID).append(" - ").append(gen.biomeName).toString();
-				sender.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GOLD)));
-			}
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(MinecraftServer.getServer().getOpPermissionLevel(), this.getCommandName());
-	}
-
-	@Override
 	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
 		return false;
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
+		sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.listbiomes.output.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
+			if(gen != null){
+				final String message = new StringBuilder().append(BiomeGenBase.getIdForBiome(gen)).append(" - ").append(gen.getBiomeName()).toString();
+				sender.addChatMessage(new TextComponentString(message).setChatStyle(new Style().setColor(TextFormatting.GOLD)));
+			}
+		}
+	}
+
+	@Override
+	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
+		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
+	}
+
+	@Override
+	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
 		return null;
 	}
 

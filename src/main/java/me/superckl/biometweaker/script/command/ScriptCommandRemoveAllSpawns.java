@@ -25,7 +25,7 @@ public class ScriptCommandRemoveAllSpawns implements IScriptCommand{
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveAllSpawns(this, gen, this.type)))
 				continue;
 			this.removeEntries(gen, this.type);
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

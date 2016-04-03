@@ -38,9 +38,9 @@ public class ScriptCommandMaxSpawnPackSize implements IScriptCommand{
 		while(it.hasNext()){
 			final BiomeGenBase biome = it.next();
 			final TIntObjectMap<TObjectIntMap<String>>  map = EntityEventHandler.getPackSizes();
-			if(!map.containsKey(biome.biomeID))
-				map.put(biome.biomeID, new TObjectIntHashMap<String>());
-			map.get(biome.biomeID).put(clazz.getName(), this.size);
+			if(!map.containsKey(BiomeGenBase.getIdForBiome(biome)))
+				map.put(BiomeGenBase.getIdForBiome(biome), new TObjectIntHashMap<String>());
+			map.get(BiomeGenBase.getIdForBiome(biome)).put(clazz.getName(), this.size);
 		}
 	}
 

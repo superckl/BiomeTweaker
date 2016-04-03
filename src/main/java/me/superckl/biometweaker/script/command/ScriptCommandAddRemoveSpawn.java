@@ -49,7 +49,7 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, gen, entry)))
 				continue;
 			this.handleTypeSwitch(gen, entry, clazz);
-			Config.INSTANCE.onTweak(gen.biomeID);
+			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 		}
 	}
 

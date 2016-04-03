@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
@@ -17,11 +18,11 @@ import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
-import net.minecraft.world.biome.WorldChunkManager;
+import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -39,9 +40,8 @@ public class BiomeHelper {
 	private static Field oceanFillerBlock;
 	private static Field grassColor;
 	private static Field foliageColor;
-	private static Field waterColor;
 
-	private static Field biomeList;
+	private static Field biomeInfoMap;
 	private static Field typeInfoList;
 	private static Field typeList;
 	private static Field biomes;
@@ -50,12 +50,11 @@ public class BiomeHelper {
 	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
 		BiomeHelper.checkFields();
 		final JsonObject obj = new JsonObject();
-		obj.addProperty("ID", gen.biomeID);
-		obj.addProperty("Name", gen.biomeName);
+		obj.addProperty("ID", BiomeGenBase.getIdForBiome(gen));
+		obj.addProperty("Name", gen.getBiomeName());
 		obj.addProperty("Class", gen.getClass().getName());
-		obj.addProperty("Color", gen.color);
-		obj.addProperty("Root Height", gen.minHeight);
-		obj.addProperty("Height Variation", gen.maxHeight);
+		obj.addProperty("Root Height", gen.getBaseHeight());
+		obj.addProperty("Height Variation", gen.getHeightVariation());
 		final boolean topNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
 		final boolean bottomNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
 		obj.addProperty("Top Block", topNull ? "ERROR":gen.topBlock.getBlock().delegate.name());
@@ -78,9 +77,9 @@ public class BiomeHelper {
 			LogHelper.error("Failed to retrieve inserted fields!");
 			e.printStackTrace();
 		}
-		obj.addProperty("Temperature", gen.temperature);
-		obj.addProperty("Humidity", gen.rainfall);
-		obj.addProperty("Water Tint", gen.waterColorMultiplier);
+		obj.addProperty("Temperature", gen.getTemperature());
+		obj.addProperty("Humidity", gen.getRainfall());
+		obj.addProperty("Water Tint", gen.getWaterColorMultiplier());
 		obj.addProperty("Enable Rain", gen.enableRain);
 		obj.addProperty("Enable Snow", gen.enableSnow);
 		JsonArray array = new JsonArray();
@@ -147,8 +146,8 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Cave Creatures", array);
-		obj.add("Spawn Biome", new JsonPrimitive(WorldChunkManager.allowedBiomes.contains(gen)));
-		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(gen.biomeID));
+		obj.add("Spawn Biome", new JsonPrimitive(BiomeProvider.allowedBiomes.contains(gen)));
+		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(BiomeGenBase.getIdForBiome(gen)));
 
 		return obj;
 	}
@@ -158,18 +157,16 @@ public class BiomeHelper {
 
 	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
 		BiomeHelper.checkFields();
+		final int id = BiomeGenBase.getIdForBiome(biome);
 		if(prop.equals("name")){
 			final String toSet = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			biome.biomeName = toSet;
-		}else if(prop.equals("color")){
-			final int toSet = value.getAsInt();
-			biome.color = toSet;
 		}else if(prop.equals("height")){
 			final float toSet = value.getAsFloat();
-			biome.minHeight = toSet;
+			biome.baseHeight = toSet;
 		}else if(prop.equals("heightVariation")){
 			final float toSet = value.getAsFloat();
-			biome.maxHeight = toSet;
+			biome.heightVariation = toSet;
 		}else if(prop.equals("topBlock")){
 			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			try {
@@ -198,7 +195,7 @@ public class BiomeHelper {
 			biome.rainfall = toSet;
 		}else if(prop.equals("waterTint")){
 			final int toSet = value.getAsInt();
-			biome.waterColorMultiplier = toSet;
+			biome.waterColor = toSet;
 		}else if(prop.equals("enableRain")){
 			final boolean toSet = value.getAsBoolean();
 			biome.enableRain = toSet;
@@ -230,9 +227,8 @@ public class BiomeHelper {
 			BiomeHelper.foliageColor.set(biome, toSet);
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
-			BiomeHelper.waterColor.set(biome, toSet);
+			biome.waterColor = toSet;
 		}else if(prop.equals("fillerBlockMeta")){
-			biome.setFillerBlockMetadata(value.getAsInt());
 			if(biome.fillerBlock != null)
 				biome.fillerBlock = biome.fillerBlock.getBlock().getStateFromMeta(value.getAsInt());
 		}else if(prop.equals("topBlockMeta")){
@@ -240,27 +236,27 @@ public class BiomeHelper {
 				biome.topBlock = biome.topBlock.getBlock().getStateFromMeta(value.getAsInt());
 		}
 		else if(prop.equals("waterliliesPerChunk"))
-			BiomeEventHandler.getWaterlilyPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getWaterlilyPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("treesPerChunk"))
-			BiomeEventHandler.getTreesPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getTreesPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("flowersPerChunk"))
-			BiomeEventHandler.getFlowersPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getFlowersPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("grassPerChunk"))
-			BiomeEventHandler.getGrassPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getGrassPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("deadbushesPerChunk"))
-			BiomeEventHandler.getDeadBushPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getDeadBushPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("mushroomsPerChunk"))
-			BiomeEventHandler.getMushroomPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getMushroomPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("reedsPerChunk"))
-			BiomeEventHandler.getReedsPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getReedsPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("cactiPerChunk"))
-			BiomeEventHandler.getCactiPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getCactiPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("sandPerChunk"))
-			BiomeEventHandler.getSandPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getSandPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("clayPerChunk"))
-			BiomeEventHandler.getClayPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getClayPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
-			BiomeEventHandler.getBigMushroomsPerChunk().put(biome.biomeID, value.getAsInt());
+			BiomeEventHandler.getBigMushroomsPerChunk().put(id, value.getAsInt());
 		/*else if(prop.equals("contiguousReplacement"))
 			BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();*/
 		else if(prop.equals("genWeight")){
@@ -268,7 +264,7 @@ public class BiomeHelper {
 			for(final BiomeType type:BiomeType.values()){
 				final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
 				for(final BiomeEntry entry:entries)
-					if(entry.biome.biomeID == biome.biomeID)
+					if(BiomeGenBase.getIdForBiome(entry.biome) == id)
 						entry.itemWeight = weight;
 				if((type != BiomeManager.BiomeType.DESERT) && !BiomeHelper.logged.contains(type) && (WeightedRandom.getTotalWeight(entries) <= 0)){
 					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
@@ -291,8 +287,8 @@ public class BiomeHelper {
 				BiomeManager.addSpawnBiome(biome);
 			else{
 				BiomeManager.removeSpawnBiome(biome);
-				if(!BiomeHelper.loggedSpawn && (WorldChunkManager.allowedBiomes.size() == 0)){
-					LogHelper.warn("Upon removal of biome "+biome.biomeID+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
+				if(!BiomeHelper.loggedSpawn && (BiomeProvider.allowedBiomes.size() == 0)){
+					LogHelper.warn("Upon removal of biome "+id+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
 					BiomeHelper.loggedSpawn = true;
 				}
 			}
@@ -304,7 +300,7 @@ public class BiomeHelper {
 					final Block block = Block.getBlockFromName(blockName);
 					if(block == null)
 						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-					BiomeHelper.oceanTopBlock.set(biome, block);
+					BiomeHelper.oceanTopBlock.set(biome, block.getDefaultState());
 				} catch (final Exception e) {
 					LogHelper.info("Failed to parse block: "+blockName);
 				}
@@ -315,11 +311,12 @@ public class BiomeHelper {
 					final Block block = Block.getBlockFromName(blockName);
 					if(block == null)
 						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-					BiomeHelper.oceanFillerBlock.set(biome, block);
+					BiomeHelper.oceanFillerBlock.set(biome, block.getDefaultState());
 				} catch (final Exception e) {
 					LogHelper.info("Failed to parse block: "+blockName);
 				}
 			}
+		//TODO ocean block meta
 			else
 				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
@@ -334,11 +331,9 @@ public class BiomeHelper {
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
-			if(BiomeHelper.waterColor == null)
-				BiomeHelper.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
-			if(BiomeHelper.biomeList == null){
-				BiomeHelper.biomeList = BiomeDictionary.class.getDeclaredField("biomeList");
-				BiomeHelper.biomeList.setAccessible(true);
+			if(BiomeHelper.biomeInfoMap == null){
+				BiomeHelper.biomeInfoMap = BiomeDictionary.class.getDeclaredField("biomeInfoMap");
+				BiomeHelper.biomeInfoMap.setAccessible(true);
 			}
 			if(BiomeHelper.typeInfoList == null){
 				BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
@@ -357,19 +352,19 @@ public class BiomeHelper {
 	public static int callGrassColorEvent(final int color, final BiomeGenBase gen){
 		final GetGrassColor e = new GetGrassColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
-		return e.newColor;
+		return e.getNewColor();
 	}
 
 	public static int callFoliageColorEvent(final int color, final BiomeGenBase gen){
 		final GetFoliageColor e = new GetFoliageColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
-		return e.newColor;
+		return e.getNewColor();
 	}
 
 	public static int callWaterColorEvent(final int color, final BiomeGenBase gen){
 		final GetWaterColor e = new GetWaterColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
-		return e.newColor;
+		return e.getNewColor();
 	}
 
 	public static void modifyBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
@@ -389,8 +384,8 @@ public class BiomeHelper {
 				list.add(gen);
 		}
 		//Okay, here we go. REFLECTION OVERLOAD!!!1! (It's really not that bad.)
-		final Object array = BiomeHelper.biomeList.get(null);
-		final Object biomeInfo = Array.get(array, gen.biomeID);
+		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
+		final Object biomeInfo = map.get(BiomeGenBase.biomeRegistry.getNameForObject(gen));
 		if(BiomeHelper.typeList == null){
 			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeList.setAccessible(true);
@@ -406,8 +401,8 @@ public class BiomeHelper {
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
-		final Object array = BiomeHelper.biomeList.get(null);
-		final Object biomeInfo = Array.get(array, gen.biomeID);
+		final Object array = BiomeHelper.biomeInfoMap.get(null);
+		final Object biomeInfo = Array.get(array, BiomeGenBase.getIdForBiome(gen));
 		if(BiomeHelper.typeList == null){
 			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeList.setAccessible(true);

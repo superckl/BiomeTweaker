@@ -19,7 +19,7 @@ public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
 	public void perform() throws Exception {
 		final Iterator<BiomeGenBase> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final int id = it.next().biomeID;
+			final int id = BiomeGenBase.getIdForBiome(it.next());
 			BiomeEventHandler.getBiomeReplacements().put(id, this.replaceWith);
 			Config.INSTANCE.onTweak(id);
 		}

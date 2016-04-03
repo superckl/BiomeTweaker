@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.org.apache.xml.internal.security.utils.I18n;
+
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 public class CommandOutput implements ICommand{
 
@@ -31,7 +33,7 @@ public class CommandOutput implements ICommand{
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return LanguageRegistry.instance().getStringLocalization("biometweaker.msg.output.usage.text");
+		return I18n.translate("biometweaker.msg.output.usage.text");
 	}
 
 	@Override
@@ -40,29 +42,29 @@ public class CommandOutput implements ICommand{
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] p_71515_2_) {
+	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
+		return false;
+	}
+
+	@Override
+	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		try {
 			BiomeTweaker.getInstance().generateOutputFiles();
-			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.output.success.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.success.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final IOException e) {
-			sender.addChatMessage(new ChatComponentTranslation("biometweaker.msg.output.failure.text").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.failure.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error("Failed to regenerate output files!");
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(MinecraftServer.getServer().getOpPermissionLevel(), this.getCommandName());
+	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
+		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
 	}
 
 	@Override
-	public boolean isUsernameIndex(final String[] p_82358_1_, final int p_82358_2_) {
-		return false;
-	}
-
-	@Override
-	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
 		return null;
 	}
 

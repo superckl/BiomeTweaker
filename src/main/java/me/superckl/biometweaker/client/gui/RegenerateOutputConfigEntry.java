@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.ButtonEntry;
@@ -32,7 +32,7 @@ public class RegenerateOutputConfigEntry extends ButtonEntry{
 	@Override
 	public void drawToolTip(final int mouseX, final int mouseY) {
 		if(this.pressedCounter-- > 0)
-			this.owningScreen.drawToolTip(Lists.newArrayList(EnumChatFormatting.AQUA+"Output files regenerated.", EnumChatFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
+			this.owningScreen.drawToolTip(Lists.newArrayList(TextFormatting.AQUA+"Output files regenerated.", TextFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
 		else
 			super.drawToolTip(mouseX, mouseY);
 	}

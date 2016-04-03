@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions
 import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
 @SortingIndex(1001)
-@MCVersion("1.8.9")
+@MCVersion("1.9")
 @Name("BiomeTweakerCore")
 @TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
 public class BiomeTweakerCore implements IFMLLoadingPlugin{

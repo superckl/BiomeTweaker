@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
@@ -169,7 +170,9 @@ public class BiomeTweaker {
 	public void generateOutputFiles() throws IOException{
 		LogHelper.info("Generating biome status report...");
 		final JsonArray array = new JsonArray();
-		for(final BiomeGenBase gen:BiomeGenBase.getBiomeGenArray()){
+		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		while(it.hasNext()){
+			final BiomeGenBase gen = it.next();
 			if(gen == null)
 				continue;
 			array.add(BiomeHelper.fillJsonObject(gen));

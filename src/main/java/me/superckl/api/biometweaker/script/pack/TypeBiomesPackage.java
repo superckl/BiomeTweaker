@@ -37,7 +37,7 @@ public class TypeBiomesPackage implements IBiomePackage{
 		for(final BiomeDictionary.Type type:this.types){
 			final BiomeGenBase[] gens = BiomeDictionary.getBiomesForType(type);
 			for(final BiomeGenBase gen:gens)
-				ints.add(gen.biomeID);
+				ints.add(BiomeGenBase.getIdForBiome(gen));
 		}
 		return ints;
 	}

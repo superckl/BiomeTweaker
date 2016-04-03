@@ -11,6 +11,7 @@ import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenBase.BiomeProperties;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
@@ -40,17 +41,17 @@ public class ScriptCommandAddRemoveBiome implements IScriptCommand{
 				final BiomeGenBase gen = it.next();
 				for(final BiomeType type:BiomeType.values())
 					for(final BiomeEntry entry:BiomeManager.getBiomes(type))
-						if(entry.biome.biomeID == gen.biomeID)
+						if(BiomeGenBase.getIdForBiome(entry.biome) == BiomeGenBase.getIdForBiome(gen))
 							if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Remove(this, entry.biome, entry))){
 								BiomeManager.removeBiome(type, entry);
 								if(BiomeManager.getBiomes(type).isEmpty())
 									LogHelper.warn("Viable generation biomes for type "+type+" is empty! This will cause Vanilla generation to crash! You've been warned!");
 							}
-				Config.INSTANCE.onTweak(gen.biomeID);
+				Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
 			}
 		} else
 			for(final int i:this.pack.getRawIds()){
-				final BiomeTweakerBiome biome = new BiomeTweakerBiome(i);
+				final BiomeTweakerBiome biome = new BiomeTweakerBiome(new BiomeProperties("BiomeTweaker Biome").setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F));
 				if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
 					BiomeManager.addBiome(BiomeType.getType(this.type), new BiomeEntry(biome, this.weight));
 				Config.INSTANCE.onTweak(i);

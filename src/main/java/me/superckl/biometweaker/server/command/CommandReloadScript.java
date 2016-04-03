@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import com.sun.org.apache.xml.internal.security.utils.I18n;
-
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -34,7 +33,7 @@ public class CommandReloadScript implements ICommand{
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return I18n.translate("biometweaker.msg.reloadscript.usage.text");
+		return I18n.format("biometweaker.msg.reloadscript.usage.text");
 	}
 
 	@Override

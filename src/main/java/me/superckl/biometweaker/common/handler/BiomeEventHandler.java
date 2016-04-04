@@ -99,8 +99,8 @@ public class BiomeEventHandler {
 				return;
 			final TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.getWorld(), new ChunkCoordIntPair(e.getX(), e.getZ()));
 
-			for (int k = 0; k < 16; ++k)
-				for (int l = 0; l < 16; ++l)
+			for (int x = 0; x < 16; ++x)
+				for (int z = 0; z < 16; ++z)
 				{
 					final BiomeGenBase biomegenbase = e.getWorld().getBiomeGenForCoords(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
 					final int id = BiomeGenBase.getIdForBiome(biomegenbase);
@@ -110,43 +110,39 @@ public class BiomeEventHandler {
 						shouldDoBMap.put(id, Maps.<Block, TIntObjectMap<WeightedBlockEntry>>newIdentityHashMap());
 					final Map<Block, TIntObjectMap<WeightedBlockEntry>> shouldDoMap = shouldDoBMap.get(id);
 					final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.blockReplacements.get(id);
-					final int i1 = k;
-					final int j1 = l;
 					//TODO assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
 					final int k1 = 256;
-					for(int x = 0; x < 16; x++)
-						for(int y = 0; y < 256; y++)
-							for(int z = 0; z < 16; z++){
-								final IBlockState state = e.getPrimer().getBlockState(x, y, z);
-								final Block block = state.getBlock();
-								WeightedBlockEntry toUse = null;
-								if(shouldDoMap.containsKey(block)){
-									final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
-									if(map.containsKey(block.getMetaFromState(state)))
-										toUse = map.get(block.getMetaFromState(state));
-									else if(map.containsKey(-1))
-										toUse = map.get(-1);
+					for(int y = 0; y < k1; y++){
+						final IBlockState state = e.getPrimer().getBlockState(x, y, z);
+						final Block block = state.getBlock();
+						WeightedBlockEntry toUse = null;
+						if(shouldDoMap.containsKey(block)){
+							final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
+							if(map.containsKey(block.getMetaFromState(state)))
+								toUse = map.get(block.getMetaFromState(state));
+							else if(map.containsKey(-1))
+								toUse = map.get(-1);
+						}
+						Integer meta;
+						if(toUse == null)
+							for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
+								if(pair.getKey().getKey() == block){
+									meta = pair.getKey().getValue();
+									final boolean shouldDo = (meta == null) || (block.getMetaFromState(state) == meta);
+									if(shouldDo){
+										toUse = WeightedRandom.getRandomItem(e.getWorld().rand, pair.getValue());
+										if(!shouldDoMap.containsKey(block))
+											shouldDoMap.put(block, new TIntObjectHashMap<WeightedBlockEntry>());
+										final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
+										map.put(meta == null ? -1:meta, toUse);
+									}
 								}
-								Integer meta;
-								if(toUse == null)
-									for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
-										if(pair.getKey().getKey() == block){
-											meta = pair.getKey().getValue();
-											final boolean shouldDo = (meta == null) || (block.getMetaFromState(state) == meta);
-											if(shouldDo){
-												toUse = WeightedRandom.getRandomItem(e.getWorld().rand, pair.getValue());
-												if(!shouldDoMap.containsKey(block))
-													shouldDoMap.put(block, new TIntObjectHashMap<WeightedBlockEntry>());
-												final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
-												map.put(meta == null ? -1:meta, toUse);
-											}
-										}
-								if(toUse != null){
-									final Block block2 = toUse.block.getKey();
-									meta = toUse.block.getValue();
-									e.getPrimer().setBlockState(x, y, z, meta == null ? block2.getDefaultState():block2.getStateFromMeta(meta));
-								}
-							}
+						if(toUse != null){
+							final Block block2 = toUse.block.getKey();
+							meta = toUse.block.getValue();
+							e.getPrimer().setBlockState(x, y, z, meta == null ? block2.getDefaultState():block2.getStateFromMeta(meta));
+						}
+					}
 				}
 			final TIntIterator it = shouldDoBMap.keySet().iterator();
 			while(it.hasNext())

@@ -22,7 +22,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 	public byte[] transform(final String name, final String transformedName, final byte[] bytes) {
 		final ClassNode cNode = ASMHelper.readClassFromBytes(bytes);
 		ModBiomeTweakerCore.logger.info("Attempting to patch class "+transformedName+"...");
-		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlocks", "[Lnet/minecraft/block/Block;", "[Lnet/minecraft/block/Block;", null);
+		cNode.visitField(Opcodes.ACC_PUBLIC, "actualFillerBlocks", "[Lnet/minecraft/block/state/IBlockState;", "[Lnet/minecraft/block/state/IBlockState;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'actualFillerBlocks' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "oceanTopBlock", "Lnet/minecraft/block/state/IBlockState;", "Lnet/minecraft/block/state/IBlockState;", null);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'oceanTopBlock' field into "+transformedName);
@@ -48,10 +48,10 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						((JumpInsnNode)someNode).setOpcode(Opcodes.IFEQ);
 						final InsnList toInsert = new InsnList();
 						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/Block;"));
+						toInsert.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/state/IBlockState;"));
 						toInsert.add(new VarInsnNode(Opcodes.ALOAD, 16));
-						toInsert.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/block/state/IBlockState", ASMNameHelper.method_getBlock.get(), "()Lnet/minecraft/block/Block;", true));
-						toInsert.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/BiomeHooks", "contains", "([Lnet/minecraft/block/Block;Lnet/minecraft/block/Block;)Z", false));
+						//toInsert.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE, "net/minecraft/block/state/IBlockState", ASMNameHelper.method_getBlock.get(), "()Lnet/minecraft/block/Block;", true));
+						toInsert.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/BiomeHooks", "contains", "([Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/block/state/IBlockState;)Z", false));
 						if(ASMHelper.findAndReplace(node.instructions, toFind, toInsert) != null){
 							ModBiomeTweakerCore.logger.debug("Successfully redirected 'Stone' check to 'contains' method.");
 							fixed++;
@@ -106,12 +106,13 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				list.add(new InsnNode(Opcodes.ICONST_1));
-				list.add(new TypeInsnNode(Opcodes.ANEWARRAY, "net/minecraft/block/Block"));
+				list.add(new TypeInsnNode(Opcodes.ANEWARRAY, "net/minecraft/block/state/IBlockState"));
 				list.add(new InsnNode(Opcodes.DUP));
 				list.add(new InsnNode(Opcodes.ICONST_0));
 				list.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
+				list.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/block/Block", ASMNameHelper.method_getDefaultState.get(), "()Lnet/minecraft/block/state/IBlockState;", false));
 				list.add(new InsnNode(Opcodes.AASTORE));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/Block;"));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "actualFillerBlocks", "[Lnet/minecraft/block/state/IBlockState;"));
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted empty array into 'actualFillerBlocks'");
 				fixed++;

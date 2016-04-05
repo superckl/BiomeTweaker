@@ -17,8 +17,6 @@ import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -48,12 +46,6 @@ public class BiomeHelper {
 	private static Field typeList;
 	private static Field biomes;
 	private static Field isModded;
-
-	private final IBlockState state;
-
-	public BiomeHelper() {
-		this.state = Blocks.gravel.getDefaultState();
-	}
 
 	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
 		BiomeHelper.checkFields();

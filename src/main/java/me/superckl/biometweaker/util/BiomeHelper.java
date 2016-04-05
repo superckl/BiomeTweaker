@@ -18,6 +18,7 @@ import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -315,9 +316,15 @@ public class BiomeHelper {
 				} catch (final Exception e) {
 					LogHelper.info("Failed to parse block: "+blockName);
 				}
-			}
-		//TODO ocean block meta
-			else
+			}else if(prop.equals("oceanFillerBlockMeta")){
+				final IBlockState state = (IBlockState) BiomeHelper.oceanFillerBlock.get(biome);
+				if(state != null)
+					BiomeHelper.oceanFillerBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
+			}else if(prop.equals("oceanTopBlockMeta")){
+				final IBlockState state = (IBlockState) BiomeHelper.oceanTopBlock.get(biome);
+				if(state != null)
+					BiomeHelper.oceanTopBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
+			}else
 				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
 

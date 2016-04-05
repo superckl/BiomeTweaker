@@ -1,10 +1,12 @@
 package me.superckl.biometweaker.core.module;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
@@ -75,29 +77,48 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ASMNameHelper.method_genTerrainBlocks.get()) && mNode.desc.equals(ASMNameHelper.desc_genTerrainBlocks.get())){
-					//TODO broken
+					//TODO misses many plausible cases, but catches all vanilla cases.
 					AbstractInsnNode node = ASMHelper.findFirstInstruction(mNode);
 					AbstractInsnNode nextNode = node;
 					int removed = 0;
-					do{
-						nextNode = node.getNext();
-						if((node instanceof FieldInsnNode) == false)
-							continue;
-						final FieldInsnNode fNode = (FieldInsnNode) node;
-						if((fNode.name.equals(ASMNameHelper.field_topBlock.get()) || fNode.name.equals(ASMNameHelper.field_fillerBlock.get())) && fNode.desc.equals("Lnet/minecraft/block/Block;")){
-							AbstractInsnNode prevNode = ASMHelper.findPreviousInstruction(fNode);
-							if((prevNode != null) && (prevNode instanceof FieldInsnNode) && (prevNode.getOpcode() == Opcodes.GETSTATIC)){
-								final FieldInsnNode prevFNode = (FieldInsnNode) prevNode;
-								if(prevFNode.owner.equals("net/minecraft/init/Blocks")){
-									prevNode = ASMHelper.findPreviousInstruction(prevFNode);
-									if((prevNode != null) && (prevNode instanceof VarInsnNode) && (prevNode.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode)prevNode).var == 0)){
-										ASMHelper.removeFromInsnListUntil(mNode.instructions, prevNode, nextNode);
-										removed++;
+					do
+						try {
+							nextNode = node.getNext();
+							if((node instanceof FieldInsnNode) == false)
+								continue;
+							final FieldInsnNode fNode = (FieldInsnNode) node;
+							if((fNode.name.equals(ASMNameHelper.field_topBlock.get()) || fNode.name.equals(ASMNameHelper.field_fillerBlock.get())) && fNode.desc.equals("Lnet/minecraft/block/state/IBlockState;")){
+								AbstractInsnNode prevNode = ASMHelper.findPreviousInstruction(fNode);
+								if((prevNode != null) && (prevNode instanceof MethodInsnNode) && (prevNode.getOpcode() == Opcodes.INVOKEVIRTUAL || prevNode.getOpcode() == Opcodes.INVOKEINTERFACE)){
+									MethodInsnNode prevMNode = (MethodInsnNode) prevNode;
+									//Only tests for getDefaultState...
+									if(!(prevMNode.name.equals(ASMNameHelper.method_getDefaultState.get()) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;"))){
+										//skip exactly three nodes to test for lines with simple withProperty calls
+										prevNode = ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(prevMNode)));
+										if(prevNode == null || prevNode instanceof MethodInsnNode == false || prevNode.getOpcode() != Opcodes.INVOKEVIRTUAL)
+											continue;
+										prevMNode = (MethodInsnNode) prevNode;
+									}
+									if(prevMNode.name.equals(ASMNameHelper.method_getDefaultState.get()) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;")){
+										prevNode = ASMHelper.findPreviousInstruction(prevMNode);
+										if(prevNode != null && prevNode instanceof FieldInsnNode && prevNode.getOpcode() == Opcodes.GETSTATIC){
+											final FieldInsnNode prevFNode = (FieldInsnNode) prevNode;
+											if(prevFNode.desc.equals("Lnet/minecraft/block/Block;") || ASMHelper.doesClassExtend(ASMHelper.getClassReaderForClassName(Type.getType(prevFNode.desc).getClassName()), "net/minecraft/block/Block")){
+												prevNode = ASMHelper.findPreviousInstruction(prevFNode);
+												if((prevNode != null) && (prevNode instanceof VarInsnNode) && (prevNode.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode)prevNode).var == 0)){
+													ASMHelper.removeFromInsnListUntil(mNode.instructions, prevNode, nextNode);
+													removed++;
+												}
+											}
+										}
 									}
 								}
 							}
+						} catch (final IOException e) {
+							e.printStackTrace();
+							//Swallow, it doesn't extend Block
 						}
-					}while((node = ASMHelper.findNextInstructionWithOpcode(nextNode, Opcodes.PUTFIELD)) != null);
+					while((node = ASMHelper.findNextInstructionWithOpcode(nextNode, Opcodes.PUTFIELD)) != null);
 					if(removed > 0){
 						ModBiomeTweakerCore.logger.warn("Found Biome subclass "+transformedName+" that was setting topBlock or fillerBlock in genTerrainBlocks! This is bad practice and breaks functionality in BiomeTweaker! "+removed+" items were removed. If this is not a vanilla biome, please let me (superckl) know.");
 						ModBiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");

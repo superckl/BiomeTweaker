@@ -87,6 +87,7 @@ public class TweakerScriptObject extends ScriptObject{
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 		validCommands.put("addActualFillerBlock", listing);
 
 		listing = new ScriptCommandListing();

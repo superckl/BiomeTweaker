@@ -18,7 +18,7 @@ public enum ASMNameHelper {
 	method_getBiomeGenForCoords("getBiomeGenForCoords","func_180494_b"),
 	method_getBlock("getBlock", "func_177230_c"),
 	method_getDefaultState("getDefaultState", "func_176223_P"),
-	method_setBlockState("setBlockState", "func_177230_c"),
+	method_setBlockState("setBlockState", "func_177855_a"),
 	method_getSkyColorByTemp("getSkyColorByTemp", "func_76731_a"),
 
 	field_stone("stone", "field_150348_b"),

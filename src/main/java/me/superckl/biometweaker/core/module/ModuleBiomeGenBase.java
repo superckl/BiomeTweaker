@@ -35,7 +35,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "skyColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'skyColor' field into "+transformedName);
-		int fixed = 7;
+		int fixed = 6;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 				InsnList toFind = new InsnList();
@@ -81,8 +81,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 
 						aNode = ASMHelper.findPreviousInstructionWithOpcode(aNode, Opcodes.GETSTATIC);
 						toFind = new InsnList();
-						toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/init/Blocks", ASMNameHelper.field_stone.get(), "Lnet/minecraft/block/Block;"));
-						toFind.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, "net/minecraft/block/Block", ASMNameHelper.method_getDefaultState.get(), "()Lnet/minecraft/block/state/IBlockState;", false));
+						toFind.add(new FieldInsnNode(Opcodes.GETSTATIC, "net/minecraft/world/biome/BiomeGenBase", ASMNameHelper.field_STONE.get(), "Lnet/minecraft/block/state/IBlockState;"));
 						toFind.add(new VarInsnNode(Opcodes.ASTORE, 10));
 						aNode = ASMHelper.find(aNode, toFind);
 						if(aNode != null){

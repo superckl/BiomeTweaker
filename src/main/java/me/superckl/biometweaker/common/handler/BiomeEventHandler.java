@@ -29,7 +29,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 import net.minecraftforge.event.terraingen.ChunkGeneratorEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
@@ -80,8 +79,7 @@ public class BiomeEventHandler {
 
 	private Field grassColor;
 	private Field foliageColor;
-	private Field waterColor;
-	private final int[] colorCache = new int[768];
+	private final int[] colorCache = new int[512];
 
 	private final Map<World, Map<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
 
@@ -202,12 +200,11 @@ public class BiomeEventHandler {
 			e1.printStackTrace();
 		}
 	}
-
+	//No longer needed
+	/*
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetWaterColor(final GetWaterColor e){
 		try {
-			if(this.waterColor == null)
-				this.waterColor = BiomeGenBase.class.getDeclaredField("waterColor");
 			final int id = BiomeGenBase.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id+512];
 			if(newColor == -1)
@@ -215,7 +212,7 @@ public class BiomeEventHandler {
 			else if((newColor = this.colorCache[id+512]) != -2)
 				e.setNewColor(newColor);
 			else{
-				newColor = this.waterColor.getInt(e.getBiome());
+				newColor = e.getBiome().waterColor;
 				this.colorCache[id+512] = newColor;
 				if(newColor == -1)
 					return;
@@ -225,7 +222,7 @@ public class BiomeEventHandler {
 			LogHelper.error("Failed to process getWaterColor event!");
 			e1.printStackTrace();
 		}
-	}
+	}*/
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){

@@ -41,6 +41,7 @@ public class BiomeHelper {
 	private static Field oceanFillerBlock;
 	private static Field grassColor;
 	private static Field foliageColor;
+	private static Field skyColor;
 
 	private static Field biomeInfoMap;
 	private static Field typeInfoList;
@@ -203,24 +204,7 @@ public class BiomeHelper {
 		}else if(prop.equals("enableSnow")){
 			final boolean toSet = value.getAsBoolean();
 			biome.enableSnow = toSet;
-		}/*else if(prop.equals("actualFillerBlock")){
-			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-			try {
-				final Block block = Block.getBlockFromName(blockName);
-				BiomeHelper.actualFillerBlock.set(biome, block);
-			} catch (final Exception e) {
-				LogHelper.info("Failed to parse block: "+blockName);
-			}
-		}else if(prop.equals("liquidFillerBlock")){
-			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-			try {
-				final Block block = Block.getBlockFromName(blockName);
-				BiomeHelper.liquidFillerBlock.set(biome, block);
-			} catch (final Exception e) {
-				LogHelper.info("Failed to parse block: "+blockName);
-			}
-
-		}*/else if(prop.equals("grassColor")){
+		}else if(prop.equals("grassColor")){
 			final int toSet = value.getAsInt();
 			BiomeHelper.grassColor.set(biome, toSet);
 		}else if(prop.equals("foliageColor")){
@@ -229,6 +213,9 @@ public class BiomeHelper {
 		}else if(prop.equals("waterColor")){
 			final int toSet = value.getAsInt();
 			biome.waterColor = toSet;
+		}else if(prop.equals("skyColor")){
+			final int toSet = value.getAsInt();
+			BiomeHelper.skyColor.set(biome, toSet);
 		}else if(prop.equals("fillerBlockMeta")){
 			if(biome.fillerBlock != null)
 				biome.fillerBlock = biome.fillerBlock.getBlock().getStateFromMeta(value.getAsInt());
@@ -258,8 +245,6 @@ public class BiomeHelper {
 			BiomeEventHandler.getClayPerChunk().put(id, value.getAsInt());
 		else if(prop.equals("bigMushroomsPerChunk"))
 			BiomeEventHandler.getBigMushroomsPerChunk().put(id, value.getAsInt());
-		/*else if(prop.equals("contiguousReplacement"))
-			BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();*/
 		else if(prop.equals("genWeight")){
 			final int weight  = value.getAsInt();
 			for(final BiomeType type:BiomeType.values()){
@@ -338,6 +323,8 @@ public class BiomeHelper {
 				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)
 				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
+			if(BiomeHelper.skyColor == null)
+				BiomeHelper.skyColor = BiomeGenBase.class.getDeclaredField("skyColor");
 			if(BiomeHelper.biomeInfoMap == null){
 				BiomeHelper.biomeInfoMap = BiomeDictionary.class.getDeclaredField("biomeInfoMap");
 				BiomeHelper.biomeInfoMap.setAccessible(true);

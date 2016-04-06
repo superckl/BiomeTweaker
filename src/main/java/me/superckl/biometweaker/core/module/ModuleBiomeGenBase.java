@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
@@ -32,9 +33,9 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'grassColor' field into "+transformedName);
 		cNode.visitField(Opcodes.ACC_PUBLIC, "foliageColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'foliageColor' field into "+transformedName);
-		/*		cNode.visitField(Opcodes.ACC_PUBLIC, "waterColor", "I", "I", -1);
-		ModBiomeTweakerCore.logger.debug("Successfully inserted 'waterColor' field into "+transformedName);*/
-		int fixed = 6;
+		cNode.visitField(Opcodes.ACC_PUBLIC, "skyColor", "I", "I", -1);
+		ModBiomeTweakerCore.logger.debug("Successfully inserted 'skyColor' field into "+transformedName);
+		int fixed = 7;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 				InsnList toFind = new InsnList();
@@ -95,7 +96,20 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 						}
 					}
 				}
-
+			}else if(node.name.equals(ASMNameHelper.method_getSkyColorByTemp.get()) && node.desc.equals("(F)I")){
+				final InsnList list = new InsnList();
+				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "skyColor", "I"));
+				list.add(new InsnNode(Opcodes.ICONST_M1));
+				final LabelNode label = new LabelNode();
+				list.add(new JumpInsnNode(Opcodes.IF_ICMPEQ, label));
+				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				list.add(new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/biome/BiomeGenBase", "skyColor", "I"));
+				list.add(new InsnNode(Opcodes.IRETURN));
+				list.add(label);
+				node.instructions.insertBefore(node.instructions.getFirst(), list);
+				ModBiomeTweakerCore.logger.debug("Successfully inserted sky color instructions.");
+				fixed++;
 			}else if(node.name.equals("<init>") && node.desc.equals("(Lnet/minecraft/world/biome/BiomeGenBase$BiomeProperties;)V")){
 				InsnList list = new InsnList();
 				list = new InsnList();
@@ -139,18 +153,18 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				node.instructions.insert(list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'foliageColor'");
 				fixed++;
-				/*list = new InsnList();
+				list = new InsnList();
 				list.add(new VarInsnNode(Opcodes.ALOAD, 0));
 				list.add(new InsnNode(Opcodes.ICONST_M1));
-				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "waterColor", "I"));
+				list.add(new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/world/biome/BiomeGenBase", "skyColor", "I"));
 				node.instructions.insert(list);
-				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'waterColor'");
-				fixed++;*/
+				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'skyColor'");
+				fixed++;
 			}
-		if(fixed < 13)
+		if(fixed < 16)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 13)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 15"
+		else if(fixed > 16)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 16"
 					+ ". Is something else also patching this class?");
 		else
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");

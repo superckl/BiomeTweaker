@@ -19,6 +19,7 @@ public enum ASMNameHelper {
 	method_getBlock("getBlock", "func_177230_c"),
 	method_getDefaultState("getDefaultState", "func_176223_P"),
 	method_setBlockState("setBlockState", "func_177230_c"),
+	method_getSkyColorByTemp("getSkyColorByTemp", "func_76731_a"),
 
 	field_stone("stone", "field_150348_b"),
 	field_STONE("STONE", "field_185365_a"),

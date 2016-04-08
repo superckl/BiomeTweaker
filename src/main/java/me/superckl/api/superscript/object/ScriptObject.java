@@ -35,10 +35,10 @@ public abstract class ScriptObject {
 			APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
 			return;
 		}
-		String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		final ScriptCommandListing listing = this.validCommands.get(command);
 		outer:
 			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 				final List<Object> objs = Lists.newArrayList();
 				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
 				final Iterator<ParameterWrapper> it = params.iterator();

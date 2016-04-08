@@ -59,8 +59,8 @@ public class BiomeHelper {
 		obj.addProperty("Height Variation", gen.getHeightVariation());
 		final boolean topNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
 		final boolean bottomNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
-		obj.addProperty("Top Block", topNull ? "ERROR":gen.topBlock.getBlock().delegate.name());
-		obj.addProperty("Filler Block", bottomNull ? "ERROR":gen.fillerBlock.getBlock().delegate.name());
+		obj.addProperty("Top Block", topNull ? "ERROR":gen.topBlock.getBlock().delegate.name().toString());
+		obj.addProperty("Filler Block", bottomNull ? "ERROR":gen.fillerBlock.getBlock().delegate.name().toString());
 		try {
 			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());

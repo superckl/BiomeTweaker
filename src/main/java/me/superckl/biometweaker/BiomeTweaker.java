@@ -40,6 +40,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ProgressManager;
+import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
@@ -73,6 +75,8 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onConstruction(final FMLConstructionEvent e){
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Construction", 1, true);
+		bar.step("Populating script commands");
 		try {
 			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
 			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
@@ -112,14 +116,24 @@ public class BiomeTweaker {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
 		}
+
+		ProgressManager.pop(bar);
 	}
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 3, true);
+
+		bar.step("Parsing scripts");
 		this.parseScripts();
 
+		bar.step("Registering handlers");
 		BiomeTweaker.proxy.registerHandlers();
+
+		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
+
+		ProgressManager.pop(bar);
 	}
 
 	public void parseScripts(){
@@ -151,19 +165,36 @@ public class BiomeTweaker {
 	}
 
 	@EventHandler
-	public void onInit(final FMLInitializationEvent e){
+	public void onInit(final FMLInitializationEvent e) throws InterruptedException{
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 1, true);
+
+		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);
+
+		ProgressManager.pop(bar);
 	}
 
 	@EventHandler
 	public void onPostInit(final FMLPostInitializationEvent e){
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 1, true);
+
+		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.POST_INIT);
+
+		ProgressManager.pop(bar);
 	}
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+
+		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.FINISHED_LOAD);
+
+		bar.step("Generating biome output files");
 		this.generateOutputFiles();
+
+		ProgressManager.pop(bar);
 	}
 
 	public void generateOutputFiles() throws IOException{
@@ -222,8 +253,6 @@ public class BiomeTweaker {
 	public void onServerStarted(final FMLServerStartedEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
 	}
-
-
 
 	//Begin compat. e.g. load biome classes that get loaded too late.
 

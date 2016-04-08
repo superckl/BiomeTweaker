@@ -18,6 +18,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
@@ -35,6 +36,9 @@ import net.minecraftforge.event.terraingen.ChunkProviderEvent.ReplaceBiomeBlocks
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.StartupQuery;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -311,6 +315,21 @@ public class BiomeEventHandler {
 					break;
 				}
 			}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onWorldLoad(final WorldEvent.Load e){
+		if(!BiomeTweakerCore.modifySuccess){
+			final boolean cont = StartupQuery.confirm("WARNING\n\nBiomeTweaker has failed to verify the integrity of its ASM modifications.\n "
+					+ "This could cause some features to not work or spam errors,\n leading to unpredicatable world generation and possibly corruption.\n "
+					+ "Please report this to the issue tracker with a full log file.\n\n"
+					+ "https://github.com/superckl/BiomeTweaker/issues\n\n"
+					+ "Continue anyway?");
+			if(cont)
+				BiomeTweakerCore.modifySuccess = true;
+			else
+				FMLCommonHandler.instance().exitJava(1, false);
+		}
 	}
 
 	private TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){

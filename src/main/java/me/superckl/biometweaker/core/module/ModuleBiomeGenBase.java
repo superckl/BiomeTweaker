@@ -182,10 +182,10 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		if(!sky)
 			ModBiomeTweakerCore.logger.warn("Failed to insert sky color instructions. If this is a server, don't worry. If if this a client, worry. A lot.");
 
-		if(fixed < 18)
+		if(fixed < 17)
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 18)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 18"
+		else if(fixed > 17)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 17"
 					+ ". Is something else also patching this class?");
 		else{
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");

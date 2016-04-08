@@ -12,8 +12,10 @@ import com.google.common.collect.Maps;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.custom_hash.TObjectByteCustomHashMap;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
@@ -24,7 +26,6 @@ import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
@@ -40,20 +41,20 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class BiomeEventHandler {
 
 	public static byte globalSize = -1;
-	public static final Map<WorldType, Byte> sizes = Maps.newIdentityHashMap();
+	public static final TObjectByteCustomHashMap<Object> sizes = new TObjectByteCustomHashMap<>(IdentityHashingStrategy.INSTANCE);
 
 	@Getter
-	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>>();
+	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<>();
 	@Getter
-	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>>();
+	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<>();
 	@Getter
 	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
 	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
 	@Getter
-	private static final TIntObjectMap<List<String>> decorateTypes = new TIntObjectHashMap<List<String>>();
+	private static final TIntObjectMap<List<String>> decorateTypes = new TIntObjectHashMap<>();
 	@Getter
-	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<List<String>>();
+	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<>();
 	@Getter
 	private static final TIntIntMap waterlilyPerChunk = new TIntIntHashMap();
 	@Getter
@@ -317,7 +318,7 @@ public class BiomeEventHandler {
 			if(map.containsKey(search))
 				return map.get(search);
 
-		return new TIntObjectHashMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>();
+		return new TIntObjectHashMap<>();
 	}
 
 	@Getter

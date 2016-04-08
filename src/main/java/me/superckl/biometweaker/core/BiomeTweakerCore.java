@@ -17,6 +17,7 @@ import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 public class BiomeTweakerCore implements IFMLLoadingPlugin{
 
 	public static File mcLocation;
+	public static boolean modifySuccess;
 
 	@Override
 	public String[] getASMTransformerClass() {

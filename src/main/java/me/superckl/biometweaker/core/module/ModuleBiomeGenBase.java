@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.core.ASMNameHelper;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.core.ModBiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 
@@ -36,6 +37,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 		cNode.visitField(Opcodes.ACC_PUBLIC, "skyColor", "I", "I", -1);
 		ModBiomeTweakerCore.logger.debug("Successfully inserted 'skyColor' field into "+transformedName);
 		int fixed = 6;
+		boolean sky = false;
 		for(final MethodNode node:cNode.methods)
 			if(node.name.equals(ASMNameHelper.method_genBiomeTerrain.get()) && node.desc.equals(ASMNameHelper.desc_genBiomeTerrain.get())){
 				InsnList toFind = new InsnList();
@@ -108,7 +110,7 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				list.add(label);
 				node.instructions.insertBefore(node.instructions.getFirst(), list);
 				ModBiomeTweakerCore.logger.debug("Successfully inserted sky color instructions.");
-				fixed++;
+				sky = true;
 			}else if(node.name.equals("<init>") && node.desc.equals("(Lnet/minecraft/world/biome/BiomeGenBase$BiomeProperties;)V")){
 				InsnList list = new InsnList();
 				list = new InsnList();
@@ -160,13 +162,20 @@ public class ModuleBiomeGenBase implements IClassTransformerModule{
 				ModBiomeTweakerCore.logger.debug("Successfully inserted -1 into 'skyColor'");
 				fixed++;
 			}
-		if(fixed < 16)
+		if(!sky)
+			ModBiomeTweakerCore.logger.warn("Failed to insert sky color instructions. If this is a server, don't worry. If if this a client, worry. A lot.");
+
+		if(fixed < 15){
 			ModBiomeTweakerCore.logger.error("Failed to completely patch "+transformedName+"! Only "+fixed+" patches were processed. Ye who continue now abandon all hope.");
-		else if(fixed > 16)
-			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 16"
+			ModBiomeTweakerCore.logger.error("Seriously, this is really bad. Things are probably going to break.");
+		}
+		else if(fixed > 15)
+			ModBiomeTweakerCore.logger.warn("Sucessfully patched "+transformedName+", but "+fixed+" patches were applied when we were expecting 15"
 					+ ". Is something else also patching this class?");
-		else
+		else{
 			ModBiomeTweakerCore.logger.info("Sucessfully patched "+transformedName+"! "+fixed+" patches were applied.");
+			BiomeTweakerCore.modifySuccess = true;
+		}
 		return ASMHelper.writeClassToBytes(cNode);
 	}
 

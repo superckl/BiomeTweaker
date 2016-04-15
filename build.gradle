@@ -104,9 +104,15 @@ artifacts {
   archives ssJar
 }
 
+ext.local_maven = "${System.env.local_maven ?: ""}"
+
 task uploadJars(dependsOn: ["build"]) {
 	description = "uploads JARs"
-	if (project.hasProperty("local_maven")) {
+
+  onlyIf{
+    return local_maven != ""
+  }
+
 		apply plugin: 'maven'
 		uploadArchives {
 			repositories {
@@ -115,7 +121,6 @@ task uploadJars(dependsOn: ["build"]) {
 				}
 			}
 		}
-	}
 }
 
 jar {

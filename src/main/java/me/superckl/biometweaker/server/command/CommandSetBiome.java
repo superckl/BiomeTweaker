@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.google.common.primitives.Ints;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -35,7 +34,7 @@ public class CommandSetBiome implements ICommand{
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return I18n.format("biometweaker.msg.setbiome.usage.text");
+		return "biometweaker.msg.setbiome.usage.text";
 	}
 
 	@Override

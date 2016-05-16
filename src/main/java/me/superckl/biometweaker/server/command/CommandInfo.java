@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import me.superckl.biometweaker.util.BiomeHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -38,7 +37,7 @@ public class CommandInfo implements ICommand{
 
 	@Override
 	public String getCommandUsage(final ICommandSender p_71518_1_) {
-		return I18n.format("biometweaker.msg.info.usage.text");
+		return "biometweaker.msg.info.usage.text";
 	}
 
 	@Override

@@ -21,8 +21,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraftforge.common.BiomeDictionary;
@@ -49,10 +49,10 @@ public class BiomeHelper {
 	private static Field biomes;
 	private static Field isModded;
 
-	public static JsonObject fillJsonObject(final BiomeGenBase gen, final int ... coords){
+	public static JsonObject fillJsonObject(final Biome gen, final int ... coords){
 		BiomeHelper.checkFields();
 		final JsonObject obj = new JsonObject();
-		obj.addProperty("ID", BiomeGenBase.getIdForBiome(gen));
+		obj.addProperty("ID", Biome.getIdForBiome(gen));
 		obj.addProperty("Name", gen.getBiomeName());
 		obj.addProperty("Class", gen.getClass().getName());
 		obj.addProperty("Root Height", gen.getBaseHeight());
@@ -149,7 +149,7 @@ public class BiomeHelper {
 		}
 		obj.add("Spawnable Cave Creatures", array);
 		obj.add("Spawn Biome", new JsonPrimitive(BiomeProvider.allowedBiomes.contains(gen)));
-		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(BiomeGenBase.getIdForBiome(gen)));
+		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(Biome.getIdForBiome(gen)));
 
 		return obj;
 	}
@@ -157,9 +157,9 @@ public class BiomeHelper {
 	private static Set<BiomeManager.BiomeType> logged = EnumSet.noneOf(BiomeManager.BiomeType.class);
 	private static boolean loggedSpawn;
 
-	public static void setBiomeProperty(final String prop, final JsonElement value, final BiomeGenBase biome) throws Exception{
+	public static void setBiomeProperty(final String prop, final JsonElement value, final Biome biome) throws Exception{
 		BiomeHelper.checkFields();
-		final int id = BiomeGenBase.getIdForBiome(biome);
+		final int id = Biome.getIdForBiome(biome);
 		if(prop.equals("name")){
 			final String toSet = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 			biome.biomeName = toSet;
@@ -250,7 +250,7 @@ public class BiomeHelper {
 			for(final BiomeType type:BiomeType.values()){
 				final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
 				for(final BiomeEntry entry:entries)
-					if(BiomeGenBase.getIdForBiome(entry.biome) == id)
+					if(Biome.getIdForBiome(entry.biome) == id)
 						entry.itemWeight = weight;
 				if((type != BiomeManager.BiomeType.DESERT) && !BiomeHelper.logged.contains(type) && (WeightedRandom.getTotalWeight(entries) <= 0)){
 					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
@@ -279,7 +279,7 @@ public class BiomeHelper {
 				}
 			}
 		else if(prop.equals("genTallPlants"))
-			BiomeGenBase.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
+			Biome.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
 			else if(prop.equals("oceanTopBlock")){
 				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
 				try {
@@ -316,15 +316,15 @@ public class BiomeHelper {
 	private static void checkFields(){
 		try{
 			if(BiomeHelper.oceanTopBlock == null)
-				BiomeHelper.oceanTopBlock = BiomeGenBase.class.getDeclaredField("oceanTopBlock");
+				BiomeHelper.oceanTopBlock = Biome.class.getDeclaredField("oceanTopBlock");
 			if(BiomeHelper.oceanFillerBlock == null)
-				BiomeHelper.oceanFillerBlock = BiomeGenBase.class.getDeclaredField("oceanFillerBlock");
+				BiomeHelper.oceanFillerBlock = Biome.class.getDeclaredField("oceanFillerBlock");
 			if(BiomeHelper.grassColor == null)
-				BiomeHelper.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
+				BiomeHelper.grassColor = Biome.class.getDeclaredField("grassColor");
 			if(BiomeHelper.foliageColor == null)
-				BiomeHelper.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
+				BiomeHelper.foliageColor = Biome.class.getDeclaredField("foliageColor");
 			if(BiomeHelper.skyColor == null)
-				BiomeHelper.skyColor = BiomeGenBase.class.getDeclaredField("skyColor");
+				BiomeHelper.skyColor = Biome.class.getDeclaredField("skyColor");
 			if(BiomeHelper.biomeInfoMap == null){
 				BiomeHelper.biomeInfoMap = BiomeDictionary.class.getDeclaredField("biomeInfoMap");
 				BiomeHelper.biomeInfoMap.setAccessible(true);
@@ -343,31 +343,31 @@ public class BiomeHelper {
 		}
 	}
 
-	public static int callGrassColorEvent(final int color, final BiomeGenBase gen){
+	public static int callGrassColorEvent(final int color, final Biome gen){
 		final GetGrassColor e = new GetGrassColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
 		return e.getNewColor();
 	}
 
-	public static int callFoliageColorEvent(final int color, final BiomeGenBase gen){
+	public static int callFoliageColorEvent(final int color, final Biome gen){
 		final GetFoliageColor e = new GetFoliageColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
 		return e.getNewColor();
 	}
 
-	public static int callWaterColorEvent(final int color, final BiomeGenBase gen){
+	public static int callWaterColorEvent(final int color, final Biome gen){
 		final GetWaterColor e = new GetWaterColor(gen, color);
 		MinecraftForge.EVENT_BUS.post(e);
 		return e.getNewColor();
 	}
 
-	public static void modifyBiomeDicType(final BiomeGenBase gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
+	public static void modifyBiomeDicType(final Biome gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
-		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
+		final List<Biome>[] listArray = (List<Biome>[]) BiomeHelper.typeInfoList.get(null);
 		if(listArray.length > type.ordinal()){
-			List<BiomeGenBase> list = listArray[type.ordinal()];
+			List<Biome> list = listArray[type.ordinal()];
 			if(list == null){
 				list = Lists.newArrayList();
 				listArray[type.ordinal()] = list;
@@ -379,7 +379,7 @@ public class BiomeHelper {
 		}
 		//Okay, here we go. REFLECTION OVERLOAD!!!1! (It's really not that bad.)
 		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
-		final Object biomeInfo = map.get(BiomeGenBase.biomeRegistry.getNameForObject(gen));
+		final Object biomeInfo = map.get(Biome.REGISTRY.getNameForObject(gen));
 		if(BiomeHelper.typeList == null){
 			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeList.setAccessible(true);
@@ -391,18 +391,18 @@ public class BiomeHelper {
 			set.add(type);
 	}
 
-	public static void removeAllBiomeDicType(final BiomeGenBase gen) throws Exception{
+	public static void removeAllBiomeDicType(final Biome gen) throws Exception{
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
 		final Object array = BiomeHelper.biomeInfoMap.get(null);
-		final Object biomeInfo = Array.get(array, BiomeGenBase.getIdForBiome(gen));
+		final Object biomeInfo = Array.get(array, Biome.getIdForBiome(gen));
 		if(BiomeHelper.typeList == null){
 			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeList.setAccessible(true);
 		}
 		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
-		final List<BiomeGenBase>[] listArray = (List<BiomeGenBase>[]) BiomeHelper.typeInfoList.get(null);
+		final List<Biome>[] listArray = (List<Biome>[]) BiomeHelper.typeInfoList.get(null);
 		for(final BiomeDictionary.Type type : set)
 			listArray[type.ordinal()].remove(gen);
 		set.clear();

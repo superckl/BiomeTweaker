@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
 public class ScriptCommandMaxSpawnPackSize implements IScriptCommand{
@@ -34,13 +34,13 @@ public class ScriptCommandMaxSpawnPackSize implements IScriptCommand{
 		}catch(final Exception e){
 			throw new IllegalArgumentException("Failed to load entity class: "+this.entityClass, e);
 		}
-		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final BiomeGenBase biome = it.next();
+			final Biome biome = it.next();
 			final TIntObjectMap<TObjectIntMap<String>>  map = EntityEventHandler.getPackSizes();
-			if(!map.containsKey(BiomeGenBase.getIdForBiome(biome)))
-				map.put(BiomeGenBase.getIdForBiome(biome), new TObjectIntHashMap<String>());
-			map.get(BiomeGenBase.getIdForBiome(biome)).put(clazz.getName(), this.size);
+			if(!map.containsKey(Biome.getIdForBiome(biome)))
+				map.put(Biome.getIdForBiome(biome), new TObjectIntHashMap<String>());
+			map.get(Biome.getIdForBiome(biome)).put(clazz.getName(), this.size);
 		}
 	}
 

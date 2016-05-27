@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.CollectionHelper;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class BasicBiomesPackage implements IBiomePackage{
 
@@ -18,10 +18,10 @@ public class BasicBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
-		final List<BiomeGenBase> list = Lists.newArrayList();
+	public Iterator<Biome> getIterator() {
+		final List<Biome> list = Lists.newArrayList();
 		for(final int i:this.ids){
-			final BiomeGenBase gen = BiomeGenBase.getBiome(i);
+			final Biome gen = Biome.getBiome(i);
 			if(gen == null){
 				APIInfo.log.info("Error applying tweaks. Biome ID "+i+" does not correspond to a biome! Check the output files for the correct ID!");
 				continue;

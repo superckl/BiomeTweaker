@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class AllBiomesPackage implements IBiomePackage{
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
-		final List<BiomeGenBase> list = Lists.newArrayList();
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+	public Iterator<Biome> getIterator() {
+		final List<Biome> list = Lists.newArrayList();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(gen != null)
 				list.add(gen);
 		}
@@ -24,11 +24,11 @@ public class AllBiomesPackage implements IBiomePackage{
 	@Override
 	public List<Integer> getRawIds() {
 		final List<Integer> list = Lists.newArrayList();
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(gen != null)
-				list.add(BiomeGenBase.getIdForBiome(gen));
+				list.add(Biome.getIdForBiome(gen));
 		}
 		return list;
 	}

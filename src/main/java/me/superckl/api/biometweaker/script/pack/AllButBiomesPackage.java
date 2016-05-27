@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class AllButBiomesPackage implements IBiomePackage{
 
@@ -16,13 +16,13 @@ public class AllButBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
-		final List<BiomeGenBase> list = Lists.newArrayList();
+	public Iterator<Biome> getIterator() {
+		final List<Biome> list = Lists.newArrayList();
 		final List<Integer> ints = this.exclusions.getRawIds();
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
-			if((gen != null) && !ints.contains(BiomeGenBase.getIdForBiome(gen)))
+			final Biome gen = it.next();
+			if((gen != null) && !ints.contains(Biome.getIdForBiome(gen)))
 				list.add(gen);
 		}
 		return list.iterator();
@@ -32,12 +32,12 @@ public class AllButBiomesPackage implements IBiomePackage{
 	public List<Integer> getRawIds() {
 		final List<Integer> list = Lists.newArrayList();
 		final List<Integer> ints = this.exclusions.getRawIds();
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(gen == null)
 				continue;
-			final int id = BiomeGenBase.getIdForBiome(gen);
+			final int id = Biome.getIdForBiome(gen);
 			if(!ints.contains(id))
 				list.add(id);
 		}

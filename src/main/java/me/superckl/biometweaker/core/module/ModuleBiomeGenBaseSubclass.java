@@ -26,7 +26,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 	@Override
 	public byte[] transform(final String name, final String transformedName, final byte[] basicClass) {
 		final ClassReader reader = new ClassReader(basicClass);
-		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "aig":"net/minecraft/world/biome/BiomeGenBase") && !transformedName.equals("net.minecraft.world.biome.BiomeGenMutated")){
+		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "aig":"net/minecraft/world/biome/Biome")){
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)
@@ -35,7 +35,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
 						final MethodInsnNode methNode = (MethodInsnNode) aNode;
-						if(methNode.name.equals("getModdedBiomeGrassColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/BiomeGenBase")){
+						if(methNode.name.equals("getModdedBiomeGrassColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/Biome")){
 							shouldCont = true;
 							break;
 						}
@@ -46,7 +46,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(mNode.name.equals(ASMNameHelper.method_getBiomeFoliageColor.get()) && mNode.desc.equals("(III)I")){
@@ -54,7 +54,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
 						final MethodInsnNode methNode = (MethodInsnNode) aNode;
-						if(methNode.name.equals("getModdedBiomeFoliageColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/BiomeGenBase")){
+						if(methNode.name.equals("getModdedBiomeFoliageColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/Biome")){
 							shouldCont = true;
 							break;
 						}
@@ -65,7 +65,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(mNode.name.equals("getWaterColorMultiplier") && mNode.desc.equals("()I")){
@@ -73,7 +73,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/BiomeGenBase;)I", false));
+						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ASMNameHelper.method_genTerrainBlocks.get()) && mNode.desc.equals(ASMNameHelper.desc_genTerrainBlocks.get())){
@@ -136,7 +136,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 
 	@Override
 	public String getModuleName() {
-		return "moduleTransformBiomeGenBaseSubclass";
+		return "moduleTransformBiomeSubclass";
 	}
 
 	@Override

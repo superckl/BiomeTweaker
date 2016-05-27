@@ -13,7 +13,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class CommandListBiomes implements ICommand{
 
@@ -46,14 +46,14 @@ public class CommandListBiomes implements ICommand{
 
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
-		sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.listbiomes.output.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+		sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.listbiomes.output.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(gen != null){
-				final String message = new StringBuilder().append(BiomeGenBase.getIdForBiome(gen)).append(" - ").append(gen.getBiomeName()).toString();
-				sender.addChatMessage(new TextComponentString(message).setChatStyle(new Style().setColor(TextFormatting.GOLD)));
+				final String message = new StringBuilder().append(Biome.getIdForBiome(gen)).append(" - ").append(gen.getBiomeName()).toString();
+				sender.addChatMessage(new TextComponentString(message).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}
 		}
 	}

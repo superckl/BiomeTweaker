@@ -15,7 +15,7 @@ import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler.WeightedBlockEntry;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
@@ -66,7 +66,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Iterator<BiomeGenBase > it = this.pack.getIterator();
+		final Iterator<Biome > it = this.pack.getIterator();
 		final Block toReplace = Block.getBlockFromName(this.toReplace);
 		if(toReplace == null)
 			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
@@ -74,13 +74,13 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 		if(replaceWith == null)
 			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RegisterGenBlockReplacement(this, this.weight, gen, toReplace, this.toReplaceMeta, replaceWith, this.replaceWithMeta)))
 				continue;
-			if(!BiomeEventHandler.getBlockReplacements().containsKey(BiomeGenBase.getIdForBiome(gen)))
-				BiomeEventHandler.getBlockReplacements().put(BiomeGenBase.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>());
+			if(!BiomeEventHandler.getBlockReplacements().containsKey(Biome.getIdForBiome(gen)))
+				BiomeEventHandler.getBlockReplacements().put(Biome.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>());
 			//LogHelper.info("Registering replacement for "+gen.biomeID+":"+gen.biomeName);
-			final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.getBlockReplacements().get(BiomeGenBase.getIdForBiome(gen));
+			final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.getBlockReplacements().get(Biome.getIdForBiome(gen));
 			final Pair<Block, Integer> toReplacePair = Pair.of(toReplace, this.toReplaceMeta);
 			List<WeightedBlockEntry> entries = null;
 			for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
@@ -93,7 +93,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 				list.add(Pair.of(toReplacePair, entries));
 			}
 			entries.add(new WeightedBlockEntry(this.weight, Pair.of(replaceWith, this.replaceWithMeta)));
-			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
+			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

@@ -6,7 +6,7 @@ import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 @RequiredArgsConstructor
 public enum ASMNameHelper {
 
-	class_biomeGenBase("net.minecraft.world.biome.BiomeGenBase", "net.minecraft.world.biome.BiomeGenBase"),
+	class_biomeGenBase("net.minecraft.world.biome.Biome", "net.minecraft.world.biome.Biome"),
 	class_blockOldLeaf("net.minecraft.block.BlockOldLeaf", "net.minecraft.block.BlockOldLeaf"),
 
 	method_genBiomeTerrain("generateBiomeTerrain", "func_180628_b"),
@@ -21,11 +21,11 @@ public enum ASMNameHelper {
 	method_setBlockState("setBlockState", "func_177855_a"),
 	method_getSkyColorByTemp("getSkyColorByTemp", "func_76731_a"),
 
-	field_stone("stone", "field_150348_b"),
-	field_STONE("STONE", "field_185365_a"),
-	field_water("water", "field_150355_j"),
-	field_gravel("gravel", "field_150351_n"),
-	field_GRAVEL("GRAVEL", "field_185368_d"),
+	field_stone("STONE", "field_150348_b"),
+	field_BiomeGenBase_stone("STONE", "field_185365_a"),
+	field_water("WATER", "field_150355_j"),
+	field_gravel("GRAVEL", "field_150351_n"),
+	field_BiomeGenBase_gravel("GRAVEL", "field_185368_d"),
 	field_topBlock("topBlock", "field_76752_A"),
 	field_fillerBlock("fillerBlock", "field_76753_B"),
 

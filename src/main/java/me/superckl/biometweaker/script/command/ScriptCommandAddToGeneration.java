@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,9 +21,9 @@ public class ScriptCommandAddToGeneration implements IScriptCommand{
 	@Override
 	public void perform() throws Exception {
 		final BiomeManager.BiomeType type = BiomeManager.BiomeType.valueOf(this.type);
-		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final BiomeGenBase biome = it.next();
+			final Biome biome = it.next();
 			final BiomeTweakEvent.AddToGeneration event = new BiomeTweakEvent.AddToGeneration(this, biome, new BiomeEntry(biome, this.weight));
 			if(MinecraftForge.EVENT_BUS.post(event))
 				continue;

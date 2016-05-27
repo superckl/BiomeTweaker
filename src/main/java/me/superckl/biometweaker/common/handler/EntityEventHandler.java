@@ -8,7 +8,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.Block;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -34,10 +34,10 @@ public class EntityEventHandler {
 		}
 		if(EntityEventHandler.packSizes.isEmpty())
 			return;
-		final BiomeGenBase biome = e.getEntityLiving().worldObj.getBiomeGenForCoords(e.getEntityLiving().getPosition());
+		final Biome biome = e.getEntityLiving().worldObj.getBiome(e.getEntityLiving().getPosition());
 		final String clazz = e.getEntityLiving().getClass().getName();
-		if(EntityEventHandler.packSizes.containsKey(BiomeGenBase.getIdForBiome(biome))){
-			final TObjectIntMap<String> sizes = EntityEventHandler.packSizes.get(BiomeGenBase.getIdForBiome(biome));
+		if(EntityEventHandler.packSizes.containsKey(Biome.getIdForBiome(biome))){
+			final TObjectIntMap<String> sizes = EntityEventHandler.packSizes.get(Biome.getIdForBiome(biome));
 			if(sizes.containsKey(clazz)){
 				final int size = sizes.get(clazz);
 				if(size > -1){
@@ -52,9 +52,9 @@ public class EntityEventHandler {
 	public void onBonemealUse(final BonemealEvent e){
 		if(EntityEventHandler.noBonemeals.isEmpty())
 			return;
-		final BiomeGenBase biome = e.getWorld().getBiomeGenForCoords(e.getPos());
-		if(EntityEventHandler.noBonemeals.containsKey(BiomeGenBase.getIdForBiome(biome))){
-			final List<Block> list = EntityEventHandler.noBonemeals.get(BiomeGenBase.getIdForBiome(biome));
+		final Biome biome = e.getWorld().getBiome(e.getPos());
+		if(EntityEventHandler.noBonemeals.containsKey(Biome.getIdForBiome(biome))){
+			final List<Block> list = EntityEventHandler.noBonemeals.get(Biome.getIdForBiome(biome));
 			if(list == null){
 				e.setCanceled(true);
 				return;

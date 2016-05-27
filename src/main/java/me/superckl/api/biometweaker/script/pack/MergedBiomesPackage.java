@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class MergedBiomesPackage implements IBiomePackage{
 
@@ -18,8 +18,8 @@ public class MergedBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
-		final List<BiomeGenBase> gens = Lists.newArrayList();
+	public Iterator<Biome> getIterator() {
+		final List<Biome> gens = Lists.newArrayList();
 		for(final IBiomePackage pack:this.packs)
 			Iterators.addAll(gens, pack.getIterator());
 		return gens.iterator();

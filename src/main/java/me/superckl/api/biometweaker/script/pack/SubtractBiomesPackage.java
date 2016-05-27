@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class SubtractBiomesPackage implements IBiomePackage{
 
@@ -18,9 +18,9 @@ public class SubtractBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
-		final List<BiomeGenBase> list = Lists.newArrayList(this.main.getIterator());
-		final Iterator<BiomeGenBase> it = this.subtract.getIterator();
+	public Iterator<Biome> getIterator() {
+		final List<Biome> list = Lists.newArrayList(this.main.getIterator());
+		final Iterator<Biome> it = this.subtract.getIterator();
 		while(it.hasNext())
 			list.remove(it.next());
 		return list.iterator();

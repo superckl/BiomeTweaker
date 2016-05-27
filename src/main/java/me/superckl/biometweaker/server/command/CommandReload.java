@@ -64,9 +64,9 @@ public class CommandReload implements ICommand{
 				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 			Config.INSTANCE.init(operateIn, obj);
 			BiomeTweaker.getInstance().parseScripts();
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.success.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final Exception e) {
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.failure.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error("Failed to reload scripts!");
 			e.printStackTrace();
 		}

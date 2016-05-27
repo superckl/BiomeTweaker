@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class TypeBiomesPackage implements IBiomePackage{
@@ -18,12 +18,12 @@ public class TypeBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
+	public Iterator<Biome> getIterator() {
 		this.checkTypes();
-		final List<BiomeGenBase> list = Lists.newArrayList();
+		final List<Biome> list = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
-			final BiomeGenBase[] gens = BiomeDictionary.getBiomesForType(type);
-			for(final BiomeGenBase gen:gens)
+			final Biome[] gens = BiomeDictionary.getBiomesForType(type);
+			for(final Biome gen:gens)
 				if(!list.contains(gen))
 					list.add(gen);
 		}
@@ -35,9 +35,9 @@ public class TypeBiomesPackage implements IBiomePackage{
 		this.checkTypes();
 		final List<Integer> ints = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
-			final BiomeGenBase[] gens = BiomeDictionary.getBiomesForType(type);
-			for(final BiomeGenBase gen:gens)
-				ints.add(BiomeGenBase.getIdForBiome(gen));
+			final Biome[] gens = BiomeDictionary.getBiomesForType(type);
+			for(final Biome gen:gens)
+				ints.add(Biome.getIdForBiome(gen));
 		}
 		return ints;
 	}

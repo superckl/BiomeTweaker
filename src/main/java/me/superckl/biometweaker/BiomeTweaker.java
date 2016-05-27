@@ -37,7 +37,7 @@ import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.ReflectionHelper;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -201,9 +201,9 @@ public class BiomeTweaker {
 	public void generateOutputFiles() throws IOException{
 		LogHelper.info("Generating biome status report...");
 		final JsonArray array = new JsonArray();
-		final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(gen == null)
 				continue;
 			array.add(BiomeHelper.fillJsonObject(gen));
@@ -259,8 +259,8 @@ public class BiomeTweaker {
 
 	//Begin compat. e.g. load biome classes that get loaded too late.
 
-	private final String[] galactCoreClasses = new String[] {"micdoodle8.mods.galacticraft.core.world.gen.BiomeGenBaseMoon", "micdoodle8.mods.galacticraft.core.world.gen.BiomeGenBaseOrbit"};
-	private final String[] galactMarsClasses = new String[] {"micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeGenBaseMars"};
+	private final String[] galactCoreClasses = new String[] {"micdoodle8.mods.galacticraft.core.world.gen.BiomeMoon", "micdoodle8.mods.galacticraft.core.world.gen.BiomeOrbit"};
+	private final String[] galactMarsClasses = new String[] {"micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeMars"};
 
 	//@Optional.Method(modid = "GalacticraftCore")
 	@EventHandler

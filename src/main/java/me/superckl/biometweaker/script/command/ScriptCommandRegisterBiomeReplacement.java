@@ -7,7 +7,7 @@ import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
 public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
@@ -17,9 +17,9 @@ public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final int id = BiomeGenBase.getIdForBiome(it.next());
+			final int id = Biome.getIdForBiome(it.next());
 			BiomeEventHandler.getBiomeReplacements().put(id, this.replaceWith);
 			Config.INSTANCE.onTweak(id);
 		}

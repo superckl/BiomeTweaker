@@ -9,7 +9,7 @@ import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.util.ArrayHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
 public class ScriptCommandAddActualFillerBlock implements IScriptCommand{
@@ -27,13 +27,13 @@ public class ScriptCommandAddActualFillerBlock implements IScriptCommand{
 	@Override
 	public void perform() throws Exception {
 		if(ScriptCommandAddActualFillerBlock.actualFillerBlocks == null)
-			ScriptCommandAddActualFillerBlock.actualFillerBlocks = BiomeGenBase.class.getDeclaredField("actualFillerBlocks");
+			ScriptCommandAddActualFillerBlock.actualFillerBlocks = Biome.class.getDeclaredField("actualFillerBlocks");
 		final Block toAdd = Block.getBlockFromName(this.block);
 		if(toAdd == null)
 			throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
-		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final BiomeGenBase biome = it.next();
+			final Biome biome = it.next();
 			IBlockState[] blocks = (IBlockState[]) ScriptCommandAddActualFillerBlock.actualFillerBlocks.get(biome);
 			blocks = ArrayHelper.append(blocks, this.meta == -1 ? toAdd.getDefaultState():toAdd.getStateFromMeta(this.meta));
 			ScriptCommandAddActualFillerBlock.actualFillerBlocks.set(biome, blocks);

@@ -15,7 +15,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 
 public class CommandSetBiome implements ICommand{
@@ -53,17 +53,17 @@ public class CommandSetBiome implements ICommand{
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
 			if((args.length < 2) || (args.length > 3)){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
-			BiomeGenBase gen = null;
+			Biome gen = null;
 			Integer i = Ints.tryParse(args[0]);
 			if(i != null)
-				gen = BiomeGenBase.getBiome(i);
+				gen = Biome.getBiome(i);
 			else{
-				final Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+				final Iterator<Biome> it = Biome.REGISTRY.iterator();
 				while(it.hasNext()){
-					final BiomeGenBase biome = it.next();
+					final Biome biome = it.next();
 					if((biome != null) && biome.getBiomeName().equals(args[0])){
 						gen = biome;
 						break;
@@ -71,13 +71,13 @@ public class CommandSetBiome implements ICommand{
 				}
 			}
 			if(gen == null){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
-			final int id = BiomeGenBase.getIdForBiome(gen);
+			final int id = Biome.getIdForBiome(gen);
 			i = Ints.tryParse(args[1]);
 			if(i == null){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			boolean blocks = true;
@@ -87,7 +87,7 @@ public class CommandSetBiome implements ICommand{
 				else if(args[2].equalsIgnoreCase("chunk"))
 					blocks = false;
 				else{
-					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 					return;
 				}
 			int count = 0;
@@ -105,7 +105,7 @@ public class CommandSetBiome implements ICommand{
 						chunk.setChunkModified();
 						count++;
 					}
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.getBiomeName()).setChatStyle(new Style().setColor(TextFormatting.GOLD)));
+				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}else{
 				final byte[] biomeArray = new byte[256];
 				Arrays.fill(biomeArray, (byte) id);
@@ -118,10 +118,10 @@ public class CommandSetBiome implements ICommand{
 							chunk.setChunkModified();
 							count++;
 						}
-					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.chunksuccess.text", count, gen.getBiomeName()).setChatStyle(new Style().setColor(TextFormatting.GOLD)));
+					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.chunksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}
 		}else
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setStyle(new Style().setColor(TextFormatting.RED)));
 	}
 
 	@Override

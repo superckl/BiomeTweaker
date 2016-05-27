@@ -48,9 +48,9 @@ public class CommandOutput implements ICommand{
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		try {
 			BiomeTweaker.getInstance().generateOutputFiles();
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.success.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final IOException e) {
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.failure.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error("Failed to regenerate output files!");
 			e.printStackTrace();
 		}

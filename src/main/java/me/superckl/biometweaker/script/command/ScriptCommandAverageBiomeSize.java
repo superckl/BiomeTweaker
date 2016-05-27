@@ -23,7 +23,7 @@ public class ScriptCommandAverageBiomeSize implements IScriptCommand{
 			return;
 		}
 		WorldType type = null;
-		for(final WorldType worldType:WorldType.worldTypes)
+		for(final WorldType worldType:WorldType.WORLD_TYPES)
 			if(worldType.getWorldTypeName().equals(this.type)){
 				type = worldType;
 				break;

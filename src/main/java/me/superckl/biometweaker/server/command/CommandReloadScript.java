@@ -48,20 +48,20 @@ public class CommandReloadScript implements ICommand{
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		if(args.length != 1){
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.usage.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.usage.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			return;
 		}
 		try {
 			final File operateIn = Config.INSTANCE.getWhereAreWe();
 			final File scriptFile = new File(operateIn, args[0]);
 			if(!scriptFile.exists() || !scriptFile.isFile()){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setChatStyle(new Style().setColor(TextFormatting.RED)));
+				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			BiomeTweaker.getInstance().parseScript(scriptFile);
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.success.text", scriptFile.getName()).setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.success.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final Exception e) {
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.failure.text", args[0]).setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.failure.text", args[0]).setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error(String.format("Failed to reload script %s!", args[0]));
 			e.printStackTrace();
 		}

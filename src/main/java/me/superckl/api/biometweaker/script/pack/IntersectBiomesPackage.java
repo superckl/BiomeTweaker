@@ -8,7 +8,7 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 
 import me.superckl.api.superscript.util.CollectionHelper;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class IntersectBiomesPackage implements IBiomePackage{
 
@@ -19,17 +19,17 @@ public class IntersectBiomesPackage implements IBiomePackage{
 	}
 
 	@Override
-	public Iterator<BiomeGenBase> getIterator() {
+	public Iterator<Biome> getIterator() {
 		if(this.packs.size() == 0)
 			return Iterators.emptyIterator();
-		final List<BiomeGenBase>[] lists = new List[this.packs.size()];
+		final List<Biome>[] lists = new List[this.packs.size()];
 		for(int i = 0; i < this.packs.size(); i++){
-			final List<BiomeGenBase> list = Lists.newArrayList();
+			final List<Biome> list = Lists.newArrayList();
 			Iterators.addAll(list, this.packs.get(i).getIterator());
 			lists[i] = list;
 		}
-		final List<BiomeGenBase> intersect = Lists.newArrayList(lists[0]);
-		final Iterator<BiomeGenBase> it = intersect.iterator();
+		final List<Biome> intersect = Lists.newArrayList(lists[0]);
+		final Iterator<Biome> it = intersect.iterator();
 		while(it.hasNext())
 			if(!CollectionHelper.allContains(it.next(), lists))
 				it.remove();

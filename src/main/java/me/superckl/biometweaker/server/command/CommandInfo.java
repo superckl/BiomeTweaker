@@ -55,17 +55,17 @@ public class CommandInfo implements ICommand{
 		final BlockPos coord = sender.getPosition();
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
-			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiomeGenForCoords(coord), coord.getX(), coord.getY(), coord.getZ());
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.output.text").setChatStyle(new Style().setColor(TextFormatting.AQUA)));
+			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiome(coord), coord.getX(), coord.getY(), coord.getZ());
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.output.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 			final Style gold = new Style().setColor(TextFormatting.GOLD);
 			final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			for(final Entry<String, JsonElement> entry:obj.entrySet())
 				if(entry.getValue().isJsonArray())
-					sender.addChatMessage(new TextComponentString(entry.getKey()+": Check the output files.").setChatStyle(gold)); //It looks hideous in MC chat.
+					sender.addChatMessage(new TextComponentString(entry.getKey()+": Check the output files.").setStyle(gold)); //It looks hideous in MC chat.
 				else
-					sender.addChatMessage(new TextComponentString(entry.getKey()+": "+gson.toJson(entry.getValue())).setChatStyle(gold));
+					sender.addChatMessage(new TextComponentString(entry.getKey()+": "+gson.toJson(entry.getValue())).setStyle(gold));
 		}else
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setStyle(new Style().setColor(TextFormatting.RED)));
 	}
 
 	@Override

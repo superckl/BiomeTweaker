@@ -11,7 +11,7 @@ import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
 import net.minecraft.block.Block;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
 public class ScriptCommandDisableBonemealUse implements IScriptCommand{
@@ -28,11 +28,11 @@ public class ScriptCommandDisableBonemealUse implements IScriptCommand{
 		final Block block = this.block == null ? null:Block.getBlockFromName(this.block);
 		if((block == null) && (this.block != null))
 			throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
-		final Iterator<BiomeGenBase > it = this.pack.getIterator();
+		final Iterator<Biome > it = this.pack.getIterator();
 		while(it.hasNext()){
-			final BiomeGenBase biome = it.next();
+			final Biome biome = it.next();
 			final TIntObjectMap<List<Block>> map = EntityEventHandler.getNoBonemeals();
-			final int id = BiomeGenBase.getIdForBiome(biome);
+			final int id = Biome.getIdForBiome(biome);
 			if(block == null){
 				map.put(id, null);
 				continue;

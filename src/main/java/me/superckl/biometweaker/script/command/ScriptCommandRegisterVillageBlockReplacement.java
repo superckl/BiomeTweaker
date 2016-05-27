@@ -11,7 +11,7 @@ import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public class ScriptCommandRegisterVillageBlockReplacement implements IScriptCommand{
 
@@ -41,7 +41,7 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 
 	@Override
 	public void perform() throws Exception {
-		final Iterator<BiomeGenBase > it = this.pack.getIterator();
+		final Iterator<Biome > it = this.pack.getIterator();
 		final Block toReplace = Block.getBlockFromName(this.toReplace);
 		if(toReplace == null)
 			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");
@@ -49,10 +49,10 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 		if(replaceWith == null)
 			throw new IllegalArgumentException("Failed to find block "+this.replaceWith+"! Tweak will not be applied.");
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
-			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(BiomeGenBase.getIdForBiome(gen)))
-				BiomeEventHandler.getVillageBlockReplacements().put(BiomeGenBase.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>());
-			final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.getVillageBlockReplacements().get(BiomeGenBase.getIdForBiome(gen));
+			final Biome gen = it.next();
+			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(Biome.getIdForBiome(gen)))
+				BiomeEventHandler.getVillageBlockReplacements().put(Biome.getIdForBiome(gen), new ArrayList<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>());
+			final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.getVillageBlockReplacements().get(Biome.getIdForBiome(gen));
 			final Iterator<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> it2 = list.iterator();
 			final Pair<Block, Integer> toReplacePair = Pair.of(toReplace, this.toReplaceMeta);
 			while(it2.hasNext()){
@@ -63,7 +63,7 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 				}
 			}
 			list.add(Pair.of(toReplacePair, Pair.of(replaceWith, this.replaceWithMeta)));
-			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
+			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

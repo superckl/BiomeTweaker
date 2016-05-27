@@ -11,8 +11,8 @@ import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.config.Config;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenBase.SpawnListEntry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -41,19 +41,19 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			throw new IllegalArgumentException("Failed to load entity class: "+this.entityClass, e);
 		}
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
-		final Iterator<BiomeGenBase> it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final BiomeGenBase gen = it.next();
+			final Biome gen = it.next();
 			if(this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveSpawn(this, gen, this.type, clazz)))
 				continue;
 			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, gen, entry)))
 				continue;
 			this.handleTypeSwitch(gen, entry, clazz);
-			Config.INSTANCE.onTweak(BiomeGenBase.getIdForBiome(gen));
+			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 
-	private void handleTypeSwitch(final BiomeGenBase gen, final SpawnListEntry entry, final Class<?> clazz){
+	private void handleTypeSwitch(final Biome gen, final SpawnListEntry entry, final Class<?> clazz){
 		switch(this.type){
 		case CAVE_CREATURE:{
 			if(this.remove)

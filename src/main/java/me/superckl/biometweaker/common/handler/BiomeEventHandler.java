@@ -25,9 +25,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
@@ -86,7 +86,7 @@ public class BiomeEventHandler {
 	private Field foliageColor;
 	private final int[] colorCache = new int[512];
 
-	private final Map<World, Map<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
+	private final Map<World, Map<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
 
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
@@ -96,17 +96,17 @@ public class BiomeEventHandler {
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
 		try {
 			if(!this.replacedBiomes.containsKey(e.getWorld()))
-				this.replacedBiomes.put(e.getWorld(), Maps.<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>newHashMap());
+				this.replacedBiomes.put(e.getWorld(), Maps.<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>newHashMap());
 
 			if(BiomeEventHandler.blockReplacements.isEmpty())
 				return;
-			final TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.getWorld(), new ChunkCoordIntPair(e.getX(), e.getZ()));
+			final TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.getWorld(), new ChunkPos(e.getX(), e.getZ()));
 
 			for (int x = 0; x < 16; ++x)
 				for (int z = 0; z < 16; ++z)
 				{
-					final BiomeGenBase biomegenbase = e.getWorld().getBiomeGenForCoords(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
-					final int id = BiomeGenBase.getIdForBiome(biomegenbase);
+					final Biome biomegenbase = e.getWorld().getBiome(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
+					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!BiomeEventHandler.blockReplacements.containsKey(id))
 						continue;
 					if(!shouldDoBMap.containsKey(id))
@@ -151,7 +151,7 @@ public class BiomeEventHandler {
 			while(it.hasNext())
 				if(!BiomeEventHandler.contigReplaces[it.next()])
 					it.remove();
-			this.replacedBiomes.get(e.getWorld()).put(new ChunkCoordIntPair(e.getX(), e.getZ()), shouldDoBMap);
+			this.replacedBiomes.get(e.getWorld()).put(new ChunkPos(e.getX(), e.getZ()), shouldDoBMap);
 		} catch (final Exception e1) {
 			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
@@ -162,8 +162,8 @@ public class BiomeEventHandler {
 	public void onGetGrassColor(final GetGrassColor e){
 		try {
 			if(this.grassColor == null)
-				this.grassColor = BiomeGenBase.class.getDeclaredField("grassColor");
-			final int id = BiomeGenBase.getIdForBiome(e.getBiome());
+				this.grassColor = Biome.class.getDeclaredField("grassColor");
+			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id];
 			if(newColor == -1)
 				return;
@@ -186,8 +186,8 @@ public class BiomeEventHandler {
 	public void onGetFoliageColor(final GetFoliageColor e){
 		try {
 			if(this.foliageColor == null)
-				this.foliageColor = BiomeGenBase.class.getDeclaredField("foliageColor");
-			final int id = BiomeGenBase.getIdForBiome(e.getBiome());
+				this.foliageColor = Biome.class.getDeclaredField("foliageColor");
+			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id+256];
 			if(newColor == -1)
 				return;
@@ -210,7 +210,7 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetWaterColor(final GetWaterColor e){
 		try {
-			final int id = BiomeGenBase.getIdForBiome(e.getBiome());
+			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id+512];
 			if(newColor == -1)
 				return;
@@ -233,9 +233,9 @@ public class BiomeEventHandler {
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
 		if(BiomeEventHandler.decorateTypes.isEmpty())
 			return;
-		final BiomeGenBase gen = e.getWorld().getBiomeGenForCoords(e.getPos());
+		final Biome gen = e.getWorld().getBiome(e.getPos());
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.decorateTypes.containsKey(BiomeGenBase.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:BiomeGenBase.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:BiomeGenBase.getIdForBiome(gen)).contains("all")))
+		if((isAll || BiomeEventHandler.decorateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
 	}
 
@@ -243,16 +243,16 @@ public class BiomeEventHandler {
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
 		if(BiomeEventHandler.populateTypes.isEmpty())
 			return;
-		final BiomeGenBase gen = e.getWorld().getBiomeGenForCoords(new BlockPos(e.getChunkX(), 0, e.getChunkZ()));
+		final Biome gen = e.getWorld().getBiome(new BlockPos(e.getChunkX(), 0, e.getChunkZ()));
 		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.populateTypes.containsKey(BiomeGenBase.getIdForBiome(gen))) && (BiomeEventHandler.populateTypes.get(isAll ? -1:BiomeGenBase.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:BiomeGenBase.getIdForBiome(gen)).contains("all")))
+		if((isAll || BiomeEventHandler.populateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
 	}
 
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onCreateBiomeDecorator(final BiomeEvent.CreateDecorator e){
-		final int id = BiomeGenBase.getIdForBiome(e.getBiome());
+		final int id = Biome.getIdForBiome(e.getBiome());
 		if(BiomeEventHandler.waterlilyPerChunk.containsKey(id))
 			e.getNewBiomeDecorator().waterlilyPerChunk = BiomeEventHandler.waterlilyPerChunk.get(id);
 		if(BiomeEventHandler.treesPerChunk.containsKey(id))
@@ -295,7 +295,7 @@ public class BiomeEventHandler {
 	public void onReplaceVillageBlockID(final BiomeEvent.GetVillageBlockID e){
 		if((e.getBiome() == null) || (e.getOriginal() == null))
 			return;
-		final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(BiomeGenBase.getIdForBiome(e.getBiome()));
+		final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(Biome.getIdForBiome(e.getBiome()));
 		if((list == null) || list.isEmpty())
 			return;
 		for(final Pair<Pair<Block, Integer>, Pair<Block, Integer>> fPair:list)
@@ -328,12 +328,12 @@ public class BiomeEventHandler {
 		}
 	}
 
-	private TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> findMap(final World world, final ChunkCoordIntPair pair){
-		final Map<ChunkCoordIntPair, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
+	private TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> findMap(final World world, final ChunkPos pair){
+		final Map<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
 
-		final ChunkCoordIntPair[] pairs = NumberHelper.fillGrid(4, pair);
+		final ChunkPos[] pairs = NumberHelper.fillGrid(4, pair);
 
-		for(final ChunkCoordIntPair search:pairs)
+		for(final ChunkPos search:pairs)
 			if(map.containsKey(search))
 				return map.get(search);
 

@@ -26,7 +26,8 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 		final File operateIn = new File(BiomeTweakerCore.mcLocation, "config/BiomeTweaker/");
 		log.debug("We are operating in "+operateIn.getAbsolutePath());
 		final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");
-		operateIn.mkdirs();
+		final File scripts = new File(operateIn, "scripts/");
+		scripts.mkdirs();
 		if(!mainConfig.exists()){
 			mainConfig.createNewFile();
 			{

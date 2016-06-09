@@ -3,6 +3,7 @@ package me.superckl.biometweaker;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -151,6 +152,20 @@ public class BiomeTweaker {
 				e1.printStackTrace();
 			}
 		}
+		final File scripts = new File(Config.INSTANCE.getWhereAreWe(), "scripts/");
+		for(final File script:scripts.listFiles(new FilenameFilter() {
+
+			@Override
+			public boolean accept(final File dir, final String name) {
+				return name.endsWith(".cfg");
+			}
+		}))
+			try {
+				this.parseScript(script);
+			} catch (final Exception e1) {
+				LogHelper.error("Failed to parse a script file! File: "+script);
+				e1.printStackTrace();
+			}
 		final long diff = System.currentTimeMillis()-time;
 		LogHelper.info("Finished script parsing.");
 		LogHelper.debug("Script parsing took "+diff+"ms.");

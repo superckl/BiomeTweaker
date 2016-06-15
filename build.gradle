@@ -90,18 +90,26 @@ task devJar(type: Jar, dependsOn: 'classes') {
 
     extension = 'jar'
     classifier = 'dev'
+	
+	manifest {
+        attributes 'FMLCorePlugin': config.core_path
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLAT': config.at_path
+    }
 }
 
-task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
-    from ('build/sources/java') {
+task apiJar(type: Zip, dependsOn: 'sourceMainJava') {
+    includeEmptyDirs = false
+    from ('build/sources/main/java') {
         include "**/api/**/*"
     }
     version = "${config.minecraft_version}-API-${project.config.api_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
     extension = 'zip'
 }
 
-task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
-    from ('build/sources/java') {
+task ssJar(type: Zip, dependsOn: 'sourceMainJava') {
+    includeEmptyDirs = false
+    from ('build/sources/main/java') {
         include "**/api/superscript/**/"
     }
     version = "${config.minecraft_version}-SSAPI-${project.config.ss_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
@@ -116,9 +124,9 @@ artifacts {
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': 'me.superckl.biometweaker.core.BiomeTweakerCore'
+        attributes 'FMLCorePlugin': config.core_path
         attributes 'FMLCorePluginContainsFMLMod': 'true'
-        attributes 'FMLAT': 'biometweaker_at.cfg'
+        attributes 'FMLAT': config.at_path
     }
 }
 

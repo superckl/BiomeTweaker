@@ -151,7 +151,7 @@ task signJar(dependsOn: ["reobfJar"]) {
     // the actual action.. sign the jar.
     doLast {
         jar.destinationDir.eachFile { file ->
-            if (!file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}.jar"))
+            if (!file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}.jar") && !file.getPath().endsWith(".${System.env.BUILD_NUMBER ?: 0}-dev.jar"))
                 return; // skip non-jars
 
             logger.lifecycle "signing $file"

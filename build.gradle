@@ -82,6 +82,15 @@ processResources
     rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
+task devJar(type: Jar, dependsOn: 'classes') {
+    from(sourceSets.main.output) {
+        include '**'
+    }
+
+    extension = 'jar'
+    classifier = 'dev'
+}
+
 task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
     from ('build/sources/java') {
         include "**/api/**/*"
@@ -99,7 +108,8 @@ task ssJar(type: Jar, dependsOn: 'sourceMainJava') {
 }
 
 artifacts {
-	archives apiJar
+  archives devJar
+  archives apiJar
   archives ssJar
 }
 

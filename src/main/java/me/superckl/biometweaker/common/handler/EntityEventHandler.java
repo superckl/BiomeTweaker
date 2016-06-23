@@ -34,7 +34,7 @@ public class EntityEventHandler {
 		}
 		if(EntityEventHandler.packSizes.isEmpty())
 			return;
-		final Biome biome = e.getEntityLiving().worldObj.getBiomeGenForCoords(e.getEntityLiving().getPosition());
+		final Biome biome = e.getEntityLiving().worldObj.getBiome(e.getEntityLiving().getPosition());
 		final String clazz = e.getEntityLiving().getClass().getName();
 		if(EntityEventHandler.packSizes.containsKey(Biome.getIdForBiome(biome))){
 			final TObjectIntMap<String> sizes = EntityEventHandler.packSizes.get(Biome.getIdForBiome(biome));
@@ -52,7 +52,7 @@ public class EntityEventHandler {
 	public void onBonemealUse(final BonemealEvent e){
 		if(EntityEventHandler.noBonemeals.isEmpty())
 			return;
-		final Biome biome = e.getWorld().getBiomeGenForCoords(e.getPos());
+		final Biome biome = e.getWorld().getBiome(e.getPos());
 		if(EntityEventHandler.noBonemeals.containsKey(Biome.getIdForBiome(biome))){
 			final List<Block> list = EntityEventHandler.noBonemeals.get(Biome.getIdForBiome(biome));
 			if(list == null){

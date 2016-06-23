@@ -40,9 +40,9 @@ group= "me.superckl.biometweaker"
 archivesBaseName = "BiomeTweaker"
 
 minecraft {
-    version = "1.10-12.18.0.1981-1.10.0"
+    version = "1.10-12.18.0.1983-1.10.0"
 	//hardcoded because it ends with 1.10.0??
-    mappings = "snapshot_20160518"
+    mappings = "snapshot_20160527"
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"

@@ -105,7 +105,7 @@ public class BiomeEventHandler {
 			for (int x = 0; x < 16; ++x)
 				for (int z = 0; z < 16; ++z)
 				{
-					final Biome biomegenbase = e.getWorld().getBiome(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
+					final Biome biomegenbase = e.getWorld().getBiomeGenForCoords(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
 					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!BiomeEventHandler.blockReplacements.containsKey(id))
 						continue;
@@ -233,7 +233,7 @@ public class BiomeEventHandler {
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
 		if(BiomeEventHandler.decorateTypes.isEmpty())
 			return;
-		final Biome gen = e.getWorld().getBiome(e.getPos());
+		final Biome gen = e.getWorld().getBiomeGenForCoords(e.getPos());
 		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.decorateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
@@ -243,7 +243,7 @@ public class BiomeEventHandler {
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
 		if(BiomeEventHandler.populateTypes.isEmpty())
 			return;
-		final Biome gen = e.getWorld().getBiome(new BlockPos(e.getChunkX(), 0, e.getChunkZ()));
+		final Biome gen = e.getWorld().getBiomeGenForCoords(new BlockPos(e.getChunkX(), 0, e.getChunkZ()));
 		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
 		if((isAll || BiomeEventHandler.populateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);

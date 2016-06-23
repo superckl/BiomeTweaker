@@ -55,7 +55,7 @@ public class CommandInfo implements ICommand{
 		final BlockPos coord = sender.getPosition();
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
-			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiome(coord), coord.getX(), coord.getY(), coord.getZ());
+			final JsonObject obj = BiomeHelper.fillJsonObject(world.getBiomeGenForCoords(coord), coord.getX(), coord.getY(), coord.getZ());
 			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.output.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 			final Style gold = new Style().setColor(TextFormatting.GOLD);
 			final Gson gson = new GsonBuilder().setPrettyPrinting().create();

@@ -29,3 +29,5 @@ BiomeTweaker-1.9_Client.launch
 BiomeTweaker-1.9_Server.launch
 BiomeTweaker 1.9_Client.launch
 BiomeTweaker 1.9_Server.launch
+/.gradle/
+/build/

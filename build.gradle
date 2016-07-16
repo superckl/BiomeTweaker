@@ -40,9 +40,8 @@ group= "me.superckl.biometweaker"
 archivesBaseName = "BiomeTweaker"
 
 minecraft {
-    version = "1.10-12.18.0.1983-1.10.0"
-	//hardcoded because it ends with 1.10.0??
-    mappings = "snapshot_20160623"
+    version = config.minecraft_version + "-" + config.forge_version
+    mappings = "snapshot_20160716"
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
@@ -91,7 +90,7 @@ task devJar(type: Jar, dependsOn: 'classes') {
 
     extension = 'jar'
     classifier = 'dev'
-	
+
 	manifest {
         attributes 'FMLCorePlugin': config.core_path
         attributes 'FMLCorePluginContainsFMLMod': 'true'

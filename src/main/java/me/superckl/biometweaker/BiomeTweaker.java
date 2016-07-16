@@ -138,36 +138,41 @@ public class BiomeTweaker {
 	}
 
 	public void parseScripts(){
-		LogHelper.info("Beginning script parsing...");
-		final long time = System.currentTimeMillis();
-		for(final JsonElement listElement:Config.INSTANCE.getIncludes()){
-			File subFile = null;
-			try {
-				final String item = listElement.getAsString();
-				subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
-				this.parseScript(subFile);
-			} catch (final Exception e1) {
-				LogHelper.error("Failed to parse a script file! File: "+subFile);
-				e1.printStackTrace();
+		try {
+			LogHelper.info("Beginning script parsing...");
+			long diff = 0;
+			final long time = System.currentTimeMillis();
+			for (final JsonElement listElement : Config.INSTANCE.getIncludes()) {
+				File subFile = null;
+				try {
+					final String item = listElement.getAsString();
+					subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
+					this.parseScript(subFile);
+				} catch (final Exception e1) {
+					LogHelper.error("Failed to parse a script file! File: " + subFile);
+					e1.printStackTrace();
+				}
 			}
-		}
-		final File scripts = new File(Config.INSTANCE.getWhereAreWe(), "scripts/");
-		for(final File script:scripts.listFiles(new FilenameFilter() {
+			final File scripts = new File(Config.INSTANCE.getWhereAreWe(), "scripts/");
+			for (final File script : scripts.listFiles(new FilenameFilter() {
 
-			@Override
-			public boolean accept(final File dir, final String name) {
-				return name.endsWith(".cfg");
-			}
-		}))
-			try {
-				this.parseScript(script);
-			} catch (final Exception e1) {
-				LogHelper.error("Failed to parse a script file! File: "+script);
-				e1.printStackTrace();
-			}
-		final long diff = System.currentTimeMillis()-time;
-		LogHelper.info("Finished script parsing.");
-		LogHelper.debug("Script parsing took "+diff+"ms.");
+				@Override
+				public boolean accept(final File dir, final String name) {
+					return name.endsWith(".cfg");
+				}
+			}))
+				try {
+					this.parseScript(script);
+				} catch (final Exception e1) {
+					LogHelper.error("Failed to parse a script file! File: " + script);
+					e1.printStackTrace();
+				}
+			diff = System.currentTimeMillis() - time;
+			LogHelper.info("Finished script parsing.");
+			LogHelper.debug("Script parsing took "+diff+"ms.");
+		} catch (Exception e) {
+			throw new RuntimeException("An unexpected error occurred while processing script files. Parsing may be incomplete. Ensure BiomeTweakerCore was called successfully.", e);
+		}
 	}
 
 	public void parseScript(final File file) throws IOException{

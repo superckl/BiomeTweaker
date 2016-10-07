@@ -237,7 +237,7 @@ public class BiomeTweaker {
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement element:array){
 				final JsonObject obj = (JsonObject) element;
-				final File output = new File(dir, ""+obj.get("Name").getAsString()+".json");
+				final File output = new File(dir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
 				if(output.exists())
 					output.delete();
 				output.createNewFile();

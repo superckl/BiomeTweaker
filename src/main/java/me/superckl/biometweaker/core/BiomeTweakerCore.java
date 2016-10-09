@@ -13,7 +13,7 @@ import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 @SortingIndex(1001)
 @MCVersion("1.9.4")
 @Name("BiomeTweakerCore")
-@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
+@TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util.CollectionHelper", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
 public class BiomeTweakerCore implements IFMLLoadingPlugin{
 
 	public static File mcLocation;

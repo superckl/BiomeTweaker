@@ -314,7 +314,7 @@ public class BiomeHelper {
 				if(state != null)
 					BiomeHelper.oceanTopBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
 			}else if(prop.equals("contiguousReplacement")){
-					BiomeEventHandler.getContigReplaces()[Biome.getIdForBiome(biome)] = value.getAsBoolean();
+					BiomeEventHandler.getContigReplaces()[biome.biomeID] = value.getAsBoolean();
 			}else
 				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}

@@ -52,8 +52,10 @@ public class ScriptCommandAddRemoveBiome implements IScriptCommand{
 		} else
 			for(final int i:this.pack.getRawIds()){
 				final BiomeTweakerBiome biome = new BiomeTweakerBiome(new BiomeProperties("BiomeTweaker Biome").setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F));
-				if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
+				if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome))){
 					BiomeManager.addBiome(BiomeType.getType(this.type), new BiomeEntry(biome, this.weight));
+					Biome.registerBiome(i, "bt_custom_biome_"+i, biome);
+				}
 				Config.INSTANCE.onTweak(i);
 			}
 	}

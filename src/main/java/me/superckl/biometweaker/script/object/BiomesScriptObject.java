@@ -38,7 +38,6 @@ import me.superckl.biometweaker.script.command.ScriptCommandMaxSpawnPackSize;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBiomeReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.ScriptCommandRegisterVillageBlockReplacement;
-import me.superckl.biometweaker.script.command.ScriptCommandRelight;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllDictionaryTypes;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.ScriptCommandRemoveDecoration;
@@ -210,11 +209,6 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
 		validCommands.put("registerGenBiomeRep", listing);
-		
-		listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterWrapper>()
-				, ScriptCommandRelight.class.getDeclaredConstructor(IBiomePackage.class));
-		validCommands.put("relight", listing);
 
 		return validCommands;
 	}

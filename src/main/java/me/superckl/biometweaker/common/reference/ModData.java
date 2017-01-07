@@ -2,7 +2,7 @@ package me.superckl.biometweaker.common.reference;
 
 public class ModData {
 
-	public static final String MOD_ID = "BiomeTweaker";
+	public static final String MOD_ID = "biometweaker";
 	public static final String MOD_NAME= "BiomeTweaker";
 	public static final String VERSION = "@VERSION@";
 	public static final String FINGERPRINT = "@FINGERPRINT@";

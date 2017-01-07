@@ -24,21 +24,21 @@ public class CommandSetBiome implements ICommand{
 
 	@Override
 	public int compareTo(final ICommand c) {
-		return this.getCommandName().compareTo(c.getCommandName());
+		return this.getName().compareTo(c.getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "BTSetBiome";
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender p_71518_1_) {
+	public String getUsage(final ICommandSender p_71518_1_) {
 		return "biometweaker.msg.setbiome.usage.text";
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return this.aliases;
 	}
 
@@ -53,7 +53,7 @@ public class CommandSetBiome implements ICommand{
 		final World world = sender.getEntityWorld();
 		if((coord != null) && (world != null)){
 			if((args.length < 2) || (args.length > 3)){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
+				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			Biome gen = null;
@@ -71,13 +71,13 @@ public class CommandSetBiome implements ICommand{
 				}
 			}
 			if(gen == null){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
+				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			final int id = Biome.getIdForBiome(gen);
 			i = Ints.tryParse(args[1]);
 			if(i == null){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
+				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			boolean blocks = true;
@@ -87,7 +87,7 @@ public class CommandSetBiome implements ICommand{
 				else if(args[2].equalsIgnoreCase("chunk"))
 					blocks = false;
 				else{
-					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
+					sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.invalargs.text").setStyle(new Style().setColor(TextFormatting.RED)));
 					return;
 				}
 			int count = 0;
@@ -105,7 +105,7 @@ public class CommandSetBiome implements ICommand{
 						chunk.setChunkModified();
 						count++;
 					}
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
+				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}else{
 				final byte[] biomeArray = new byte[256];
 				Arrays.fill(biomeArray, (byte) id);
@@ -118,19 +118,19 @@ public class CommandSetBiome implements ICommand{
 							chunk.setChunkModified();
 							count++;
 						}
-					sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.setbiome.chunksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
+					sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.chunksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}
 		}else
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setStyle(new Style().setColor(TextFormatting.RED)));
+			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.info.invalsender.text").setStyle(new Style().setColor(TextFormatting.RED)));
 	}
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
+		return sender.canUseCommand(server.getOpPermissionLevel(), this.getName());
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args,
+	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args,
 			final BlockPos pos) {
 		return null;
 	}

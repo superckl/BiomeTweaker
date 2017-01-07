@@ -41,7 +41,7 @@ archivesBaseName = "BiomeTweaker"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "snapshot_20160716"
+    mappings = "stable_29"
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"

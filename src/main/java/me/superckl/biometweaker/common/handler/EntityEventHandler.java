@@ -34,7 +34,7 @@ public class EntityEventHandler {
 		}
 		if(EntityEventHandler.packSizes.isEmpty())
 			return;
-		final Biome biome = e.getEntityLiving().worldObj.getBiome(e.getEntityLiving().getPosition());
+		final Biome biome = e.getEntityLiving().world.getBiome(e.getEntityLiving().getPosition());
 		final String clazz = e.getEntityLiving().getClass().getName();
 		if(EntityEventHandler.packSizes.containsKey(Biome.getIdForBiome(biome))){
 			final TObjectIntMap<String> sizes = EntityEventHandler.packSizes.get(Biome.getIdForBiome(biome));

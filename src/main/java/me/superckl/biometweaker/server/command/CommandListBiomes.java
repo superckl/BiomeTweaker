@@ -21,21 +21,21 @@ public class CommandListBiomes implements ICommand{
 
 	@Override
 	public int compareTo(final ICommand c) {
-		return this.getCommandName().compareTo(c.getCommandName());
+		return this.getName().compareTo(c.getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "BTListBiomes";
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender p_71518_1_) {
+	public String getUsage(final ICommandSender p_71518_1_) {
 		return "biometweaker.msg.listbiomes.usage.text";
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return this.aliases;
 	}
 
@@ -46,25 +46,25 @@ public class CommandListBiomes implements ICommand{
 
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
-		sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.listbiomes.output.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
+		sender.sendMessage(new TextComponentTranslation("biometweaker.msg.listbiomes.output.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
 			final Biome gen = it.next();
 			if(gen != null){
 				final String message = new StringBuilder().append(Biome.getIdForBiome(gen)).append(" - ").append(gen.getBiomeName()).toString();
-				sender.addChatMessage(new TextComponentString(message).setStyle(new Style().setColor(TextFormatting.GOLD)));
+				sender.sendMessage(new TextComponentString(message).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}
 		}
 	}
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
+		return sender.canUseCommand(server.getOpPermissionLevel(), this.getName());
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
 		return null;
 	}
 

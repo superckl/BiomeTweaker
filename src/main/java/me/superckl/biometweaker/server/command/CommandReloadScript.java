@@ -22,21 +22,21 @@ public class CommandReloadScript implements ICommand{
 
 	@Override
 	public int compareTo(final ICommand c) {
-		return this.getCommandName().compareTo(c.getCommandName());
+		return this.getName().compareTo(c.getName());
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "BTReloadScript";
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender p_71518_1_) {
+	public String getUsage(final ICommandSender p_71518_1_) {
 		return "biometweaker.msg.reloadscript.usage.text";
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List getAliases() {
 		return this.aliases;
 	}
 
@@ -48,20 +48,20 @@ public class CommandReloadScript implements ICommand{
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		if(args.length != 1){
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.usage.text").setStyle(new Style().setColor(TextFormatting.RED)));
+			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.usage.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			return;
 		}
 		try {
 			final File operateIn = Config.INSTANCE.getWhereAreWe();
 			final File scriptFile = new File(operateIn, args[0]);
 			if(!scriptFile.exists() || !scriptFile.isFile()){
-				sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.RED)));
+				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.RED)));
 				return;
 			}
 			BiomeTweaker.getInstance().parseScript(scriptFile);
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.success.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.success.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final Exception e) {
-			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.failure.text", args[0]).setStyle(new Style().setColor(TextFormatting.RED)));
+			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.failure.text", args[0]).setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error(String.format("Failed to reload script %s!", args[0]));
 			e.printStackTrace();
 		}
@@ -69,12 +69,12 @@ public class CommandReloadScript implements ICommand{
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
+		return sender.canUseCommand(server.getOpPermissionLevel(), this.getName());
 
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args,
+	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args,
 			final BlockPos pos) {
 		return null;
 	}

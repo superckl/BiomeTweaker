@@ -61,7 +61,7 @@ public class BOPIntegrationModule implements IIntegrationModule{
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, BiomesScriptObject.class);
+			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
@@ -70,7 +70,7 @@ public class BOPIntegrationModule implements IIntegrationModule{
 
 			//BiomesObject
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 					ScriptCommandAddToGenerationBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
 			ScriptCommandRegistry.INSTANCE.registerListing("addToGenerationBOP", listing, BiomesScriptObject.class);
 

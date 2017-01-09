@@ -23,14 +23,12 @@ public class ScriptCommandRegistry {
 	 * In most cases, you should use {@link #getListing(Class, String) getListing} instead of this method, so that you don't override anything you don't mean to.
 	 * @param command The command that should be recognized by the script parser.
 	 * @param listing The command listing that should be used to parse the command.
-	 * @param classes The ScriptObject classes this command should be defined for.
+	 * @param clazz The ScriptObject class this command should be defined for.
 	 */
-	public void registerListing(final String command, final ScriptCommandListing listing, final Class<? extends ScriptObject> ... classes){
-		for(final Class<? extends ScriptObject> clazz:classes){
-			if(!this.commands.containsKey(clazz))
-				this.commands.put(clazz, new LinkedHashMap<String, ScriptCommandListing>());
-			this.commands.get(clazz).put(command, listing);
-		}
+	public void registerListing(final String command, final ScriptCommandListing listing, final Class<? extends ScriptObject> clazz){
+		if(!this.commands.containsKey(clazz))
+			this.commands.put(clazz, new LinkedHashMap<String, ScriptCommandListing>());
+		this.commands.get(clazz).put(command, listing);
 	}
 
 	/**

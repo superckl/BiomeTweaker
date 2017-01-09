@@ -88,7 +88,7 @@ public class BiomeTweaker {
 			e2.printStackTrace();
 		}
 
-		ScriptHandler.registerStaticObject("Tweaker", new TweakerScriptObject());
+		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);
 
 		try {
 			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();

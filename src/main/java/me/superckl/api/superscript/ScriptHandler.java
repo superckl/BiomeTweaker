@@ -9,10 +9,11 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.biometweaker.util.LogHelper;
 
 public class ScriptHandler {
 
-	private final static Map<String, ScriptObject> staticObjects = Maps.newHashMap();
+	private final static Map<String, Class<? extends ScriptObject>> staticObjects = Maps.newHashMap();
 
 	private final List<String> lines;
 
@@ -23,7 +24,13 @@ public class ScriptHandler {
 
 	public ScriptHandler(final List<String> lines) {
 		this.lines = lines;
-		this.objects.putAll(ScriptHandler.staticObjects);
+		for(final Entry<String, Class<? extends ScriptObject>> entry:ScriptHandler.staticObjects.entrySet())
+			try {
+				this.objects.put(entry.getKey(), entry.getValue().newInstance());
+			} catch (final Exception e) {
+				LogHelper.error("Failed to instantiate static object!");
+				e.printStackTrace();
+			}
 	}
 
 	public void parse() throws Exception{
@@ -66,10 +73,10 @@ public class ScriptHandler {
 	/**
 	 * Registers a static ScriptObject, that can be referenced in scripts without being instantiated.
 	 * @param name The name to be used in scripts. Example: The "Tweaker" object from BiomeTweaker.
-	 * @param object The actual ScriptObject to reference.
+	 * @param clazz The Class object for the ScriptObject. Static ScriptObjects must have a no argument constructor.
 	 */
-	public static void registerStaticObject(final String name, final ScriptObject object){
-		ScriptHandler.staticObjects.put(name, object);
+	public static void registerStaticObject(final String name, final Class<? extends ScriptObject> clazz){
+		ScriptHandler.staticObjects.put(name, clazz);
 	}
 
 	public List<String> getLines() {

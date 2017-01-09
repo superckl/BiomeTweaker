@@ -15,9 +15,7 @@ import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.ScriptCommandAddActualFillerBlock;
-import me.superckl.biometweaker.script.command.ScriptCommandAddBOPWorldType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddDictionaryType;
-import me.superckl.biometweaker.script.command.ScriptCommandRemoveBOPWorldType;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.ScriptCommandAddRemoveSpawn;
@@ -172,15 +170,7 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
 		validCommands.put("registerGenBiomeRep", listing);
-		
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveBOPWorldType.class.getDeclaredConstructor(String.class));
-		validCommands.put("removeExcludedBOPWorldType", listing);
-		
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddBOPWorldType.class.getDeclaredConstructor(String.class));
-		validCommands.put("addExcludedBOPWorldType", listing);
-		
+
 		return validCommands;
 	}
 

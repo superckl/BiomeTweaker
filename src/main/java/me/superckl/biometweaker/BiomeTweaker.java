@@ -26,6 +26,7 @@ import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
+import me.superckl.biometweaker.integration.IntegrationManager;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
@@ -124,7 +125,10 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 3, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 4, true);
+
+		bar.step("Pre-Initializing Integration");
+		IntegrationManager.INSTANCE.preInit();
 
 		bar.step("Parsing scripts");
 		this.parseScripts();
@@ -171,7 +175,7 @@ public class BiomeTweaker {
 			diff = System.currentTimeMillis() - time;
 			LogHelper.info("Finished script parsing.");
 			LogHelper.debug("Script parsing took "+diff+"ms.");
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException("An unexpected error occurred while processing script files. Parsing may be incomplete. Ensure BiomeTweakerCore was called successfully.", e);
 		}
 	}
@@ -187,7 +191,10 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onInit(final FMLInitializationEvent e) throws InterruptedException{
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 1, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+
+		bar.step("Initializing Integration");
+		IntegrationManager.INSTANCE.init();
 
 		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);
@@ -197,7 +204,10 @@ public class BiomeTweaker {
 
 	@EventHandler
 	public void onPostInit(final FMLPostInitializationEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 1, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+
+		bar.step("Post-Initializing Integration");
+		IntegrationManager.INSTANCE.postInit();
 
 		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.POST_INIT);

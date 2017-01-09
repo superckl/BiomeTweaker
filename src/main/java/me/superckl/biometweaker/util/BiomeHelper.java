@@ -17,6 +17,7 @@ import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.integration.IntegrationManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
@@ -49,18 +50,18 @@ public class BiomeHelper {
 	private static Field biomes;
 	private static Field isModded;
 
-	public static JsonObject fillJsonObject(final Biome gen, final int ... coords){
+	public static JsonObject fillJsonObject(final Biome biome, final int ... coords){
 		BiomeHelper.checkFields();
 		final JsonObject obj = new JsonObject();
-		obj.addProperty("ID", Biome.getIdForBiome(gen));
-		obj.addProperty("Name", gen.getBiomeName());
-		obj.addProperty("Class", gen.getClass().getName());
-		obj.addProperty("Root Height", gen.getBaseHeight());
-		obj.addProperty("Height Variation", gen.getHeightVariation());
-		final boolean topNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
-		final boolean bottomNull = gen.topBlock == null || gen.topBlock.getBlock() == null || gen.topBlock.getBlock().delegate == null;
-		obj.addProperty("Top Block", topNull ? "ERROR":gen.topBlock.getBlock().delegate.name().toString());
-		obj.addProperty("Filler Block", bottomNull ? "ERROR":gen.fillerBlock.getBlock().delegate.name().toString());
+		obj.addProperty("ID", Biome.getIdForBiome(biome));
+		obj.addProperty("Name", biome.getBiomeName());
+		obj.addProperty("Class", biome.getClass().getName());
+		obj.addProperty("Root Height", biome.getBaseHeight());
+		obj.addProperty("Height Variation", biome.getHeightVariation());
+		final boolean topNull = biome.topBlock == null || biome.topBlock.getBlock() == null || biome.topBlock.getBlock().delegate == null;
+		final boolean bottomNull = biome.topBlock == null || biome.topBlock.getBlock() == null || biome.topBlock.getBlock().delegate == null;
+		obj.addProperty("Top Block", topNull ? "ERROR":biome.topBlock.getBlock().delegate.name().toString());
+		obj.addProperty("Filler Block", bottomNull ? "ERROR":biome.fillerBlock.getBlock().delegate.name().toString());
 		try {
 			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());
@@ -72,20 +73,20 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? gen.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? gen.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(gen)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Water Color", ""+gen.getWaterColorMultiplier());
+			obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(biome)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(biome)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Water Color", ""+biome.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
 			e.printStackTrace();
 		}
-		obj.addProperty("Temperature", gen.getTemperature());
-		obj.addProperty("Humidity", gen.getRainfall());
-		obj.addProperty("Water Tint", gen.getWaterColorMultiplier());
-		obj.addProperty("Enable Rain", gen.enableRain);
-		obj.addProperty("Enable Snow", gen.enableSnow);
+		obj.addProperty("Temperature", biome.getTemperature());
+		obj.addProperty("Humidity", biome.getRainfall());
+		obj.addProperty("Water Tint", biome.getWaterColorMultiplier());
+		obj.addProperty("Enable Rain", biome.enableRain);
+		obj.addProperty("Enable Snow", biome.enableSnow);
 		JsonArray array = new JsonArray();
-		for(final Type type: BiomeDictionary.getTypesForBiome(gen))
+		for(final Type type: BiomeDictionary.getTypesForBiome(biome))
 			array.add(new JsonPrimitive(type.toString()));
 		obj.add("Dictionary Types", array);
 
@@ -94,7 +95,7 @@ public class BiomeHelper {
 			final JsonArray subArray = new JsonArray();
 			final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
 			for(final BiomeEntry entry:entries)
-				if(entry.biome == gen)
+				if(Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome))
 					subArray.add(new JsonPrimitive(entry.itemWeight));
 			if(subArray.size() > 0)
 				managerWeights.add(type.name()+" Weights", subArray);
@@ -102,7 +103,7 @@ public class BiomeHelper {
 		obj.add("BiomeManager Entries", managerWeights);
 
 		array = new JsonArray();
-		for(final Object entity:gen.spawnableCreatureList){
+		for(final Object entity:biome.spawnableCreatureList){
 			final SpawnListEntry entry = (SpawnListEntry) entity;
 			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
@@ -114,7 +115,7 @@ public class BiomeHelper {
 		obj.add("Spawnable Creatures", array);
 
 		array = new JsonArray();
-		for(final Object entity:gen.spawnableMonsterList){
+		for(final Object entity:biome.spawnableMonsterList){
 			final SpawnListEntry entry = (SpawnListEntry) entity;
 			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
@@ -126,7 +127,7 @@ public class BiomeHelper {
 		obj.add("Spawnable Monsters", array);
 
 		array = new JsonArray();
-		for(final Object entity:gen.spawnableWaterCreatureList){
+		for(final Object entity:biome.spawnableWaterCreatureList){
 			final SpawnListEntry entry = (SpawnListEntry) entity;
 			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
@@ -138,7 +139,7 @@ public class BiomeHelper {
 		obj.add("Spawnable Water Creatures", array);
 
 		array = new JsonArray();
-		for(final Object entity:gen.spawnableCaveCreatureList){
+		for(final Object entity:biome.spawnableCaveCreatureList){
 			final SpawnListEntry entry = (SpawnListEntry) entity;
 			final JsonObject object = new JsonObject();
 			object.addProperty("Entity Class", entry.entityClass.getName());
@@ -148,8 +149,10 @@ public class BiomeHelper {
 			array.add(object);
 		}
 		obj.add("Spawnable Cave Creatures", array);
-		obj.add("Spawn Biome", new JsonPrimitive(BiomeProvider.allowedBiomes.contains(gen)));
-		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(Biome.getIdForBiome(gen)));
+		obj.add("Spawn Biome", new JsonPrimitive(BiomeProvider.allowedBiomes.contains(biome)));
+		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(Biome.getIdForBiome(biome)));
+
+		IntegrationManager.INSTANCE.addBiomeInfo(biome, obj);
 
 		return obj;
 	}
@@ -309,9 +312,9 @@ public class BiomeHelper {
 				final IBlockState state = (IBlockState) BiomeHelper.oceanTopBlock.get(biome);
 				if(state != null)
 					BiomeHelper.oceanTopBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
-			}else if(prop.equals("contiguousReplacement")){
-					BiomeEventHandler.getContigReplaces()[Biome.getIdForBiome(biome)] = value.getAsBoolean();
-			}else
+			}else if(prop.equals("contiguousReplacement"))
+				BiomeEventHandler.getContigReplaces()[Biome.getIdForBiome(biome)] = value.getAsBoolean();
+			else
 				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
 	}
 

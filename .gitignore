@@ -33,3 +33,5 @@ BiomeTweaker 1.10_Client.launch
 BiomeTweaker 1.10_Server.launch
 /.gradle/
 /build/
+BiomeTweaker 1.11_Client.launch
+BiomeTweaker 1.11_Server.launch

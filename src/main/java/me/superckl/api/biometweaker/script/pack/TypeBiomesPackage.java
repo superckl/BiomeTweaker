@@ -2,6 +2,7 @@ package me.superckl.api.biometweaker.script.pack;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
 
@@ -22,7 +23,7 @@ public class TypeBiomesPackage implements IBiomePackage{
 		this.checkTypes();
 		final List<Biome> list = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
-			final Biome[] gens = BiomeDictionary.getBiomesForType(type);
+			final Set<Biome> gens = BiomeDictionary.getBiomes(type);
 			for(final Biome gen:gens)
 				if(!list.contains(gen))
 					list.add(gen);
@@ -35,7 +36,7 @@ public class TypeBiomesPackage implements IBiomePackage{
 		this.checkTypes();
 		final List<Integer> ints = Lists.newArrayList();
 		for(final BiomeDictionary.Type type:this.types){
-			final Biome[] gens = BiomeDictionary.getBiomesForType(type);
+			final Set<Biome> gens = BiomeDictionary.getBiomes(type);
 			for(final Biome gen:gens)
 				ints.add(Biome.getIdForBiome(gen));
 		}

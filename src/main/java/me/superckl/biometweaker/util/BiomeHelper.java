@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -45,8 +44,7 @@ public class BiomeHelper {
 	private static Field skyColor;
 
 	private static Field biomeInfoMap;
-	private static Field typeInfoList;
-	private static Field typeList;
+	private static Field typeSet;
 	private static Field biomes;
 	private static Field isModded;
 
@@ -86,7 +84,7 @@ public class BiomeHelper {
 		obj.addProperty("Enable Rain", biome.enableRain);
 		obj.addProperty("Enable Snow", biome.enableSnow);
 		JsonArray array = new JsonArray();
-		for(final Type type: BiomeDictionary.getTypesForBiome(biome))
+		for(final Type type: BiomeDictionary.getTypes(biome))
 			array.add(new JsonPrimitive(type.toString()));
 		obj.add("Dictionary Types", array);
 
@@ -334,10 +332,6 @@ public class BiomeHelper {
 				BiomeHelper.biomeInfoMap = BiomeDictionary.class.getDeclaredField("biomeInfoMap");
 				BiomeHelper.biomeInfoMap.setAccessible(true);
 			}
-			if(BiomeHelper.typeInfoList == null){
-				BiomeHelper.typeInfoList = BiomeDictionary.class.getDeclaredField("typeInfoList");
-				BiomeHelper.typeInfoList.setAccessible(true);
-			}
 			if(BiomeHelper.biomes == null){
 				BiomeHelper.biomes = BiomeManager.class.getDeclaredField("biomes");
 				BiomeHelper.biomes.setAccessible(true);
@@ -370,26 +364,14 @@ public class BiomeHelper {
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
-		final List<Biome>[] listArray = (List<Biome>[]) BiomeHelper.typeInfoList.get(null);
-		if(listArray.length > type.ordinal()){
-			List<Biome> list = listArray[type.ordinal()];
-			if(list == null){
-				list = Lists.newArrayList();
-				listArray[type.ordinal()] = list;
-			}
-			if(remove)
-				list.remove(gen);
-			else if(!list.contains(gen))
-				list.add(gen);
-		}
-		//Okay, here we go. REFLECTION OVERLOAD!!!1! (It's really not that bad.)
+		//Have to leave raw types since BiomeInfo is private
 		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
-		final Object biomeInfo = map.get(Biome.REGISTRY.getNameForObject(gen));
-		if(BiomeHelper.typeList == null){
-			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
-			BiomeHelper.typeList.setAccessible(true);
+		final Object biomeInfo = map.get(gen.getRegistryName());
+		if(BiomeHelper.typeSet == null){
+			BiomeHelper.typeSet = biomeInfo.getClass().getDeclaredField("types");
+			BiomeHelper.typeSet.setAccessible(true);
 		}
-		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
+		final Set<Type> set = (Set<Type>) BiomeHelper.typeSet.get(biomeInfo);
 		if(remove)
 			set.remove(type);
 		else if(!set.contains(type))
@@ -400,16 +382,14 @@ public class BiomeHelper {
 		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
-		final Object array = BiomeHelper.biomeInfoMap.get(null);
-		final Object biomeInfo = Array.get(array, Biome.getIdForBiome(gen));
-		if(BiomeHelper.typeList == null){
-			BiomeHelper.typeList = biomeInfo.getClass().getDeclaredField("typeList");
-			BiomeHelper.typeList.setAccessible(true);
+		//Have to leave raw types since BiomeInfo is private
+		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
+		final Object biomeInfo = map.get(gen.getRegistryName());
+		if(BiomeHelper.typeSet == null){
+			BiomeHelper.typeSet = biomeInfo.getClass().getDeclaredField("typeList");
+			BiomeHelper.typeSet.setAccessible(true);
 		}
-		final EnumSet<BiomeDictionary.Type> set = (EnumSet<Type>) BiomeHelper.typeList.get(biomeInfo);
-		final List<Biome>[] listArray = (List<Biome>[]) BiomeHelper.typeInfoList.get(null);
-		for(final BiomeDictionary.Type type : set)
-			listArray[type.ordinal()].remove(gen);
+		final Set<Type> set = (Set<Type>) BiomeHelper.typeSet.get(biomeInfo);
 		set.clear();
 	}
 

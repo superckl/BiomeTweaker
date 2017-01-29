@@ -41,7 +41,7 @@ archivesBaseName = "BiomeTweaker"
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "stable_29"
+    mappings = config.mcp_mappings
 
     replaceIn "reference/ModData.java"
     replace "@VERSION@", "${config.mod_version}.${System.env.BUILD_NUMBER ?: 0}"
@@ -58,9 +58,14 @@ minecraft {
 
 version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
 
+repositories {
+    jcenter()
+    maven { url "http://files.minecraftforge.net/maven" } //BiomesOPlenty
+}
+
 dependencies {
     compile "org.projectlombok:lombok:1.16.12"
-  //compile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:1.11-6.0.1.2128:universal"
+    compile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:" + config.bop_version + ":universal"
 }
 
 processResources

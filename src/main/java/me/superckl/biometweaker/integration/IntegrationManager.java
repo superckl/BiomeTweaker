@@ -20,7 +20,7 @@ public class IntegrationManager implements IIntegrationModule{
 	private static final Map<List<String>, String> modules = new HashMap<List<String>, String>();
 
 	static{
-		IntegrationManager.modules.put(Arrays.asList(new String[] {"BiomesOPlenty"}), "me.superckl.biometweaker.integration.bop.BOPIntegrationModule");
+		IntegrationManager.modules.put(Arrays.asList(new String[] {"biomesoplenty"}), "me.superckl.biometweaker.integration.bop.BOPIntegrationModule");
 	}
 
 	@Getter

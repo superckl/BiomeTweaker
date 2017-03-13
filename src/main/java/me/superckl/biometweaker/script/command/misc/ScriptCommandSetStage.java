@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command;
+package me.superckl.biometweaker.script.command.misc;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;

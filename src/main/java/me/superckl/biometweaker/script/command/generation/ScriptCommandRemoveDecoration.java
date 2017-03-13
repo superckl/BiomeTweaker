@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command;
+package me.superckl.biometweaker.script.command.generation;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor
-public class ScriptCommandRemoveFeature implements IScriptCommand{
+public class ScriptCommandRemoveDecoration implements IScriptCommand{
 
 	private final IBiomePackage pack;
 	private final String type;
@@ -21,9 +21,9 @@ public class ScriptCommandRemoveFeature implements IScriptCommand{
 		for(final int i:this.pack.getRawIds()){
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveDecoration(this, Biome.getBiome(i), i, this.type)))
 				continue;
-			if(!BiomeEventHandler.getPopulateTypes().containsKey(i))
-				BiomeEventHandler.getPopulateTypes().put(i, new ArrayList<String>());
-			BiomeEventHandler.getPopulateTypes().get(i).add(this.type);
+			if(!BiomeEventHandler.getDecorateTypes().containsKey(i))
+				BiomeEventHandler.getDecorateTypes().put(i, new ArrayList<String>());
+			BiomeEventHandler.getDecorateTypes().get(i).add(this.type);
 		}
 	}
 

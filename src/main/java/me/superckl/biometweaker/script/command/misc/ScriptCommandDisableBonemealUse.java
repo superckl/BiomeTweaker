@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command;
+package me.superckl.biometweaker.script.command.misc;
 
 import java.util.Iterator;
 import java.util.List;

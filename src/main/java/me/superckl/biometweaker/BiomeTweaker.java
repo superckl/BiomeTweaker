@@ -39,7 +39,6 @@ import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.EntityHelper;
 import me.superckl.biometweaker.util.LogHelper;
-import me.superckl.biometweaker.util.ReflectionHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
@@ -338,25 +337,6 @@ public class BiomeTweaker {
 	@EventHandler
 	public void onServerStarted(final FMLServerStartedEvent e){
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
-	}
-
-	//Begin compat. e.g. load biome classes that get loaded too late.
-
-	private final String[] galactCoreClasses = new String[] {"micdoodle8.mods.galacticraft.core.world.gen.BiomeMoon", "micdoodle8.mods.galacticraft.core.world.gen.BiomeOrbit"};
-	private final String[] galactMarsClasses = new String[] {"micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeMars"};
-
-	//@Optional.Method(modid = "GalacticraftCore")
-	@EventHandler
-	public void GalactCoreCompat(final FMLPreInitializationEvent e){
-		LogHelper.info("Attempting to load compat. biome classes...");
-		this.loadCompatClasses(this.galactCoreClasses);
-		this.loadCompatClasses(this.galactMarsClasses);
-	}
-
-	private void loadCompatClasses(final String ... classes){
-		for(final String clazz:classes)
-			if(ReflectionHelper.tryLoadClass(clazz) == null)
-				LogHelper.debug("Failed to load compat. biome class "+clazz);
 	}
 
 }

@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command;
+package me.superckl.biometweaker.script.command.generation;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;

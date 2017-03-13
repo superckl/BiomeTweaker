@@ -10,10 +10,9 @@ import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.util.EntityHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,17 +36,12 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		Class<? extends EntityLiving> clazz = null;
-		try{
-			clazz = (Class<? extends EntityLiving>) Class.forName(this.entityClass);
-		}catch(final Exception e){
-			final Class<? extends Entity> clazz2 = EntityList.getClass(new ResourceLocation(this.entityClass));
-			if(clazz2 == null)
-				throw new IllegalArgumentException("Failed to load entity class: "+this.entityClass, e);
-			if(!EntityLiving.class.isAssignableFrom(clazz2))
-				throw new IllegalArgumentException("entity class "+this.entityClass+" is not assignable to EntityLiving. It cannot be spawned!");
-			clazz = (Class<? extends EntityLiving>) clazz2;
-		}
+		final Class<? extends Entity> clazz2 = EntityHelper.getEntityClass(this.entityClass);
+		if(clazz2 == null)
+			throw new IllegalArgumentException("Failed to find entity class: "+this.entityClass);
+		if(!EntityLiving.class.isAssignableFrom(clazz2))
+			throw new IllegalArgumentException("entity class "+this.entityClass+" is not assignable to EntityLiving. It cannot be spawned!");
+		final Class<? extends EntityLiving> clazz = (Class<? extends EntityLiving>) clazz2;
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){

@@ -37,8 +37,10 @@ import me.superckl.biometweaker.server.command.CommandReload;
 import me.superckl.biometweaker.server.command.CommandReloadScript;
 import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
+import me.superckl.biometweaker.util.EntityHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.ReflectionHelper;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -54,6 +56,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = "before:biomesoplenty; after:galacticraftcore")
 public class BiomeTweaker {
@@ -239,36 +243,85 @@ public class BiomeTweaker {
 			array.add(BiomeHelper.fillJsonObject(gen));
 		}
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		final File dir = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/");
-		dir.mkdirs();
-		for(final File file:dir.listFiles())
+		final File baseDir = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/");
+		final File biomeDir = new File(baseDir, "/biome/");
+		biomeDir.mkdirs();
+
+		for(final File file:biomeDir.listFiles())
 			if(file.getName().endsWith(".json"))
 				file.delete();
+
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement element:array){
 				final JsonObject obj = (JsonObject) element;
-				final File output = new File(dir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
-				if(output.exists())
-					output.delete();
-				output.createNewFile();
+				final File biomeOutput = new File(biomeDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				if(biomeOutput.exists())
+					biomeOutput.delete();
+				biomeOutput.createNewFile();
 				@Cleanup
 				final
-				BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(biomeOutput));
 				writer.newLine();
 				writer.write(gson.toJson(obj));
 			}
 		else{
-			final File output = new File(dir, "BiomeTweaker - Biome Status Report.json");
-			if(output.exists())
-				output.delete();
-			output.createNewFile();
+			final File biomeOutput = new File(biomeDir, "BiomeTweaker - Biome Status Report.json");
+			if(biomeOutput.exists())
+				biomeOutput.delete();
+			biomeOutput.createNewFile();
 			@Cleanup
 			final
-			BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+			BufferedWriter writer = new BufferedWriter(new FileWriter(biomeOutput));
 			writer.write("//Yeah, it's a doozy.");
 			writer.newLine();
 			writer.write(gson.toJson(array));
 		}
+
+		LogHelper.info("Generating LivingEntity status report...");
+
+		final File entityDir = new File(baseDir, "/entity/");
+		entityDir.mkdirs();
+
+		for(final File file:entityDir.listFiles())
+			if(file.getName().endsWith(".json"))
+				file.delete();
+
+		final Iterator<EntityEntry> entityIt = ForgeRegistries.ENTITIES.getValues().iterator();
+		final JsonArray entityArray = new JsonArray();
+
+		while(entityIt.hasNext()){
+			final EntityEntry entry = entityIt.next();
+			if(!EntityLiving.class.isAssignableFrom(entry.getEntityClass()))
+				continue;
+			entityArray.add(EntityHelper.populateObject(entry));
+
+		}
+
+		if(Config.INSTANCE.isOutputSeperateFiles())
+			for(final JsonElement ele:entityArray){
+				final JsonObject obj = (JsonObject) ele;
+				final File entityOutput = new File(entityDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				if(entityOutput.exists())
+					entityOutput.delete();
+				entityOutput.createNewFile();
+				@Cleanup
+				final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
+				writer.newLine();
+				writer.write(gson.toJson(obj));
+			}
+		else{
+
+			final File entityOutput = new File(entityDir, "BiomeTweaker - EntityLiving Status Report.json");
+			if(entityOutput.exists())
+				entityOutput.delete();
+			entityOutput.createNewFile();
+			@Cleanup
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
+			writer.write("//Yeah, it's a doozy.");
+			writer.newLine();
+			writer.write(gson.toJson(entityArray));
+		}
+
 	}
 
 	@EventHandler

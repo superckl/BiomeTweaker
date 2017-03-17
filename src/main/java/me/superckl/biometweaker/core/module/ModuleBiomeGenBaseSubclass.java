@@ -30,7 +30,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)
-				if(mNode.name.equals(ASMNameHelper.method_getBiomeGrassColor.get()) && mNode.desc.equals("(III)I")){
+				if(mNode.name.equals(ASMNameHelper.method_getBiomeGrassColor.get()) && mNode.desc.equals("(Lnet/minecraft/util/math/BlockPos;)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
@@ -49,7 +49,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(mNode.name.equals(ASMNameHelper.method_getBiomeFoliageColor.get()) && mNode.desc.equals("(III)I")){
+				}else if(mNode.name.equals(ASMNameHelper.method_getBiomeFoliageColor.get()) && mNode.desc.equals("(Lnet/minecraft/util.math/BlockPos;)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){

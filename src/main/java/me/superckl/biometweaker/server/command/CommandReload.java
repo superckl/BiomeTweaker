@@ -28,21 +28,21 @@ public class CommandReload implements ICommand{
 
 	@Override
 	public int compareTo(final ICommand c) {
-		return this.getName().compareTo(c.getName());
+		return this.getCommandName().compareTo(c.getCommandName());
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "BTReload";
 	}
 
 	@Override
-	public String getUsage(final ICommandSender p_71518_1_) {
+	public String getCommandUsage(final ICommandSender p_71518_1_) {
 		return "biometweaker.msg.reload.usage.text";
 	}
 
 	@Override
-	public List getAliases() {
+	public List getCommandAliases() {
 		return this.aliases;
 	}
 
@@ -64,9 +64,9 @@ public class CommandReload implements ICommand{
 				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 			Config.INSTANCE.init(operateIn, obj);
 			BiomeTweaker.getInstance().parseScripts();
-			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reload.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final Exception e) {
-			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reload.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.reload.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error("Failed to reload scripts!");
 			e.printStackTrace();
 		}
@@ -74,11 +74,11 @@ public class CommandReload implements ICommand{
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canUseCommand(server.getOpPermissionLevel(), this.getName());
+		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
 	}
 
 	@Override
-	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
 		return null;
 	}
 

@@ -21,21 +21,21 @@ public class CommandOutput implements ICommand{
 
 	@Override
 	public int compareTo(final ICommand c) {
-		return this.getName().compareTo(c.getName());
+		return this.getCommandName().compareTo(c.getCommandName());
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "BTOutput";
 	}
 
 	@Override
-	public String getUsage(final ICommandSender p_71518_1_) {
+	public String getCommandUsage(final ICommandSender p_71518_1_) {
 		return "biometweaker.msg.output.usage.text";
 	}
 
 	@Override
-	public List getAliases() {
+	public List getCommandAliases() {
 		return this.aliases;
 	}
 
@@ -48,9 +48,9 @@ public class CommandOutput implements ICommand{
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		try {
 			BiomeTweaker.getInstance().generateOutputFiles();
-			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.output.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final IOException e) {
-			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.output.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
+			sender.addChatMessage(new TextComponentTranslation("biometweaker.msg.output.failure.text").setStyle(new Style().setColor(TextFormatting.RED)));
 			LogHelper.error("Failed to regenerate output files!");
 			e.printStackTrace();
 		}
@@ -58,11 +58,11 @@ public class CommandOutput implements ICommand{
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canUseCommand(server.getOpPermissionLevel(), this.getName());
+		return sender.canCommandSenderUseCommand(server.getOpPermissionLevel(), this.getCommandName());
 	}
 
 	@Override
-	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, final BlockPos pos) {
 		return null;
 	}
 

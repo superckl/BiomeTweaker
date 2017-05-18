@@ -24,7 +24,7 @@ public class ScriptCommandAddToGenerationBOP implements IScriptCommand{
 		while(it.hasNext()){
 			final Biome biome = it.next();
 			final IExtendedBiome eBiome = BOPIntegrationModule.getExtendedBiome(biome);
-			climate.addLandBiome(this.weight, eBiome.getBaseBiome());
+			climate.addBiome(this.weight, eBiome.getBaseBiome());
 		}
 	}
 

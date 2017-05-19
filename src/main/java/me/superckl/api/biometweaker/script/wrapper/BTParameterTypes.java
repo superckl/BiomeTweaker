@@ -6,6 +6,7 @@ import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
 import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.BasicBiomesPackage;
+import me.superckl.api.biometweaker.script.pack.BasicResourceNameBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
@@ -15,9 +16,6 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.biome.Biome;
 
 public class BTParameterTypes {
 
@@ -45,13 +43,7 @@ public class BTParameterTypes {
 					final String rLoc = (String) ParameterTypes.STRING.tryParse(parameter, handler);
 					if(rLoc == null || rLoc.isEmpty())
 						return null;
-					final ResourceLocation loc = new ResourceLocation(rLoc);
-					final Biome biome = Biome.REGISTRY.getObject(loc);
-					if(biome == null)
-						return null;
-					LogHelper.info("found "+rLoc);
-					LogHelper.info("id: "+Biome.getIdForBiome(biome));
-					return new BasicBiomesPackage(Biome.getIdForBiome(biome));
+					return new BasicResourceNameBiomesPackage(rLoc);
 				}
 			}
 			final int[] array = new int[ints.size()];

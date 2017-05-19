@@ -23,7 +23,7 @@ public class BasicBiomesPackage implements IBiomePackage{
 		for(final int i:this.ids){
 			final Biome gen = Biome.getBiome(i);
 			if(gen == null){
-				APIInfo.log.info("Error applying tweaks. Biome ID "+i+" does not correspond to a biome! Check the output files for the correct ID!");
+				APIInfo.log.error("Error applying tweaks. Biome ID "+i+" does not correspond to a biome! Check the output files for the correct ID!");
 				continue;
 			}
 			list.add(gen);

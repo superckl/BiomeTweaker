@@ -94,8 +94,7 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onDecorateBiome(final DecorateBiomeEvent.Post e){
-		LogHelper.info("ran for "+e.getPos());
-		BlockReplacer.runReplacement(ReplacementStage.DECORATE, e.getWorld(), new ChunkPos(e.getPos().getX() >> 4, e.getPos().getZ() >> 4), null);
+		BlockReplacer.runReplacement(ReplacementStage.DECORATE, e.getWorld(), new ChunkPos(e.getPos()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

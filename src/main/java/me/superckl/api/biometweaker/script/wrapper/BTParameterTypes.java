@@ -15,6 +15,9 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 
 public class BTParameterTypes {
 
@@ -36,9 +39,20 @@ public class BTParameterTypes {
 			final List<Integer> ints = (List<Integer>) ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler);
 			if(ints.isEmpty()){
 				final ScriptObject obj = handler.getObjects().get(parameter);
-				if((obj == null) || !(obj instanceof BiomePackScriptObject))
-					return null;
-				return ((BiomePackScriptObject)obj).getPack();
+				if(obj != null && obj instanceof BiomePackScriptObject)
+					return ((BiomePackScriptObject)obj).getPack();
+				else{
+					final String rLoc = (String) ParameterTypes.STRING.tryParse(parameter, handler);
+					if(rLoc == null || rLoc.isEmpty())
+						return null;
+					final ResourceLocation loc = new ResourceLocation(rLoc);
+					final Biome biome = Biome.REGISTRY.getObject(loc);
+					if(biome == null)
+						return null;
+					LogHelper.info("found "+rLoc);
+					LogHelper.info("id: "+Biome.getIdForBiome(biome));
+					return new BasicBiomesPackage(Biome.getIdForBiome(biome));
+				}
 			}
 			final int[] array = new int[ints.size()];
 			for(int i = 0; i < array.length; i++)

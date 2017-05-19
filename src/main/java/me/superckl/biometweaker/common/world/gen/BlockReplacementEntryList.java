@@ -2,6 +2,8 @@ package me.superckl.biometweaker.common.world.gen;
 
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
@@ -10,6 +12,7 @@ public class BlockReplacementEntryList {
 
 	private final Map<Block, BlockReplacementEntry> replacements = Maps.newIdentityHashMap();
 
+	@Nullable
 	public BlockReplacementEntry findEntry(final Block toReplace, final int meta){
 		final BlockReplacementEntry entry = this.replacements.get(toReplace);
 		if(entry != null && entry.matches(toReplace, meta))
@@ -18,6 +21,7 @@ public class BlockReplacementEntryList {
 			return null;
 	}
 
+	@Nullable
 	public BlockReplacementEntry findEntry(final Block toReplace){
 		final BlockReplacementEntry entry = this.replacements.get(toReplace);
 		if(entry != null && entry.matches(toReplace))

@@ -53,6 +53,7 @@ public class BiomeHelper {
 		final JsonObject obj = new JsonObject();
 		obj.addProperty("ID", Biome.getIdForBiome(biome));
 		obj.addProperty("Name", biome.getBiomeName());
+		obj.addProperty("Resource Location", Biome.REGISTRY.getNameForObject(biome).toString());
 		obj.addProperty("Class", biome.getClass().getName());
 		obj.addProperty("Root Height", biome.getBaseHeight());
 		obj.addProperty("Height Variation", biome.getHeightVariation());

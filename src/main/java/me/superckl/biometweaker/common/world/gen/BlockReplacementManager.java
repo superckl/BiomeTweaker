@@ -90,7 +90,7 @@ public class BlockReplacementManager {
 
 	public void registerBlockReplacement(final int biome, final int weight, final Block toReplace, final int toReplaceMeta, final Block replacement, final int replacementMeta){
 		if(!this.blockReplacements.containsKey(BlockReplacementManager.currentStage))
-			this.blockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<>());
+			this.blockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!this.blockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
 			this.blockReplacements.get(BlockReplacementManager.currentStage).put(biome, new BlockReplacementEntryList());
 		this.blockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, toReplaceMeta, replacement, replacementMeta);
@@ -98,7 +98,7 @@ public class BlockReplacementManager {
 
 	public static void registerGlobalBlockReplacement(final int biome, final int weight, final Block toReplace, final int toReplaceMeta, final Block replacement, final int replacementMeta){
 		if(!BlockReplacementManager.globalBlockReplacements.containsKey(BlockReplacementManager.currentStage))
-			BlockReplacementManager.globalBlockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<>());
+			BlockReplacementManager.globalBlockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
 			BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).put(biome, new BlockReplacementEntryList());
 		BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, toReplaceMeta, replacement, replacementMeta);

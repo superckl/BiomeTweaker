@@ -21,7 +21,7 @@ public class BlockReplacementEntry {
 	public BlockReplacementEntry(final Block toReplace, final int toReplaceMeta){
 		this.block = toReplace;
 		this.replacements = new TIntObjectHashMap<>();
-		this.replacements.put(toReplaceMeta, Lists.newArrayList());
+		this.replacements.put(toReplaceMeta, Lists.<WeightedBlockEntry>newArrayList());
 	}
 
 	public BlockReplacementEntry(final int weight, final Block toReplace, final Block replacement) {

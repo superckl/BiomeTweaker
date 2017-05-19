@@ -13,6 +13,7 @@ import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.util.ParameterWrapper;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackSize;
@@ -90,7 +91,7 @@ public class TweakerScriptObject extends ScriptObject{
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.INTEGER.getSimpleWrapper()), ScriptCommandSetWorld.class.getDeclaredConstructor(Integer.class));
-		listing.addEntry(Lists.newArrayList(), ScriptCommandSetWorld.class.getDeclaredConstructor());
+		listing.addEntry(Lists.<ParameterWrapper>newArrayList(), ScriptCommandSetWorld.class.getDeclaredConstructor());
 		validCommands.put("setWorld", listing);
 
 		listing = new ScriptCommandListing();

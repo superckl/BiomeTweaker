@@ -24,8 +24,7 @@ public class BlockReplacementManager {
 	private static TIntObjectMap<BlockReplacementManager> managers = new TIntObjectHashMap<>();
 
 	public static enum ReplacementStage{
-		BIOME_BLOCKS, POPULATE, DECORATE;
-
+		BIOME_BLOCKS, PRE_POPULATE, POST_POPULATE, PRE_DECORATE, PRE_ORES, POST_ORES, POST_DECORATE;
 	}
 
 	@Getter

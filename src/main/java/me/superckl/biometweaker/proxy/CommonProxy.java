@@ -11,6 +11,7 @@ public class CommonProxy implements IProxy{
 		final BiomeEventHandler handler = new BiomeEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);
 		MinecraftForge.TERRAIN_GEN_BUS.register(handler);
+		MinecraftForge.ORE_GEN_BUS.register(handler);
 		final EntityEventHandler eHandler = new EntityEventHandler();
 		MinecraftForge.EVENT_BUS.register(eHandler);
 	}

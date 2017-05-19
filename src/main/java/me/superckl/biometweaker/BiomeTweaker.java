@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
+import me.superckl.api.superscript.ScriptCommandManager;
 import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.ScriptHandler;
@@ -28,6 +29,8 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import me.superckl.biometweaker.proxy.IProxy;
+import me.superckl.biometweaker.script.command.misc.ScriptCommandSetReplacementStage;
+import me.superckl.biometweaker.script.command.misc.ScriptCommandSetWorld;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.server.command.CommandInfo;
@@ -189,7 +192,10 @@ public class BiomeTweaker {
 			file.createNewFile();
 		}
 		ScriptParser.parseScriptFile(file);
-		Config.INSTANCE.getCommandManager().setCurrentStage(ApplicationStage.FINISHED_LOAD);
+		//Reset other various stages
+		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetReplacementStage("BIOME_BLOCKS"));
+		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetWorld(null));
+		Config.INSTANCE.getCommandManager().setCurrentStage(ScriptCommandManager.getDefaultStage());
 	}
 
 	@EventHandler

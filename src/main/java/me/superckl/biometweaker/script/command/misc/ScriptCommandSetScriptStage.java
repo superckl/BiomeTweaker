@@ -7,7 +7,7 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 
 @RequiredArgsConstructor
-public class ScriptCommandSetStage implements IScriptCommand{
+public class ScriptCommandSetScriptStage implements IScriptCommand{
 
 	private final String stage;
 
@@ -15,7 +15,7 @@ public class ScriptCommandSetStage implements IScriptCommand{
 	public void perform() throws Exception {
 		final ApplicationStage stage = ApplicationStage.valueOf(this.stage);
 		if(stage == null){
-			LogHelper.info("Invalid application stage specified!");
+			LogHelper.error("Invalid application stage specified!");
 			return;
 		}
 		Config.INSTANCE.getCommandManager().setCurrentStage(stage);

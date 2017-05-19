@@ -11,7 +11,7 @@ public class BOPReflectionHelper {
 
 	public static void reflectFields() throws Exception{
 		if(BOPReflectionHelper.totalLandBiomesWeight == null){
-			BOPReflectionHelper.totalLandBiomesWeight = BOPClimates.class.getDeclaredField("totalLandBiomesWeight");
+			BOPReflectionHelper.totalLandBiomesWeight = BOPClimates.class.getDeclaredField("totalBiomesWeight");
 			BOPReflectionHelper.totalLandBiomesWeight.setAccessible(true);
 		}
 		if(BOPReflectionHelper.landBiomes == null){

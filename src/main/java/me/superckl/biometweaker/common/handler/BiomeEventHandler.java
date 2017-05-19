@@ -3,13 +3,9 @@ package me.superckl.biometweaker.common.handler;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.google.common.collect.Maps;
-
-import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.custom_hash.TObjectByteCustomHashMap;
@@ -17,16 +13,14 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
+import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.ReplacementStage;
+import me.superckl.biometweaker.common.world.gen.BlockReplacer;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
-import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.BiomeEvent;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
@@ -48,11 +42,7 @@ public class BiomeEventHandler {
 	public static final TObjectByteCustomHashMap<Object> sizes = new TObjectByteCustomHashMap<>(IdentityHashingStrategy.INSTANCE);
 
 	@Getter
-	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>>> blockReplacements = new TIntObjectHashMap<>();
-	@Getter
 	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<>();
-	@Getter
-	private static final boolean[] contigReplaces = new boolean[256];
 	@Getter
 	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
 	@Getter
@@ -86,7 +76,7 @@ public class BiomeEventHandler {
 	private Field foliageColor;
 	private final int[] colorCache = new int[512];
 
-	private final Map<World, Map<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>> replacedBiomes = Maps.newHashMap();
+
 
 	public BiomeEventHandler() {
 		Arrays.fill(this.colorCache, -2);
@@ -94,68 +84,18 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
-		try {
-			if(!this.replacedBiomes.containsKey(e.getWorld()))
-				this.replacedBiomes.put(e.getWorld(), Maps.<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>>newHashMap());
+		BlockReplacer.runReplacement(ReplacementStage.BIOME_BLOCKS, e.getWorld(), new ChunkPos(e.getX(), e.getZ()), e.getPrimer());
+	}
 
-			if(BiomeEventHandler.blockReplacements.isEmpty())
-				return;
-			final TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> shouldDoBMap = this.findMap(e.getWorld(), new ChunkPos(e.getX(), e.getZ()));
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public void onPopulateBiome(final PopulateChunkEvent.Post e){
+		BlockReplacer.runReplacement(ReplacementStage.POPULATE, e.getWorld(), new ChunkPos(e.getChunkX(), e.getChunkZ()), null);
+	}
 
-			for (int x = 0; x < 16; ++x)
-				for (int z = 0; z < 16; ++z)
-				{
-					final Biome biomegenbase = e.getWorld().getBiome(new BlockPos(e.getX() << 4, 0, e.getZ() << 4));//e.biomeArray[l + (k * 16)];
-					final int id = Biome.getIdForBiome(biomegenbase);
-					if(!BiomeEventHandler.blockReplacements.containsKey(id))
-						continue;
-					if(!shouldDoBMap.containsKey(id))
-						shouldDoBMap.put(id, Maps.<Block, TIntObjectMap<WeightedBlockEntry>>newIdentityHashMap());
-					final Map<Block, TIntObjectMap<WeightedBlockEntry>> shouldDoMap = shouldDoBMap.get(id);
-					final List<Pair<Pair<Block, Integer>, List<WeightedBlockEntry>>> list = BiomeEventHandler.blockReplacements.get(id);
-					//TODO assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
-					final int k1 = 256;
-					for(int y = 0; y < k1; y++){
-						final IBlockState state = e.getPrimer().getBlockState(x, y, z);
-						final Block block = state.getBlock();
-						WeightedBlockEntry toUse = null;
-						if(shouldDoMap.containsKey(block)){
-							final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
-							if(map.containsKey(block.getMetaFromState(state)))
-								toUse = map.get(block.getMetaFromState(state));
-							else if(map.containsKey(-1))
-								toUse = map.get(-1);
-						}
-						Integer meta;
-						if(toUse == null)
-							for(final Pair<Pair<Block, Integer>, List<WeightedBlockEntry>> pair:list)
-								if(pair.getKey().getKey() == block){
-									meta = pair.getKey().getValue();
-									final boolean shouldDo = (meta == null) || (block.getMetaFromState(state) == meta);
-									if(shouldDo){
-										toUse = WeightedRandom.getRandomItem(e.getWorld().rand, pair.getValue());
-										if(!shouldDoMap.containsKey(block))
-											shouldDoMap.put(block, new TIntObjectHashMap<WeightedBlockEntry>());
-										final TIntObjectMap<WeightedBlockEntry> map = shouldDoMap.get(block);
-										map.put(meta == null ? -1:meta, toUse);
-									}
-								}
-						if(toUse != null){
-							final Block block2 = toUse.block.getKey();
-							meta = toUse.block.getValue();
-							e.getPrimer().setBlockState(x, y, z, meta == null ? block2.getDefaultState():block2.getStateFromMeta(meta));
-						}
-					}
-				}
-			final TIntIterator it = shouldDoBMap.keySet().iterator();
-			while(it.hasNext())
-				if(!BiomeEventHandler.contigReplaces[it.next()])
-					it.remove();
-			this.replacedBiomes.get(e.getWorld()).put(new ChunkPos(e.getX(), e.getZ()), shouldDoBMap);
-		} catch (final Exception e1) {
-			LogHelper.error("Failed to process replace biome blocks event.");
-			e1.printStackTrace();
-		}
+	@SubscribeEvent(priority = EventPriority.LOW)
+	public void onDecorateBiome(final DecorateBiomeEvent.Post e){
+		LogHelper.info("ran for "+e.getPos());
+		BlockReplacer.runReplacement(ReplacementStage.DECORATE, e.getWorld(), new ChunkPos(e.getPos().getX() >> 4, e.getPos().getZ() >> 4), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -326,30 +266,6 @@ public class BiomeEventHandler {
 			else
 				FMLCommonHandler.instance().exitJava(1, false);
 		}
-	}
-
-	private TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>> findMap(final World world, final ChunkPos pair){
-		final Map<ChunkPos, TIntObjectMap<Map<Block, TIntObjectMap<WeightedBlockEntry>>>> map = this.replacedBiomes.get(world);
-
-		final ChunkPos[] pairs = NumberHelper.fillGrid(4, pair);
-
-		for(final ChunkPos search:pairs)
-			if(map.containsKey(search))
-				return map.get(search);
-
-		return new TIntObjectHashMap<>();
-	}
-
-	@Getter
-	public static class WeightedBlockEntry extends WeightedRandom.Item{
-
-		private final Pair<Block, Integer> block;
-
-		public WeightedBlockEntry(final int weight, final Pair<Block, Integer> block) {
-			super(weight);
-			this.block = block;
-		}
-
 	}
 
 }

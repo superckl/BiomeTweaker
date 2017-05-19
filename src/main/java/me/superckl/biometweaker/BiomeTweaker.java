@@ -40,9 +40,11 @@ import me.superckl.biometweaker.server.command.CommandReload;
 import me.superckl.biometweaker.server.command.CommandReloadScript;
 import me.superckl.biometweaker.server.command.CommandSetBiome;
 import me.superckl.biometweaker.util.BiomeHelper;
+import me.superckl.biometweaker.util.DimensionHelper;
 import me.superckl.biometweaker.util.EntityHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -231,14 +233,14 @@ public class BiomeTweaker {
 		bar.step("Applying scripts");
 		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.FINISHED_LOAD);
 
-		bar.step("Generating biome output files");
+		bar.step("Generating output files");
 		this.generateOutputFiles();
 
 		ProgressManager.pop(bar);
 	}
 
 	public void generateOutputFiles() throws IOException{
-		LogHelper.info("Generating biome status report...");
+		LogHelper.info("Generating Biome status report...");
 		final JsonArray array = new JsonArray();
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
@@ -322,6 +324,46 @@ public class BiomeTweaker {
 			entityOutput.createNewFile();
 			@Cleanup
 			final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
+			writer.write("//Yeah, it's a doozy.");
+			writer.newLine();
+			writer.write(gson.toJson(entityArray));
+		}
+
+		LogHelper.info("Generating Dimension status report...");
+
+		final File dimDir = new File(baseDir, "/dimension/");
+		dimDir.mkdirs();
+
+		for(final File file:dimDir.listFiles())
+			if(file.getName().endsWith(".json"))
+				file.delete();
+
+		final DimensionType[] dimTypes = DimensionType.values();
+		final JsonArray dimArray = new JsonArray();
+
+		for(final DimensionType dimType:dimTypes)
+			dimArray.add(DimensionHelper.populateObject(dimType));
+
+		if(Config.INSTANCE.isOutputSeperateFiles())
+			for(final JsonElement ele:dimArray){
+				final JsonObject obj = (JsonObject) ele;
+				final File dimOutput = new File(dimDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				if(dimOutput.exists())
+					dimOutput.delete();
+				dimOutput.createNewFile();
+				@Cleanup
+				final BufferedWriter writer = new BufferedWriter(new FileWriter(dimOutput));
+				writer.newLine();
+				writer.write(gson.toJson(obj));
+			}
+		else{
+
+			final File dimOutput = new File(entityDir, "BiomeTweaker - Dimension Status Report.json");
+			if(dimOutput.exists())
+				dimOutput.delete();
+			dimOutput.createNewFile();
+			@Cleanup
+			final BufferedWriter writer = new BufferedWriter(new FileWriter(dimOutput));
 			writer.write("//Yeah, it's a doozy.");
 			writer.newLine();
 			writer.write(gson.toJson(entityArray));

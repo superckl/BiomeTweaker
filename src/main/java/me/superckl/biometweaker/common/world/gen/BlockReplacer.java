@@ -29,8 +29,7 @@ public class BlockReplacer {
 			for (int x = 0; x < 16; ++x)
 				for (int z = 0; z < 16; ++z)
 				{
-					//TODO verify adding x and z works
-					final Biome biomegenbase = world.getBiome(new BlockPos(pos.chunkXPos << 4 + x, 0, pos.chunkZPos << 4 + z));//e.biomeArray[l + (k * 16)];
+					final Biome biomegenbase = world.getBiome(new BlockPos((pos.chunkXPos << 4)+x, 0, (pos.chunkZPos << 4)+z));//e.biomeArray[l + (k * 16)];
 					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!manager.hasReplacements(id, stage))
 						continue;
@@ -38,7 +37,7 @@ public class BlockReplacer {
 						previousReplacements.put(id, new BlockReplacementEntryList());
 					final BlockReplacementEntryList previousReplacementsBiome = previousReplacements.get(id);
 					final BlockReplacementEntryList list = manager.findReplacementEntryList(id, stage);
-					//TODO assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
+					//assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
 					final int k1 = 256;
 					for(int y = 0; y < k1; y++){
 						final IBlockState state = primer == null ? chunk.getBlockState(x, y, z):primer.getBlockState(x, y, z);

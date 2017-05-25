@@ -3,8 +3,12 @@ package me.superckl.biometweaker.common.handler;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.common.collect.Maps;
 
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
@@ -51,27 +55,7 @@ public class BiomeEventHandler {
 	@Getter
 	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<>();
 	@Getter
-	private static final TIntIntMap waterlilyPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap treesPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap flowersPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap grassPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap deadBushPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap mushroomPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap reedsPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap cactiPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap sandPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap clayPerChunk = new TIntIntHashMap();
-	@Getter
-	private static final TIntIntMap bigMushroomsPerChunk = new TIntIntHashMap();
+	private static final Map<String, TIntIntMap> decorationsPerChunk = Maps.newHashMap();
 
 	private Field grassColor;
 	private Field foliageColor;
@@ -213,28 +197,56 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onCreateBiomeDecorator(final BiomeEvent.CreateDecorator e){
 		final int id = Biome.getIdForBiome(e.getBiome());
-		if(BiomeEventHandler.waterlilyPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().waterlilyPerChunk = BiomeEventHandler.waterlilyPerChunk.get(id);
-		if(BiomeEventHandler.treesPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().treesPerChunk = BiomeEventHandler.treesPerChunk.get(id);
-		if(BiomeEventHandler.flowersPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().flowersPerChunk = BiomeEventHandler.flowersPerChunk.get(id);
-		if(BiomeEventHandler.grassPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().grassPerChunk = BiomeEventHandler.grassPerChunk.get(id);
-		if(BiomeEventHandler.deadBushPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().deadBushPerChunk = BiomeEventHandler.deadBushPerChunk.get(id);
-		if(BiomeEventHandler.mushroomPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().mushroomsPerChunk = BiomeEventHandler.mushroomPerChunk.get(id);
-		if(BiomeEventHandler.reedsPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().reedsPerChunk = BiomeEventHandler.reedsPerChunk.get(id);
-		if(BiomeEventHandler.cactiPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().cactiPerChunk = BiomeEventHandler.cactiPerChunk.get(id);
-		if(BiomeEventHandler.sandPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().sandPerChunk = BiomeEventHandler.sandPerChunk.get(id);
-		if(BiomeEventHandler.clayPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().clayPerChunk = BiomeEventHandler.clayPerChunk.get(id);
-		if(BiomeEventHandler.bigMushroomsPerChunk.containsKey(id))
-			e.getNewBiomeDecorator().bigMushroomsPerChunk = BiomeEventHandler.bigMushroomsPerChunk.get(id);
+		for(final Entry<String, TIntIntMap> entry:BiomeEventHandler.decorationsPerChunk.entrySet()){
+			if(!entry.getValue().containsKey(id))
+				continue;
+			switch(entry.getKey()){
+			case "waterlily":{
+				e.getNewBiomeDecorator().waterlilyPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "trees":{
+				e.getNewBiomeDecorator().treesPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "flowers":{
+				e.getNewBiomeDecorator().flowersPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "grass":{
+				e.getNewBiomeDecorator().grassPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "deadBush":{
+				e.getNewBiomeDecorator().deadBushPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "mushrooms":{
+				e.getNewBiomeDecorator().mushroomsPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "reeds":{
+				e.getNewBiomeDecorator().reedsPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "cacti":{
+				e.getNewBiomeDecorator().cactiPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "sand":{
+				e.getNewBiomeDecorator().sandPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "clay":{
+				e.getNewBiomeDecorator().clayPerChunk = entry.getValue().get(id);
+				break;
+			}
+			case "bigMushrooms":{
+				e.getNewBiomeDecorator().bigMushroomsPerChunk = entry.getValue().get(id);
+				break;
+			}
+			}
+		}
 	}
 
 	@SubscribeEvent

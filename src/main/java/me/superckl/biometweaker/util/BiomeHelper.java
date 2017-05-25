@@ -2,46 +2,31 @@ package me.superckl.biometweaker.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.biometweaker.common.handler.BiomeEventHandler;
-import me.superckl.biometweaker.common.world.gen.feature.WorldGenDoublePlantBlank;
+import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.integration.IntegrationManager;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
-import net.minecraftforge.common.BiomeManager.BiomeType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
-
-	private static Field oceanTopBlock;
-	private static Field oceanFillerBlock;
-	private static Field grassColor;
-	private static Field foliageColor;
-	private static Field skyColor;
 
 	private static Field biomeInfoMap;
 	private static Field typeSet;
@@ -72,8 +57,8 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.grassColor.getInt(biome)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomeHelper.foliageColor.getInt(biome)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.GRASS_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
+			obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.FOLIAGE_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+biome.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
@@ -156,180 +141,8 @@ public class BiomeHelper {
 		return obj;
 	}
 
-	private static Set<BiomeManager.BiomeType> logged = EnumSet.noneOf(BiomeManager.BiomeType.class);
-	private static boolean loggedSpawn;
-
-	public static void setBiomeProperty(final String prop, final JsonElement value, final Biome biome) throws Exception{
-		BiomeHelper.checkFields();
-		final int id = Biome.getIdForBiome(biome);
-		if(prop.equals("name")){
-			final String toSet = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-			biome.biomeName = toSet;
-		}else if(prop.equals("height")){
-			final float toSet = value.getAsFloat();
-			biome.baseHeight = toSet;
-		}else if(prop.equals("heightVariation")){
-			final float toSet = value.getAsFloat();
-			biome.heightVariation = toSet;
-		}else if(prop.equals("topBlock")){
-			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-			try {
-				final Block block = Block.getBlockFromName(blockName);
-				if(block == null)
-					throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-				biome.topBlock = block.getDefaultState();
-			} catch (final Exception e) {
-				LogHelper.info("Failed to parse block: "+blockName);
-			}
-		}else if(prop.equals("fillerBlock")){
-			final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-			try {
-				final Block block = Block.getBlockFromName(blockName);
-				if(block == null)
-					throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-				biome.fillerBlock = block.getDefaultState();
-			} catch (final Exception e) {
-				LogHelper.info("Failed to parse block: "+blockName);
-			}
-		}else if(prop.equals("temperature")){
-			final float toSet = value.getAsFloat();
-			biome.temperature = toSet;
-		}else if(prop.equals("humidity")){
-			final float toSet = value.getAsFloat();
-			biome.rainfall = toSet;
-		}else if(prop.equals("waterTint")){
-			final int toSet = value.getAsInt();
-			biome.waterColor = toSet;
-		}else if(prop.equals("enableRain")){
-			final boolean toSet = value.getAsBoolean();
-			biome.enableRain = toSet;
-		}else if(prop.equals("enableSnow")){
-			final boolean toSet = value.getAsBoolean();
-			biome.enableSnow = toSet;
-		}else if(prop.equals("grassColor")){
-			final int toSet = value.getAsInt();
-			BiomeHelper.grassColor.set(biome, toSet);
-		}else if(prop.equals("foliageColor")){
-			final int toSet = value.getAsInt();
-			BiomeHelper.foliageColor.set(biome, toSet);
-		}else if(prop.equals("waterColor")){
-			final int toSet = value.getAsInt();
-			biome.waterColor = toSet;
-		}else if(prop.equals("skyColor")){
-			final int toSet = value.getAsInt();
-			BiomeHelper.skyColor.set(biome, toSet);
-		}else if(prop.equals("fillerBlockMeta")){
-			if(biome.fillerBlock != null)
-				biome.fillerBlock = biome.fillerBlock.getBlock().getStateFromMeta(value.getAsInt());
-		}else if(prop.equals("topBlockMeta")){
-			if(biome.topBlock != null)
-				biome.topBlock = biome.topBlock.getBlock().getStateFromMeta(value.getAsInt());
-		}
-		else if(prop.equals("waterliliesPerChunk"))
-			BiomeEventHandler.getWaterlilyPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("treesPerChunk"))
-			BiomeEventHandler.getTreesPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("flowersPerChunk"))
-			BiomeEventHandler.getFlowersPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("grassPerChunk"))
-			BiomeEventHandler.getGrassPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("deadbushesPerChunk"))
-			BiomeEventHandler.getDeadBushPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("mushroomsPerChunk"))
-			BiomeEventHandler.getMushroomPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("reedsPerChunk"))
-			BiomeEventHandler.getReedsPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("cactiPerChunk"))
-			BiomeEventHandler.getCactiPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("sandPerChunk"))
-			BiomeEventHandler.getSandPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("clayPerChunk"))
-			BiomeEventHandler.getClayPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("bigMushroomsPerChunk"))
-			BiomeEventHandler.getBigMushroomsPerChunk().put(id, value.getAsInt());
-		else if(prop.equals("genWeight")){
-			final int weight  = value.getAsInt();
-			for(final BiomeType type:BiomeType.values()){
-				final List<BiomeEntry> entries = BiomeManager.getBiomes(type);
-				for(final BiomeEntry entry:entries)
-					if(Biome.getIdForBiome(entry.biome) == id)
-						entry.itemWeight = weight;
-				if((type != BiomeManager.BiomeType.DESERT) && !BiomeHelper.logged.contains(type) && (WeightedRandom.getTotalWeight(entries) <= 0)){
-					LogHelper.warn("Sum of biome generation weights for type "+type+" is zero! This will cause Vanilla generation to crash! You have been warned!");
-					BiomeHelper.logged.add(type);
-				}
-			}
-			BiomeHelper.modTypeLists();
-		}else if(prop.equals("genVillages"))
-			if(value.getAsBoolean())
-				BiomeManager.addVillageBiome(biome, true);
-			else
-				BiomeManager.removeVillageBiome(biome);
-		else if(prop.equals("genStrongholds"))
-			if(value.getAsBoolean())
-				BiomeManager.removeStrongholdBiome(biome);
-			else
-				BiomeManager.addStrongholdBiome(biome);
-		else if(prop.equals("isSpawnBiome"))
-			if(value.getAsBoolean())
-				BiomeManager.addSpawnBiome(biome);
-			else{
-				BiomeManager.removeSpawnBiome(biome);
-				if(!BiomeHelper.loggedSpawn && (BiomeProvider.allowedBiomes.size() == 0)){
-					LogHelper.warn("Upon removal of biome "+id+" the allowed spawn list appears to be empty. If you aren't adding one later, this will cause a crash.");
-					BiomeHelper.loggedSpawn = true;
-				}
-			}
-		else if(prop.equals("genTallPlants"))
-			Biome.DOUBLE_PLANT_GENERATOR = value.getAsBoolean() ? new WorldGenDoublePlant():new WorldGenDoublePlantBlank();
-			else if(prop.equals("oceanTopBlock")){
-				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-				try {
-					final Block block = Block.getBlockFromName(blockName);
-					if(block == null)
-						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-					BiomeHelper.oceanTopBlock.set(biome, block.getDefaultState());
-				} catch (final Exception e) {
-					LogHelper.info("Failed to parse block: "+blockName);
-				}
-			}
-			else if(prop.equals("oceanFillerBlock")){
-				final String blockName = (String) ParameterTypes.STRING.tryParse(value.getAsString());
-				try {
-					final Block block = Block.getBlockFromName(blockName);
-					if(block == null)
-						throw new IllegalArgumentException("Failed to find block "+blockName+"! Tweak will not be applied.");
-					BiomeHelper.oceanFillerBlock.set(biome, block.getDefaultState());
-				} catch (final Exception e) {
-					LogHelper.info("Failed to parse block: "+blockName);
-				}
-			}else if(prop.equals("oceanFillerBlockMeta")){
-				final IBlockState state = (IBlockState) BiomeHelper.oceanFillerBlock.get(biome);
-				if(state != null)
-					BiomeHelper.oceanFillerBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
-			}else if(prop.equals("oceanTopBlockMeta")){
-				final IBlockState state = (IBlockState) BiomeHelper.oceanTopBlock.get(biome);
-				if(state != null)
-					BiomeHelper.oceanTopBlock.set(biome, state.getBlock().getStateFromMeta(value.getAsInt()));
-			}/*else if(prop.equals("contiguousReplacement"))
-				BiomeEventHandler.getContigReplaces()[Biome.getIdForBiome(biome)] = value.getAsBoolean();*/
-		//TODO
-			else
-				LogHelper.warn("Attempted to set property "+prop+" but corresponding property was not found for biomes. Value: "+value.getAsString());
-	}
-
 	private static void checkFields(){
 		try{
-			if(BiomeHelper.oceanTopBlock == null)
-				BiomeHelper.oceanTopBlock = Biome.class.getDeclaredField("oceanTopBlock");
-			if(BiomeHelper.oceanFillerBlock == null)
-				BiomeHelper.oceanFillerBlock = Biome.class.getDeclaredField("oceanFillerBlock");
-			if(BiomeHelper.grassColor == null)
-				BiomeHelper.grassColor = Biome.class.getDeclaredField("grassColor");
-			if(BiomeHelper.foliageColor == null)
-				BiomeHelper.foliageColor = Biome.class.getDeclaredField("foliageColor");
-			if(BiomeHelper.skyColor == null)
-				BiomeHelper.skyColor = Biome.class.getDeclaredField("skyColor");
 			if(BiomeHelper.biomeInfoMap == null){
 				BiomeHelper.biomeInfoMap = BiomeDictionary.class.getDeclaredField("biomeInfoMap");
 				BiomeHelper.biomeInfoMap.setAccessible(true);

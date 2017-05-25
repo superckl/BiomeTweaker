@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.util.BiomeHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -27,7 +27,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 			final Biome gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
-			BiomeHelper.setBiomeProperty(this.key, this.value, gen);
+			BiomePropertyManager.setProperty(gen, this.key, this.value);
 			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
 		}
 	}

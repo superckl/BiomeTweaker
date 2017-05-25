@@ -80,7 +80,7 @@ public class ScriptParser {
 			return new String[0];
 		}
 		final String args = script.substring(script.indexOf("(")+1, script.length()-1).trim();
-		final String[] split = args.isEmpty() ? new String[0]:args.split(",");
+		final String[] split = args.isEmpty() ? new String[0]:args.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 		return split;
 	}
 

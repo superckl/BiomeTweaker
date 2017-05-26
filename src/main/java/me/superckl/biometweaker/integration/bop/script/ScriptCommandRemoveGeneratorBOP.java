@@ -21,9 +21,8 @@ public class ScriptCommandRemoveGeneratorBOP implements IScriptCommand{
 		while(it.hasNext()){
 			final Biome biome = it.next();
 			final IExtendedBiome eBiome = BOPIntegrationModule.getExtendedBiome(biome);
-			for (String type:this.types) {
+			for (final String type:this.types)
 				eBiome.getGenerationManager().removeGenerator(type);
-			}
 		}
 	}
 

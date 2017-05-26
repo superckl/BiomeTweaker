@@ -157,11 +157,9 @@ public class BOPIntegrationModule implements IIntegrationModule{
 		final Gson gson = new Gson();
 		obj.add("BOP Weight Map", gson.toJsonTree(eBiome.getWeightMap()));
 		try {
-			BOPReflectionHelper.reflectFields();
-
 			final JsonObject weights = new JsonObject();
 			for(final BOPClimates climate:BOPClimates.values()){
-				final List<WeightedBiomeEntry> entries = (List<WeightedBiomeEntry>) BOPReflectionHelper.landBiomes.get(climate);
+				final List<WeightedBiomeEntry> entries = BOPBiomeProperties.LAND_BIOMES.get(climate);
 				final JsonArray subArray = new JsonArray();
 				for(final WeightedBiomeEntry entry:entries)
 					if(Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome))

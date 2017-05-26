@@ -2,13 +2,12 @@ package me.superckl.biometweaker.common.handler;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Maps;
 
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
@@ -31,6 +30,7 @@ import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
 import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
 import net.minecraftforge.event.terraingen.ChunkGeneratorEvent.ReplaceBiomeBlocks;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
@@ -55,7 +55,7 @@ public class BiomeEventHandler {
 	@Getter
 	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<>();
 	@Getter
-	private static final Map<String, TIntIntMap> decorationsPerChunk = Maps.newHashMap();
+	private static final Map<EventType, TIntIntMap> decorationsPerChunk = new EnumMap<>(EventType.class);
 
 	private Field grassColor;
 	private Field foliageColor;
@@ -197,51 +197,51 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onCreateBiomeDecorator(final BiomeEvent.CreateDecorator e){
 		final int id = Biome.getIdForBiome(e.getBiome());
-		for(final Entry<String, TIntIntMap> entry:BiomeEventHandler.decorationsPerChunk.entrySet()){
+		for(final Entry<EventType, TIntIntMap> entry:BiomeEventHandler.decorationsPerChunk.entrySet()){
 			if(!entry.getValue().containsKey(id))
 				continue;
 			switch(entry.getKey()){
-			case "waterlily":{
+			case LILYPAD:{
 				e.getNewBiomeDecorator().waterlilyPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "trees":{
+			case TREE:{
 				e.getNewBiomeDecorator().treesPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "flowers":{
+			case FLOWERS:{
 				e.getNewBiomeDecorator().flowersPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "grass":{
+			case GRASS:{
 				e.getNewBiomeDecorator().grassPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "deadBush":{
+			case DEAD_BUSH:{
 				e.getNewBiomeDecorator().deadBushPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "mushrooms":{
+			case SHROOM:{
 				e.getNewBiomeDecorator().mushroomsPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "reeds":{
+			case REED:{
 				e.getNewBiomeDecorator().reedsPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "cacti":{
+			case CACTUS:{
 				e.getNewBiomeDecorator().cactiPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "sand":{
+			case SAND:{
 				e.getNewBiomeDecorator().sandPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "clay":{
+			case CLAY:{
 				e.getNewBiomeDecorator().clayPerChunk = entry.getValue().get(id);
 				break;
 			}
-			case "bigMushrooms":{
+			case BIG_SHROOM:{
 				e.getNewBiomeDecorator().bigMushroomsPerChunk = entry.getValue().get(id);
 				break;
 			}

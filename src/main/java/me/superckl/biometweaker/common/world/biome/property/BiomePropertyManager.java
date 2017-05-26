@@ -13,6 +13,7 @@ import me.superckl.api.biometweaker.property.PropertyField;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
 
 public class BiomePropertyManager {
 
@@ -41,17 +42,17 @@ public class BiomePropertyManager {
 	public static final PropertyGenStrongholds GEN_STRONGHOLDS = new PropertyGenStrongholds();
 	public static final PropertySpawnBiome IS_SPAWN_BIOME = new PropertySpawnBiome();
 	public static final PropertyGenTallPlants GEN_TALL_PLANTS = new PropertyGenTallPlants();
-	public static final PropertyDecorationPerChunk WATERLILY_PER_CHUNK = new PropertyDecorationPerChunk("waterlily");
-	public static final PropertyDecorationPerChunk TREES_PER_CHUNK = new PropertyDecorationPerChunk("tress");
-	public static final PropertyDecorationPerChunk FLOWERS_PER_CHUNK = new PropertyDecorationPerChunk("flowers");
-	public static final PropertyDecorationPerChunk GRASS_PER_CHUNK = new PropertyDecorationPerChunk("grass");
-	public static final PropertyDecorationPerChunk DEAD_BUSH_PER_CHUNK = new PropertyDecorationPerChunk("deadBush");
-	public static final PropertyDecorationPerChunk MUSHROOMS_PER_CHUNK = new PropertyDecorationPerChunk("mushrooms");
-	public static final PropertyDecorationPerChunk REEDS_PER_CHUNK = new PropertyDecorationPerChunk("reeds");
-	public static final PropertyDecorationPerChunk CACTI_PER_CHUNK = new PropertyDecorationPerChunk("cacti");
-	public static final PropertyDecorationPerChunk SAND_PER_CHUNK = new PropertyDecorationPerChunk("sand");
-	public static final PropertyDecorationPerChunk CLAY_PER_CHUNK = new PropertyDecorationPerChunk("clay");
-	public static final PropertyDecorationPerChunk BIG_MUSHROOMS_PER_CHUNK = new PropertyDecorationPerChunk("bigMushrooms");
+	public static final PropertyDecorationPerChunk WATERLILY_PER_CHUNK = new PropertyDecorationPerChunk(EventType.LILYPAD);
+	public static final PropertyDecorationPerChunk TREES_PER_CHUNK = new PropertyDecorationPerChunk(EventType.TREE);
+	public static final PropertyDecorationPerChunk FLOWERS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.FLOWERS);
+	public static final PropertyDecorationPerChunk GRASS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.GRASS);
+	public static final PropertyDecorationPerChunk DEAD_BUSH_PER_CHUNK = new PropertyDecorationPerChunk(EventType.DEAD_BUSH);
+	public static final PropertyDecorationPerChunk MUSHROOMS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SHROOM);
+	public static final PropertyDecorationPerChunk REEDS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.REED);
+	public static final PropertyDecorationPerChunk CACTI_PER_CHUNK = new PropertyDecorationPerChunk(EventType.CACTUS);
+	public static final PropertyDecorationPerChunk SAND_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SAND);
+	public static final PropertyDecorationPerChunk CLAY_PER_CHUNK = new PropertyDecorationPerChunk(EventType.CLAY);
+	public static final PropertyDecorationPerChunk BIG_MUSHROOMS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.BIG_SHROOM);
 
 	public static final Map<String, Property<?>> propertyMap = Maps.newHashMap();
 

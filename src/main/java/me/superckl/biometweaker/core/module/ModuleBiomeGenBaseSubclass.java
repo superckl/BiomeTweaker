@@ -17,7 +17,7 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.ASMNameHelper;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
 import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
@@ -42,7 +42,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					}
 					if(shouldCont)
 						continue;
-					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden grass color method and no event call. Attempting to force modded color event call...");
+					BiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden grass color method and no event call. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -61,7 +61,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					}
 					if(shouldCont)
 						continue;
-					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden foliage color method and no event call. Attempting to force modded color event call...");
+					BiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden foliage color method and no event call. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -69,7 +69,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						mNode.instructions.insertBefore(aINode, list);
 					}
 				}else if(mNode.name.equals("getWaterColorMultiplier") && mNode.desc.equals("()I")){
-					ModBiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
+					BiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
@@ -120,8 +120,8 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						}
 					while((node = ASMHelper.findNextInstructionWithOpcode(nextNode, Opcodes.PUTFIELD)) != null);
 					if(removed > 0){
-						ModBiomeTweakerCore.logger.warn("Found Biome subclass "+transformedName+" that was setting topBlock or fillerBlock in genTerrainBlocks! This is bad practice and breaks functionality in BiomeTweaker! "+removed+" items were removed. If this is not a vanilla biome, please let me (superckl) know.");
-						ModBiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");
+						BiomeTweakerCore.logger.warn("Found Biome subclass "+transformedName+" that was setting topBlock or fillerBlock in genTerrainBlocks! This is bad practice and breaks functionality in BiomeTweaker! "+removed+" items were removed. If this is not a vanilla biome, please let me (superckl) know.");
+						BiomeTweakerCore.logger.info("If you feel the removal of this is causing issues with a modded biome, add this class to the ASM blacklist in the config and let me know. I apologize for the wall of text, but this is important.");
 					}
 				}
 			return ASMHelper.writeClassToBytes(cNode);

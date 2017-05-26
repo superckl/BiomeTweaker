@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -21,10 +19,9 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 
 	@Override
 	public Void call() throws Exception {
-		final Logger log = ModBiomeTweakerCore.logger;
-		log.info("Beginning early config parsing...");
+		BiomeTweakerCore.logger.info("Beginning early config parsing...");
 		final File operateIn = new File(BiomeTweakerCore.mcLocation, "config/BiomeTweaker/");
-		log.debug("We are operating in "+operateIn.getAbsolutePath());
+		BiomeTweakerCore.logger.debug("We are operating in "+operateIn.getAbsolutePath());
 		final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");
 		final File scripts = new File(operateIn, "scripts/");
 		scripts.mkdirs();
@@ -58,7 +55,7 @@ public class BiomeTweakerCallHook implements IFMLCallHook{
 		BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
 		final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
 		if(obj.entrySet().isEmpty())
-			log.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
+			BiomeTweakerCore.logger.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
 		Config.INSTANCE.init(operateIn, obj);
 		return null;
 	}

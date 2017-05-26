@@ -3,6 +3,9 @@ package me.superckl.biometweaker.core;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.Name;
@@ -16,6 +19,7 @@ import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 @TransformerExclusions({"me.superckl.biometweaker.core", "me.superckl.biometweaker.util.CollectionHelper", "me.superckl.biometweaker.config", "squeek.asmhelper.me.superckl.biometweaker", "me.superckl.api.superscript"})
 public class BiomeTweakerCore implements IFMLLoadingPlugin{
 
+	public static final Logger logger = LogManager.getLogger("BiomeTweakerCore");
 	public static File mcLocation;
 	public static boolean modifySuccess;
 
@@ -26,7 +30,7 @@ public class BiomeTweakerCore implements IFMLLoadingPlugin{
 
 	@Override
 	public String getModContainerClass() {
-		return ModBiomeTweakerCore.class.getName();
+		return null;
 	}
 
 	@Override

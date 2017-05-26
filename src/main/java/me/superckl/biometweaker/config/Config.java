@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.logging.log4j.Logger;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -15,7 +13,7 @@ import lombok.SneakyThrows;
 import me.superckl.api.superscript.ScriptCommandManager;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.reference.ModData;
-import me.superckl.biometweaker.core.ModBiomeTweakerCore;
+import me.superckl.biometweaker.core.BiomeTweakerCore;
 
 @Getter
 public class Config {
@@ -47,10 +45,9 @@ public class Config {
 
 	@SneakyThrows
 	public void init(final File whereAreWe, final JsonObject obj){
-		final Logger log = ModBiomeTweakerCore.logger;
 		this.whereAreWe = whereAreWe;
 		if(this.init)
-			log.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
+			BiomeTweakerCore.logger.warn("Config is already initialized! Tweaks will be applied immediately. Values changed previously will not be restored.");
 		this.commandManager.reset();
 		if(obj.has(Fields.SEPARATE_FILES))
 			this.outputSeperateFiles = obj.get(Fields.SEPARATE_FILES).getAsBoolean();
@@ -72,10 +69,10 @@ public class Config {
 				final JsonArray array = (JsonArray) element;
 				this.includes = array;
 			} else
-				log.warn("Failed to parse include array! Check your formatting!");
+				BiomeTweakerCore.logger.warn("Failed to parse include array! Check your formatting!");
 		}
 		this.init = true;
-		ModBiomeTweakerCore.logger.info("Finished config parsing.");
+		BiomeTweakerCore.logger.info("Finished config parsing.");
 	}
 
 	public void addCommand(final IScriptCommand command){

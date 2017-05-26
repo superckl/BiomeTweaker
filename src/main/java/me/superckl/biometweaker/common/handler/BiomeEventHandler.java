@@ -1,6 +1,5 @@
 package me.superckl.biometweaker.common.handler;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
@@ -16,6 +15,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
+import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.ReplacementStage;
 import me.superckl.biometweaker.common.world.gen.BlockReplacer;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
@@ -57,8 +57,6 @@ public class BiomeEventHandler {
 	@Getter
 	private static final Map<EventType, TIntIntMap> decorationsPerChunk = new EnumMap<>(EventType.class);
 
-	private Field grassColor;
-	private Field foliageColor;
 	private final int[] colorCache = new int[512];
 
 
@@ -105,8 +103,6 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
 		try {
-			if(this.grassColor == null)
-				this.grassColor = Biome.class.getDeclaredField("grassColor");
 			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id];
 			if(newColor == -1)
@@ -114,7 +110,7 @@ public class BiomeEventHandler {
 			else if((newColor = this.colorCache[id]) != -2)
 				e.setNewColor(newColor);
 			else{
-				newColor = this.grassColor.getInt(e.getBiome());
+				newColor = BiomePropertyManager.GRASS_COLOR.get(e.getBiome());
 				this.colorCache[id] = newColor;
 				if(newColor == -1)
 					return;
@@ -129,8 +125,6 @@ public class BiomeEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetFoliageColor(final GetFoliageColor e){
 		try {
-			if(this.foliageColor == null)
-				this.foliageColor = Biome.class.getDeclaredField("foliageColor");
 			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id+256];
 			if(newColor == -1)
@@ -138,7 +132,7 @@ public class BiomeEventHandler {
 			else if((newColor = this.colorCache[id+256]) != -2)
 				e.setNewColor(newColor);
 			else{
-				newColor = this.foliageColor.getInt(e.getBiome());
+				newColor = BiomePropertyManager.FOLIAGE_COLOR.get(e.getBiome());
 				this.colorCache[id+256] = newColor;
 				if(newColor == -1)
 					return;

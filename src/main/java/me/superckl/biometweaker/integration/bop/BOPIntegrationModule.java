@@ -62,11 +62,11 @@ public class BOPIntegrationModule implements IIntegrationModule{
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeGeneratorBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
@@ -88,11 +88,11 @@ public class BOPIntegrationModule implements IIntegrationModule{
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(new ArrayList<ParameterWrapper>(), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeGeneratorBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();

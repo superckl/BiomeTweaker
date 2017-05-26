@@ -13,7 +13,7 @@ import net.minecraft.world.biome.Biome;
 public class ScriptCommandRemoveGeneratorBOP implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final String type;
+	private final String[] types;
 
 	@Override
 	public void perform() throws Exception {
@@ -21,7 +21,9 @@ public class ScriptCommandRemoveGeneratorBOP implements IScriptCommand{
 		while(it.hasNext()){
 			final Biome biome = it.next();
 			final IExtendedBiome eBiome = BOPIntegrationModule.getExtendedBiome(biome);
-			eBiome.getGenerationManager().removeGenerator(this.type);
+			for (String type:this.types) {
+				eBiome.getGenerationManager().removeGenerator(type);
+			}
 		}
 	}
 

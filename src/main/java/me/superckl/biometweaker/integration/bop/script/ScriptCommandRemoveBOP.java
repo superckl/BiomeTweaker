@@ -18,7 +18,7 @@ import net.minecraft.world.biome.Biome;
 public class ScriptCommandRemoveBOP implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final String type;
+	private final String[] types;
 
 	public ScriptCommandRemoveBOP(final IBiomePackage pack) {
 		this(pack, null);
@@ -32,7 +32,7 @@ public class ScriptCommandRemoveBOP implements IScriptCommand{
 			Biome biome = it.next();
 			final IExtendedBiome eBiome = BOPIntegrationModule.getExtendedBiome(biome);
 			biome = eBiome.getBaseBiome();
-			if(this.type == null)
+			if(this.types == null)
 				for(final BOPClimates climate:BOPClimates.values()){
 					final Iterator<WeightedBiomeEntry> bit = ((List<WeightedBiomeEntry>) BOPReflectionHelper.landBiomes.get(climate)).iterator();
 					while(bit.hasNext()){
@@ -44,16 +44,20 @@ public class ScriptCommandRemoveBOP implements IScriptCommand{
 					}
 				}
 			else{
-				final BOPClimates climate = BOPClimates.valueOf(this.type);
-				if(climate == null)
-					throw new IllegalArgumentException("No cliamte type found for: "+this.type);
-				final Iterator<WeightedBiomeEntry> bit = ((List<WeightedBiomeEntry>) BOPReflectionHelper.landBiomes.get(climate)).iterator();
-				while(bit.hasNext()){
-					final WeightedBiomeEntry entry = bit.next();
-					if(Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome)){
-						bit.remove();
-						BOPReflectionHelper.totalLandBiomesWeight.setInt(climate, BOPReflectionHelper.totalLandBiomesWeight.getInt(climate)-entry.weight);
-					}
+				for (String type:this.types) {
+					final BOPClimates climate = BOPClimates.valueOf(type);
+					if (climate == null)
+						throw new IllegalArgumentException("No climate type found for: " + type);
+					final Iterator<WeightedBiomeEntry> bit = ((List<WeightedBiomeEntry>) BOPReflectionHelper.landBiomes
+							.get(climate)).iterator();
+					while (bit.hasNext()) {
+						final WeightedBiomeEntry entry = bit.next();
+						if (Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome)) {
+							bit.remove();
+							BOPReflectionHelper.totalLandBiomesWeight.setInt(climate,
+									BOPReflectionHelper.totalLandBiomesWeight.getInt(climate) - entry.weight);
+						}
+					} 
 				}
 			}
 			Config.INSTANCE.onTweak(Biome.getIdForBiome(biome));

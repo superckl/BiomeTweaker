@@ -171,13 +171,7 @@ public class BiomeTweaker {
 				}
 			}
 			final File scripts = new File(Config.INSTANCE.getWhereAreWe(), "scripts/");
-			for (final File script : scripts.listFiles(new FilenameFilter() {
-
-				@Override
-				public boolean accept(final File dir, final String name) {
-					return name.endsWith(".cfg");
-				}
-			}))
+			for (final File script : scripts.listFiles((FilenameFilter) (dir, name) -> name.endsWith(".cfg")))
 				try {
 					this.parseScript(script);
 				} catch (final Exception e1) {

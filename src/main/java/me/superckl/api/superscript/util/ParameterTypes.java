@@ -104,4 +104,15 @@ public final class ParameterTypes {
 
 	};
 
+	public static final ParameterType STRING_ARRAY = new ParameterType(new ParameterWrapperStringArray()) {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			final String parsed = (String) ParameterTypes.STRING.tryParse(parameter, handler);
+			if(parsed == null)
+				return null;
+			return new String[] {parsed};
+		}
+	};
+
 }

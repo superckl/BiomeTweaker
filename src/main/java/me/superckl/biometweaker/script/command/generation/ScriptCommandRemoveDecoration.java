@@ -14,17 +14,19 @@ import net.minecraftforge.common.MinecraftForge;
 public class ScriptCommandRemoveDecoration implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final String type;
+	private final String[] types;
 
 	@Override
 	public void perform() throws Exception {
-		for(final int i:this.pack.getRawIds()){
-			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveDecoration(this, Biome.getBiome(i), i, this.type)))
-				continue;
-			if(!BiomeEventHandler.getDecorateTypes().containsKey(i))
-				BiomeEventHandler.getDecorateTypes().put(i, new ArrayList<String>());
-			BiomeEventHandler.getDecorateTypes().get(i).add(this.type);
-		}
+		for(final int i:this.pack.getRawIds())
+			for (final String type:this.types) {
+				if (MinecraftForge.EVENT_BUS
+						.post(new BiomeTweakEvent.RemoveDecoration(this, Biome.getBiome(i), i, type)))
+					continue;
+				if (!BiomeEventHandler.getDecorateTypes().containsKey(i))
+					BiomeEventHandler.getDecorateTypes().put(i, new ArrayList<String>());
+				BiomeEventHandler.getDecorateTypes().get(i).add(type);
+			}
 	}
 
 }

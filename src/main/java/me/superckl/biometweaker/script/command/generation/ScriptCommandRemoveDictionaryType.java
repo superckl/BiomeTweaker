@@ -17,17 +17,19 @@ import net.minecraftforge.common.MinecraftForge;
 public class ScriptCommandRemoveDictionaryType implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final String type;
+	private final String[] types;
 
 	@Override
 	public void perform() throws Exception {
-		final BiomeDictionary.Type bType = Type.getType(this.type);
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
 			final Biome gen = it.next();
-			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveDictionaryType(this, gen, bType)))
-				continue;
-			BiomeHelper.modifyBiomeDicType(gen, bType, true);
+			for (final String type:this.types) {
+				final BiomeDictionary.Type bType = Type.getType(type);
+				if (MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveDictionaryType(this, gen, bType)))
+					continue;
+				BiomeHelper.modifyBiomeDicType(gen, bType, true);
+			}
 			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
 		}
 	}

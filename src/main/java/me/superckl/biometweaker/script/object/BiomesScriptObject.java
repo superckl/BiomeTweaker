@@ -43,6 +43,7 @@ import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDec
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveFeature;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandDisableBonemealUse;
+import me.superckl.biometweaker.script.command.misc.ScriptCommandInheritProperties;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetBiomeProperty;
 import me.superckl.biometweaker.util.LogHelper;
 
@@ -209,6 +210,13 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
 				, ScriptCommandRegisterBiomeReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE));
 		validCommands.put("registerGenBiomeRep", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper())
+				, ScriptCommandInheritProperties.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class, String[].class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper())
+				, ScriptCommandInheritProperties.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
+		validCommands.put("inheritProperties", listing);
 
 		return validCommands;
 	}

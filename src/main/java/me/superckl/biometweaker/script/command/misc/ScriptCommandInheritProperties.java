@@ -42,7 +42,7 @@ public class ScriptCommandInheritProperties implements IScriptCommand{
 					try {
 						prop.copy(inheritFrom.next(), gen);
 					} catch (final Exception e) {
-						LogHelper.debug("Failed to inherit property "+property);
+						LogHelper.debug("Failed to inherit property "+property+". This may be because it hasn't been set in the parent biome, or the property is not readable.");
 					}
 			}
 		}

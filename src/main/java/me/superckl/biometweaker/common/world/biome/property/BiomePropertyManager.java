@@ -30,7 +30,7 @@ public class BiomePropertyManager {
 	public static final PropertyBlockStateMeta OCEAN_FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanFillerBlock");
 	public static final PropertyField<Float> TEMPERATURE = new PropertyField<>(Biome.class, "temperature", Float.class);
 	public static final PropertyField<Float> HUMIDITY = new PropertyField<>(Biome.class, "rainfall", Float.class);
-	public static final PropertyField<Integer> WATER_TINT = new PropertyField<>(Biome.class, "waterTint", Integer.class);
+	public static final PropertyField<Integer> WATER_TINT = new PropertyField<>(Biome.class, "waterColor", Integer.class);
 	public static final PropertyField<Boolean> ENABLE_RAIN = new PropertyField<>(Biome.class, "enableRain", Boolean.class);
 	public static final PropertyField<Boolean> ENABLE_SNOW = new PropertyField<>(Biome.class, "enableSnow", Boolean.class);
 	public static final PropertyField<Integer> GRASS_COLOR = new PropertyField<>(Biome.class, "grassColor", Integer.class);

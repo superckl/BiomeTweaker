@@ -123,6 +123,10 @@ public class BiomeTweaker {
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("subtractFrom", listing);
 
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.PROPERTY_RANGE_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("forBiomesWithPropertyRange", listing);
+
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
 			e2.printStackTrace();

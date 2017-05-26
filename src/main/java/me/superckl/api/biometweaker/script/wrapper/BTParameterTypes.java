@@ -93,4 +93,12 @@ public class BTParameterTypes {
 		}
 	};
 
+	public static final ParameterType PROPERTY_RANGE_PACKAGE = new ParameterType(new PropertyRangePackParameterWrapper()) {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			throw new UnsupportedOperationException();
+		}
+	};
+
 }

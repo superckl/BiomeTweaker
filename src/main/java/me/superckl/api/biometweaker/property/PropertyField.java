@@ -45,6 +45,8 @@ public final class PropertyField<K> extends Property<K>{
 				this.field = this.clazz.getDeclaredField(this.fieldName);
 				if(!this.field.getType().isAssignableFrom(this.field.getType().isPrimitive() ? Primitives.unwrap(this.getTypeClass()):this.getTypeClass()))
 					throw new IllegalStateException("Generic Type of Property is not assignable to Field Type.");
+				if(!this.getTypeClass().isAssignableFrom(this.field.getType().isPrimitive() ? Primitives.wrap(this.field.getType()):this.field.getType()))
+					throw new IllegalStateException("Field Type is not assignable to Generic Type of Property.");
 				this.field.setAccessible(true);
 			} catch (final IllegalArgumentException e1) {
 				throw new IllegalArgumentException("Unable to find field "+this.fieldName+" in class "+this.clazz.getCanonicalName(), e1);

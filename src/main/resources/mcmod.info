@@ -1,6 +1,6 @@
 [
 {
-  "modid": "BiomeTweaker",
+  "modid": "biometweaker",
   "name": "BiomeTweaker",
   "description": "Used to tweak various characteristics of biomes.",
   "version": "${mod_version}",

@@ -126,7 +126,7 @@ artifacts {
 jar {
     manifest {
         attributes 'FMLCorePlugin': config.core_path
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
+        attributes 'FMLCorePluginContainsFMLMod': 'false'
         attributes 'FMLAT': config.at_path
     }
 }

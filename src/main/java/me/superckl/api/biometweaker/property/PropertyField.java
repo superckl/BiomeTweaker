@@ -39,7 +39,7 @@ public final class PropertyField<K> extends Property<K>{
 		}
 	}
 
-	private void verifyField() throws IllegalStateException, IllegalArgumentException{
+	public void verifyField() throws IllegalStateException, IllegalArgumentException{
 		if(this.field == null && this.clazz != null && this.fieldName != null && !this.fieldName.isEmpty())
 			try {
 				this.field = this.clazz.getDeclaredField(this.fieldName);

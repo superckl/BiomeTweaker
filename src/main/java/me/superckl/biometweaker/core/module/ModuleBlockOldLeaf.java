@@ -1,6 +1,6 @@
 package me.superckl.biometweaker.core.module;
 
-import me.superckl.biometweaker.core.ASMNameHelper;
+import me.superckl.biometweaker.core.ObfNameHelper;
 
 public class ModuleBlockOldLeaf implements IClassTransformerModule{
 
@@ -38,7 +38,7 @@ public class ModuleBlockOldLeaf implements IClassTransformerModule{
 
 	@Override
 	public String[] getClassesToTransform() {
-		return new String[] {ASMNameHelper.class_blockOldLeaf.get()};
+		return new String[] {ObfNameHelper.Classes.blockOldLead.getName()};
 	}
 
 	@Override

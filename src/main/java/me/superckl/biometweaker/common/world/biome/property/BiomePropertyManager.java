@@ -70,10 +70,10 @@ public class BiomePropertyManager {
 		}
 	}
 
-	public static boolean setProperty(final Biome biome, final String property, final JsonElement value){
+	public static void setProperty(final Biome biome, final String property, final JsonElement value) throws Exception{
 		final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
 		if(prop == null)
-			return false;
+			throw new IllegalArgumentException("No property found for "+property);
 		final Class<?> type = prop.getTypeClass();
 		try {
 			if(type.getCanonicalName().equals(Integer.class.getCanonicalName()))
@@ -85,9 +85,8 @@ public class BiomePropertyManager {
 			else if(type.getCanonicalName().equals(String.class.getCanonicalName()))
 				((Property<String>)prop).set(biome, (String) ParameterTypes.STRING.tryParse(value.getAsString()));
 		} catch (final Exception e) {
-			return false;
+			throw e;
 		}
-		return true;
 	}
 
 }

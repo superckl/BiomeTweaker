@@ -259,7 +259,9 @@ public class BiomeTweaker {
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement element:array){
 				final JsonObject obj = (JsonObject) element;
-				final File biomeOutput = new File(biomeDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+						.append(" (").append(obj.get("Resource Location").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+				final File biomeOutput = new File(biomeDir, fileName.toString());
 				if(biomeOutput.exists())
 					biomeOutput.delete();
 				biomeOutput.createNewFile();
@@ -305,7 +307,9 @@ public class BiomeTweaker {
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement ele:entityArray){
 				final JsonObject obj = (JsonObject) ele;
-				final File entityOutput = new File(entityDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+						.append(" (").append(obj.get("Registry ID").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+				final File entityOutput = new File(entityDir, fileName.toString());
 				if(entityOutput.exists())
 					entityOutput.delete();
 				entityOutput.createNewFile();
@@ -345,7 +349,9 @@ public class BiomeTweaker {
 		if(Config.INSTANCE.isOutputSeperateFiles())
 			for(final JsonElement ele:dimArray){
 				final JsonObject obj = (JsonObject) ele;
-				final File dimOutput = new File(dimDir, obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")+".json");
+				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+						.append(" (").append(obj.get("Suffix").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+				final File dimOutput = new File(dimDir, fileName.toString());
 				if(dimOutput.exists())
 					dimOutput.delete();
 				dimOutput.createNewFile();

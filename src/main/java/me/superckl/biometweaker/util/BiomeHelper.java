@@ -68,10 +68,11 @@ public class BiomeHelper {
 		obj.addProperty("Humidity", biome.getRainfall());
 		obj.addProperty("Water Tint", biome.getWaterColorMultiplier());
 		obj.addProperty("Enable Rain", biome.enableRain);
-		obj.addProperty("Enable Snow", biome.enableSnow);
+		obj.addProperty("Enable Snow", biome.getEnableSnow());
 		JsonArray array = new JsonArray();
-		for(final Type type: BiomeDictionary.getTypes(biome))
-			array.add(new JsonPrimitive(type.toString()));
+		if(BiomeDictionary.hasAnyType(biome))
+			for(final Type type: BiomeDictionary.getTypes(biome))
+				array.add(new JsonPrimitive(type.toString()));
 		obj.add("Dictionary Types", array);
 
 		final JsonObject managerWeights = new JsonObject();
@@ -226,6 +227,22 @@ public class BiomeHelper {
 			BiomeHelper.isModded.setBoolean(list, true);
 		}
 		BiomeHelper.hasModded = true;
+	}
+
+	private static int nextBiomeId = 40;
+
+	public static int getNextFreeBiomeId()
+	{
+		for (int i = BiomeHelper.nextBiomeId; i < 256; i++)
+			if (Biome.getBiome(i) != null) {
+				if (i == 255) throw new IllegalArgumentException("There are no more biome ids avaliable!");
+				continue;
+			}else{
+				BiomeHelper.nextBiomeId = i + 1;
+				return i;
+			}
+
+		return -1;
 	}
 
 }

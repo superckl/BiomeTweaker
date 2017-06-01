@@ -40,7 +40,7 @@ public class PropertyDecorationPerChunk extends Property<Integer> {
 
 	@Override
 	public boolean isReadable() {
-		return true;
+		return false;
 	}
 
 	@Override

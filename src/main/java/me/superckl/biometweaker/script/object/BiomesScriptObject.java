@@ -32,13 +32,13 @@ import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackS
 import me.superckl.biometweaker.script.command.entity.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddActualFillerBlock;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddDictionaryType;
-import me.superckl.biometweaker.script.command.generation.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddToGeneration;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterBiomeReplacement;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterVillageBlockReplacement;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveAllDictionaryTypes;
+import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveBiome;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveFeature;
@@ -93,7 +93,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 
 		ScriptCommandListing listing = new ScriptCommandListing();
 		listing.addEntry(new ArrayList<ParameterWrapper>()
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
+				, ScriptCommandRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
 		validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
@@ -151,11 +151,6 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveFeature.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 		validCommands.put("removeFeature", listing);
-
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
-		validCommands.put("create", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())

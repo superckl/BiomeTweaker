@@ -19,8 +19,8 @@ import me.superckl.biometweaker.script.command.entity.ScriptCommandAddRemoveSpaw
 import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackSize;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddActualFillerBlock;
+import me.superckl.biometweaker.script.command.generation.ScriptCommandAddBiome;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddDictionaryType;
-import me.superckl.biometweaker.script.command.generation.ScriptCommandAddRemoveBiome;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddToGeneration;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAverageBiomeSize;
@@ -28,6 +28,7 @@ import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterB
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterBlockReplacement;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRegisterVillageBlockReplacement;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveAllDictionaryTypes;
+import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveBiome;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDecoration;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveDictionaryType;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandRemoveFeature;
@@ -45,7 +46,7 @@ public class TweakerScriptObject extends ScriptObject{
 
 		ScriptCommandListing listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
+				, ScriptCommandRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
 		validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
@@ -121,9 +122,10 @@ public class TweakerScriptObject extends ScriptObject{
 		validCommands.put("removeFeature", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
-		validCommands.put("create", listing);
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddBiome.class.getDeclaredConstructor(String.class));
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()),
+				ScriptCommandAddBiome.class.getDeclaredConstructor(String.class, IBiomePackage.class));
+		validCommands.put("createBiome", listing);
 
 
 		listing = new ScriptCommandListing();

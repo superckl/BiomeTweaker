@@ -19,22 +19,22 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType
 
 public class BiomePropertyManager {
 
-	public static final PropertyField<String> NAME = new PropertyField<>(Biome.class, ObfNameHelper.Fields.biomeName.getName(), String.class);
-	public static final PropertyField<Float> HEIGHT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.baseHeight.getName(), Float.class);
-	public static final PropertyField<Float> HEIGHT_VARIATION = new PropertyField<>(Biome.class, ObfNameHelper.Fields.heightVariation.getName(), Float.class);
-	public static final PropertyBlockState TOP_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.topBlock.getName());
-	public static final PropertyBlockStateMeta TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.topBlock.getName());
-	public static final PropertyBlockState FILLER_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.fillerBlock.getName());
-	public static final PropertyBlockStateMeta FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.fillerBlock.getName());
+	public static final PropertyField<String> NAME = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BIOMENAME.getName(), String.class);
+	public static final PropertyField<Float> HEIGHT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BASEHEIGHT.getName(), Float.class);
+	public static final PropertyField<Float> HEIGHT_VARIATION = new PropertyField<>(Biome.class, ObfNameHelper.Fields.HEIGHTVARIATION.getName(), Float.class);
+	public static final PropertyBlockState TOP_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName());
+	public static final PropertyBlockStateMeta TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName());
+	public static final PropertyBlockState FILLER_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
+	public static final PropertyBlockStateMeta FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
 	public static final PropertyBlockState OCEAN_TOP_BLOCK = new PropertyBlockState(Biome.class, "oceanTopBlock");
 	public static final PropertyBlockStateMeta OCEAN_TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanTopBlock");
 	public static final PropertyBlockState OCEAN_FILLER_BLOCK = new PropertyBlockState(Biome.class, "oceanFillerBlock");
 	public static final PropertyBlockStateMeta OCEAN_FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanFillerBlock");
-	public static final PropertyField<Float> TEMPERATURE = new PropertyField<>(Biome.class, ObfNameHelper.Fields.temperature.getName(), Float.class);
-	public static final PropertyField<Float> HUMIDITY = new PropertyField<>(Biome.class, ObfNameHelper.Fields.rainfall.getName(), Float.class);
-	public static final PropertyField<Integer> WATER_TINT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.waterColor.getName(), Integer.class);
-	public static final PropertyField<Boolean> ENABLE_RAIN = new PropertyField<>(Biome.class, ObfNameHelper.Fields.enableRain.getName(), Boolean.class);
-	public static final PropertyField<Boolean> ENABLE_SNOW = new PropertyField<>(Biome.class, ObfNameHelper.Fields.enableSnow.getName(), Boolean.class);
+	public static final PropertyField<Float> TEMPERATURE = new PropertyField<>(Biome.class, ObfNameHelper.Fields.TEMPERATURE.getName(), Float.class);
+	public static final PropertyField<Float> HUMIDITY = new PropertyField<>(Biome.class, ObfNameHelper.Fields.RAINFALL.getName(), Float.class);
+	public static final PropertyField<Integer> WATER_TINT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.WATERCOLOR.getName(), Integer.class);
+	public static final PropertyField<Boolean> ENABLE_RAIN = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLERAIN.getName(), Boolean.class);
+	public static final PropertyField<Boolean> ENABLE_SNOW = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLESNOW.getName(), Boolean.class);
 	public static final PropertyField<Integer> GRASS_COLOR = new PropertyField<>(Biome.class, "grassColor", Integer.class);
 	public static final PropertyField<Integer> FOLIAGE_COLOR = new PropertyField<>(Biome.class, "foliageColor", Integer.class);
 	public static final PropertyField<Integer> WATER_COLOR = new PropertyField<>(Biome.class, "waterColor", Integer.class);

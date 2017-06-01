@@ -30,7 +30,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)
-				if(mNode.name.equals(ObfNameHelper.Methods.getBiomeGrassColor.getName("(Lnet/minecraft/util/math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util/math/BlockPos;)I")){
+				if(mNode.name.equals(ObfNameHelper.Methods.GETBIOMEGRASSCOLOR.getName("(Lnet/minecraft/util/math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util/math/BlockPos;)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
@@ -49,7 +49,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(mNode.name.equals(ObfNameHelper.Methods.getBiomeFoliageColor.getName("(Lnet/minecraft/util.math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util.math/BlockPos;)I")){
+				}else if(mNode.name.equals(ObfNameHelper.Methods.GETBIOMEFOLIAGECOLOR.getName("(Lnet/minecraft/util.math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util.math/BlockPos;)I")){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
@@ -76,7 +76,7 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ObfNameHelper.Methods.genTerrainBlocks.getName(ObfNameHelper.Descriptors.genTerrainBlocks.getDescriptor())) && mNode.desc.equals(ObfNameHelper.Descriptors.genTerrainBlocks.getDescriptor())){
+				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ObfNameHelper.Methods.GENTERRAINBLOCKS.getName(ObfNameHelper.Descriptors.GENTERRAINBLOCKS.getDescriptor())) && mNode.desc.equals(ObfNameHelper.Descriptors.GENTERRAINBLOCKS.getDescriptor())){
 					//TODO misses many plausible cases, but catches all vanilla cases.
 					AbstractInsnNode node = ASMHelper.findFirstInstruction(mNode);
 					AbstractInsnNode nextNode = node;
@@ -87,19 +87,19 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 							if((node instanceof FieldInsnNode) == false)
 								continue;
 							final FieldInsnNode fNode = (FieldInsnNode) node;
-							if((fNode.name.equals(ObfNameHelper.Fields.topBlock.getName()) || fNode.name.equals(ObfNameHelper.Fields.fillerBlock.getName())) && fNode.desc.equals("Lnet/minecraft/block/state/IBlockState;")){
+							if((fNode.name.equals(ObfNameHelper.Fields.TOPBLOCK.getName()) || fNode.name.equals(ObfNameHelper.Fields.FILLERBLOCK.getName())) && fNode.desc.equals("Lnet/minecraft/block/state/IBlockState;")){
 								AbstractInsnNode prevNode = ASMHelper.findPreviousInstruction(fNode);
 								if((prevNode != null) && (prevNode instanceof MethodInsnNode) && (prevNode.getOpcode() == Opcodes.INVOKEVIRTUAL || prevNode.getOpcode() == Opcodes.INVOKEINTERFACE)){
 									MethodInsnNode prevMNode = (MethodInsnNode) prevNode;
 									//Only tests for getDefaultState...
-									if(!(prevMNode.name.equals(ObfNameHelper.Methods.getDefaultState.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;"))){
+									if(!(prevMNode.name.equals(ObfNameHelper.Methods.GETDEFAULTSTATE.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;"))){
 										//skip exactly three nodes to test for lines with simple withProperty calls
 										prevNode = ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(prevMNode)));
 										if(prevNode == null || prevNode instanceof MethodInsnNode == false || prevNode.getOpcode() != Opcodes.INVOKEVIRTUAL)
 											continue;
 										prevMNode = (MethodInsnNode) prevNode;
 									}
-									if(prevMNode.name.equals(ObfNameHelper.Methods.getDefaultState.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;")){
+									if(prevMNode.name.equals(ObfNameHelper.Methods.GETDEFAULTSTATE.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;")){
 										prevNode = ASMHelper.findPreviousInstruction(prevMNode);
 										if(prevNode != null && prevNode instanceof FieldInsnNode && prevNode.getOpcode() == Opcodes.GETSTATIC){
 											final FieldInsnNode prevFNode = (FieldInsnNode) prevNode;

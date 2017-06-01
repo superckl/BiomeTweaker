@@ -38,7 +38,7 @@ public class ModuleBlockOldLeaf implements IClassTransformerModule{
 
 	@Override
 	public String[] getClassesToTransform() {
-		return new String[] {ObfNameHelper.Classes.blockOldLead.getName()};
+		return new String[] {ObfNameHelper.Classes.BLOCKOLDLEAD.getName()};
 	}
 
 	@Override

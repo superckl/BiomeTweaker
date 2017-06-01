@@ -49,4 +49,14 @@ public class PropertyGenWeight extends Property<Integer>{
 		throw new UnsupportedOperationException("Can't get gen weight!");
 	}
 
+	@Override
+	public boolean isReadable() {
+		return false;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

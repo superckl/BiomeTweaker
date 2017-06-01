@@ -38,4 +38,14 @@ public class PropertyDecorationPerChunk extends Property<Integer> {
 		return map.get(id);
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

@@ -63,4 +63,14 @@ public final class PropertyField<K> extends Property<K>{
 		return this.fieldName;
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

@@ -13,6 +13,7 @@ import me.superckl.api.biometweaker.property.PropertyField;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.core.ObfNameHelper;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
 
@@ -38,6 +39,7 @@ public class BiomePropertyManager {
 	public static final PropertyField<Integer> FOLIAGE_COLOR = new PropertyField<>(Biome.class, "foliageColor", Integer.class);
 	public static final PropertyField<Integer> WATER_COLOR = new PropertyField<>(Biome.class, "waterColor", Integer.class);
 	public static final PropertyField<Integer> SKY_COLOR = new PropertyField<>(Biome.class, "skyColor", Integer.class);
+	public static final PropertyField<IBlockState[]> ACTUAL_FILLER_BLOCKS = new PropertyField<>(Biome.class, "actualFillerBlocks", IBlockState[].class);
 	public static final PropertyGenWeight GEN_WEIGHT = new PropertyGenWeight();
 	public static final PropertyGenVillages GEN_VILLAGES = new PropertyGenVillages();
 	public static final PropertyGenStrongholds GEN_STRONGHOLDS = new PropertyGenStrongholds();
@@ -71,10 +73,12 @@ public class BiomePropertyManager {
 		}
 	}
 
-	public static void setProperty(final Biome biome, final String property, final JsonElement value) throws Exception{
+	public static boolean setProperty(final Biome biome, final String property, final JsonElement value) throws Exception{
 		final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
 		if(prop == null)
 			throw new IllegalArgumentException("No property found for "+property);
+		if(!prop.isSettable())
+			return false;
 		final Class<?> type = prop.getTypeClass();
 		try {
 			if(type.getCanonicalName().equals(Integer.class.getCanonicalName()))
@@ -88,6 +92,7 @@ public class BiomePropertyManager {
 		} catch (final Exception e) {
 			throw e;
 		}
+		return true;
 	}
 
 }

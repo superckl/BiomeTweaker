@@ -37,6 +37,11 @@ public class ScriptCommandInheritProperties implements IScriptCommand{
 					LogHelper.error("No property found for "+property);
 					continue;
 				}
+				if(!prop.isCopyable()){
+					if(this.properties != null)
+						LogHelper.error("Property "+property + " is not copyable!");
+					continue;
+				}
 				final Iterator<Biome> inheritFrom = this.toInheritFrom.getIterator();
 				while(inheritFrom.hasNext())
 					try {

@@ -27,4 +27,14 @@ public class PropertyBlockStateMeta extends Property<Integer>{
 		return blockState.getBlock().getMetaFromState(blockState);
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

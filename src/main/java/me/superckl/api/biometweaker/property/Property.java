@@ -10,8 +10,16 @@ public abstract class Property <K> {
 
 	public abstract void set(Object obj, K val);
 	public abstract K get(Object obj);
+	public abstract boolean isReadable();
+	public abstract boolean isSettable();
+
+	public boolean isCopyable(){
+		return this.isReadable() && this.isSettable();
+	}
 
 	public void copy(final Object from, final Object to){
+		if(!this.isCopyable())
+			throw new UnsupportedOperationException("Property cannot be copied!");
 		this.set(to, this.get(from));
 	}
 

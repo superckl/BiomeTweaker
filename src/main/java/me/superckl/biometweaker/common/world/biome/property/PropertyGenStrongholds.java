@@ -27,4 +27,14 @@ public class PropertyGenStrongholds extends Property<Boolean>{
 		return BiomeManager.strongHoldBiomes.contains(obj) && !BiomeManager.strongHoldBiomesBlackList.contains(obj);
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

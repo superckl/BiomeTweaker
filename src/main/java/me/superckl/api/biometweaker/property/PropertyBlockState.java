@@ -28,4 +28,14 @@ public class PropertyBlockState extends Property<String>{
 		return Block.REGISTRY.getNameForObject(blockState.getBlock()).toString();
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

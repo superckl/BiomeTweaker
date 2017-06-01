@@ -36,4 +36,14 @@ public class PropertySpawnBiome extends Property<Boolean>{
 		return BiomeProvider.allowedBiomes.contains(obj);
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

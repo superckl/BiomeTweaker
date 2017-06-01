@@ -20,7 +20,17 @@ public class PropertyGenTallPlants extends Property<Boolean>{
 
 	@Override
 	public Boolean get(final Object obj) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-		throw new UnsupportedOperationException("Can't get gen tall plants!");
+		return !(Biome.DOUBLE_PLANT_GENERATOR instanceof WorldGenDoublePlantBlank);
+	}
+
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
 	}
 
 }

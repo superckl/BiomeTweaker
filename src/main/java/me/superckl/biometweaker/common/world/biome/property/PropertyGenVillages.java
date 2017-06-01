@@ -28,4 +28,14 @@ public class PropertyGenVillages extends Property<Boolean>{
 		return MapGenVillage.VILLAGE_SPAWN_BIOMES.contains(obj);
 	}
 
+	@Override
+	public boolean isReadable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSettable() {
+		return true;
+	}
+
 }

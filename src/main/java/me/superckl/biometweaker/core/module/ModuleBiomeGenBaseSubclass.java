@@ -17,25 +17,27 @@ import org.objectweb.asm.tree.VarInsnNode;
 
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
-import me.superckl.biometweaker.core.ObfNameHelper;
+import me.superckl.biometweaker.core.ObfNameHelper.Classes;
+import me.superckl.biometweaker.core.ObfNameHelper.Fields;
+import me.superckl.biometweaker.core.ObfNameHelper.Methods;
+import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import squeek.asmhelper.me.superckl.biometweaker.ASMHelper;
-import squeek.asmhelper.me.superckl.biometweaker.ObfHelper;
 
 public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 
 	@Override
 	public byte[] transform(final String name, final String transformedName, final byte[] basicClass) {
 		final ClassReader reader = new ClassReader(basicClass);
-		if(ASMHelper.doesClassExtend(reader, ObfHelper.isObfuscated() ? "aig":"net/minecraft/world/biome/Biome")){
+		if(ASMHelper.doesClassExtend(reader, FMLDeobfuscatingRemapper.INSTANCE.unmap(Classes.BIOME.getInternalName()))){
 			final ClassNode cNode = new ClassNode();
 			reader.accept(cNode, 0);
 			for(final MethodNode mNode:cNode.methods)
-				if(mNode.name.equals(ObfNameHelper.Methods.GETBIOMEGRASSCOLOR.getName("(Lnet/minecraft/util/math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util/math/BlockPos;)I")){
+				if(Methods.GETBIOMEGRASSCOLOR.matches(mNode)){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
 						final MethodInsnNode methNode = (MethodInsnNode) aNode;
-						if(methNode.name.equals("getModdedBiomeGrassColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/Biome")){
+						if(Methods.GETMODDEDBIOMEGRASSCOLOR.matches(methNode)){
 							shouldCont = true;
 							break;
 						}
@@ -46,15 +48,15 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callGrassColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
+						list.add(Methods.CALLGRASSCOLOREVENT.toInsnNode(Opcodes.INVOKESTATIC));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(mNode.name.equals(ObfNameHelper.Methods.GETBIOMEFOLIAGECOLOR.getName("(Lnet/minecraft/util.math/BlockPos;)I")) && mNode.desc.equals("(Lnet/minecraft/util.math/BlockPos;)I")){
+				}else if(Methods.GETBIOMEFOLIAGECOLOR.matches(mNode)){
 					boolean shouldCont = false;
 					final AbstractInsnNode aNode = mNode.instructions.get(mNode.instructions.size()-2);
 					if(aNode instanceof MethodInsnNode){
 						final MethodInsnNode methNode = (MethodInsnNode) aNode;
-						if(methNode.name.equals("getModdedBiomeFoliageColor") && methNode.desc.equals("(I)I") && methNode.owner.equals("net/minecraft/world/biome/Biome")){
+						if(Methods.GETMODDEDBIOMEFOLIAGECOLOR.matches(methNode)){
 							shouldCont = true;
 							break;
 						}
@@ -65,18 +67,18 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
+						list.add(Methods.CALLFOLIAGECOLOREVENT.toInsnNode(Opcodes.INVOKESTATIC));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(mNode.name.equals("getWaterColorMultiplier") && mNode.desc.equals("()I")){
+				}else if(Methods.GETWATERCOLORMULTIPLIER.matches(mNode)){
 					BiomeTweakerCore.logger.debug("Found Biome subclass "+transformedName+" with overriden water color method. Attempting to force modded color event call...");
 					for(final AbstractInsnNode aINode:this.findReturnNodes(mNode.instructions)){
 						final InsnList list = new InsnList();
 						list.add(new VarInsnNode(Opcodes.ALOAD, 0));
-						list.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "me/superckl/biometweaker/util/BiomeHelper", "callFoliageColorEvent", "(ILnet/minecraft/world/biome/Biome;)I", false));
+						list.add(Methods.CALLWATERCOLOREVENT.toInsnNode(Opcodes.INVOKESTATIC));
 						mNode.instructions.insertBefore(aINode, list);
 					}
-				}else if(Config.INSTANCE.isRemoveLateAssignments() && mNode.name.equals(ObfNameHelper.Methods.GENTERRAINBLOCKS.getName(ObfNameHelper.Descriptors.GENTERRAINBLOCKS.getDescriptor())) && mNode.desc.equals(ObfNameHelper.Descriptors.GENTERRAINBLOCKS.getDescriptor())){
+				}else if(Config.INSTANCE.isRemoveLateAssignments() && Methods.GENTERRAINBLOCKS.matches(mNode)){
 					//TODO misses many plausible cases, but catches all vanilla cases.
 					AbstractInsnNode node = ASMHelper.findFirstInstruction(mNode);
 					AbstractInsnNode nextNode = node;
@@ -87,23 +89,23 @@ public class ModuleBiomeGenBaseSubclass implements IClassTransformerModule{
 							if((node instanceof FieldInsnNode) == false)
 								continue;
 							final FieldInsnNode fNode = (FieldInsnNode) node;
-							if((fNode.name.equals(ObfNameHelper.Fields.TOPBLOCK.getName()) || fNode.name.equals(ObfNameHelper.Fields.FILLERBLOCK.getName())) && fNode.desc.equals("Lnet/minecraft/block/state/IBlockState;")){
+							if(Fields.TOPBLOCK.matches(fNode) || Fields.FILLERBLOCK.matches(fNode)){
 								AbstractInsnNode prevNode = ASMHelper.findPreviousInstruction(fNode);
 								if((prevNode != null) && (prevNode instanceof MethodInsnNode) && (prevNode.getOpcode() == Opcodes.INVOKEVIRTUAL || prevNode.getOpcode() == Opcodes.INVOKEINTERFACE)){
 									MethodInsnNode prevMNode = (MethodInsnNode) prevNode;
 									//Only tests for getDefaultState...
-									if(!(prevMNode.name.equals(ObfNameHelper.Methods.GETDEFAULTSTATE.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;"))){
+									if(!(Methods.GETDEFAULTSTATE.matches(prevMNode))){
 										//skip exactly three nodes to test for lines with simple withProperty calls
 										prevNode = ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(ASMHelper.findPreviousInstruction(prevMNode)));
 										if(prevNode == null || prevNode instanceof MethodInsnNode == false || prevNode.getOpcode() != Opcodes.INVOKEVIRTUAL)
 											continue;
 										prevMNode = (MethodInsnNode) prevNode;
 									}
-									if(prevMNode.name.equals(ObfNameHelper.Methods.GETDEFAULTSTATE.getName("()Lnet/minecraft/block/state/IBlockState;")) && prevMNode.desc.equals("()Lnet/minecraft/block/state/IBlockState;")){
+									if(Methods.GETDEFAULTSTATE.matches(prevMNode)){
 										prevNode = ASMHelper.findPreviousInstruction(prevMNode);
 										if(prevNode != null && prevNode instanceof FieldInsnNode && prevNode.getOpcode() == Opcodes.GETSTATIC){
 											final FieldInsnNode prevFNode = (FieldInsnNode) prevNode;
-											if(prevFNode.desc.equals("Lnet/minecraft/block/Block;") || ASMHelper.doesClassExtend(ASMHelper.getClassReaderForClassName(Type.getType(prevFNode.desc).getClassName()), "net/minecraft/block/Block")){
+											if(prevFNode.desc.equals(ASMHelper.toDescriptor(Classes.BLOCK.getInternalName())) || ASMHelper.doesClassExtend(ASMHelper.getClassReaderForClassName(Type.getType(prevFNode.desc).getClassName()), Classes.BLOCK.getInternalName())){
 												prevNode = ASMHelper.findPreviousInstruction(prevFNode);
 												if((prevNode != null) && (prevNode instanceof VarInsnNode) && (prevNode.getOpcode() == Opcodes.ALOAD) && (((VarInsnNode)prevNode).var == 0)){
 													ASMHelper.removeFromInsnListUntil(mNode.instructions, prevNode, nextNode);

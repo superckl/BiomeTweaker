@@ -49,16 +49,22 @@ public class ScriptCommandAddBiome implements IScriptCommand{
 				LogHelper.warn("More than one biome found to copy! Only the first one will be copied.");
 			Constructor<? extends Biome> construct = null;
 			try{
+				//catches most vanilla biomes, a few exceptions
 				construct = toCopy.getBiomeClass().getConstructor(BiomeProperties.class);
 			} catch(final Exception e){
-				//Swallow it
+				try{
+					//Catches most BOP biomes
+					construct = toCopy.getBiomeClass().getConstructor();
+				} catch(final Exception e1){}
 			}
 			Biome biome;
 			if(construct == null){
 				LogHelper.warn("Unable to copy biome class "+toCopy.getBiomeClass().getCanonicalName()+"! Some functionality may not be copied!");
 				biome = new BiomeTweakerBiome(new BiomeProperties("BiomeTweaker Biome").setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F));
-			}else
-				biome = construct.newInstance(new BiomeProperties(toCopy.getBiomeName()));
+			}else{
+				final boolean noArgs = construct.getParameterCount() == 0;
+				biome = noArgs ? construct.newInstance():construct.newInstance(new BiomeProperties(toCopy.getBiomeName()));
+			}
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
 				return;
 			Biome.registerBiome(id, ModData.MOD_ID+":"+this.rLoc.toLowerCase(), biome);

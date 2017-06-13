@@ -56,6 +56,14 @@ public class BiomePropertyManager {
 	public static final PropertyDecorationPerChunk SAND_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SAND);
 	public static final PropertyDecorationPerChunk CLAY_PER_CHUNK = new PropertyDecorationPerChunk(EventType.CLAY);
 	public static final PropertyDecorationPerChunk BIG_MUSHROOMS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.BIG_SHROOM);
+	public static final PropertyDecorationPerChunk DESERT_WELLS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.DESERT_WELL);
+	public static final PropertyDecorationPerChunk FOSSILS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.FOSSIL);
+	public static final PropertyDecorationPerChunk ICE_PER_CHUNK = new PropertyDecorationPerChunk(EventType.ICE);
+	public static final PropertyDecorationPerChunk LAKES_PER_CHUNK = new PropertyDecorationPerChunk(EventType.LAKE_WATER);
+	public static final PropertyDecorationPerChunk LAVA_LAKES_PER_CHUNK = new PropertyDecorationPerChunk(EventType.LAKE_LAVA);
+	public static final PropertyDecorationPerChunk PUMPKINS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.PUMPKIN);
+	public static final PropertyDecorationPerChunk ROCK_PER_CHUNK = new PropertyDecorationPerChunk(EventType.ROCK);
+	public static final PropertyDecorationPerChunk SAND2_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SAND_PASS2);
 
 	public static final Map<String, Property<?>> propertyMap = Maps.newHashMap();
 

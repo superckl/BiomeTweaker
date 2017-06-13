@@ -25,11 +25,11 @@ public class BlockReplacer {
 			if(!manager.hasReplacements(stage))
 				return;
 			final TIntObjectMap<BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
-			final Chunk chunk = primer == null ? world.getChunkFromChunkCoords(pos.chunkXPos, pos.chunkZPos):null;
+			final Chunk chunk = primer == null ? world.getChunkFromChunkCoords(pos.x, pos.z):null;
 			for (int x = 0; x < 16; ++x)
 				for (int z = 0; z < 16; ++z)
 				{
-					final Biome biomegenbase = world.getBiome(new BlockPos((pos.chunkXPos << 4)+x, 0, (pos.chunkZPos << 4)+z));//e.biomeArray[l + (k * 16)];
+					final Biome biomegenbase = world.getBiome(new BlockPos((pos.x << 4)+x, 0, (pos.z << 4)+z));//e.biomeArray[l + (k * 16)];
 					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!manager.hasReplacements(id, stage))
 						continue;

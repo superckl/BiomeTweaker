@@ -102,7 +102,7 @@ public class CommandSetBiome implements ICommand{
 							realZ = 15-realZ;*/
 						final Chunk chunk = world.getChunkFromBlockCoords(new BlockPos(x, 0, z));
 						chunk.getBiomeArray()[(realZ*16)+realX] = (byte) id;
-						chunk.setChunkModified();
+						chunk.markDirty();
 						count++;
 					}
 				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.blocksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));
@@ -115,7 +115,7 @@ public class CommandSetBiome implements ICommand{
 						for(int z = chunkZ-i; z <= (chunkZ+i); z++){
 							final Chunk chunk = world.getChunkFromChunkCoords(x, z);
 							chunk.setBiomeArray(Arrays.copyOf(biomeArray, biomeArray.length));
-							chunk.setChunkModified();
+							chunk.markDirty();
 							count++;
 						}
 					sender.sendMessage(new TextComponentTranslation("biometweaker.msg.setbiome.chunksuccess.text", count, gen.getBiomeName()).setStyle(new Style().setColor(TextFormatting.GOLD)));

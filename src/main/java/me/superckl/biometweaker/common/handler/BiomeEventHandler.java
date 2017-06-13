@@ -228,7 +228,7 @@ public class BiomeEventHandler {
 				break;
 			}
 			case SAND:{
-				e.getNewBiomeDecorator().sandPerChunk = entry.getValue().get(id);
+				e.getNewBiomeDecorator().sandPatchesPerChunk = entry.getValue().get(id);
 				break;
 			}
 			case CLAY:{

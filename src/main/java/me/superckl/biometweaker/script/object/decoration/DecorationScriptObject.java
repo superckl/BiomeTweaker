@@ -7,21 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nonnull;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import lombok.Getter;
+import me.superckl.api.biometweaker.script.object.DecorationBuilderScriptObject;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
-import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorWrapper;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
@@ -29,14 +25,10 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationBlock;
 import me.superckl.biometweaker.util.LogHelper;
 
-public abstract class DecorationScriptObject<T extends WorldGeneratorWrapper<?>, V extends WorldGeneratorBuilder<T>> extends ScriptObject{
-
-	@Nonnull
-	@Getter
-	protected final V builder;
+public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>> extends DecorationBuilderScriptObject<V>{
 
 	public DecorationScriptObject(final V builder) {
-		this.builder = builder;
+		super(builder);
 	}
 
 	@Override
@@ -81,10 +73,6 @@ public abstract class DecorationScriptObject<T extends WorldGeneratorWrapper<?>,
 	@Override
 	public void addCommand(final IScriptCommand command) {
 		Config.INSTANCE.addCommand(command);
-	}
-
-	public T createDecoration(){
-		return this.builder.build();
 	}
 
 	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {

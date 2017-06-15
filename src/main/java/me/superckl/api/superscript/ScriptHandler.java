@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.object.ScriptObject;
-import me.superckl.biometweaker.util.LogHelper;
 
 public class ScriptHandler {
 
@@ -28,7 +27,7 @@ public class ScriptHandler {
 			try {
 				this.objects.put(entry.getKey(), entry.getValue().newInstance());
 			} catch (final Exception e) {
-				LogHelper.error("Failed to instantiate static object!");
+				APIInfo.log.error("Failed to instantiate static object!");
 				e.printStackTrace();
 			}
 	}

@@ -15,7 +15,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
-import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.biometweaker.common.world.gen.BlockReplacer;
 import me.superckl.biometweaker.common.world.gen.PlacementStage;
 import me.superckl.biometweaker.common.world.gen.feature.Decorator;

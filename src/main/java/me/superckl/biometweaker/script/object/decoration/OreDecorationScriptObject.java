@@ -5,7 +5,6 @@ import java.util.Map;
 import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;
-import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableWrapper;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreBlockToReplace;
@@ -13,7 +12,7 @@ import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandS
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreHeights;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreSize;
 
-public class OreDecorationScriptObject extends DecorationScriptObject<WorldGenMineableWrapper, WorldGenMineableBuilder>{
+public class OreDecorationScriptObject extends DecorationScriptObject<WorldGenMineableBuilder>{
 
 	public OreDecorationScriptObject() {
 		super(new WorldGenMineableBuilder());

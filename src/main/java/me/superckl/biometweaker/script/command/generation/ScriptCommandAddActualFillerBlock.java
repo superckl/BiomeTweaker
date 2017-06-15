@@ -3,9 +3,9 @@ package me.superckl.biometweaker.script.command.generation;
 import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import me.superckl.biometweaker.util.ArrayHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

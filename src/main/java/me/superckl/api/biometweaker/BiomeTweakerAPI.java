@@ -9,6 +9,7 @@ public class BiomeTweakerAPI {
 
 	private static Class<? extends ScriptObject> biomesScriptObjectClass;
 	private static Class<? extends ScriptObject> tweakerScriptObjectClass;
+	private static Class<? extends ScriptObject> oreDecorationScriptObjectClass;
 	private static boolean foundBiomeTweaker;
 
 	static{
@@ -17,6 +18,7 @@ public class BiomeTweakerAPI {
 			try {
 				BiomeTweakerAPI.biomesScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.BiomesScriptObject");
 				BiomeTweakerAPI.tweakerScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.TweakerScriptObject");
+				BiomeTweakerAPI.oreDecorationScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject");
 				found = true;
 			} catch (final Exception e) {
 				found = false;
@@ -38,17 +40,13 @@ public class BiomeTweakerAPI {
 		return BiomeTweakerAPI.tweakerScriptObjectClass;
 	}
 
-	public static boolean registerBiomesScriptCommand(final String name, final ScriptCommandListing listing){
-		if(BiomeTweakerAPI.foundBiomeTweaker){
-			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, BiomeTweakerAPI.biomesScriptObjectClass);
-			return true;
-		}
-		return false;
+	public static Class<? extends ScriptObject> getOreDecorationScriptObjectClass() {
+		return BiomeTweakerAPI.oreDecorationScriptObjectClass;
 	}
 
-	public static boolean registerTweakerScriptCommand(final String name, final ScriptCommandListing listing){
+	public static boolean registerScriptCommand(final Class<? extends ScriptObject> clazz, final String name, final ScriptCommandListing listing){
 		if(BiomeTweakerAPI.foundBiomeTweaker){
-			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, BiomeTweakerAPI.tweakerScriptObjectClass);
+			ScriptCommandRegistry.INSTANCE.registerListing(name, listing, clazz);
 			return true;
 		}
 		return false;

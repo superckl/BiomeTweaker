@@ -3,6 +3,7 @@ package me.superckl.api.biometweaker.script.wrapper;
 import java.util.List;
 
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
+import me.superckl.api.biometweaker.script.object.DecorationBuilderScriptObject;
 import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.BasicBiomesPackage;
@@ -16,8 +17,6 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.biometweaker.script.object.decoration.DecorationScriptObject;
-import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 
 public class BTParameterTypes {
 
@@ -108,17 +107,9 @@ public class BTParameterTypes {
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final ScriptObject obj = handler.getObjects().get(parameter);
-			if(obj != null && obj instanceof DecorationScriptObject)
-				return ((DecorationScriptObject<?, ?>)obj).getBuilder();
+			if(obj != null && obj instanceof DecorationBuilderScriptObject)
+				return ((DecorationBuilderScriptObject<?>)obj).getBuilder();
 			return null;
-		}
-	};
-
-	public static final ParameterType ORE_DECORATION_OBJECT = new ParameterType(new NoArgsParameterWrapper<>(OreDecorationScriptObject.class)) {
-
-		@Override
-		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			return new OreDecorationScriptObject();
 		}
 	};
 

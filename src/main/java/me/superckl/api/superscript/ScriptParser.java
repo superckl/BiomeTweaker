@@ -117,7 +117,7 @@ public class ScriptParser {
 					System.arraycopy(objs.toArray(), 0, args, 0, objs.size());
 					final ScriptObject obj = entry.getValue().getDeclaringClass().newInstance();
 					obj.readArgs(args);
-					return CollectionHelper.linkedMapWithEntry(var, (Object) obj/*new BiomesScriptObject(args.length == 1 ? args[0]:new MergedBiomesPackage(args)*/);
+					return CollectionHelper.linkedMapWithEntry(var, (Object) obj);
 				}
 			}
 			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");

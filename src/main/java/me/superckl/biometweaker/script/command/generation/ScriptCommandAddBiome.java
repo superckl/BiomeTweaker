@@ -7,12 +7,12 @@ import com.google.common.collect.Lists;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
-import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;

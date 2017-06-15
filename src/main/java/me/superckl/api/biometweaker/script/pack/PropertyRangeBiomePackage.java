@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
-import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
 import net.minecraft.world.biome.Biome;
 
 public class PropertyRangeBiomePackage implements IBiomePackage{

@@ -22,7 +22,7 @@ public class NoArgsParameterWrapper<K> extends ParameterWrapper{
 
 	@Override
 	public Pair<Object[], String[]> parseArgs(final ScriptHandler handler, final String... args) throws Exception {
-		return Pair.of(new Object[] {this.clazz.getConstructor().newInstance()}, args);
+		return Pair.of(new Object[] {this.clazz.newInstance()}, args);
 	}
 
 }

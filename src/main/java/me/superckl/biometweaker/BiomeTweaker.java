@@ -7,7 +7,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Iterator;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -16,14 +15,9 @@ import com.google.gson.JsonObject;
 
 import lombok.Cleanup;
 import lombok.Getter;
-import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.ScriptCommandManager;
 import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
-import me.superckl.api.superscript.object.ScriptObject;
-import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
@@ -31,9 +25,6 @@ import me.superckl.biometweaker.integration.IntegrationManager;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetPlacementStage;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetWorld;
-import me.superckl.biometweaker.script.object.BiomesScriptObject;
-import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
@@ -88,67 +79,10 @@ public class BiomeTweaker {
 	@EventHandler
 	public void onConstruction(final FMLConstructionEvent e){
 		final ProgressBar bar = ProgressManager.push("BiomeTweaker Construction", 1, true);
-		bar.step("Populating script commands");
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate BiomeScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
+		bar.step("Initializing scripting enviroment");
 
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate Tweaker command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(OreDecorationScriptObject.class, OreDecorationScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate OreDecorationScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);
-
-		try {
-			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forBiomes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forBiomesOfTypes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forAllBiomes", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forAllBiomesExcept", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("intersectionOf", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("subtractFrom", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.PROPERTY_RANGE_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forBiomesWithPropertyRange", listing);
-
-			listing = new ConstructorListing<ScriptObject>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.ORE_DECORATION_OBJECT.getSpecialWrapper()), OreDecorationScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("newOreDecoration", listing);
-
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
+		BiomeTweaker.proxy.initProperties();
+		BiomeTweaker.proxy.setupScripts();
 
 		ProgressManager.pop(bar);
 	}

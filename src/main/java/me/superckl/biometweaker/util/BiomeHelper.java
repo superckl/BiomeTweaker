@@ -10,7 +10,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import net.minecraft.util.math.BlockPos;

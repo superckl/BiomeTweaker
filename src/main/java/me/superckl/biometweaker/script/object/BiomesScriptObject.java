@@ -19,6 +19,7 @@ import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.util.SpawnListType;
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.command.IScriptCommand;
@@ -31,6 +32,7 @@ import me.superckl.biometweaker.script.command.entity.ScriptCommandAddRemoveSpaw
 import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackSize;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandRemoveAllSpawns;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddActualFillerBlock;
+import me.superckl.biometweaker.script.command.generation.ScriptCommandAddDecoration;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddDictionaryType;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddRemoveBiomeFlower;
 import me.superckl.biometweaker.script.command.generation.ScriptCommandAddToGeneration;
@@ -212,6 +214,11 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper())
 				, ScriptCommandInheritProperties.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
 		validCommands.put("inheritProperties", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper())
+				, ScriptCommandAddDecoration.class.getDeclaredConstructor(IBiomePackage.class, WorldGeneratorBuilder.class));
+		validCommands.put("addDecoration", listing);
 
 		return validCommands;
 	}

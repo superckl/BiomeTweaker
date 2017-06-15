@@ -60,7 +60,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Iterator<Biome > it = this.pack.getIterator();
+		final Iterator<Biome> it = this.pack.getIterator();
 		final Block toReplace = Block.getBlockFromName(this.toReplace);
 		if(toReplace == null)
 			throw new IllegalArgumentException("Failed to find block "+this.toReplace+"! Tweak will not be applied.");

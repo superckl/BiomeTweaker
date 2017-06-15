@@ -16,6 +16,8 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.biometweaker.script.object.decoration.DecorationScriptObject;
+import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 
 public class BTParameterTypes {
 
@@ -61,7 +63,7 @@ public class BTParameterTypes {
 		}
 	};
 
-	public static final ParameterType ALL_BIOMES_PACKAGE = new ParameterType(new AllPackParameterWrapper()) {
+	public static final ParameterType ALL_BIOMES_PACKAGE = new ParameterType(new NoArgsParameterWrapper<>(AllBiomesPackage.class)) {
 
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) {
@@ -98,6 +100,25 @@ public class BTParameterTypes {
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			throw new UnsupportedOperationException();
+		}
+	};
+
+	public static final ParameterType WORLD_GENERATOR_BUILDER = new ParameterType() {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			final ScriptObject obj = handler.getObjects().get(parameter);
+			if(obj != null && obj instanceof DecorationScriptObject)
+				return ((DecorationScriptObject<?, ?>)obj).getBuilder();
+			return null;
+		}
+	};
+
+	public static final ParameterType ORE_DECORATION_OBJECT = new ParameterType(new NoArgsParameterWrapper<>(OreDecorationScriptObject.class)) {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return new OreDecorationScriptObject();
 		}
 	};
 

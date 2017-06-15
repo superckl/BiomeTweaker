@@ -17,36 +17,30 @@ import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraftforge.common.DimensionManager;
 
 public class BlockReplacementManager {
 
-	private static TIntObjectMap<BlockReplacementManager> managers = new TIntObjectHashMap<>();
-
-	public static enum ReplacementStage{
-		BIOME_BLOCKS, PRE_POPULATE, POST_POPULATE, PRE_DECORATE, PRE_ORES, POST_ORES, POST_DECORATE;
-	}
+	private static final TIntObjectMap<BlockReplacementManager> managers = new TIntObjectHashMap<>();
 
 	@Getter
-	private static ReplacementStage defaultStage = ReplacementStage.BIOME_BLOCKS;
+	private static PlacementStage defaultStage = PlacementStage.BIOME_BLOCKS;
 
 	private static final boolean[] globalContigReplaces = new boolean[256];
 
-	private static final Map<ReplacementStage, TIntObjectMap<BlockReplacementEntryList>> globalBlockReplacements = new EnumMap<>(ReplacementStage.class);
+	private static final Map<PlacementStage, TIntObjectMap<BlockReplacementEntryList>> globalBlockReplacements = new EnumMap<>(PlacementStage.class);
 
 	private final boolean[] contigReplaces = new boolean[256];
 
-	private final Map<ReplacementStage, TIntObjectMap<BlockReplacementEntryList>> blockReplacements = new EnumMap<>(ReplacementStage.class);
+	private final Map<PlacementStage, TIntObjectMap<BlockReplacementEntryList>> blockReplacements = new EnumMap<>(PlacementStage.class);
 
 	private final Map<ChunkPos, TIntObjectMap<BlockReplacementEntryList>> replacedBiomes = Maps.newHashMap();
 
 	@Getter
 	@Setter
-	private static ReplacementStage currentStage = BlockReplacementManager.defaultStage;
+	private static PlacementStage currentStage = BlockReplacementManager.defaultStage;
 
 
 	public static BlockReplacementManager getManagerForWorld(final int worldId){
-		DimensionManager.getWorld(0);
 		BlockReplacementManager manager = BlockReplacementManager.managers.get(worldId);
 		if(manager == null){
 			manager = new BlockReplacementManager();
@@ -63,7 +57,7 @@ public class BlockReplacementManager {
 		return BlockReplacementManager.hasGlobalReplacements() || !this.blockReplacements.isEmpty();
 	}
 
-	public boolean hasReplacements(final ReplacementStage stage){
+	public boolean hasReplacements(final PlacementStage stage){
 		if(!this.hasReplacements())
 			return false;
 		final TIntObjectMap<BlockReplacementEntryList> entries = BlockReplacementManager.globalBlockReplacements.get(stage);
@@ -75,7 +69,7 @@ public class BlockReplacementManager {
 		return false;
 	}
 
-	public boolean hasReplacements(final int biome, final ReplacementStage stage){
+	public boolean hasReplacements(final int biome, final PlacementStage stage){
 		if(!this.hasReplacements())
 			return false;
 		final TIntObjectMap<BlockReplacementEntryList> entries = BlockReplacementManager.globalBlockReplacements.get(stage);
@@ -104,7 +98,7 @@ public class BlockReplacementManager {
 	}
 
 	@Nullable
-	public BlockReplacementEntryList findReplacementEntryList(final int biome, final ReplacementStage stage){
+	public BlockReplacementEntryList findReplacementEntryList(final int biome, final PlacementStage stage){
 		TIntObjectMap<BlockReplacementEntryList> entryMap = this.blockReplacements.get(stage);
 		if(entryMap != null)
 			return entryMap.get(biome);

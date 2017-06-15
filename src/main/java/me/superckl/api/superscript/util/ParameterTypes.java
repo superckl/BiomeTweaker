@@ -115,4 +115,12 @@ public final class ParameterTypes {
 		}
 	};
 
+	public static final ParameterType BLANK = new ParameterType() {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return null;
+		}
+	};
+
 }

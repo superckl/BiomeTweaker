@@ -1,10 +1,10 @@
 package me.superckl.biometweaker.common.world.gen;
 
 import java.util.List;
+import java.util.Random;
 
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntObjectMap;
-import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.ReplacementStage;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.WeightedBlockEntry;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
@@ -19,7 +19,7 @@ import net.minecraft.world.chunk.ChunkPrimer;
 
 public class BlockReplacer {
 
-	public static void runReplacement(final ReplacementStage stage, final World world, final ChunkPos pos, final ChunkPrimer primer){
+	public static void runReplacement(final PlacementStage stage, final World world, final Random rand, final ChunkPos pos, final ChunkPrimer primer){
 		try {
 			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(world.provider.getDimension());
 			if(!manager.hasReplacements(stage))
@@ -54,7 +54,7 @@ public class BlockReplacer {
 								final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
 								if(entries == null || entries.isEmpty())
 									continue;
-								toUse = WeightedRandom.getRandomItem(world.rand, entries);
+								toUse = WeightedRandom.getRandomItem(rand, entries);
 								previousReplacementsBiome.registerReplacement(toUse.itemWeight, block, meta, toUse.getBlock().getKey(), toUse.getBlock().getValue().intValue());
 							}
 						}

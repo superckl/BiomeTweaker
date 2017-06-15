@@ -16,8 +16,9 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
 import me.superckl.biometweaker.common.world.biome.property.BiomePropertyManager;
-import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.ReplacementStage;
 import me.superckl.biometweaker.common.world.gen.BlockReplacer;
+import me.superckl.biometweaker.common.world.gen.PlacementStage;
+import me.superckl.biometweaker.common.world.gen.feature.Decorator;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
@@ -67,37 +68,44 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onReplaceBlocks(final ReplaceBiomeBlocks e){
-		BlockReplacer.runReplacement(ReplacementStage.BIOME_BLOCKS, e.getWorld(), new ChunkPos(e.getX(), e.getZ()), e.getPrimer());
+		//Don't decorate here, too early
+		BlockReplacer.runReplacement(PlacementStage.BIOME_BLOCKS, e.getWorld(), e.getWorld().rand, new ChunkPos(e.getX(), e.getZ()), e.getPrimer());
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPrePopulateBiome(final PopulateChunkEvent.Pre e){
-		BlockReplacer.runReplacement(ReplacementStage.PRE_POPULATE, e.getWorld(), new ChunkPos(e.getChunkX(), e.getChunkZ()), null);
+		Decorator.runDecoration(PlacementStage.PRE_POPULATE, e.getWorld(), e.getRand(), new ChunkPos(e.getChunkX(), e.getChunkZ()));
+		BlockReplacer.runReplacement(PlacementStage.PRE_POPULATE, e.getWorld(), e.getRand(), new ChunkPos(e.getChunkX(), e.getChunkZ()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPostPopulateBiome(final PopulateChunkEvent.Post e){
-		BlockReplacer.runReplacement(ReplacementStage.POST_POPULATE, e.getWorld(), new ChunkPos(e.getChunkX(), e.getChunkZ()), null);
+		Decorator.runDecoration(PlacementStage.POST_POPULATE, e.getWorld(), e.getRand(), new ChunkPos(e.getChunkX(), e.getChunkZ()));
+		BlockReplacer.runReplacement(PlacementStage.POST_POPULATE, e.getWorld(), e.getRand(), new ChunkPos(e.getChunkX(), e.getChunkZ()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPreDecorateBiome(final DecorateBiomeEvent.Pre e){
-		BlockReplacer.runReplacement(ReplacementStage.PRE_DECORATE, e.getWorld(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
+		BlockReplacer.runReplacement(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPreGenerateOres(final OreGenEvent.Pre e){
-		BlockReplacer.runReplacement(ReplacementStage.PRE_ORES, e.getWorld(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.PRE_ORES, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
+		BlockReplacer.runReplacement(PlacementStage.PRE_ORES, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPreGenerateOres(final OreGenEvent.Post e){
-		BlockReplacer.runReplacement(ReplacementStage.POST_ORES, e.getWorld(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.POST_ORES, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
+		BlockReplacer.runReplacement(PlacementStage.POST_ORES, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPostDecorateBiome(final DecorateBiomeEvent.Post e){
-		BlockReplacer.runReplacement(ReplacementStage.POST_DECORATE, e.getWorld(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
+		BlockReplacer.runReplacement(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

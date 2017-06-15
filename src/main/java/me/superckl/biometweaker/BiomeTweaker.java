@@ -29,10 +29,11 @@ import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import me.superckl.biometweaker.proxy.IProxy;
-import me.superckl.biometweaker.script.command.misc.ScriptCommandSetReplacementStage;
+import me.superckl.biometweaker.script.command.misc.ScriptCommandSetPlacementStage;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetWorld;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.server.command.CommandInfo;
 import me.superckl.biometweaker.server.command.CommandListBiomes;
 import me.superckl.biometweaker.server.command.CommandOutput;
@@ -90,9 +91,22 @@ public class BiomeTweaker {
 		bar.step("Populating script commands");
 		try {
 			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
+		} catch (final Exception e2) {
+			LogHelper.error("Failed to populate BiomeScriptObject command listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
+		}
+
+		try {
 			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
 		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate command listings! Some tweaks may not be applied.");
+			LogHelper.error("Failed to populate Tweaker command listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
+		}
+
+		try {
+			ScriptCommandRegistry.INSTANCE.registerClassListing(OreDecorationScriptObject.class, OreDecorationScriptObject.populateCommands());
+		} catch (final Exception e2) {
+			LogHelper.error("Failed to populate OreDecorationScriptObject command listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
 		}
 
@@ -126,6 +140,10 @@ public class BiomeTweaker {
 			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.PROPERTY_RANGE_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomesWithPropertyRange", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.ORE_DECORATION_OBJECT.getSpecialWrapper()), OreDecorationScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("newOreDecoration", listing);
 
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
@@ -193,7 +211,7 @@ public class BiomeTweaker {
 		}
 		ScriptParser.parseScriptFile(file);
 		//Reset other various stages
-		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetReplacementStage("BIOME_BLOCKS"));
+		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetPlacementStage("BIOME_BLOCKS"));
 		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetWorld(null));
 		Config.INSTANCE.getCommandManager().setCurrentStage(ScriptCommandManager.getDefaultStage());
 	}

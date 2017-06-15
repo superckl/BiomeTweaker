@@ -1,14 +1,21 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
+import java.util.List;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.world.gen.feature.WorldGenTrees;
 
 public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWrapper>{
 
 	private int minHeight = 4;
 	private IBlockState leafBlock = Blocks.LEAVES.getDefaultState();
+	private IBlockState vineBlock = Blocks.VINE.getDefaultState();
 	private boolean growVines = false;
+	private boolean checkCanGrow = true;
+	private final List<Predicate<IBlockState>> soilPredicates = Lists.newArrayList();
 
 	public WorldGenTreesBuilder() {
 		this.setMainBlock(Blocks.LOG.getDefaultState());
@@ -16,7 +23,7 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 
 	@Override
 	public WorldGenTreesWrapper build() {
-		final WorldGenTrees gen = new WorldGenTrees(false, this.minHeight, this.mainBlock, this.leafBlock, this.growVines);
+		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicates);
 		return new WorldGenTreesWrapper(gen, this.count);
 	}
 
@@ -36,12 +43,32 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 		this.leafBlock = leafBlock;
 	}
 
+	public IBlockState getVineBlock() {
+		return this.vineBlock;
+	}
+
+	public void setVineBlock(final IBlockState vineBlock) {
+		this.vineBlock = vineBlock;
+	}
+
 	public boolean isGrowVines() {
 		return this.growVines;
 	}
 
 	public void setGrowVines(final boolean vines) {
 		this.growVines = vines;
+	}
+
+	public boolean isCheckCanGrow() {
+		return this.checkCanGrow;
+	}
+
+	public void setCheckCanGrow(final boolean checkCanGrow) {
+		this.checkCanGrow = checkCanGrow;
+	}
+
+	public void addSoilPredicate(final Predicate<IBlockState> predicate){
+		this.soilPredicates.add(predicate);
 	}
 
 }

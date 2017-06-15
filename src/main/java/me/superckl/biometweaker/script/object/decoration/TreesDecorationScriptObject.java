@@ -7,9 +7,12 @@ import com.google.common.collect.Lists;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandAddTreesSoilBlock;
+import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesCheckGrow;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesGrowVines;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesHeight;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesLeafBlock;
+import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesVineBlock;
 
 public class TreesDecorationScriptObject extends DecorationScriptObject<WorldGenTreesBuilder>{
 
@@ -26,6 +29,11 @@ public class TreesDecorationScriptObject extends DecorationScriptObject<WorldGen
 		validCommands.put("setGrowVines", listing);
 
 		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.BOOLEAN.getSimpleWrapper()),
+				ScriptCommandSetTreesCheckGrow.class.getConstructor(WorldGenTreesBuilder.class, Boolean.TYPE));
+		validCommands.put("setCheckCanGrow", listing);
+
+		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 				ScriptCommandSetTreesHeight.class.getConstructor(WorldGenTreesBuilder.class, Integer.TYPE));
 		validCommands.put("setHeight", listing);
@@ -36,6 +44,20 @@ public class TreesDecorationScriptObject extends DecorationScriptObject<WorldGen
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
 				ScriptCommandSetTreesLeafBlock.class.getConstructor(WorldGenTreesBuilder.class, String.class));
 		validCommands.put("setLeafBlock", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+				ScriptCommandSetTreesVineBlock.class.getConstructor(WorldGenTreesBuilder.class, String.class, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
+				ScriptCommandSetTreesVineBlock.class.getConstructor(WorldGenTreesBuilder.class, String.class));
+		validCommands.put("setVineBlock", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+				ScriptCommandAddTreesSoilBlock.class.getConstructor(WorldGenTreesBuilder.class, String.class, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
+				ScriptCommandAddTreesSoilBlock.class.getConstructor(WorldGenTreesBuilder.class, String.class));
+		validCommands.put("addSoilBlock", listing);
 
 		return validCommands;
 	}

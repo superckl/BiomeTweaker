@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandAddTreesSoilBlock;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandAddTreesSoilBlock;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesCheckGrow;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesGrowVines;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesHeight;

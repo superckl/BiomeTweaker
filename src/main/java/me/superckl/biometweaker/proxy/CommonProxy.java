@@ -23,6 +23,7 @@ import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
 import me.superckl.biometweaker.core.ObfNameHelper;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.script.object.decoration.ClusterDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.TreesDecorationScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
@@ -124,6 +125,13 @@ public class CommonProxy implements IProxy{
 			e2.printStackTrace();
 		}
 
+		try {
+			ScriptCommandRegistry.INSTANCE.registerClassListing(ClusterDecorationScriptObject.class, ClusterDecorationScriptObject.populateCommands());
+		} catch (final Exception e2) {
+			LogHelper.error("Failed to populate ClusterDecorationScriptObject command listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
+		}
+
 		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);
 
 		try {
@@ -162,6 +170,10 @@ public class CommonProxy implements IProxy{
 			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(), TreesDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newTreeDecoration", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("newClusterDecoration", listing);
 
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");

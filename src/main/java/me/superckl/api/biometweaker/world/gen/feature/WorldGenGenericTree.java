@@ -5,6 +5,7 @@ import java.util.Random;
 
 import com.google.common.base.Predicate;
 
+import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import net.minecraft.block.BlockSapling;
 import net.minecraft.block.BlockVine;
 import net.minecraft.block.material.Material;
@@ -22,28 +23,34 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 public class WorldGenGenericTree extends WorldGenAbstractTree{
 
 	private final int minHeight;
+	private final int heightVariation;
+	private final int leafHeight;
 	private final IBlockState trunkBlock;
 	private final IBlockState leafBlock;
 	private final IBlockState vineBlock;
 	private final boolean growVines;
 	private final boolean checkCanGrow;
 	private final List<Predicate<IBlockState>> soilPredicates;
+	private final Predicate<IBlockState> leafPredicate;
 
-	public WorldGenGenericTree(final boolean notify, final int minHeight, final IBlockState trunkBlock, final IBlockState leafBlock,
+	public WorldGenGenericTree(final boolean notify, final int minHeight, final int heightVariation, final int leafHeight, final IBlockState trunkBlock, final IBlockState leafBlock,
 			final IBlockState vineBlock, final boolean growVines, final boolean checkCanGrow, final List<Predicate<IBlockState>> soilPredicates) {
 		super(notify);
 		this.minHeight = minHeight;
+		this.heightVariation = heightVariation;
+		this.leafHeight = leafHeight;
 		this.trunkBlock = trunkBlock;
 		this.leafBlock = leafBlock;
 		this.vineBlock = vineBlock;
 		this.growVines = growVines;
 		this.checkCanGrow = checkCanGrow;
 		this.soilPredicates = soilPredicates;
+		this.leafPredicate = new BlockEquivalencePredicate(this.leafBlock);
 	}
 
 	@Override
 	public boolean generate(final World world, final Random rand, final BlockPos position) {
-		final int height = rand.nextInt(3) + this.minHeight;
+		final int height = rand.nextInt(this.heightVariation) + this.minHeight;
 		boolean shouldGrow = true;
 
 		if (position.getY() >= 1 && position.getY() + height + 1 <= world.getHeight()){
@@ -87,21 +94,22 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 					if(this.checkCanGrow)
 						block.getBlock().onPlantGrow(block, world, position.down(), position);
 
-					for (int i3 = position.getY() - 3 + height; i3 <= position.getY() + height; ++i3){
-						final int i4 = i3 - (position.getY() + height);
-						final int j1 = 1 - i4 / 2;
+					for (int y = position.getY() - (this.leafHeight-1) + height; y <= position.getY() + height; ++y){
+						final int ly = y - (position.getY() + height);
+						final int leafRadius = 1 - ly / 2;
 
-						for (int k1 = position.getX() - j1; k1 <= position.getX() + j1; ++k1){
-							final int l1 = k1 - position.getX();
+						for (int x = position.getX() - leafRadius; x <= position.getX() + leafRadius; ++x){
+							final int lx = x - position.getX();
 
-							for (int i2 = position.getZ() - j1; i2 <= position.getZ() + j1; ++i2){
-								final int j2 = i2 - position.getZ();
+							for (int z = position.getZ() - leafRadius; z <= position.getZ() + leafRadius; ++z){
+								final int lz = z - position.getZ();
 
-								if (Math.abs(l1) != j1 || Math.abs(j2) != j1 || rand.nextInt(2) != 0 && i4 != 0){
-									final BlockPos blockpos = new BlockPos(k1, i3, i2);
+								if (Math.abs(lx) != leafRadius || Math.abs(lz) != leafRadius || rand.nextInt(2) != 0 && ly != 0){
+									final BlockPos blockpos = new BlockPos(x, y, z);
 									block = world.getBlockState(blockpos);
 
-									if (block.getBlock().isAir(block, world, blockpos) || block.getBlock().isLeaves(block, world, blockpos) || block.getMaterial() == Material.VINE)
+									if (block.getBlock().isAir(block, world, blockpos) || (this.leafBlock.getBlock().isLeaves(block, world, blockpos) &&
+											block.getBlock().isLeaves(block, world, blockpos)) || this.leafPredicate.apply(block) || block.getMaterial() == Material.VINE)
 										this.setBlockAndNotifyAdequately(world, blockpos, this.leafBlock);
 								}
 							}
@@ -112,7 +120,8 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 						final BlockPos up = position.up(y);
 						block = world.getBlockState(up);
 
-						if (block.getBlock().isAir(block, world, up) || block.getBlock().isLeaves(block, world, up) || block.getMaterial() == Material.VINE){
+						if (block.getBlock().isAir(block, world, up) || (this.leafBlock.getBlock().isLeaves(block, world, up) &&
+								block.getBlock().isLeaves(block, world, up)) || this.leafPredicate.apply(block) || block.getMaterial() == Material.VINE){
 							this.setBlockAndNotifyAdequately(world, position.up(y), this.trunkBlock);
 
 							if (this.growVines && y > 0){
@@ -133,33 +142,33 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 					}
 
 					if (this.growVines)
-						for (int k3 = position.getY() - 3 + height; k3 <= position.getY() + height; ++k3){
-							final int j4 = k3 - (position.getY() + height);
-							final int k4 = 2 - j4 / 2;
-							final BlockPos.MutableBlockPos blockpos$mutableblockpos1 = new BlockPos.MutableBlockPos();
+						for (int y = position.getY() - 3 + height; y <= position.getY() + height; ++y){
+							final int ly = y - (position.getY() + height);
+							final int vineRadius = 2 - ly / 2;
+							final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
-							for (int l4 = position.getX() - k4; l4 <= position.getX() + k4; ++l4)
-								for (int i5 = position.getZ() - k4; i5 <= position.getZ() + k4; ++i5){
-									blockpos$mutableblockpos1.setPos(l4, k3, i5);
+							for (int x = position.getX() - vineRadius; x <= position.getX() + vineRadius; ++x)
+								for (int z = position.getZ() - vineRadius; z <= position.getZ() + vineRadius; ++z){
+									mutableBlockPos.setPos(x, y, z);
 
-									block = world.getBlockState(blockpos$mutableblockpos1);
-									if (block.getBlock().isLeaves(block, world, blockpos$mutableblockpos1)){
-										final BlockPos blockpos2 = blockpos$mutableblockpos1.west();
-										final BlockPos blockpos3 = blockpos$mutableblockpos1.east();
-										final BlockPos blockpos4 = blockpos$mutableblockpos1.north();
-										final BlockPos blockpos1 = blockpos$mutableblockpos1.south();
+									block = world.getBlockState(mutableBlockPos);
+									if (block.getBlock().isLeaves(block, world, mutableBlockPos)){
+										final BlockPos west = mutableBlockPos.west();
+										final BlockPos east = mutableBlockPos.east();
+										final BlockPos north = mutableBlockPos.north();
+										final BlockPos south = mutableBlockPos.south();
 
-										if (rand.nextInt(4) == 0 && world.isAirBlock(blockpos2))
-											this.addHangingVine(world, blockpos2, BlockVine.EAST);
+										if (rand.nextInt(4) == 0 && world.isAirBlock(west))
+											this.addHangingVine(world, west, BlockVine.EAST);
 
-										if (rand.nextInt(4) == 0 && world.isAirBlock(blockpos3))
-											this.addHangingVine(world, blockpos3, BlockVine.WEST);
+										if (rand.nextInt(4) == 0 && world.isAirBlock(east))
+											this.addHangingVine(world, east, BlockVine.WEST);
 
-										if (rand.nextInt(4) == 0 && world.isAirBlock(blockpos4))
-											this.addHangingVine(world, blockpos4, BlockVine.SOUTH);
+										if (rand.nextInt(4) == 0 && world.isAirBlock(north))
+											this.addHangingVine(world, north, BlockVine.SOUTH);
 
-										if (rand.nextInt(4) == 0 && world.isAirBlock(blockpos1))
-											this.addHangingVine(world, blockpos1, BlockVine.NORTH);
+										if (rand.nextInt(4) == 0 && world.isAirBlock(south))
+											this.addHangingVine(world, south, BlockVine.NORTH);
 									}
 								}
 						}
@@ -180,9 +189,9 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 	private void addHangingVine(final World worldIn, BlockPos pos, final PropertyBool prop)
 	{
 		this.addVine(worldIn, pos, prop);
-		int i = 4;
+		int vineLength = 4;
 
-		for (pos = pos.down(); worldIn.isAirBlock(pos) && i > 0; --i)
+		for (pos = pos.down(); worldIn.isAirBlock(pos) && vineLength > 0; --vineLength)
 		{
 			this.addVine(worldIn, pos, prop);
 			pos = pos.down();

@@ -8,11 +8,13 @@ import me.superckl.api.biometweaker.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandAddTreesSoilBlock;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesCheckGrow;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesGrowVines;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesHeight;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesLeafBlock;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetTreesVineBlock;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesCheckGrow;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesGrowVines;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesHeight;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesHeightVariation;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesLeafBlock;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesLeafHeight;
+import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesVineBlock;
 
 public class TreesDecorationScriptObject extends DecorationScriptObject<WorldGenTreesBuilder>{
 
@@ -37,6 +39,16 @@ public class TreesDecorationScriptObject extends DecorationScriptObject<WorldGen
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 				ScriptCommandSetTreesHeight.class.getConstructor(WorldGenTreesBuilder.class, Integer.TYPE));
 		validCommands.put("setHeight", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+				ScriptCommandSetTreesHeightVariation.class.getConstructor(WorldGenTreesBuilder.class, Integer.TYPE));
+		validCommands.put("setHeightVariation", listing);
+
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+				ScriptCommandSetTreesLeafHeight.class.getConstructor(WorldGenTreesBuilder.class, Integer.TYPE));
+		validCommands.put("setLeafHeight", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),

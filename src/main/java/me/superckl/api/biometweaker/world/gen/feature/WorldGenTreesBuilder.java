@@ -11,6 +11,8 @@ import net.minecraft.init.Blocks;
 public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWrapper>{
 
 	private int minHeight = 4;
+	private int leafHeight = 4;
+	private int heightVariation = 3;
 	private IBlockState leafBlock = Blocks.LEAVES.getDefaultState();
 	private IBlockState vineBlock = Blocks.VINE.getDefaultState();
 	private boolean growVines = false;
@@ -23,7 +25,7 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 
 	@Override
 	public WorldGenTreesWrapper build() {
-		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicates);
+		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.heightVariation, this.leafHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicates);
 		return new WorldGenTreesWrapper(gen, this.count);
 	}
 
@@ -33,6 +35,22 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 
 	public void setMinHeight(final int minHeight) {
 		this.minHeight = minHeight;
+	}
+
+	public int getLeafHeight() {
+		return this.leafHeight;
+	}
+
+	public void setLeafHeight(final int leafHeight) {
+		this.leafHeight = leafHeight;
+	}
+
+	public int getHeightVariation() {
+		return this.heightVariation;
+	}
+
+	public void setHeightVariation(final int heightVariation) {
+		this.heightVariation = heightVariation;
 	}
 
 	public IBlockState getLeafBlock() {

@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.script.command.generation.feature;
+package me.superckl.biometweaker.script.command.generation.feature.ore;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;

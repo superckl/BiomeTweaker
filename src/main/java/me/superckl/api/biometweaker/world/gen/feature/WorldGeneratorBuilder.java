@@ -7,7 +7,7 @@ public abstract class WorldGeneratorBuilder<V extends WorldGeneratorWrapper<?>> 
 
 	protected IBlockState mainBlock = Blocks.STONE.getDefaultState();
 	protected int count = 10;
-	
+
 	public abstract V build();
 
 	public IBlockState getMainBlock() {
@@ -19,11 +19,11 @@ public abstract class WorldGeneratorBuilder<V extends WorldGeneratorWrapper<?>> 
 	}
 
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(final int count) {
 		this.count = count;
 	}
-	
+
 }

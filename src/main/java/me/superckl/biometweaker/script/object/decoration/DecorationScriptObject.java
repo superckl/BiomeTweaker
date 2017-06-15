@@ -85,7 +85,7 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
 				ScriptCommandSetDecorationBlock.class.getConstructor(WorldGeneratorBuilder.class, String.class));
 		validCommands.put("setBlock", listing);
-		
+
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 				ScriptCommandSetDecorationCount.class.getConstructor(WorldGeneratorBuilder.class, Integer.TYPE));

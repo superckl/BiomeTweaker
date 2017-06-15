@@ -16,7 +16,7 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 
 	@Override
 	public WorldGenMineableWrapper build() {
-		final WorldGenMinable gen = new WorldGenMinable(this.getMainBlock(), this.size, this.predicate);
+		final WorldGenMinable gen = new WorldGenMinable(this.mainBlock, this.size, this.predicate);
 		if (this.maxHeight < this.minHeight){
 			final int i = this.minHeight;
 			this.minHeight = this.maxHeight;

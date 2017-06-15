@@ -8,13 +8,11 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 public class WorldGenMineableWrapper extends WorldGeneratorWrapper<WorldGenMinable>{
 
-	private final int count;
 	private final int maxHeight;
 	private final int minHeight;
 
 	public WorldGenMineableWrapper(final WorldGenMinable generator, final int count, final int maxHeight, final int minHeight) {
-		super(generator);
-		this.count = count;
+		super(generator, count);
 		this.maxHeight = maxHeight;
 		this.minHeight = minHeight;
 	}

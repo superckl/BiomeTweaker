@@ -115,6 +115,18 @@ public final class ParameterTypes {
 		}
 	};
 
+	public static final ParameterType BOOLEAN = new ParameterType() {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			if(parameter.equals("true"))
+				return true;
+			else if(parameter.equals("false"))
+				return false;
+			return null;
+		}
+	};
+
 	public static final ParameterType BLANK = new ParameterType() {
 
 		@Override

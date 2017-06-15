@@ -12,7 +12,6 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 	private int size = 9;
 	private int maxHeight = 128;
 	private int minHeight = 0;
-	private int count = 20;
 	private Predicate<IBlockState> predicate = new BlockEquivalencePredicate(Blocks.STONE.getDefaultState());
 
 	@Override
@@ -60,14 +59,6 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 
 	public void setMinHeight(final int minHeight) {
 		this.minHeight = minHeight;
-	}
-
-	public int getCount() {
-		return this.count;
-	}
-
-	public void setCount(final int count) {
-		this.count = count;
 	}
 
 }

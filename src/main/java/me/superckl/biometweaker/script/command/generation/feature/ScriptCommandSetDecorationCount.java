@@ -1,13 +1,13 @@
 package me.superckl.biometweaker.script.command.generation.feature;
 
 import lombok.RequiredArgsConstructor;
-import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.command.IScriptCommand;
 
 @RequiredArgsConstructor
-public class ScriptCommandSetOreCount implements IScriptCommand{
+public class ScriptCommandSetDecorationCount implements IScriptCommand{
 
-	private final WorldGenMineableBuilder builder;
+	private final WorldGeneratorBuilder<?> builder;
 	private final int count;
 
 	@Override

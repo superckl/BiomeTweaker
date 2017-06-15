@@ -23,6 +23,7 @@ import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationBlock;
+import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationCount;
 import me.superckl.biometweaker.util.LogHelper;
 
 public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>> extends DecorationBuilderScriptObject<V>{
@@ -78,12 +79,17 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {
 		final Map<String, ScriptCommandListing> validCommands = Maps.newLinkedHashMap();
 
-		final ScriptCommandListing listing = new ScriptCommandListing();
+		ScriptCommandListing listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 				ScriptCommandSetDecorationBlock.class.getConstructor(WorldGeneratorBuilder.class, String.class, Integer.TYPE));
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
 				ScriptCommandSetDecorationBlock.class.getConstructor(WorldGeneratorBuilder.class, String.class));
 		validCommands.put("setBlock", listing);
+		
+		listing = new ScriptCommandListing();
+		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+				ScriptCommandSetDecorationCount.class.getConstructor(WorldGeneratorBuilder.class, Integer.TYPE));
+		validCommands.put("setCount", listing);
 
 		return validCommands;
 	}

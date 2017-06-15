@@ -8,7 +8,6 @@ import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreBlockToReplace;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreCount;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreHeights;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetOreSize;
 
@@ -25,11 +24,6 @@ public class OreDecorationScriptObject extends DecorationScriptObject<WorldGenMi
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
 				ScriptCommandSetOreSize.class.getConstructor(WorldGenMineableBuilder.class, Integer.TYPE));
 		validCommands.put("setSize", listing);
-
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-				ScriptCommandSetOreCount.class.getConstructor(WorldGenMineableBuilder.class, Integer.TYPE));
-		validCommands.put("setCount", listing);
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),

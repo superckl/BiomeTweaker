@@ -13,6 +13,8 @@ import com.google.gson.JsonPrimitive;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.integration.IntegrationManager;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
@@ -45,7 +47,41 @@ public class BiomeHelper {
 		final boolean topNull = biome.topBlock == null || biome.topBlock.getBlock() == null || biome.topBlock.getBlock().delegate == null;
 		final boolean bottomNull = biome.topBlock == null || biome.topBlock.getBlock() == null || biome.topBlock.getBlock().delegate == null;
 		obj.addProperty("Top Block", topNull ? "ERROR":biome.topBlock.getBlock().delegate.name().toString());
+		obj.addProperty("Top Block Meta", topNull ? "ERROR":""+biome.topBlock.getBlock().getMetaFromState(biome.topBlock));
 		obj.addProperty("Filler Block", bottomNull ? "ERROR":biome.fillerBlock.getBlock().delegate.name().toString());
+		obj.addProperty("Filler Block Meta", topNull ? "ERROR":""+biome.fillerBlock.getBlock().getMetaFromState(biome.fillerBlock));
+		if(!BiomeTweaker.getInstance().isTweakEnabled("oceanTopBlock")){
+			obj.addProperty("Ocean Top Block", "Disabled. Activate in BiomeTweakerCore.");
+			obj.addProperty("Ocean Top Block Meta", "Disabled. Activate in BiomeTweakerCore.");
+		}else{
+			final String topBlock = BiomePropertyManager.OCEAN_TOP_BLOCK.get(biome);
+			final int meta = BiomePropertyManager.OCEAN_TOP_BLOCK_META.get(biome);
+			obj.addProperty("Ocean Top Block", topBlock);
+			obj.addProperty("Ocean Top Block Meta", Integer.toString(meta));
+		}
+		if(!BiomeTweaker.getInstance().isTweakEnabled("oceanFillerBlock")){
+			obj.addProperty("Ocean Filler Block", "Disabled. Activate in BiomeTweakerCore.");
+			obj.addProperty("Ocean Filler Block Meta", "Disabled. Activate in BiomeTweakerCore.");
+		}else{
+			final String topBlock = BiomePropertyManager.OCEAN_FILLER_BLOCK.get(biome);
+			final int meta = BiomePropertyManager.OCEAN_FILLER_BLOCK_META.get(biome);
+			obj.addProperty("Ocean Filler Block", topBlock);
+			obj.addProperty("Ocean Filler Block Meta", Integer.toString(meta));
+		}
+		if(!BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks"))
+			obj.addProperty("Actual Filler Blocks", "Disabled. Activate in BiomeTweakerCore.");
+		else{
+			final JsonArray array = new JsonArray();
+			final IBlockState[] states = BiomePropertyManager.ACTUAL_FILLER_BLOCKS.get(biome);
+			for(final IBlockState state:states){
+				final JsonObject blockObj = new JsonObject();
+				blockObj.addProperty("Block", Block.REGISTRY.getNameForObject(state.getBlock()).toString());
+				blockObj.addProperty("Meta", state.getBlock().getMetaFromState(state));
+				array.add(blockObj);
+			}
+			obj.add("Actual Filler Blocks", array);
+		}
+
 		try {
 			int i = -1;
 			//obj.addProperty("Actual Filler Block", ((Block) BiomeHelper.actualFillerBlock.get(gen)).delegate.name());

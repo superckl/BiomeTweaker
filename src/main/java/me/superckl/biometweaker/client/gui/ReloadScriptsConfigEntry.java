@@ -1,16 +1,8 @@
 package me.superckl.biometweaker.client.gui;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
 import com.google.common.collect.Lists;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import lombok.Cleanup;
-import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.BiomeTweakerCore;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.config.GuiConfig;
@@ -51,15 +43,9 @@ public class ReloadScriptsConfigEntry extends ButtonEntry{
 			return;
 		if(this.youSure)
 			try {
-				final File operateIn = new File(BiomeTweakerCore.mcLocation, "config/BiomeTweaker/");
-				final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");
-				@Cleanup
-				final
-				BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
-				final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
-				if(obj.entrySet().isEmpty())
-					LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
-				Config.INSTANCE.init(operateIn, obj);
+				BiomeTweaker.getInstance().getConfig().loadValues();
+				BiomeTweaker.getInstance().getCommandManager().reset();
+				BiomeTweaker.getInstance().parseScripts();
 				this.pressedCounter = 200;
 			} catch (final Exception e) {
 				LogHelper.error("Failed to reload scripts!");

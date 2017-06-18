@@ -9,7 +9,7 @@ import biomesoplenty.api.enums.BOPClimates.WeightedBiomeEntry;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.integration.bop.BOPBiomeProperties;
 import me.superckl.biometweaker.integration.bop.BOPIntegrationModule;
 import net.minecraft.world.biome.Biome;
@@ -56,7 +56,7 @@ public class ScriptCommandRemoveBOP implements IScriptCommand{
 						}
 					}
 				}
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(biome));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 		}
 	}
 

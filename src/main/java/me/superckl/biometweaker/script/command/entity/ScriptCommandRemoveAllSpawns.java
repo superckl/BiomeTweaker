@@ -7,7 +7,7 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -25,7 +25,7 @@ public class ScriptCommandRemoveAllSpawns implements IScriptCommand{
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveAllSpawns(this, gen, this.type)))
 				continue;
 			this.removeEntries(gen, this.type);
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

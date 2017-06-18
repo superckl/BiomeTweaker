@@ -15,7 +15,7 @@ import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackSize;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandRemoveAllSpawns;
@@ -102,10 +102,12 @@ public class TweakerScriptObject extends ScriptObject{
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandAddDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 		validCommands.put("addDicType", listing);
 
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
-		validCommands.put("addActualFillerBlock", listing);
+		if(BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks")){
+			listing = new ScriptCommandListing();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+			validCommands.put("addActualFillerBlock", listing);
+		}
 
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveDictionaryType.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
@@ -206,7 +208,7 @@ public class TweakerScriptObject extends ScriptObject{
 
 	@Override
 	public void addCommand(final IScriptCommand command) {
-		Config.INSTANCE.addCommand(command);
+		BiomeTweaker.getInstance().addCommand(command);
 	}
 
 }

@@ -9,7 +9,7 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -28,7 +28,7 @@ public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
 			BiomePropertyManager.setProperty(gen, this.key.toLowerCase(), this.value);
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

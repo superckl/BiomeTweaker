@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
-import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.Biome;
 
@@ -63,7 +63,7 @@ public class ScriptCommandRegisterVillageBlockReplacement implements IScriptComm
 				}
 			}
 			list.add(Pair.of(toReplacePair, Pair.of(replaceWith, this.replaceWithMeta)));
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

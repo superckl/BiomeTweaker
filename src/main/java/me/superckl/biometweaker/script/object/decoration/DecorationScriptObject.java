@@ -21,7 +21,7 @@ import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationBlock;
 import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationCount;
 import me.superckl.biometweaker.util.LogHelper;
@@ -65,7 +65,7 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 				if(listing.isPerformInst())
 					sCommand.perform();
 				else
-					Config.INSTANCE.addCommand(sCommand);
+					BiomeTweaker.getInstance().addCommand(sCommand);
 				return;
 			}
 		LogHelper.error("Failed to find meaning in command "+call+". It will be ignored.");
@@ -73,7 +73,7 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 
 	@Override
 	public void addCommand(final IScriptCommand command) {
-		Config.INSTANCE.addCommand(command);
+		BiomeTweaker.getInstance().addCommand(command);
 	}
 
 	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {

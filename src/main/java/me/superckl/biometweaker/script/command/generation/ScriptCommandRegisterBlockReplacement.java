@@ -5,9 +5,9 @@ import java.util.Iterator;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.world.TweakWorldManager;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager;
-import me.superckl.biometweaker.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
@@ -76,7 +76,7 @@ public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
 			else
 				BlockReplacementManager.getManagerForWorld(TweakWorldManager.getCurrentWorld()).registerBlockReplacement(Biome.getIdForBiome(gen),
 						this.weight, toReplace, this.toReplaceMeta, replaceWith, this.replaceWithMeta);
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

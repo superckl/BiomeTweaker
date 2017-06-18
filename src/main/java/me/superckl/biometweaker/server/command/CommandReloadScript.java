@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -52,7 +51,7 @@ public class CommandReloadScript implements ICommand{
 			return;
 		}
 		try {
-			final File operateIn = Config.INSTANCE.getWhereAreWe();
+			final File operateIn = BiomeTweaker.getInstance().getConfig().getWhereAreWe();
 			final File scriptFile = new File(operateIn, args[0]);
 			if(!scriptFile.exists() || !scriptFile.isFile()){
 				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.RED)));

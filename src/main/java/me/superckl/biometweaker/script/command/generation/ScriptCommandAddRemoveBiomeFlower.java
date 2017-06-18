@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.FlowerEntry;
@@ -56,7 +56,7 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 					if((entry.state.getBlock() == block) && (block.getMetaFromState(entry.state) == this.meta))
 						itF.remove();
 				}
-				Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+				BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 			}
 		}else{
 			final Block block = Block.getBlockFromName(this.block);
@@ -68,7 +68,7 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 				if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddFlower(this, gen, block, this.meta, this.weight)))
 					continue;
 				gen.addFlower(block.getStateFromMeta(this.meta), this.weight);
-				Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+				BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 			}
 		}
 	}

@@ -11,7 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
@@ -57,8 +57,14 @@ public class BiomeHelper {
 				y = coords[1];
 				z = coords[2];
 			}
-			obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.GRASS_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
-			obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.FOLIAGE_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
+			if(!BiomeTweaker.getInstance().isTweakEnabled("grassColor"))
+				obj.addProperty("Grass Color", "Disabled. Activate in BiomeTweakerCore.");
+			else
+				obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.GRASS_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
+			if(!BiomeTweaker.getInstance().isTweakEnabled("foliageColor"))
+				obj.addProperty("Foliage Color", "Disabled. Activate in BiomeTweakerCore.");
+			else
+				obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.FOLIAGE_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+biome.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");
@@ -135,7 +141,7 @@ public class BiomeHelper {
 		}
 		obj.add("Spawnable Cave Creatures", array);
 		obj.add("Spawn Biome", new JsonPrimitive(BiomeProvider.allowedBiomes.contains(biome)));
-		obj.addProperty("Tweaked", Config.INSTANCE.getTweakedBiomes().contains(-1) || Config.INSTANCE.getTweakedBiomes().contains(Biome.getIdForBiome(biome)));
+		obj.addProperty("Tweaked", BiomeTweaker.getInstance().getTweakedBiomes().contains(-1) || BiomeTweaker.getInstance().getTweakedBiomes().contains(Biome.getIdForBiome(biome)));
 
 		IntegrationManager.INSTANCE.addBiomeInfo(biome, obj);
 

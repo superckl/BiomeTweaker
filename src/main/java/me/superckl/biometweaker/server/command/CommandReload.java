@@ -1,17 +1,9 @@
 package me.superckl.biometweaker.server.command;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.Arrays;
 import java.util.List;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import lombok.Cleanup;
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -54,15 +46,8 @@ public class CommandReload implements ICommand{
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
 		try {
-			final File operateIn = Config.INSTANCE.getWhereAreWe();
-			final File mainConfig = new File(operateIn, "BiomeTweaker.cfg");
-			@Cleanup
-			final
-			BufferedReader reader = new BufferedReader(new FileReader(mainConfig));
-			final JsonObject obj = (JsonObject) new JsonParser().parse(reader);
-			if(obj.entrySet().isEmpty())
-				LogHelper.warn("The configuration file read as empty! BiomeTweaker isn't going to do anything.");
-			Config.INSTANCE.init(operateIn, obj);
+			BiomeTweaker.getInstance().getConfig().loadValues();
+			BiomeTweaker.getInstance().getCommandManager().reset();
 			BiomeTweaker.getInstance().parseScripts();
 			sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reload.success.text").setStyle(new Style().setColor(TextFormatting.AQUA)));
 		} catch (final Exception e) {

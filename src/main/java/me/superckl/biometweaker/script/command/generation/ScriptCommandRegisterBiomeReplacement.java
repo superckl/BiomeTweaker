@@ -5,8 +5,8 @@ import java.util.Iterator;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
-import me.superckl.biometweaker.config.Config;
 import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
@@ -21,7 +21,7 @@ public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
 		while(it.hasNext()){
 			final int id = Biome.getIdForBiome(it.next());
 			BiomeEventHandler.getBiomeReplacements().put(id, this.replaceWith);
-			Config.INSTANCE.onTweak(id);
+			BiomeTweaker.getInstance().onTweak(id);
 		}
 	}
 

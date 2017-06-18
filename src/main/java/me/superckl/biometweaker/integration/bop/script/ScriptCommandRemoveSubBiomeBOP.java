@@ -4,7 +4,7 @@ import biomesoplenty.common.init.ModBiomes;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 
 @RequiredArgsConstructor
 public class ScriptCommandRemoveSubBiomeBOP implements IScriptCommand{
@@ -17,7 +17,7 @@ public class ScriptCommandRemoveSubBiomeBOP implements IScriptCommand{
 		for(final int i:this.pack.getRawIds()){
 			if(ModBiomes.subBiomesMap.containsKey(i))
 				ModBiomes.subBiomesMap.get(i).removeAll(this.toAdd.getRawIds());
-			Config.INSTANCE.onTweak(i);
+			BiomeTweaker.getInstance().onTweak(i);
 		}
 	}
 

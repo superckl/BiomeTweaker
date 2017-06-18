@@ -63,16 +63,15 @@ public class BiomePropertyManager {
 
 	public static void populatePropertyMap(){
 		final Field[] fields = BiomePropertyManager.class.getDeclaredFields();
-		for(final Field field:fields){
-			if(!Property.class.isAssignableFrom(field.getType()))
-				continue;
+		for(final Field field:fields)
 			try {
+				if(!Property.class.isAssignableFrom(field.getType()) || field.get(null) == null)
+					continue;
 				BiomePropertyManager.propertyMap.put(field.getName().toLowerCase().replace("_", ""), (Property<?>) field.get(null));
 			} catch (final Exception e) {
 				APIInfo.log.error("Unable to add property to propertyMap!");
 				e.printStackTrace();
 			}
-		}
 	}
 
 	public static boolean setProperty(final Biome biome, final String property, final JsonElement value) throws Exception{

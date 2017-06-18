@@ -20,7 +20,6 @@ import me.superckl.biometweaker.common.world.gen.BlockReplacer;
 import me.superckl.biometweaker.common.world.gen.PlacementStage;
 import me.superckl.biometweaker.common.world.gen.feature.Decorator;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
-import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
@@ -35,9 +34,6 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType
 import net.minecraftforge.event.terraingen.OreGenEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.WorldTypeEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.StartupQuery;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -110,6 +106,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetGrassColor(final GetGrassColor e){
+		if(BiomePropertyManager.GRASS_COLOR == null)
+			return;
 		try {
 			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id];
@@ -132,6 +130,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onGetFoliageColor(final GetFoliageColor e){
+		if(BiomePropertyManager.FOLIAGE_COLOR == null)
+			return;
 		try {
 			final int id = Biome.getIdForBiome(e.getBiome());
 			int newColor = this.colorCache[id+256];
@@ -151,29 +151,6 @@ public class BiomeEventHandler {
 			e1.printStackTrace();
 		}
 	}
-	//No longer needed
-	/*
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public void onGetWaterColor(final GetWaterColor e){
-		try {
-			final int id = Biome.getIdForBiome(e.getBiome());
-			int newColor = this.colorCache[id+512];
-			if(newColor == -1)
-				return;
-			else if((newColor = this.colorCache[id+512]) != -2)
-				e.setNewColor(newColor);
-			else{
-				newColor = e.getBiome().waterColor;
-				this.colorCache[id+512] = newColor;
-				if(newColor == -1)
-					return;
-				e.setNewColor(newColor);
-			}
-		} catch (final Exception e1) {
-			LogHelper.error("Failed to process getWaterColor event!");
-			e1.printStackTrace();
-		}
-	}*/
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
@@ -287,7 +264,8 @@ public class BiomeEventHandler {
 			}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	//TODO remember how many tweaks were done and warn if not the same
+	/*	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onWorldLoad(final WorldEvent.Load e){
 		if(!BiomeTweakerCore.modifySuccess){
 			final boolean cont = StartupQuery.confirm("WARNING\n\nBiomeTweaker has failed to verify the integrity of its ASM modifications.\n "
@@ -300,6 +278,6 @@ public class BiomeEventHandler {
 			else
 				FMLCommonHandler.instance().exitJava(1, false);
 		}
-	}
+	}*/
 
 }

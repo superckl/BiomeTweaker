@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,14 +16,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import gnu.trove.set.TIntSet;
+import gnu.trove.set.hash.TIntHashSet;
 import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.api.superscript.ScriptCommandManager;
 import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
 import me.superckl.api.superscript.ScriptParser;
+import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
-import me.superckl.biometweaker.core.BiomeTweakerCore;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetPlacementStage;
@@ -44,9 +49,10 @@ import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraftforge.fml.common.ProgressManager.ProgressBar;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
 import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -55,7 +61,8 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY, acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = "before:biomesoplenty; after:galacticraftcore")
+@Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY,
+acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = ModData.DEPENDENCIES)
 public class BiomeTweaker {
 
 	@Instance(ModData.MOD_ID)
@@ -69,6 +76,15 @@ public class BiomeTweaker {
 	@Getter
 	private static IProxy proxy;
 
+	@Getter
+	private Config config;
+
+	@Getter
+	private ScriptCommandManager commandManager;
+	@Getter
+	private final TIntSet tweakedBiomes = new TIntHashSet();
+	private final Set<String> enabledTweaks = new HashSet<>();
+
 	@EventHandler
 	public void onFingerprintViolation(final FMLFingerprintViolationEvent e){
 		this.signed = false;
@@ -77,19 +93,29 @@ public class BiomeTweaker {
 	}
 
 	@EventHandler
-	public void onConstruction(final FMLConstructionEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Construction", 1, true);
+	public void onPreInit(final FMLPreInitializationEvent e){
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 6, true);
+
+		bar.step("Reading config");
+		this.config = new Config(new File(e.getSuggestedConfigurationFile().getParentFile(), ModData.MOD_NAME+"/"));
+		this.config.loadValues();
+
+		final List<IMCMessage> messages = FMLInterModComms.fetchRuntimeMessages(ModData.MOD_ID);
+		for(final IMCMessage message:messages)
+			if(message.key.equals("enableTweak") && message.isStringMessage()){
+				LogHelper.debug("Received enableTweak IMC message from "+message.getSender()+", enabling tweak: "+message.getStringValue());
+				this.enabledTweaks.add(message.getStringValue());
+			}
+
 		bar.step("Initializing scripting enviroment");
+		final File scripts = new File(this.config.getWhereAreWe(), "scripts/");
+		scripts.mkdirs();
+
+		this.commandManager = ScriptCommandManager.newInstance(ModData.MOD_ID);
 
 		BiomeTweaker.proxy.initProperties();
 		BiomeTweaker.proxy.setupScripts();
 
-		ProgressManager.pop(bar);
-	}
-
-	@EventHandler
-	public void onPreInit(final FMLPreInitializationEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 4, true);
 
 		bar.step("Pre-Initializing Integration");
 		IntegrationManager.INSTANCE.preInit();
@@ -101,7 +127,7 @@ public class BiomeTweaker {
 		BiomeTweaker.proxy.registerHandlers();
 
 		bar.step("Applying scripts");
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.PRE_INIT);
+		this.commandManager.applyCommandsFor(ApplicationStage.PRE_INIT);
 
 		ProgressManager.pop(bar);
 	}
@@ -111,18 +137,17 @@ public class BiomeTweaker {
 			LogHelper.info("Beginning script parsing...");
 			long diff = 0;
 			final long time = System.currentTimeMillis();
-			for (final JsonElement listElement : Config.INSTANCE.getIncludes()) {
+			for (final String item : this.config.getIncludes()) {
 				File subFile = null;
 				try {
-					final String item = listElement.getAsString();
-					subFile = new File(Config.INSTANCE.getWhereAreWe(), item);
+					subFile = new File(this.config.getWhereAreWe(), item);
 					this.parseScript(subFile);
 				} catch (final Exception e1) {
 					LogHelper.error("Failed to parse a script file! File: " + subFile);
 					e1.printStackTrace();
 				}
 			}
-			final File scripts = new File(Config.INSTANCE.getWhereAreWe(), "scripts/");
+			final File scripts = new File(this.config.getWhereAreWe(), "scripts/");
 			for (final File script : scripts.listFiles((FilenameFilter) (dir, name) -> name.endsWith(".cfg")))
 				try {
 					this.parseScript(script);
@@ -145,9 +170,9 @@ public class BiomeTweaker {
 		}
 		ScriptParser.parseScriptFile(file);
 		//Reset other various stages
-		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetPlacementStage("BIOME_BLOCKS"));
-		Config.INSTANCE.getCommandManager().addCommand(new ScriptCommandSetWorld(null));
-		Config.INSTANCE.getCommandManager().setCurrentStage(ScriptCommandManager.getDefaultStage());
+		this.commandManager.addCommand(new ScriptCommandSetPlacementStage("BIOME_BLOCKS"));
+		this.commandManager.addCommand(new ScriptCommandSetWorld(null));
+		this.commandManager.setCurrentStage(ScriptCommandManager.getDefaultStage());
 	}
 
 	@EventHandler
@@ -158,7 +183,7 @@ public class BiomeTweaker {
 		IntegrationManager.INSTANCE.init();
 
 		bar.step("Applying scripts");
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.INIT);
+		this.commandManager.applyCommandsFor(ApplicationStage.INIT);
 
 		ProgressManager.pop(bar);
 	}
@@ -171,7 +196,7 @@ public class BiomeTweaker {
 		IntegrationManager.INSTANCE.postInit();
 
 		bar.step("Applying scripts");
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.POST_INIT);
+		this.commandManager.applyCommandsFor(ApplicationStage.POST_INIT);
 
 		ProgressManager.pop(bar);
 	}
@@ -181,7 +206,7 @@ public class BiomeTweaker {
 		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
 
 		bar.step("Applying scripts");
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.FINISHED_LOAD);
+		this.commandManager.applyCommandsFor(ApplicationStage.FINISHED_LOAD);
 
 		bar.step("Generating output files");
 		this.generateOutputFiles();
@@ -200,7 +225,7 @@ public class BiomeTweaker {
 			array.add(BiomeHelper.fillJsonObject(gen));
 		}
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		final File baseDir = new File(BiomeTweakerCore.mcLocation, "/config/BiomeTweaker/output/");
+		final File baseDir = new File(this.config.getWhereAreWe(), "output/");
 		final File biomeDir = new File(baseDir, "/biome/");
 		biomeDir.mkdirs();
 
@@ -208,7 +233,7 @@ public class BiomeTweaker {
 			if(file.getName().endsWith(".json"))
 				file.delete();
 
-		if(Config.INSTANCE.isOutputSeperateFiles())
+		if(this.config.isOutputSeperateFiles())
 			for(final JsonElement element:array){
 				final JsonObject obj = (JsonObject) element;
 				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
@@ -256,7 +281,7 @@ public class BiomeTweaker {
 
 		}
 
-		if(Config.INSTANCE.isOutputSeperateFiles())
+		if(this.config.isOutputSeperateFiles())
 			for(final JsonElement ele:entityArray){
 				final JsonObject obj = (JsonObject) ele;
 				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
@@ -298,7 +323,7 @@ public class BiomeTweaker {
 		for(final DimensionType dimType:dimTypes)
 			dimArray.add(DimensionHelper.populateObject(dimType));
 
-		if(Config.INSTANCE.isOutputSeperateFiles())
+		if(this.config.isOutputSeperateFiles())
 			for(final JsonElement ele:dimArray){
 				final JsonObject obj = (JsonObject) ele;
 				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
@@ -335,12 +360,24 @@ public class BiomeTweaker {
 		e.registerServerCommand(new CommandListBiomes());
 		e.registerServerCommand(new CommandSetBiome());
 		e.registerServerCommand(new CommandReloadScript());
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTING);
+		this.commandManager.applyCommandsFor(ApplicationStage.SERVER_STARTING);
 	}
 
 	@EventHandler
 	public void onServerStarted(final FMLServerStartedEvent e){
-		Config.INSTANCE.getCommandManager().applyCommandsFor(ApplicationStage.SERVER_STARTED);
+		this.commandManager.applyCommandsFor(ApplicationStage.SERVER_STARTED);
+	}
+
+	public boolean isTweakEnabled(final String tweak){
+		return this.enabledTweaks.contains(tweak);
+	}
+
+	public void addCommand(final IScriptCommand command){
+		this.commandManager.addCommand(command);
+	}
+
+	public void onTweak(final int biomeID){
+		this.tweakedBiomes.add(biomeID);
 	}
 
 }

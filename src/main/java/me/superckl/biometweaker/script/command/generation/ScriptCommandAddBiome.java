@@ -11,9 +11,9 @@ import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
-import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.Biome;
@@ -38,7 +38,7 @@ public class ScriptCommandAddBiome implements IScriptCommand{
 			final BiomeTweakerBiome biome = new BiomeTweakerBiome(new BiomeProperties("BiomeTweaker Biome").setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F));
 			if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome))){
 				Biome.registerBiome(id, ModData.MOD_ID+":"+this.rLoc.toLowerCase(), biome);
-				Config.INSTANCE.onTweak(Biome.getIdForBiome(biome));
+				BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 			}
 		}else{
 			final Iterator<Biome> it = this.toCopy.getIterator();
@@ -81,7 +81,7 @@ public class ScriptCommandAddBiome implements IScriptCommand{
 			biome.spawnableMonsterList = Lists.newArrayList(toCopy.spawnableMonsterList);
 			biome.spawnableWaterCreatureList = Lists.newArrayList(toCopy.spawnableWaterCreatureList);
 			//TODO modSpawnables? Forge adds it so it'd have to be reflection
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(biome));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 		}
 	}
 

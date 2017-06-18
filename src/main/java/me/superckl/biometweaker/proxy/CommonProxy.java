@@ -12,6 +12,7 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
 import me.superckl.biometweaker.common.world.biome.property.PropertyDecorationPerChunk;
@@ -20,13 +21,13 @@ import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlant
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenVillages;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenWeight;
 import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
-import me.superckl.biometweaker.core.ObfNameHelper;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.decoration.ClusterDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.TreesDecorationScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
+import me.superckl.biometweaker.util.ObfNameHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
@@ -53,20 +54,12 @@ public class CommonProxy implements IProxy{
 		BiomePropertyManager.TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName());
 		BiomePropertyManager.FILLER_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
 		BiomePropertyManager.FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
-		BiomePropertyManager.OCEAN_TOP_BLOCK = new PropertyBlockState(Biome.class, "oceanTopBlock");
-		BiomePropertyManager.OCEAN_TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanTopBlock");
-		BiomePropertyManager.OCEAN_FILLER_BLOCK = new PropertyBlockState(Biome.class, "oceanFillerBlock");
-		BiomePropertyManager.OCEAN_FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanFillerBlock");
 		BiomePropertyManager.TEMPERATURE = new PropertyField<>(Biome.class, ObfNameHelper.Fields.TEMPERATURE.getName(), Float.class);
 		BiomePropertyManager.HUMIDITY = new PropertyField<>(Biome.class, ObfNameHelper.Fields.RAINFALL.getName(), Float.class);
 		BiomePropertyManager.WATER_TINT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.WATERCOLOR.getName(), Integer.class);
 		BiomePropertyManager.ENABLE_RAIN = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLERAIN.getName(), Boolean.class);
 		BiomePropertyManager.ENABLE_SNOW = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLESNOW.getName(), Boolean.class);
-		BiomePropertyManager.GRASS_COLOR = new PropertyField<>(Biome.class, "grassColor", Integer.class);
-		BiomePropertyManager.FOLIAGE_COLOR = new PropertyField<>(Biome.class, "foliageColor", Integer.class);
 		BiomePropertyManager.WATER_COLOR = new PropertyField<>(Biome.class, "waterColor", Integer.class);
-		BiomePropertyManager.SKY_COLOR = new PropertyField<>(Biome.class, "skyColor", Integer.class);
-		BiomePropertyManager.ACTUAL_FILLER_BLOCKS = new PropertyField<>(Biome.class, "actualFillerBlocks", IBlockState[].class);
 		BiomePropertyManager.GEN_WEIGHT = new PropertyGenWeight();
 		BiomePropertyManager.GEN_VILLAGES = new PropertyGenVillages();
 		BiomePropertyManager.GEN_STRONGHOLDS = new PropertyGenStrongholds();
@@ -91,6 +84,23 @@ public class CommonProxy implements IProxy{
 		BiomePropertyManager.PUMPKINS_PER_CHUNK = new PropertyDecorationPerChunk(EventType.PUMPKIN);
 		BiomePropertyManager.ROCK_PER_CHUNK = new PropertyDecorationPerChunk(EventType.ROCK);
 		BiomePropertyManager.SAND2_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SAND_PASS2);
+
+		if(BiomeTweaker.getInstance().isTweakEnabled("oceanTopBlock")){
+			BiomePropertyManager.OCEAN_TOP_BLOCK = new PropertyBlockState(Biome.class, "oceanTopBlock");
+			BiomePropertyManager.OCEAN_TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanTopBlock");
+		}
+		if(BiomeTweaker.getInstance().isTweakEnabled("oceanFillerBlock")) {
+			BiomePropertyManager.OCEAN_FILLER_BLOCK = new PropertyBlockState(Biome.class, "oceanFillerBlock");
+			BiomePropertyManager.OCEAN_FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class,"oceanFillerBlock");
+		}
+		if(BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks"))
+			BiomePropertyManager.ACTUAL_FILLER_BLOCKS = new PropertyField<>(Biome.class, "actualFillerBlocks", IBlockState[].class);
+		if(BiomeTweaker.getInstance().isTweakEnabled("grassColor"))
+			BiomePropertyManager.GRASS_COLOR = new PropertyField<>(Biome.class, "grassColor", Integer.class);
+		if(BiomeTweaker.getInstance().isTweakEnabled("foliageColor"))
+			BiomePropertyManager.FOLIAGE_COLOR = new PropertyField<>(Biome.class, "foliageColor", Integer.class);
+		if(BiomeTweaker.getInstance().isTweakEnabled("skyColor"))
+			BiomePropertyManager.SKY_COLOR = new PropertyField<>(Biome.class, "skyColor", Integer.class);
 
 		BiomePropertyManager.populatePropertyMap();
 	}

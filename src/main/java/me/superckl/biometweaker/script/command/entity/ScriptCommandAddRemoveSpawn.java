@@ -9,7 +9,7 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.EntityHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -51,7 +51,7 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, gen, entry)))
 				continue;
 			this.handleTypeSwitch(gen, entry, clazz);
-			Config.INSTANCE.onTweak(Biome.getIdForBiome(gen));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

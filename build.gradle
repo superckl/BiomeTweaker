@@ -93,8 +93,6 @@ task devJar(type: Jar, dependsOn: 'classes') {
     classifier = 'dev'
 
 	manifest {
-        attributes 'FMLCorePlugin': config.core_path
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
         attributes 'FMLAT': config.at_path
     }
 }
@@ -125,8 +123,6 @@ artifacts {
 
 jar {
     manifest {
-        attributes 'FMLCorePlugin': config.core_path
-        attributes 'FMLCorePluginContainsFMLMod': 'false'
         attributes 'FMLAT': config.at_path
     }
 }

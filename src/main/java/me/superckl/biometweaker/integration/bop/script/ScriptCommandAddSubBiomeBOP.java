@@ -4,7 +4,7 @@ import biomesoplenty.common.init.ModBiomes;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.biometweaker.config.Config;
+import me.superckl.biometweaker.BiomeTweaker;
 
 @RequiredArgsConstructor
 public class ScriptCommandAddSubBiomeBOP implements IScriptCommand{
@@ -19,7 +19,7 @@ public class ScriptCommandAddSubBiomeBOP implements IScriptCommand{
 				ModBiomes.subBiomesMap.put(i, this.toAdd.getRawIds());
 			else
 				ModBiomes.subBiomesMap.get(i).addAll(this.toAdd.getRawIds());
-			Config.INSTANCE.onTweak(i);
+			BiomeTweaker.getInstance().onTweak(i);
 		}
 	}
 

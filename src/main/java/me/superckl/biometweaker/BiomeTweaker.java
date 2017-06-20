@@ -43,6 +43,7 @@ import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -97,7 +98,7 @@ public class BiomeTweaker {
 		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 6, true);
 
 		bar.step("Reading config");
-		this.config = new Config(new File(e.getSuggestedConfigurationFile().getParentFile(), ModData.MOD_NAME+"/"));
+		this.config = new Config(new File(Loader.instance().getConfigDir(), ModData.MOD_NAME+"/"));
 		this.config.loadValues();
 
 		final List<IMCMessage> messages = FMLInterModComms.fetchRuntimeMessages(ModData.MOD_ID);
@@ -108,7 +109,7 @@ public class BiomeTweaker {
 			}
 
 		bar.step("Initializing scripting enviroment");
-		final File scripts = new File(this.config.getWhereAreWe(), "scripts/");
+		final File scripts = new File(this.config.getBtConfigFolder(), "scripts/");
 		scripts.mkdirs();
 
 		this.commandManager = ScriptCommandManager.newInstance(ModData.MOD_ID);
@@ -140,14 +141,14 @@ public class BiomeTweaker {
 			for (final String item : this.config.getIncludes()) {
 				File subFile = null;
 				try {
-					subFile = new File(this.config.getWhereAreWe(), item);
+					subFile = new File(this.config.getBtConfigFolder(), item);
 					this.parseScript(subFile);
 				} catch (final Exception e1) {
 					LogHelper.error("Failed to parse a script file! File: " + subFile);
 					e1.printStackTrace();
 				}
 			}
-			final File scripts = new File(this.config.getWhereAreWe(), "scripts/");
+			final File scripts = new File(this.config.getBtConfigFolder(), "scripts/");
 			for (final File script : scripts.listFiles((FilenameFilter) (dir, name) -> name.endsWith(".cfg")))
 				try {
 					this.parseScript(script);
@@ -225,7 +226,7 @@ public class BiomeTweaker {
 			array.add(BiomeHelper.fillJsonObject(gen));
 		}
 		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		final File baseDir = new File(this.config.getWhereAreWe(), "output/");
+		final File baseDir = new File(this.config.getBtConfigFolder(), "output/");
 		final File biomeDir = new File(baseDir, "/biome/");
 		biomeDir.mkdirs();
 

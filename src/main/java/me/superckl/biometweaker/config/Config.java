@@ -16,11 +16,11 @@ public class Config {
 	@Getter
 	private boolean outputSeperateFiles;
 	@Getter
-	private final File whereAreWe;
+	private final File btConfigFolder;
 
 	public Config(final File config) {
 		this.configFile = new Configuration(new File(config, ModData.MOD_NAME+".cfg"));
-		this.whereAreWe = config;
+		this.btConfigFolder = config;
 		this.configFile.load();
 		if(this.configFile.hasChanged())
 			this.configFile.save();

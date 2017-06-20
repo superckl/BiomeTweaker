@@ -51,7 +51,7 @@ public class CommandReloadScript implements ICommand{
 			return;
 		}
 		try {
-			final File operateIn = BiomeTweaker.getInstance().getConfig().getWhereAreWe();
+			final File operateIn = BiomeTweaker.getInstance().getConfig().getBtConfigFolder();
 			final File scriptFile = new File(operateIn, args[0]);
 			if(!scriptFile.exists() || !scriptFile.isFile()){
 				sender.sendMessage(new TextComponentTranslation("biometweaker.msg.reloadscript.nofile.text", scriptFile.getName()).setStyle(new Style().setColor(TextFormatting.RED)));

@@ -15,6 +15,7 @@ import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
+import me.superckl.biometweaker.common.handler.WorldEventHandler;
 import me.superckl.biometweaker.common.world.biome.property.PropertyDecorationPerChunk;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenStrongholds;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlants;
@@ -43,6 +44,8 @@ public class CommonProxy implements IProxy{
 		MinecraftForge.ORE_GEN_BUS.register(handler);
 		final EntityEventHandler eHandler = new EntityEventHandler();
 		MinecraftForge.EVENT_BUS.register(eHandler);
+		final WorldEventHandler wHandler = new WorldEventHandler();
+		MinecraftForge.EVENT_BUS.register(wHandler);
 	}
 
 	@Override

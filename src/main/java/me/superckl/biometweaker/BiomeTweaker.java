@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -64,7 +65,7 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 @Mod(modid=ModData.MOD_ID, name=ModData.MOD_NAME, version=ModData.VERSION, guiFactory = ModData.GUI_FACTORY,
 acceptableRemoteVersions = "*", certificateFingerprint = ModData.FINGERPRINT, dependencies = ModData.DEPENDENCIES)
-public class BiomeTweaker {
+public class BiomeTweaker{
 
 	@Instance(ModData.MOD_ID)
 	@Getter
@@ -379,6 +380,10 @@ public class BiomeTweaker {
 
 	public void onTweak(final int biomeID){
 		this.tweakedBiomes.add(biomeID);
+	}
+
+	public Set<String> getEnabledTweaks(){
+		return ImmutableSet.copyOf(this.enabledTweaks);
 	}
 
 }

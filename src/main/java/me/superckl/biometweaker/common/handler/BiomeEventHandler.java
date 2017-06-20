@@ -264,20 +264,4 @@ public class BiomeEventHandler {
 			}
 	}
 
-	//TODO remember how many tweaks were done and warn if not the same
-	/*	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onWorldLoad(final WorldEvent.Load e){
-		if(!BiomeTweakerCore.modifySuccess){
-			final boolean cont = StartupQuery.confirm("WARNING\n\nBiomeTweaker has failed to verify the integrity of its ASM modifications.\n "
-					+ "This could cause some features to not work or spam errors,\n leading to unpredicatable world generation and possibly corruption.\n "
-					+ "Please report this to the issue tracker with a full log file.\n\n"
-					+ "https://github.com/superckl/BiomeTweaker/issues\n\n"
-					+ "Continue anyway?");
-			if(cont)
-				BiomeTweakerCore.modifySuccess = true;
-			else
-				FMLCommonHandler.instance().exitJava(1, false);
-		}
-	}*/
-
 }

@@ -21,7 +21,7 @@ public class IntersectBiomesPackage implements IBiomePackage{
 	@Override
 	public Iterator<Biome> getIterator() {
 		if(this.packs.size() == 0)
-			return Iterators.emptyIterator();
+			return Collections.emptyIterator();
 		final List<List<Biome>> lists = Lists.newArrayList();
 		for(final IBiomePackage pack:this.packs){
 			final List<Biome> list = Lists.newArrayList();

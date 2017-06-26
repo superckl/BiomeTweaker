@@ -90,15 +90,20 @@ public class BiomeTweaker{
 	@EventHandler
 	public void onFingerprintViolation(final FMLFingerprintViolationEvent e){
 		this.signed = false;
-		LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
-		LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
 	}
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
 		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 6, true);
 
+		LogHelper.setLogger(e.getModLog());
+
 		bar.step("Reading config");
+		if(!this.signed){
+			LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
+			LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
+		}
+
 		this.config = new Config(new File(Loader.instance().getConfigDir(), ModData.MOD_NAME+"/"));
 		this.config.loadValues();
 

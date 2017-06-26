@@ -1,15 +1,19 @@
 package me.superckl.biometweaker.util;
 
 import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.Logger;
 
-import me.superckl.biometweaker.common.reference.ModData;
-import net.minecraftforge.fml.common.FMLLog;
+import lombok.NonNull;
 
 public class LogHelper {
 
+	private static Logger log;
+
 	public static void log(final Level logLevel, final Object object)
 	{
-		FMLLog.log(ModData.MOD_NAME, logLevel, String.valueOf(object));
+		if(LogHelper.log == null)
+			throw new IllegalStateException("Logger has not been set!");
+		LogHelper.log.log(logLevel, String.valueOf(object));
 	}
 
 	public static void all(final Object object)
@@ -50,6 +54,12 @@ public class LogHelper {
 	public static void warn(final Object object)
 	{
 		LogHelper.log(Level.WARN, object);
+	}
+
+	public static void setLogger(@NonNull final Logger log){
+		if(LogHelper.log != null)
+			throw new IllegalStateException("Logger has already been set!");
+		LogHelper.log = log;
 	}
 
 }

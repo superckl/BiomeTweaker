@@ -35,7 +35,7 @@ public class CommandListBiomes implements ICommand{
 	}
 
 	@Override
-	public List getAliases() {
+	public List<String> getAliases() {
 		return this.aliases;
 	}
 

@@ -34,7 +34,7 @@ public class ParameterWrapper {
 				break;
 			}
 			if(obj instanceof Collection)
-				parsed.addAll((Collection<? extends Object>) obj);
+				parsed.addAll(WarningHelper.uncheckedCast(obj));
 			else if(obj != null)
 				parsed.add(obj);
 		}

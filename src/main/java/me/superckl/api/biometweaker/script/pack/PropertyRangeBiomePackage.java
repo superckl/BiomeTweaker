@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
+import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.world.biome.Biome;
 
 public class PropertyRangeBiomePackage implements IBiomePackage{
@@ -21,7 +22,7 @@ public class PropertyRangeBiomePackage implements IBiomePackage{
 			throw new IllegalArgumentException("No property found for name "+property);
 		if(!Number.class.isAssignableFrom(prop.getTypeClass()))
 			throw new IllegalArgumentException("Property "+property+" is not a numeric value!");
-		this.property = (Property<? extends Number>) prop;
+		this.property = WarningHelper.uncheckedCast(prop);
 		this.lowBound = lowBound;
 		this.highBound = highBound;
 	}

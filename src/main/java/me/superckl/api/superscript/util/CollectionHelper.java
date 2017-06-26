@@ -39,7 +39,7 @@ public class CollectionHelper {
 			coll.add(i);
 	}
 
-	public static <T> boolean allContains(final T element, final Collection<T> ... colls){
+	public static <T> boolean allContains(final T element, final Iterable<? extends Collection<T>> colls){
 		for(final Collection<T> coll:colls)
 			if(!coll.contains(element))
 				return false;

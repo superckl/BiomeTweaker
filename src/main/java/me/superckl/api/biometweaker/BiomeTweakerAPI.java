@@ -3,6 +3,7 @@ package me.superckl.api.biometweaker;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraftforge.fml.common.Loader;
 
 public class BiomeTweakerAPI {
@@ -16,9 +17,9 @@ public class BiomeTweakerAPI {
 		boolean found = false;
 		if(Loader.isModLoaded("BiomeTweaker"))
 			try {
-				BiomeTweakerAPI.biomesScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.BiomesScriptObject");
-				BiomeTweakerAPI.tweakerScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.TweakerScriptObject");
-				BiomeTweakerAPI.oreDecorationScriptObjectClass = (Class<? extends ScriptObject>) Class.forName("me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject");
+				BiomeTweakerAPI.biomesScriptObjectClass = WarningHelper.uncheckedCast(Class.forName("me.superckl.biometweaker.script.object.BiomesScriptObject"));
+				BiomeTweakerAPI.tweakerScriptObjectClass = WarningHelper.uncheckedCast(Class.forName("me.superckl.biometweaker.script.object.TweakerScriptObject"));
+				BiomeTweakerAPI.oreDecorationScriptObjectClass = WarningHelper.uncheckedCast(Class.forName("me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject"));
 				found = true;
 			} catch (final Exception e) {
 				found = false;

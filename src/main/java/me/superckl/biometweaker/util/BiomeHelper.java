@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
+import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.integration.IntegrationManager;
 import net.minecraft.block.Block;
@@ -23,10 +24,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetFoliageColor;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetGrassColor;
-import net.minecraftforge.event.terraingen.BiomeEvent.GetWaterColor;
 
 public class BiomeHelper {
 
@@ -205,13 +202,13 @@ public class BiomeHelper {
 		if(gen == null)
 			return;
 		//Have to leave raw types since BiomeInfo is private
-		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
+		final Map<?, ?> map = WarningHelper.uncheckedCast(BiomeHelper.biomeInfoMap.get(null));
 		final Object biomeInfo = map.get(gen.getRegistryName());
 		if(BiomeHelper.typeSet == null){
 			BiomeHelper.typeSet = biomeInfo.getClass().getDeclaredField("types");
 			BiomeHelper.typeSet.setAccessible(true);
 		}
-		final Set<Type> set = (Set<Type>) BiomeHelper.typeSet.get(biomeInfo);
+		final Set<Type> set = WarningHelper.uncheckedCast(BiomeHelper.typeSet.get(biomeInfo));
 		if(remove)
 			set.remove(type);
 		else if(!set.contains(type))
@@ -223,13 +220,13 @@ public class BiomeHelper {
 		if(gen == null)
 			return;
 		//Have to leave raw types since BiomeInfo is private
-		final Map map = (Map) BiomeHelper.biomeInfoMap.get(null);
+		final Map<?, ?> map = WarningHelper.uncheckedCast(BiomeHelper.biomeInfoMap.get(null));
 		final Object biomeInfo = map.get(gen.getRegistryName());
 		if(BiomeHelper.typeSet == null){
 			BiomeHelper.typeSet = biomeInfo.getClass().getDeclaredField("typeList");
 			BiomeHelper.typeSet.setAccessible(true);
 		}
-		final Set<Type> set = (Set<Type>) BiomeHelper.typeSet.get(biomeInfo);
+		final Set<Type> set = WarningHelper.uncheckedCast(BiomeHelper.typeSet.get(biomeInfo));
 		set.clear();
 	}
 

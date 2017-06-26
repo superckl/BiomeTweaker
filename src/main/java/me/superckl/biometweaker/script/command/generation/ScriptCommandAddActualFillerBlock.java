@@ -31,7 +31,7 @@ public class ScriptCommandAddActualFillerBlock implements IScriptCommand{
 		while(it.hasNext()){
 			final Biome biome = it.next();
 			IBlockState[] blocks = BiomePropertyManager.ACTUAL_FILLER_BLOCKS.get(biome);
-			blocks = ArrayHelper.append(blocks, this.meta == -1 ? toAdd.getDefaultState():toAdd.getStateFromMeta(this.meta));
+			blocks = ArrayHelper.append(blocks, this.meta == -1 ? new IBlockState[] {toAdd.getDefaultState()}: new IBlockState[] {toAdd.getStateFromMeta(this.meta)});
 			BiomePropertyManager.ACTUAL_FILLER_BLOCKS.set(biome, blocks);
 		}
 	}

@@ -47,7 +47,7 @@ public final class ParameterTypes {
 
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			final List<Integer> ints = (List<Integer>) ParameterTypes.INTEGERS.tryParse(parameter, handler);
+			final List<Integer> ints = WarningHelper.uncheckedCast(ParameterTypes.INTEGERS.tryParse(parameter, handler));
 			final Iterator<Integer> it = ints.iterator();
 			while(it.hasNext())
 				if(it.next() < 0)

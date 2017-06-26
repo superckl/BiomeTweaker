@@ -200,24 +200,6 @@ public class BiomeHelper {
 		}
 	}
 
-	public static int callGrassColorEvent(final int color, final Biome gen){
-		final GetGrassColor e = new GetGrassColor(gen, color);
-		MinecraftForge.EVENT_BUS.post(e);
-		return e.getNewColor();
-	}
-
-	public static int callFoliageColorEvent(final int color, final Biome gen){
-		final GetFoliageColor e = new GetFoliageColor(gen, color);
-		MinecraftForge.EVENT_BUS.post(e);
-		return e.getNewColor();
-	}
-
-	public static int callWaterColorEvent(final int color, final Biome gen){
-		final GetWaterColor e = new GetWaterColor(gen, color);
-		MinecraftForge.EVENT_BUS.post(e);
-		return e.getNewColor();
-	}
-
 	public static void modifyBiomeDicType(final Biome gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
 		BiomeHelper.checkFields();
 		if(gen == null)

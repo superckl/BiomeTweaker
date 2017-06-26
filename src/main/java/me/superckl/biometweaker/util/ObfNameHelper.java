@@ -9,7 +9,7 @@ public final class ObfNameHelper {
 	@RequiredArgsConstructor
 	public static enum Classes{
 
-		BIOMEHOOKS("me.superckl.biometweaker.BiomeHooks"),
+		BIOMEHOOKS("me.superckl.biometweakercore.util.BiomeHooks"),
 		BIOMEHELPER("me.superckl.biometweaker.util.BiomeHelper"),
 		BIOME("net.minecraft.world.biome.Biome"),
 		IBLOCKSTATE("net.minecraft.block.state.IBlockState"),

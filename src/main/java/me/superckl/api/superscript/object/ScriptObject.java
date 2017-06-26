@@ -1,16 +1,10 @@
 package me.superckl.api.superscript.object;
 
 import java.lang.reflect.Constructor;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.ScriptCommandRegistry;
@@ -19,7 +13,6 @@ import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.CollectionHelper;
-import me.superckl.api.superscript.util.ParameterWrapper;
 
 public abstract class ScriptObject {
 
@@ -36,30 +29,17 @@ public abstract class ScriptObject {
 			return;
 		}
 		final ScriptCommandListing listing = this.validCommands.get(command);
-		outer:
-			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
-				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
-				final List<Object> objs = Lists.newArrayList();
-				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
-				final Iterator<ParameterWrapper> it = params.iterator();
-				while(it.hasNext()){
-					final ParameterWrapper wrap = it.next();
-					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
-						continue outer;
-					Collections.addAll(objs, parsed.getKey());
-					arguments = parsed.getValue();
-					it.remove();
-				}
-				if(!params.isEmpty() || (arguments.length != 0))
-					continue;
-				final IScriptCommand sCommand = entry.getValue().newInstance(objs.toArray());
-				if(listing.isPerformInst())
-					sCommand.perform();
-				else
-					this.addCommand(sCommand);
-				return;
-			}
+		final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
+		Pair<Constructor<? extends IScriptCommand>, Object[]> pair = ScriptParser.findConstructor(listing, args, handler);
+		if(pair != null){
+			pair = this.modifyConstructorPair(pair, args, handler);
+			final IScriptCommand sCommand = pair.getKey().newInstance(pair.getValue());
+			if(listing.isPerformInst())
+				sCommand.perform();
+			else
+				this.addCommand(sCommand);
+			return;
+		}
 		APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
 	}
 
@@ -76,6 +56,10 @@ public abstract class ScriptObject {
 
 	public Map<String, ScriptCommandListing> getValidCommands() {
 		return this.validCommands;
+	}
+
+	public Pair<Constructor<? extends IScriptCommand>, Object[]> modifyConstructorPair(final Pair<Constructor<? extends IScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler){
+		return pair;
 	}
 
 }

@@ -91,7 +91,4 @@ public class ReloadScriptsConfigEntry extends ButtonEntry{
 		return null;
 	}
 
-	@Override
-	public void setSelected(final int p_178011_1_, final int p_178011_2_, final int p_178011_3_) {}
-
 }

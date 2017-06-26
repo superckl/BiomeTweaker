@@ -224,6 +224,8 @@ public class BiomeEventHandler {
 				e.getNewBiomeDecorator().bigMushroomsPerChunk = entry.getValue().get(id);
 				break;
 			}
+			default:
+				break;
 			}
 		}
 	}

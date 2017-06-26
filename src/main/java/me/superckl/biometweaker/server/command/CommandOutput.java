@@ -35,7 +35,7 @@ public class CommandOutput implements ICommand{
 	}
 
 	@Override
-	public List getAliases() {
+	public List<String> getAliases() {
 		return this.aliases;
 	}
 

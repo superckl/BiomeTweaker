@@ -2,6 +2,7 @@ package me.superckl.biometweaker.util;
 
 import com.google.gson.JsonObject;
 
+import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +13,7 @@ public class EntityHelper {
 	public static Class<? extends Entity> getEntityClass(final String identifier){
 		Class<? extends Entity> clazz = null;
 		try{
-			clazz = (Class<? extends Entity>) Class.forName(identifier);
+			clazz = WarningHelper.uncheckedCast(Class.forName(identifier));
 			return clazz;
 		}catch(final Exception e){
 			return EntityList.getClass(new ResourceLocation(identifier));

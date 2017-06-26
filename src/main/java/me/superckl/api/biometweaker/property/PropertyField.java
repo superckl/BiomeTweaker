@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 
 import com.google.common.primitives.Primitives;
 
+import me.superckl.api.superscript.util.WarningHelper;
+
 public final class PropertyField<K> extends Property<K>{
 
 	private final Class<?> clazz;
@@ -31,7 +33,7 @@ public final class PropertyField<K> extends Property<K>{
 	public K get(final Object obj) throws IllegalStateException, IllegalArgumentException{
 		this.verifyField();
 		try {
-			return (K) this.field.get(obj);
+			return WarningHelper.uncheckedCast(this.field.get(obj));
 		} catch (final IllegalArgumentException e1){
 			throw new IllegalArgumentException("Unable to get field "+this.fieldName+" in class "+this.clazz.getCanonicalName(), e1);
 		} catch (final Exception e2) {

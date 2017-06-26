@@ -22,13 +22,13 @@ public class IntersectBiomesPackage implements IBiomePackage{
 	public Iterator<Biome> getIterator() {
 		if(this.packs.size() == 0)
 			return Iterators.emptyIterator();
-		final List<Biome>[] lists = new List[this.packs.size()];
-		for(int i = 0; i < this.packs.size(); i++){
+		final List<List<Biome>> lists = Lists.newArrayList();
+		for(final IBiomePackage pack:this.packs){
 			final List<Biome> list = Lists.newArrayList();
-			Iterators.addAll(list, this.packs.get(i).getIterator());
-			lists[i] = list;
+			Iterators.addAll(list, pack.getIterator());
+			lists.add(list);
 		}
-		final List<Biome> intersect = Lists.newArrayList(lists[0]);
+		final List<Biome> intersect = Lists.newArrayList(lists.get(0));
 		final Iterator<Biome> it = intersect.iterator();
 		while(it.hasNext())
 			if(!CollectionHelper.allContains(it.next(), lists))
@@ -47,11 +47,11 @@ public class IntersectBiomesPackage implements IBiomePackage{
 	@Override
 	public List<Integer> getRawIds() {
 		if(this.packs.size() == 0)
-			return Collections.EMPTY_LIST;
-		final List<Integer>[] ints = new List[this.packs.size()];
-		for(int i = 0; i < this.packs.size(); i++)
-			ints[i] = this.packs.get(i).getRawIds();
-		final List<Integer> intersect = Lists.newArrayList(ints[0]);
+			return Collections.emptyList();
+		final List<List<Integer>> ints = Lists.newArrayList();
+		for(final IBiomePackage pack:this.packs)
+			ints.add(pack.getRawIds());
+		final List<Integer> intersect = Lists.newArrayList(ints.get(0));
 		final Iterator<Integer> it = intersect.iterator();
 		while(it.hasNext())
 			if(!CollectionHelper.allContains(it.next(), ints))

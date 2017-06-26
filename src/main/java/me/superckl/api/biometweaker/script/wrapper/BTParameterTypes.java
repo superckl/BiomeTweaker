@@ -17,6 +17,7 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.util.WarningHelper;
 
 public class BTParameterTypes {
 
@@ -35,7 +36,7 @@ public class BTParameterTypes {
 
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			final List<Integer> ints = (List<Integer>) ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler);
+			final List<Integer> ints = WarningHelper.uncheckedCast(ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler));
 			if(ints.isEmpty()){
 				final ScriptObject obj = handler.getObjects().get(parameter);
 				if(obj != null && obj instanceof BiomePackScriptObject)

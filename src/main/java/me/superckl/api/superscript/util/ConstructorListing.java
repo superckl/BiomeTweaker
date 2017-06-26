@@ -3,7 +3,6 @@ package me.superckl.api.superscript.util;
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
@@ -13,13 +12,8 @@ public class ConstructorListing<T> {
 
 	public ConstructorListing() {}
 
-	public ConstructorListing(final Entry<List<ParameterWrapper>, Constructor<? extends T>> ... entries){
-		this.addEntries(entries);
-	}
-
-	public void addEntries(final Entry<List<ParameterWrapper>, Constructor<? extends T>> ... entries){
-		for(final Entry<List<ParameterWrapper>, Constructor<? extends T>> entry:entries)
-			this.constructors.put(entry.getKey(), entry.getValue());
+	public ConstructorListing(final List<ParameterWrapper> parameters, final Constructor<? extends T> constructor){
+		this.addEntry(parameters, constructor);
 	}
 
 	public void addEntry(final List<ParameterWrapper> list, final Constructor<? extends T> construct){

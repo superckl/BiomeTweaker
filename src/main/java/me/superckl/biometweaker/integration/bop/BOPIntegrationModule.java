@@ -25,6 +25,7 @@ import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.ParameterWrapper;
+import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.integration.IIntegrationModule;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddBOPWorldType;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddSubBiomeBOP;
@@ -159,7 +160,7 @@ public class BOPIntegrationModule implements IIntegrationModule{
 		try {
 			final JsonObject weights = new JsonObject();
 			for(final BOPClimates climate:BOPClimates.values()){
-				final List<WeightedBiomeEntry> entries = BOPBiomeProperties.LAND_BIOMES.get(climate);
+				final List<WeightedBiomeEntry> entries = WarningHelper.uncheckedCast(BOPBiomeProperties.LAND_BIOMES.get(climate));
 				final JsonArray subArray = new JsonArray();
 				for(final WeightedBiomeEntry entry:entries)
 					if(Biome.getIdForBiome(entry.biome) == Biome.getIdForBiome(biome))

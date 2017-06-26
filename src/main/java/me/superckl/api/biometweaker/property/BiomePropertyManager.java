@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 
@@ -83,13 +84,13 @@ public class BiomePropertyManager {
 		final Class<?> type = prop.getTypeClass();
 		try {
 			if(type.getCanonicalName().equals(Integer.class.getCanonicalName()))
-				((Property<Integer>) prop).set(biome, value.getAsInt());
+				WarningHelper.<Property<Integer>>uncheckedCast(prop).set(biome, value.getAsInt());
 			else if(type.getCanonicalName().equals(Float.class.getCanonicalName()))
-				((Property<Float>)prop).set(biome, value.getAsFloat());
+				WarningHelper.<Property<Float>>uncheckedCast(prop).set(biome, value.getAsFloat());
 			else if(type.getCanonicalName().equals(Boolean.class.getCanonicalName()))
-				((Property<Boolean>)prop).set(biome, value.getAsBoolean());
+				WarningHelper.<Property<Boolean>>uncheckedCast(prop).set(biome, value.getAsBoolean());
 			else if(type.getCanonicalName().equals(String.class.getCanonicalName()))
-				((Property<String>)prop).set(biome, (String) ParameterTypes.STRING.tryParse(value.getAsString()));
+				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, (String) ParameterTypes.STRING.tryParse(value.getAsString()));
 		} catch (final Exception e) {
 			throw e;
 		}

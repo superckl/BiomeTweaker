@@ -9,6 +9,7 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.EntityHelper;
 import net.minecraft.entity.Entity;
@@ -41,7 +42,7 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 			throw new IllegalArgumentException("Failed to find entity class: "+this.entityClass);
 		if(!EntityLiving.class.isAssignableFrom(clazz2))
 			throw new IllegalArgumentException("entity class "+this.entityClass+" is not assignable to EntityLiving. It cannot be spawned!");
-		final Class<? extends EntityLiving> clazz = (Class<? extends EntityLiving>) clazz2;
+		final Class<? extends EntityLiving> clazz = WarningHelper.uncheckedCast(clazz2);
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){

@@ -7,17 +7,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ConstructorListing;
@@ -123,6 +128,30 @@ public class ScriptParser {
 			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
 		}
 		return null;
+	}
+
+	@Nullable
+	public static Pair<Constructor<? extends IScriptCommand>, Object[]> findConstructor(final ScriptCommandListing listing, final String[] args, final ScriptHandler handler) throws Exception{
+		outer:
+			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+				String[] arguments = Arrays.copyOf(args, args.length);
+				final List<Object> objs = Lists.newArrayList();
+				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
+				final Iterator<ParameterWrapper> it = params.iterator();
+				while(it.hasNext()){
+					final ParameterWrapper wrap = it.next();
+					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
+					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+						continue outer;
+					Collections.addAll(objs, parsed.getKey());
+					arguments = parsed.getValue();
+					it.remove();
+				}
+				if(!params.isEmpty() || (arguments.length != 0))
+					continue;
+				return Pair.of(entry.getValue(), objs.toArray());
+			}
+	return null;
 	}
 
 	public static Map<String, ConstructorListing<ScriptObject>> getValidobjects() {

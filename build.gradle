@@ -60,7 +60,7 @@ version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("BU
 
 dependencies {
     compile "org.projectlombok:lombok:" + config.lombok_version
-    compile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:" + config.bop_version + ":universal"
+    //compile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:" + config.bop_version + ":universal"
 }
 
 processResources

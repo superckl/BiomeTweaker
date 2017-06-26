@@ -1,6 +1,5 @@
 package me.superckl.biometweaker.integration;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class IntegrationManager implements IIntegrationModule{
 	private static final Map<List<String>, String> modules = new HashMap<List<String>, String>();
 
 	static{
-		IntegrationManager.modules.put(Arrays.asList(new String[] {"biomesoplenty"}), "me.superckl.biometweaker.integration.bop.BOPIntegrationModule");
+		//IntegrationManager.modules.put(Arrays.asList(new String[] {"biomesoplenty"}), "me.superckl.biometweaker.integration.bop.BOPIntegrationModule");
 	}
 
 	@Getter

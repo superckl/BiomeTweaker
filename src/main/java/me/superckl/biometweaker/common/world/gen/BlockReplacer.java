@@ -43,29 +43,25 @@ public class BlockReplacer {
 						final IBlockState state = primer == null ? chunk.getBlockState(x, y, z):primer.getBlockState(x, y, z);
 						final Block block = state.getBlock();
 						WeightedBlockEntry toUse = null;
-						final BlockReplacementEntry previousEntry = previousReplacementsBiome.findEntry(block, block.getMetaFromState(state));
+						final BlockReplacementEntry previousEntry = previousReplacementsBiome.findEntry(state);
+						final int meta = block.getMetaFromState(state);
 						if(previousEntry != null)
-							toUse = previousEntry.findEntriesForMeta(previousEntry.checkWildcardMeta(block.getMetaFromState(state))).get(0);
-						int meta = block.getMetaFromState(state);
+							toUse = previousEntry.findEntriesForMeta(meta).get(0);
 						if(toUse == null){
-							final BlockReplacementEntry entry = list.findEntry(block, meta);
+							final BlockReplacementEntry entry = list.findEntry(state);
 							if(entry != null){
-								meta = entry.checkWildcardMeta(meta);
 								final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
 								if(entries == null || entries.isEmpty())
 									continue;
 								toUse = WeightedRandom.getRandomItem(rand, entries);
-								previousReplacementsBiome.registerReplacement(toUse.itemWeight, block, meta, toUse.getBlock().getKey(), toUse.getBlock().getValue().intValue());
+								previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getBlock());
 							}
 						}
-						if(toUse != null){
-							final Block block2 = toUse.getBlock().getKey();
-							meta = toUse.getBlock().getValue();
+						if(toUse != null)
 							if(primer != null)
-								primer.setBlockState(x, y, z, meta == -1 ? block2.getDefaultState():block2.getStateFromMeta(meta));
+								primer.setBlockState(x, y, z, toUse.getBlock());
 							else
-								chunk.setBlockState(new BlockPos(x, y, z), meta == -1 ? block2.getDefaultState():block2.getStateFromMeta(meta));
-						}
+								chunk.setBlockState(new BlockPos(x, y, z), toUse.getBlock());
 					}
 				}
 			final TIntIterator it = previousReplacements.keySet().iterator();

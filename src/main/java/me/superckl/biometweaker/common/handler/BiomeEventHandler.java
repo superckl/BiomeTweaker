@@ -21,7 +21,7 @@ import me.superckl.biometweaker.common.world.gen.PlacementStage;
 import me.superckl.biometweaker.common.world.gen.feature.Decorator;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
@@ -44,7 +44,7 @@ public class BiomeEventHandler {
 	public static final TObjectByteCustomHashMap<Object> sizes = new TObjectByteCustomHashMap<>(IdentityHashingStrategy.INSTANCE);
 
 	@Getter
-	private static final TIntObjectMap<List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>>> villageBlockReplacements = new TIntObjectHashMap<>();
+	private static final TIntObjectMap<List<Pair<IBlockState, IBlockState>>> villageBlockReplacements = new TIntObjectHashMap<>();
 	@Getter
 	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
 	@Getter
@@ -248,18 +248,17 @@ public class BiomeEventHandler {
 	public void onReplaceVillageBlockID(final BiomeEvent.GetVillageBlockID e){
 		if((e.getBiome() == null) || (e.getOriginal() == null))
 			return;
-		final List<Pair<Pair<Block, Integer>, Pair<Block, Integer>>> list = BiomeEventHandler.villageBlockReplacements.get(Biome.getIdForBiome(e.getBiome()));
+		final List<Pair<IBlockState, IBlockState>> list = BiomeEventHandler.villageBlockReplacements.get(Biome.getIdForBiome(e.getBiome()));
 		if((list == null) || list.isEmpty())
 			return;
-		for(final Pair<Pair<Block, Integer>, Pair<Block, Integer>> fPair:list)
-			if(fPair.getKey().getKey() == (e.getReplacement() == null ? e.getOriginal().getBlock():e.getReplacement().getBlock())){
-				Integer meta = fPair.getKey().getValue();
-				boolean shouldDo = meta == null;
+		for(final Pair<IBlockState, IBlockState> fPair:list)
+			if(fPair.getKey().getBlock() == (e.getReplacement() == null ? e.getOriginal().getBlock():e.getReplacement().getBlock())){
+				final Integer meta = fPair.getKey().getBlock().getMetaFromState(fPair.getKey());
+				boolean shouldDo = false;
 				if(!shouldDo)
-					shouldDo = meta == fPair.getKey().getKey().getMetaFromState(e.getReplacement() == null ? e.getOriginal():e.getReplacement());
+					shouldDo = meta == (e.getReplacement() == null ? e.getOriginal().getBlock().getMetaFromState(e.getOriginal()):e.getReplacement().getBlock().getMetaFromState(e.getReplacement()));
 				if(shouldDo){
-					meta = fPair.getValue().getValue();
-					e.setReplacement(fPair.getValue().getKey().getStateFromMeta(meta == null ? 0:meta));
+					e.setReplacement(fPair.getValue());
 					e.setResult(Result.DENY);
 					break;
 				}

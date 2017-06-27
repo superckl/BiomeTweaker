@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
@@ -31,10 +33,8 @@ public class OreDecorationScriptObject extends DecorationScriptObject<WorldGenMi
 		validCommands.put("setHeights", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-				ScriptCommandSetOreBlockToReplace.class.getConstructor(WorldGenMineableBuilder.class, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
-				ScriptCommandSetOreBlockToReplace.class.getConstructor(WorldGenMineableBuilder.class, String.class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper()),
+				ScriptCommandSetOreBlockToReplace.class.getConstructor(WorldGenMineableBuilder.class, BlockStateBuilder.class));
 		validCommands.put("setBlockToReplace", listing);
 
 

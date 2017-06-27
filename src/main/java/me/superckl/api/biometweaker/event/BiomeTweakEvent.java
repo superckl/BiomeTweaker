@@ -2,9 +2,9 @@ package me.superckl.api.biometweaker.event;
 
 import com.google.gson.JsonElement;
 
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
-import net.minecraft.block.Block;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
@@ -240,23 +240,17 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class AddFlower extends BiomeTweakEvent{
 
-		private final Block block;
-		private final int metdata;
+		private final BlockStateBuilder<?> block;
 		private final int weight;
 
-		public AddFlower(final IScriptCommand command, final Biome biome, final Block block, final int meta, final int weight) {
+		public AddFlower(final IScriptCommand command, final Biome biome, final BlockStateBuilder<?> block, final int weight) {
 			super(command, biome);
 			this.block = block;
-			this.metdata = meta;
 			this.weight = weight;
 		}
 
-		public Block getBlock() {
+		public BlockStateBuilder<?> getBlock() {
 			return this.block;
-		}
-
-		public int getMetdata() {
-			return this.metdata;
 		}
 
 		public int getWeight() {
@@ -268,21 +262,15 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class RemoveFlower extends BiomeTweakEvent{
 
-		private final Block block;
-		private final int metdata;
+		private final BlockStateBuilder<?> block;
 
-		public RemoveFlower(final IScriptCommand command, final Biome biome, final Block block, final int meta) {
+		public RemoveFlower(final IScriptCommand command, final Biome biome, final BlockStateBuilder<?> block) {
 			super(command, biome);
 			this.block = block;
-			this.metdata = meta;
 		}
 
-		public Block getBlock() {
+		public BlockStateBuilder<?> getBlock() {
 			return this.block;
-		}
-
-		public int getMetdata() {
-			return this.metdata;
 		}
 
 	}
@@ -291,38 +279,26 @@ public abstract class BiomeTweakEvent extends Event{
 	public static class RegisterGenBlockReplacement extends BiomeTweakEvent{
 
 		private final int weight;
-		private final Block toReplace;
-		private final Integer toReplaceMeta;
-		private final Block replaceWith;
-		private final Integer replaceWithMeta;
+		private final BlockStateBuilder<?> toReplace;
+		private final BlockStateBuilder<?> replaceWith;
 
-		public RegisterGenBlockReplacement(final IScriptCommand command, final int weight, final Biome biome, final Block toReplace, final Integer toReplaceMeta, final Block replaceWith, final Integer replaceWithMeta) {
+		public RegisterGenBlockReplacement(final IScriptCommand command, final int weight, final Biome biome, final BlockStateBuilder<?> toReplace, final BlockStateBuilder<?> replaceWith) {
 			super(command, biome);
 			this.weight = weight;
 			this.toReplace = toReplace;
-			this.toReplaceMeta = toReplaceMeta;
 			this.replaceWith = replaceWith;
-			this.replaceWithMeta = replaceWithMeta;
 		}
 
 		public int getWeight() {
 			return this.weight;
 		}
 
-		public Block getToReplace() {
+		public BlockStateBuilder<?> getToReplace() {
 			return this.toReplace;
 		}
 
-		public Integer getToReplaceMeta() {
-			return this.toReplaceMeta;
-		}
-
-		public Block getReplaceWith() {
+		public BlockStateBuilder<?> getReplaceWith() {
 			return this.replaceWith;
-		}
-
-		public Integer getReplaceWithMeta() {
-			return this.replaceWithMeta;
 		}
 
 	}

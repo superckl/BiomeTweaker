@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
@@ -48,10 +49,9 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 	public Pair<Constructor<? extends IScriptCommand>, Object[]> modifyConstructorPair(
 			final Pair<Constructor<? extends IScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler) {
 		final Object[] newArgs = new Object[pair.getValue().length+1];
-		System.arraycopy(pair.getValue(), 0, args, 1, pair.getValue().length);
+		System.arraycopy(pair.getValue(), 0, newArgs, 1, pair.getValue().length);
 		newArgs[0] = this.pack;
-		pair.setValue(newArgs);
-		return pair;
+		return Pair.of(pair.getKey(), newArgs);
 	}
 
 	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {
@@ -79,13 +79,13 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		validCommands.put("removeAllSpawns", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, BlockStateBuilder.class, Integer.TYPE));
 		validCommands.put("addFlower", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper())
+				, ScriptCommandAddRemoveBiomeFlower.class.getDeclaredConstructor(IBiomePackage.class, BlockStateBuilder.class));
 		validCommands.put("removeFlower", listing);
 
 		listing = new ScriptCommandListing();
@@ -99,8 +99,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 
 		if(BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks")){
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper()), ScriptCommandAddActualFillerBlock.class.getDeclaredConstructor(IBiomePackage.class, BlockStateBuilder.class));
 			validCommands.put("addActualFillerBlock", listing);
 		}
 
@@ -121,33 +120,15 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		validCommands.put("removeFeature", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, String.class, Integer.TYPE, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, String.class, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE, String.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, String.class, Integer.TYPE, String.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, String.class, String.class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper(), BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper())
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, BlockStateBuilder.class, BlockStateBuilder.class));
+		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper(), BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper())
+				, ScriptCommandRegisterBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, Integer.TYPE, BlockStateBuilder.class, BlockStateBuilder.class));
 		validCommands.put("registerGenBlockRep", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterVillageBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class, Integer.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterVillageBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper())
-				, ScriptCommandRegisterVillageBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.class, String.class, Integer.class));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper())
-				, ScriptCommandRegisterVillageBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, String.class, String.class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper(), BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper())
+				, ScriptCommandRegisterVillageBlockReplacement.class.getDeclaredConstructor(IBiomePackage.class, BlockStateBuilder.class, BlockStateBuilder.class));
 		validCommands.put("registerGenVillageBlockRep", listing);
 
 		listing = new ScriptCommandListing();

@@ -2,7 +2,9 @@ package me.superckl.api.biometweaker.script.wrapper;
 
 import java.util.List;
 
+import me.superckl.api.biometweaker.block.BasicBlockStateBuilder;
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
+import me.superckl.api.biometweaker.script.object.BlockStateScriptObject;
 import me.superckl.api.biometweaker.script.object.DecorationBuilderScriptObject;
 import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
@@ -14,10 +16,12 @@ import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.ScriptHandler;
+import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ParameterType;
 import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.api.superscript.util.WarningHelper;
+import net.minecraft.util.ResourceLocation;
 
 public class BTParameterTypes {
 
@@ -110,6 +114,22 @@ public class BTParameterTypes {
 			final ScriptObject obj = handler.getObjects().get(parameter);
 			if(obj != null && obj instanceof DecorationBuilderScriptObject)
 				return ((DecorationBuilderScriptObject<?>)obj).getBuilder();
+			return null;
+		}
+	};
+
+	public static final ParameterType BLOCKSTATE_BUILDER = new ParameterType() {
+
+		@Override
+		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			if(ScriptParser.isStringArg(parameter)){
+				final BasicBlockStateBuilder builder = new BasicBlockStateBuilder();
+				builder.setrLoc(new ResourceLocation((String) ParameterTypes.STRING.tryParse(parameter, handler)));
+				return builder;
+			}
+			final ScriptObject obj = handler.getObjects().get(parameter);
+			if(obj != null && obj instanceof BlockStateScriptObject)
+				return ((BlockStateScriptObject<?>) obj).getBuilder();
 			return null;
 		}
 	};

@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenClusterBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.util.ParameterTypes;
@@ -31,10 +33,8 @@ public class ClusterDecorationScriptObject extends DecorationScriptObject<WorldG
 		validCommands.put("setHeight", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-				ScriptCommandAddClusterSoilBlock.class.getConstructor(WorldGenClusterBuilder.class, String.class, Integer.TYPE));
-		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()),
-				ScriptCommandAddClusterSoilBlock.class.getConstructor(WorldGenClusterBuilder.class, String.class));
+		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper()),
+				ScriptCommandAddClusterSoilBlock.class.getConstructor(WorldGenClusterBuilder.class, BlockStateBuilder.class));
 		validCommands.put("addSoilBlock", listing);
 
 		return validCommands;

@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.google.common.collect.Maps;
 
 import gnu.trove.map.TIntObjectMap;
@@ -14,7 +12,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import me.superckl.biometweaker.util.NumberHelper;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.util.math.ChunkPos;
 
@@ -81,20 +79,20 @@ public class BlockReplacementManager {
 		return false;
 	}
 
-	public void registerBlockReplacement(final int biome, final int weight, final Block toReplace, final int toReplaceMeta, final Block replacement, final int replacementMeta){
+	public void registerBlockReplacement(final int biome, final int weight, final IBlockState toReplace, final IBlockState replacement){
 		if(!this.blockReplacements.containsKey(BlockReplacementManager.currentStage))
 			this.blockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!this.blockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
 			this.blockReplacements.get(BlockReplacementManager.currentStage).put(biome, new BlockReplacementEntryList());
-		this.blockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, toReplaceMeta, replacement, replacementMeta);
+		this.blockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, replacement);
 	}
 
-	public static void registerGlobalBlockReplacement(final int biome, final int weight, final Block toReplace, final int toReplaceMeta, final Block replacement, final int replacementMeta){
+	public static void registerGlobalBlockReplacement(final int biome, final int weight,  final IBlockState toReplace, final IBlockState replacement){
 		if(!BlockReplacementManager.globalBlockReplacements.containsKey(BlockReplacementManager.currentStage))
 			BlockReplacementManager.globalBlockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
 			BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).put(biome, new BlockReplacementEntryList());
-		BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, toReplaceMeta, replacement, replacementMeta);
+		BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, replacement);
 	}
 
 	@Nullable
@@ -131,9 +129,9 @@ public class BlockReplacementManager {
 	@Getter
 	public static class WeightedBlockEntry extends WeightedRandom.Item{
 
-		private final Pair<Block, Integer> block;
+		private final IBlockState block;
 
-		public WeightedBlockEntry(final int weight, final Pair<Block, Integer> block) {
+		public WeightedBlockEntry(final int weight, final IBlockState block) {
 			super(weight);
 			this.block = block;
 		}

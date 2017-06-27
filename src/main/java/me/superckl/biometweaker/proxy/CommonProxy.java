@@ -12,6 +12,7 @@ import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.api.superscript.util.ParameterTypes;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
@@ -24,6 +25,7 @@ import me.superckl.biometweaker.common.world.biome.property.PropertyGenWeight;
 import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 import me.superckl.biometweaker.script.object.decoration.ClusterDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.TreesDecorationScriptObject;
@@ -145,6 +147,13 @@ public class CommonProxy implements IProxy{
 			e2.printStackTrace();
 		}
 
+		try {
+			ScriptCommandRegistry.INSTANCE.registerClassListing(BasicBlockStateScriptObject.class, BasicBlockStateScriptObject.populateCommands());
+		} catch (final Exception e2) {
+			LogHelper.error("Failed to populate ClusterDecorationScriptObject command listings! Some tweaks may not be applied.");
+			e2.printStackTrace();
+		}
+
 		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);
 
 		try {
@@ -187,6 +196,10 @@ public class CommonProxy implements IProxy{
 			listing = new ConstructorListing<ScriptObject>();
 			listing.addEntry(Lists.newArrayList(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newClusterDecoration", listing);
+
+			listing = new ConstructorListing<ScriptObject>();
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), BasicBlockStateScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("forBlock", listing);
 
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");

@@ -3,8 +3,6 @@ package me.superckl.biometweaker.proxy;
 import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
-import me.superckl.api.biometweaker.property.PropertyBlockState;
-import me.superckl.api.biometweaker.property.PropertyBlockStateMeta;
 import me.superckl.api.biometweaker.property.PropertyField;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.ScriptCommandRegistry;
@@ -55,10 +53,8 @@ public class CommonProxy implements IProxy{
 		BiomePropertyManager.NAME = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BIOMENAME.getName(), String.class);
 		BiomePropertyManager.HEIGHT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BASEHEIGHT.getName(), Float.class);
 		BiomePropertyManager.HEIGHT_VARIATION = new PropertyField<>(Biome.class, ObfNameHelper.Fields.HEIGHTVARIATION.getName(), Float.class);
-		BiomePropertyManager.TOP_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName());
-		BiomePropertyManager.TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName());
-		BiomePropertyManager.FILLER_BLOCK = new PropertyBlockState(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
-		BiomePropertyManager.FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName());
+		BiomePropertyManager.TOP_BLOCK = new PropertyField<>(Biome.class, ObfNameHelper.Fields.TOPBLOCK.getName(), IBlockState.class);
+		BiomePropertyManager.FILLER_BLOCK = new PropertyField<>(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName(), IBlockState.class);
 		BiomePropertyManager.TEMPERATURE = new PropertyField<>(Biome.class, ObfNameHelper.Fields.TEMPERATURE.getName(), Float.class);
 		BiomePropertyManager.HUMIDITY = new PropertyField<>(Biome.class, ObfNameHelper.Fields.RAINFALL.getName(), Float.class);
 		BiomePropertyManager.WATER_TINT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.WATERCOLOR.getName(), Integer.class);
@@ -90,14 +86,10 @@ public class CommonProxy implements IProxy{
 		BiomePropertyManager.ROCK_PER_CHUNK = new PropertyDecorationPerChunk(EventType.ROCK);
 		BiomePropertyManager.SAND2_PER_CHUNK = new PropertyDecorationPerChunk(EventType.SAND_PASS2);
 
-		if(BiomeTweaker.getInstance().isTweakEnabled("oceanTopBlock")){
-			BiomePropertyManager.OCEAN_TOP_BLOCK = new PropertyBlockState(Biome.class, "oceanTopBlock");
-			BiomePropertyManager.OCEAN_TOP_BLOCK_META = new PropertyBlockStateMeta(Biome.class, "oceanTopBlock");
-		}
-		if(BiomeTweaker.getInstance().isTweakEnabled("oceanFillerBlock")) {
-			BiomePropertyManager.OCEAN_FILLER_BLOCK = new PropertyBlockState(Biome.class, "oceanFillerBlock");
-			BiomePropertyManager.OCEAN_FILLER_BLOCK_META = new PropertyBlockStateMeta(Biome.class,"oceanFillerBlock");
-		}
+		if(BiomeTweaker.getInstance().isTweakEnabled("oceanTopBlock"))
+			BiomePropertyManager.OCEAN_TOP_BLOCK = new PropertyField<>(Biome.class, "oceanTopBlock", IBlockState.class);
+		if(BiomeTweaker.getInstance().isTweakEnabled("oceanFillerBlock"))
+			BiomePropertyManager.OCEAN_FILLER_BLOCK = new PropertyField<>(Biome.class, "oceanFillerBlock", IBlockState.class);
 		if(BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks"))
 			BiomePropertyManager.ACTUAL_FILLER_BLOCKS = new PropertyField<>(Biome.class, "actualFillerBlocks", IBlockState[].class);
 		if(BiomeTweaker.getInstance().isTweakEnabled("grassColor"))

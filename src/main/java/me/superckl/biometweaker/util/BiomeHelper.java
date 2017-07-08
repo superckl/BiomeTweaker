@@ -51,19 +51,15 @@ public class BiomeHelper {
 			obj.addProperty("Ocean Top Block", "Disabled. Activate in BiomeTweakerCore.");
 			obj.addProperty("Ocean Top Block Meta", "Disabled. Activate in BiomeTweakerCore.");
 		}else{
-			final String topBlock = BiomePropertyManager.OCEAN_TOP_BLOCK.get(biome);
-			final int meta = BiomePropertyManager.OCEAN_TOP_BLOCK_META.get(biome);
+			final String topBlock = BiomePropertyManager.OCEAN_TOP_BLOCK.get(biome).toString();
 			obj.addProperty("Ocean Top Block", topBlock);
-			obj.addProperty("Ocean Top Block Meta", Integer.toString(meta));
 		}
 		if(!BiomeTweaker.getInstance().isTweakEnabled("oceanFillerBlock")){
 			obj.addProperty("Ocean Filler Block", "Disabled. Activate in BiomeTweakerCore.");
 			obj.addProperty("Ocean Filler Block Meta", "Disabled. Activate in BiomeTweakerCore.");
 		}else{
-			final String topBlock = BiomePropertyManager.OCEAN_FILLER_BLOCK.get(biome);
-			final int meta = BiomePropertyManager.OCEAN_FILLER_BLOCK_META.get(biome);
+			final String topBlock = BiomePropertyManager.OCEAN_FILLER_BLOCK.get(biome).toString();
 			obj.addProperty("Ocean Filler Block", topBlock);
-			obj.addProperty("Ocean Filler Block Meta", Integer.toString(meta));
 		}
 		if(!BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks"))
 			obj.addProperty("Actual Filler Blocks", "Disabled. Activate in BiomeTweakerCore.");

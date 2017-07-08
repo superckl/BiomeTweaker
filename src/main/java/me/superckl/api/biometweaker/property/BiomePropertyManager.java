@@ -7,7 +7,9 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.APIInfo;
+import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.script.ParameterTypes;
+import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
@@ -17,14 +19,10 @@ public class BiomePropertyManager {
 	public static Property<String> NAME;
 	public static Property<Float> HEIGHT;
 	public static Property<Float> HEIGHT_VARIATION;
-	public static Property<String> TOP_BLOCK;
-	public static Property<Integer> TOP_BLOCK_META;
-	public static Property<String> FILLER_BLOCK;
-	public static Property<Integer> FILLER_BLOCK_META;
-	public static Property<String> OCEAN_TOP_BLOCK;
-	public static Property<Integer> OCEAN_TOP_BLOCK_META;
-	public static Property<String> OCEAN_FILLER_BLOCK;
-	public static Property<Integer> OCEAN_FILLER_BLOCK_META;
+	public static Property<IBlockState> TOP_BLOCK;
+	public static Property<IBlockState> FILLER_BLOCK;
+	public static Property<IBlockState> OCEAN_TOP_BLOCK;
+	public static Property<IBlockState> OCEAN_FILLER_BLOCK;
 	public static Property<Float> TEMPERATURE;
 	public static Property<Float> HUMIDITY;
 	public static Property<Integer> WATER_TINT;
@@ -75,7 +73,7 @@ public class BiomePropertyManager {
 			}
 	}
 
-	public static boolean setProperty(final Biome biome, final String property, final JsonElement value) throws Exception{
+	public static boolean setProperty(final Biome biome, final String property, final JsonElement value, final ScriptHandler handler) throws Exception{
 		final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
 		if(prop == null)
 			throw new IllegalArgumentException("No property found for "+property);
@@ -90,7 +88,9 @@ public class BiomePropertyManager {
 			else if(type.getCanonicalName().equals(Boolean.class.getCanonicalName()))
 				WarningHelper.<Property<Boolean>>uncheckedCast(prop).set(biome, value.getAsBoolean());
 			else if(type.getCanonicalName().equals(String.class.getCanonicalName()))
-				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, ParameterTypes.STRING.tryParse(value.getAsString(), null));
+				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, ParameterTypes.STRING.tryParse(value.getAsString(), handler));
+			else if(type.getCanonicalName().equals(IBlockState.class.getCanonicalName()))
+				WarningHelper.<Property<IBlockState>>uncheckedCast(prop).set(biome, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
 		} catch (final Exception e) {
 			throw e;
 		}

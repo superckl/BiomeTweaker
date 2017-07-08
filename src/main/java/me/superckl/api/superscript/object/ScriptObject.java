@@ -34,6 +34,7 @@ public abstract class ScriptObject {
 		if(pair != null){
 			pair = this.modifyConstructorPair(pair, args, handler);
 			final IScriptCommand sCommand = pair.getKey().newInstance(pair.getValue());
+			sCommand.setScriptHandler(handler);
 			if(listing.isPerformInst())
 				sCommand.perform();
 			else

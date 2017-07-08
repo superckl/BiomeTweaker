@@ -8,10 +8,10 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.ScriptHandler;
-import me.superckl.api.superscript.ScriptParser;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.ScriptHandler;
+import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.util.CollectionHelper;
 
 public abstract class ScriptObject {

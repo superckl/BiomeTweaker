@@ -23,8 +23,8 @@ import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.api.superscript.util.ParameterWrapper;
+import me.superckl.api.superscript.script.ParameterTypes;
+import me.superckl.api.superscript.script.ParameterWrapper;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.integration.IIntegrationModule;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddBOPWorldType;
@@ -88,7 +88,7 @@ public class BOPIntegrationModule implements IIntegrationModule{
 			ScriptCommandRegistry.INSTANCE.registerListing("addToGenerationBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(new ArrayList<ParameterWrapper>(), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
+			listing.addEntry(new ArrayList<ParameterWrapper<?>>(), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, BiomesScriptObject.class);
 

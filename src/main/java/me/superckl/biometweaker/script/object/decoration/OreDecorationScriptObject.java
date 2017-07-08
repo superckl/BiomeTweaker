@@ -8,7 +8,7 @@ import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenMineableBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.biometweaker.script.command.generation.feature.ore.ScriptCommandSetOreBlockToReplace;
 import me.superckl.biometweaker.script.command.generation.feature.ore.ScriptCommandSetOreHeights;
 import me.superckl.biometweaker.script.command.generation.feature.ore.ScriptCommandSetOreSize;

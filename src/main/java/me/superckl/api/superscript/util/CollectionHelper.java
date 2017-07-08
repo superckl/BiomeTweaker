@@ -1,5 +1,6 @@
 package me.superckl.api.superscript.util;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -50,6 +51,12 @@ public class CollectionHelper {
 		for(int i = 0; i < strings.length; i++)
 			strings[i] = strings[i].trim();
 		return strings;
+	}
+
+	public static <T, V extends Collection<T>> V addAllFromArray(final V addTo, final Object array){
+		for(int i = 0; i < Array.getLength(array); i++)
+			addTo.add(WarningHelper.uncheckedCast(Array.get(array, i)));
+		return addTo;
 	}
 
 }

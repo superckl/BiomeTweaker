@@ -1,4 +1,4 @@
-package me.superckl.api.superscript;
+package me.superckl.api.superscript.script;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.google.common.collect.Maps;
 
+import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.object.ScriptObject;
 
 public class ScriptHandler {

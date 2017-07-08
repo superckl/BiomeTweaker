@@ -8,7 +8,7 @@ import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandAddTreesSoilBlock;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesCheckGrow;
 import me.superckl.biometweaker.script.command.generation.feature.tree.ScriptCommandSetTreesGrowVines;

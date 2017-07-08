@@ -1,7 +1,6 @@
 package me.superckl.biometweaker.script.object;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,11 +16,10 @@ import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
-import me.superckl.api.superscript.ScriptHandler;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.api.superscript.util.ParameterWrapper;
+import me.superckl.api.superscript.script.ParameterTypes;
+import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandAddRemoveSpawn;
 import me.superckl.biometweaker.script.command.entity.ScriptCommandMaxSpawnPackSize;
@@ -58,8 +56,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		final Map<String, ScriptCommandListing> validCommands = Maps.newLinkedHashMap();
 
 		ScriptCommandListing listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterWrapper>()
-				, ScriptCommandRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
+		listing.addEntry(Lists.newArrayList(), ScriptCommandRemoveBiome.class.getDeclaredConstructor(IBiomePackage.class));
 		validCommands.put("remove", listing);
 
 		listing = new ScriptCommandListing();
@@ -108,7 +105,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		validCommands.put("removeDicType", listing);
 
 		listing = new ScriptCommandListing();
-		listing.addEntry(new ArrayList<ParameterWrapper>(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
+		listing.addEntry(Lists.newArrayList(), ScriptCommandRemoveAllDictionaryTypes.class.getDeclaredConstructor(IBiomePackage.class));
 		validCommands.put("removeAllDicTypes", listing);
 
 		listing = new ScriptCommandListing();
@@ -141,8 +138,7 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 		listing = new ScriptCommandListing();
 		listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper())
 				, ScriptCommandDisableBonemealUse.class.getDeclaredConstructor(IBiomePackage.class, String.class));
-		listing.addEntry(Lists.<ParameterWrapper>newArrayList()
-				, ScriptCommandDisableBonemealUse.class.getDeclaredConstructor(IBiomePackage.class));
+		listing.addEntry(Lists.newArrayList(), ScriptCommandDisableBonemealUse.class.getDeclaredConstructor(IBiomePackage.class));
 		validCommands.put("disableBonemealUse", listing);
 
 		listing = new ScriptCommandListing();

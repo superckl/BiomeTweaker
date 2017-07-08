@@ -1,14 +1,14 @@
-package me.superckl.api.superscript;
+package me.superckl.api.superscript.script;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +21,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ConstructorListing;
-import me.superckl.api.superscript.util.ParameterTypes;
-import me.superckl.api.superscript.util.ParameterWrapper;
 
 public class ScriptParser {
 
@@ -98,21 +97,21 @@ public class ScriptParser {
 		final String var = split[0].trim();
 		final String assign = split[1].trim();
 		if(assign.startsWith("\"") && assign.endsWith("\"")){
-			final String shortcut = (String) ParameterTypes.STRING.tryParse(assign, handler);
+			final String shortcut = ParameterTypes.STRING.tryParse(assign, handler);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
 		}else{
 			final String called = ScriptParser.getCommandCalled(assign);
 			if(ScriptParser.validObjects.containsKey(called)){
 				final ConstructorListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
 				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
-				for(final Entry<List<ParameterWrapper>, Constructor<? extends ScriptObject>> entry:listing.getConstructors().entrySet()){
+				for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends ScriptObject>> entry:listing.getConstructors().entrySet()){
 					final List<Object> objs = Lists.newArrayList();
-					final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
-					final Iterator<ParameterWrapper> it = params.iterator();
+					final List<ParameterWrapper<?>> params = Lists.newArrayList(entry.getKey());
+					final Iterator<ParameterWrapper<?>> it = params.iterator();
 					while(it.hasNext()){
-						final ParameterWrapper wrap = it.next();
-						final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-						Collections.addAll(objs, parsed.getKey());
+						final ParameterWrapper<?> wrap = it.next();
+						final Pair<?, String[]> parsed = wrap.parseArgs(handler, arguments);
+						CollectionHelper.addAllFromArray(objs, parsed.getKey());
 						arguments = parsed.getValue();
 						it.remove();
 					}
@@ -133,17 +132,17 @@ public class ScriptParser {
 	@Nullable
 	public static Pair<Constructor<? extends IScriptCommand>, Object[]> findConstructor(final ScriptCommandListing listing, final String[] args, final ScriptHandler handler) throws Exception{
 		outer:
-			for(final Entry<List<ParameterWrapper>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+			for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
 				String[] arguments = Arrays.copyOf(args, args.length);
 				final List<Object> objs = Lists.newArrayList();
-				final List<ParameterWrapper> params = Lists.newArrayList(entry.getKey());
-				final Iterator<ParameterWrapper> it = params.iterator();
+				final List<ParameterWrapper<?>> params = Lists.newArrayList(entry.getKey());
+				final Iterator<ParameterWrapper<?>> it = params.iterator();
 				while(it.hasNext()){
-					final ParameterWrapper wrap = it.next();
-					final Pair<Object[], String[]> parsed = wrap.parseArgs(handler, arguments);
-					if((parsed.getKey().length == 0) && !wrap.canReturnNothing())
+					final ParameterWrapper<?> wrap = it.next();
+					final Pair<?, String[]> parsed = wrap.parseArgs(handler, arguments);
+					if((Array.getLength(parsed.getKey()) == 0) && !wrap.canReturnNothing())
 						continue outer;
-					Collections.addAll(objs, parsed.getKey());
+					CollectionHelper.addAllFromArray(objs, parsed.getKey());
 					arguments = parsed.getValue();
 					it.remove();
 				}

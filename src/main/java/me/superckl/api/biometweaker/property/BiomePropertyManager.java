@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.APIInfo;
-import me.superckl.api.superscript.util.ParameterTypes;
+import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
@@ -90,7 +90,7 @@ public class BiomePropertyManager {
 			else if(type.getCanonicalName().equals(Boolean.class.getCanonicalName()))
 				WarningHelper.<Property<Boolean>>uncheckedCast(prop).set(biome, value.getAsBoolean());
 			else if(type.getCanonicalName().equals(String.class.getCanonicalName()))
-				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, (String) ParameterTypes.STRING.tryParse(value.getAsString()));
+				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, ParameterTypes.STRING.tryParse(value.getAsString(), null));
 		} catch (final Exception e) {
 			throw e;
 		}

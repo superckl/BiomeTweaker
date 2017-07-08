@@ -31,6 +31,7 @@ public class GuiFactory implements IModGuiFactory{
 		return new GuiScreenConfig(parentScreen);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
 		// TODO Auto-generated method stub

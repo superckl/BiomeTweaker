@@ -100,7 +100,7 @@ public class BiomeTweaker{
 
 		bar.step("Reading config");
 		if(!this.signed){
-			LogHelper.warn("Hey... uhm... this is akward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
+			LogHelper.warn("Hey... uhm... this is awkward but, it looks like you're using an unofficial version of BiomeTweaker. Where exactly did you get this from?");
 			LogHelper.warn("Unless I (superckl) sent you this version, don't expect to get any support for it.");
 		}
 

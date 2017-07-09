@@ -121,7 +121,7 @@ public class BiomeTweaker{
 		this.commandManager = ScriptCommandManager.newInstance(ModData.MOD_ID);
 
 		BiomeTweaker.proxy.initProperties();
-		BiomeTweaker.proxy.setupScripts();
+		BiomeTweaker.proxy.setupScripts(e.getAsmData());
 
 
 		bar.step("Pre-Initializing Integration");

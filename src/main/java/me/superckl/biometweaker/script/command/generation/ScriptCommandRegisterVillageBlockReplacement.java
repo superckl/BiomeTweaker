@@ -8,26 +8,26 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
+import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
+import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 
+@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "registerGenVillageBlockRep")
+@RequiredArgsConstructor
 public class ScriptCommandRegisterVillageBlockReplacement implements IScriptCommand{
 
 	private final IBiomePackage pack;
 	private final BlockStateBuilder<?> toReplace;
 	private final BlockStateBuilder<?> replaceWith;
-
-	public ScriptCommandRegisterVillageBlockReplacement(final IBiomePackage pack, final BlockStateBuilder<?> block1, final BlockStateBuilder<?> block2) {
-		this.pack = pack;
-		this.toReplace = block1;
-		this.replaceWith = block2;
-	}
 
 	@Override
 	public void perform() throws Exception {

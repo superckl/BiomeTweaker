@@ -7,7 +7,8 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.block.Block;
+import me.superckl.api.superscript.util.BlockEquivalencePredicate;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.living.LivingPackSizeEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
@@ -21,9 +22,9 @@ public class EntityEventHandler {
 	@Setter
 	private static int globalPackSize = -1;
 	@Getter
-	private static TIntObjectMap<TObjectIntMap<String>> packSizes = new TIntObjectHashMap<TObjectIntMap<String>>();
+	private static TIntObjectMap<TObjectIntMap<String>> packSizes = new TIntObjectHashMap<>();
 	@Getter
-	private static TIntObjectMap<List<Block>> noBonemeals = new TIntObjectHashMap<List<Block>>();
+	private static TIntObjectMap<List<IBlockState>> noBonemeals = new TIntObjectHashMap<>();
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onGetMaxPackSize(final LivingPackSizeEvent e){
@@ -54,13 +55,13 @@ public class EntityEventHandler {
 			return;
 		final Biome biome = e.getWorld().getBiome(e.getPos());
 		if(EntityEventHandler.noBonemeals.containsKey(Biome.getIdForBiome(biome))){
-			final List<Block> list = EntityEventHandler.noBonemeals.get(Biome.getIdForBiome(biome));
+			final List<IBlockState> list = EntityEventHandler.noBonemeals.get(Biome.getIdForBiome(biome));
 			if(list == null){
 				e.setCanceled(true);
 				return;
 			}
-			for(final Block block:list)
-				if(block == e.getBlock()){
+			for(final IBlockState block:list)
+				if(new BlockEquivalencePredicate(block).apply(e.getBlock())){
 					e.setCanceled(true);
 					break;
 				}

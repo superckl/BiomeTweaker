@@ -1,9 +1,12 @@
 package me.superckl.api.superscript.script;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.gson.JsonElement;
@@ -13,6 +16,9 @@ import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.WarningHelper;
 
 public final class ParameterTypes {
+
+	private static final Map<Class<?>, ParameterType<?>> defaultTypes = Maps.newHashMap();
+	private static final Map<String, ParameterWrapper<?>> exceptionTypes = Maps.newHashMap();
 
 	public static final ParameterType<JsonElement> JSON_ELEMENT = new ParameterType<JsonElement>(JsonElement.class) {
 
@@ -48,12 +54,14 @@ public final class ParameterTypes {
 
 		@Override
 		public int[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			final List<Integer> ints = WarningHelper.uncheckedCast(ParameterTypes.INTEGERS.tryParse(parameter, handler));
-			final Iterator<Integer> it = ints.iterator();
+			final int[] ints = WarningHelper.uncheckedCast(ParameterTypes.INTEGERS.tryParse(parameter, handler));
+			final List<Integer> newInts = Lists.newArrayList();
+			Arrays.stream(ints).forEach(i -> newInts.add(i));
+			final Iterator<Integer> it = newInts.iterator();
 			while(it.hasNext())
 				if(it.next() < 0)
 					it.remove();
-			return ints.stream().mapToInt(i -> i).toArray();
+			return newInts.stream().mapToInt(i -> i).toArray();
 		}
 	};
 	public static final ParameterType<Integer> NON_NEG_INTEGER = new ParameterType<Integer>(Integer.class) {
@@ -135,5 +143,40 @@ public final class ParameterTypes {
 			return null;
 		}
 	};
+
+	public static <T, K extends T> void registerDefaultType(final Class<T> clazz, final ParameterType<K> type){
+		ParameterTypes.defaultTypes.put(clazz, type);
+	}
+
+	public static void registerExceptionWrapper(final String key, final ParameterWrapper<?> type){
+		ParameterTypes.exceptionTypes.put(key, type);
+	}
+
+	public static <T> ParameterType<? extends T> getDefaultType(final Class<T> clazz){
+		return WarningHelper.uncheckedCast(ParameterTypes.defaultTypes.get(clazz));
+	}
+
+	public static ParameterWrapper<?> getExceptionWrapper(final String key){
+		return ParameterTypes.exceptionTypes.get(key);
+	}
+
+	static {
+		ParameterTypes.registerDefaultType(Integer.class, ParameterTypes.INTEGER);
+		ParameterTypes.registerDefaultType(Integer.TYPE, ParameterTypes.INTEGER);
+		ParameterTypes.registerDefaultType(Float.class, ParameterTypes.FLOAT);
+		ParameterTypes.registerDefaultType(Float.TYPE, ParameterTypes.FLOAT);
+		ParameterTypes.registerDefaultType(Byte.class, ParameterTypes.BYTE);
+		ParameterTypes.registerDefaultType(Byte.TYPE, ParameterTypes.BYTE);
+		ParameterTypes.registerDefaultType(Boolean.class, ParameterTypes.BOOLEAN);
+		ParameterTypes.registerDefaultType(Boolean.TYPE, ParameterTypes.BOOLEAN);
+		ParameterTypes.registerDefaultType(int[].class, ParameterTypes.INTEGERS);
+		ParameterTypes.registerDefaultType(String.class, ParameterTypes.STRING);
+		ParameterTypes.registerDefaultType(String[].class, ParameterTypes.STRING_ARRAY);
+		ParameterTypes.registerDefaultType(JsonElement.class, ParameterTypes.JSON_ELEMENT);
+
+		ParameterTypes.registerExceptionWrapper("nonNegInt", ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper());
+		ParameterTypes.registerExceptionWrapper("nonNegByte", ParameterTypes.NON_NEG_BYTE.getSimpleWrapper());
+		ParameterTypes.registerExceptionWrapper("nonNegInts", ParameterTypes.NON_NEG_INTEGERS.getSimpleWrapper());
+	}
 
 }

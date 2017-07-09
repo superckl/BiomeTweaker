@@ -7,17 +7,22 @@ import com.google.common.collect.Lists;
 
 import gnu.trove.map.TIntObjectMap;
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
+import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
-import net.minecraft.block.Block;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 
+@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "disableBonemealUse")
 @RequiredArgsConstructor
 public class ScriptCommandDisableBonemealUse implements IScriptCommand{
 
 	private final IBiomePackage pack;
-	private final String block;
+	private final BlockStateBuilder<?> block;
 
 	public ScriptCommandDisableBonemealUse(final IBiomePackage pack) {
 		this(pack, null);
@@ -25,21 +30,19 @@ public class ScriptCommandDisableBonemealUse implements IScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Block block = this.block == null ? null:Block.getBlockFromName(this.block);
-		if((block == null) && (this.block != null))
-			throw new IllegalArgumentException("Failed to find block "+this.block+"! Tweak will not be applied.");
+		final IBlockState block = this.block == null ? null:this.block.build();
 		final Iterator<Biome > it = this.pack.getIterator();
 		while(it.hasNext()){
 			final Biome biome = it.next();
-			final TIntObjectMap<List<Block>> map = EntityEventHandler.getNoBonemeals();
+			final TIntObjectMap<List<IBlockState>> map = EntityEventHandler.getNoBonemeals();
 			final int id = Biome.getIdForBiome(biome);
 			if(block == null){
 				map.put(id, null);
 				continue;
 			}
 			if(!map.containsKey(id))
-				map.put(id, Lists.<Block>newArrayList());
-			final List<Block> list = map.get(id);
+				map.put(id, Lists.newArrayList());
+			final List<IBlockState> list = map.get(id);
 			if(list != null)
 				list.add(block);
 		}

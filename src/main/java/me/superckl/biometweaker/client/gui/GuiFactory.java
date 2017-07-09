@@ -34,7 +34,6 @@ public class GuiFactory implements IModGuiFactory{
 	@SuppressWarnings("deprecation")
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

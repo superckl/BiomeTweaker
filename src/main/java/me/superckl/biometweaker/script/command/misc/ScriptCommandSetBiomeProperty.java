@@ -7,13 +7,17 @@ import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
+import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 
+@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "set")
 @RequiredArgsConstructor
 public class ScriptCommandSetBiomeProperty implements IScriptCommand{
 

@@ -1,24 +1,11 @@
 package me.superckl.biometweaker.script.object.decoration;
 
-import java.lang.reflect.Constructor;
-import java.util.Map;
-
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-
-import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.object.DecorationBuilderScriptObject;
-import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ScriptHandler;
+import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationBlock;
-import me.superckl.biometweaker.script.command.generation.feature.ScriptCommandSetDecorationCount;
 
 public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>> extends DecorationBuilderScriptObject<V>{
 
@@ -27,12 +14,12 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 	}
 
 	@Override
-	public Pair<Constructor<? extends IScriptCommand>, Object[]> modifyConstructorPair(
-			final Pair<Constructor<? extends IScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler) {
-		final Object[] newArgs = new Object[pair.getValue().length+1];
-		System.arraycopy(pair.getValue(), 0, newArgs, 1, pair.getValue().length);
-		newArgs[0] = this.builder;
-		return Pair.of(pair.getKey(), newArgs);
+	public String[] modifyArguments(final String[] args, final ScriptHandler handler) {
+		final String name = CollectionHelper.reverseLookup(handler.getObjects(), this);
+		final String[] newArgs = new String[args.length+1];
+		newArgs[0] = name;
+		System.arraycopy(args, 0, newArgs, 1, args.length);
+		return newArgs;
 	}
 
 	@Override
@@ -40,19 +27,4 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 		BiomeTweaker.getInstance().addCommand(command);
 	}
 
-	public static Map<String, ScriptCommandListing> populateCommands() throws Exception {
-		final Map<String, ScriptCommandListing> validCommands = Maps.newLinkedHashMap();
-
-		ScriptCommandListing listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(BTParameterTypes.BLOCKSTATE_BUILDER.getSimpleWrapper()),
-				ScriptCommandSetDecorationBlock.class.getConstructor(WorldGeneratorBuilder.class, BlockStateBuilder.class));
-		validCommands.put("setBlock", listing);
-
-		listing = new ScriptCommandListing();
-		listing.addEntry(Lists.newArrayList(ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-				ScriptCommandSetDecorationCount.class.getConstructor(WorldGeneratorBuilder.class, Integer.TYPE));
-		validCommands.put("setCount", listing);
-
-		return validCommands;
-	}
 }

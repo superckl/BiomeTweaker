@@ -13,13 +13,18 @@ import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.util.CollectionHelper;
+import me.superckl.api.superscript.util.WarningHelper;
 
 public abstract class ScriptObject {
 
 	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<String, ScriptCommandListing>();
 
 	public ScriptObject() {
-		this.validCommands.putAll(ScriptCommandRegistry.INSTANCE.getListings(this.getClass()));
+		Class<?> clazz = this.getClass();
+		while(ScriptObject.class.isAssignableFrom(clazz)){
+			this.validCommands.putAll(ScriptCommandRegistry.INSTANCE.getListings(WarningHelper.uncheckedCast(clazz)));
+			clazz = clazz.getSuperclass();
+		}
 	}
 
 	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
@@ -29,7 +34,8 @@ public abstract class ScriptObject {
 			return;
 		}
 		final ScriptCommandListing listing = this.validCommands.get(command);
-		final String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
+		String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
+		args = this.modifyArguments(args, handler);
 		Pair<Constructor<? extends IScriptCommand>, Object[]> pair = ScriptParser.findConstructor(listing, args, handler);
 		if(pair != null){
 			pair = this.modifyConstructorPair(pair, args, handler);
@@ -41,7 +47,7 @@ public abstract class ScriptObject {
 				this.addCommand(sCommand);
 			return;
 		}
-		APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
+		APIInfo.log.error("Failed to parse arguments for command "+call+". It will be ignored.");
 	}
 
 	/**
@@ -61,6 +67,10 @@ public abstract class ScriptObject {
 
 	public Pair<Constructor<? extends IScriptCommand>, Object[]> modifyConstructorPair(final Pair<Constructor<? extends IScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler){
 		return pair;
+	}
+
+	public String[] modifyArguments(final String[] args, final ScriptHandler handler){
+		return args;
 	}
 
 }

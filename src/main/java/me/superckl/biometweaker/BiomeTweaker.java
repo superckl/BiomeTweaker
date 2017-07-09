@@ -197,7 +197,7 @@ public class BiomeTweaker{
 
 	@EventHandler
 	public void onPostInit(final FMLPostInitializationEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker PostInitialization", 2, true);
 
 		bar.step("Post-Initializing Integration");
 		IntegrationManager.INSTANCE.postInit();
@@ -210,7 +210,7 @@ public class BiomeTweaker{
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker LoadComplete", 2, true);
 
 		bar.step("Applying scripts");
 		this.commandManager.applyCommandsFor(ApplicationStage.FINISHED_LOAD);

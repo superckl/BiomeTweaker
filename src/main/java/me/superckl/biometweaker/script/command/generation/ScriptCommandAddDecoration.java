@@ -3,13 +3,17 @@ package me.superckl.biometweaker.script.command.generation;
 import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.common.world.TweakWorldManager;
 import me.superckl.biometweaker.common.world.gen.feature.DecorationManager;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.world.biome.Biome;
 
+@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addDecoration")
 @RequiredArgsConstructor
 public class ScriptCommandAddDecoration implements IScriptCommand{
 

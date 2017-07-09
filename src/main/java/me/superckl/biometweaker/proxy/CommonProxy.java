@@ -1,16 +1,33 @@
 package me.superckl.biometweaker.proxy;
 
+import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.PropertyField;
+import me.superckl.api.biometweaker.script.AutoRegister;
+import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
+import me.superckl.api.biometweaker.script.AutoRegister.RegisterExempt;
+import me.superckl.api.biometweaker.script.AutoRegisters;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.ScriptCommandRegistry;
+import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
+import me.superckl.api.superscript.script.ParameterWrapper;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.util.ConstructorListing;
+import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
@@ -33,6 +50,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType;
+import net.minecraftforge.fml.common.discovery.ASMDataTable;
+import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 
 public class CommonProxy implements IProxy{
 
@@ -103,47 +122,69 @@ public class CommonProxy implements IProxy{
 	}
 
 	@Override
-	public void setupScripts() {
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(BiomesScriptObject.class, BiomesScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate BiomeScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
+	public void setupScripts(final ASMDataTable table) {
+		//Ensure BTParamterTypes registers its defaults
+		BTParameterTypes.BLOCKSTATE_BUILDER.getTypeClass();
+		LogHelper.debug("Discovering @AutoRegister script commands...");
+		final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> listings = Maps.newHashMap();
+		final Set<ASMData> datas = table.getAll(AutoRegister.class.getCanonicalName());
+		final Set<ASMData> groupedDatas = table.getAll(AutoRegisters.class.getCanonicalName());
+		final Set<ASMData> allData = Sets.newHashSet(datas);
+		for(final ASMData data:groupedDatas){
+			final List<Map<String, Object>> anns =  WarningHelper.uncheckedCast(data.getAnnotationInfo().get("value"));
+			anns.forEach(l -> allData.add(new ASMData(data.getCandidate(), AutoRegister.class.getCanonicalName(), data.getClassName(), data.getObjectName(), l)));
 		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(TweakerScriptObject.class, TweakerScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate Tweaker command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(OreDecorationScriptObject.class, OreDecorationScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate OreDecorationScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(TreesDecorationScriptObject.class, TreesDecorationScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate TreesDecorationScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(ClusterDecorationScriptObject.class, ClusterDecorationScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate ClusterDecorationScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
-		}
-
-		try {
-			ScriptCommandRegistry.INSTANCE.registerClassListing(BasicBlockStateScriptObject.class, BasicBlockStateScriptObject.populateCommands());
-		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate ClusterDecorationScriptObject command listings! Some tweaks may not be applied.");
-			e2.printStackTrace();
+		final Set<String> examinedClasses = Sets.newHashSet();
+		for(final ASMData data:allData)
+			try {
+				if(examinedClasses.contains(data.getClassName()))
+					continue;
+				final Class<?> asmClass = Class.forName(data.getClassName());
+				final Class<? extends IScriptCommand> scriptClass = asmClass.asSubclass(IScriptCommand.class);
+				final AutoRegister[] classAnns = scriptClass.getAnnotationsByType(AutoRegister.class);
+				final Constructor<?>[] cons = scriptClass.getConstructors();
+				for(final Constructor<?> con:cons){
+					if(con.isAnnotationPresent(RegisterExempt.class))
+						continue;
+					final AutoRegister[] methodAnns = con.getAnnotationsByType(AutoRegister.class);
+					if(classAnns.length == 0 && methodAnns.length == 0)
+						continue;
+					AutoRegister[] annsToUse;
+					if(methodAnns.length != 0)
+						annsToUse = methodAnns;
+					else
+						annsToUse = classAnns;
+					final Class<?>[] cTypes = con.getParameterTypes();
+					final ParameterWrapper<?>[] pTypes = new ParameterWrapper[cTypes.length];
+					for(final ParameterOverride override:con.getAnnotationsByType(ParameterOverride.class))
+						pTypes[override.parameterIndex()] = ParameterTypes.getExceptionWrapper(override.exceptionKey());
+					for(int i = 0; i < cTypes.length; i++){
+						if(pTypes[i] != null)
+							continue;
+						final ParameterType<?> type = ParameterTypes.getDefaultType(cTypes[i]);
+						if(type == null)
+							throw new IllegalStateException("No parameter type found for parameter "+cTypes[i].getCanonicalName());
+						pTypes[i] = type.getSimpleWrapper();
+					}
+					for(final AutoRegister ann:annsToUse)
+						for(final Class<? extends ScriptObject> clazz:ann.classes()){
+							if(!listings.containsKey(clazz))
+								listings.put(clazz, Maps.newHashMap());
+							final Map<String, ScriptCommandListing> map = listings.get(clazz);
+							if(!map.containsKey(ann.name()))
+								map.put(ann.name(), new ScriptCommandListing());
+							final ScriptCommandListing listing = map.get(ann.name());
+							listing.addEntry(Lists.newArrayList(pTypes), WarningHelper.uncheckedCast(con));
+						}
+				}
+				examinedClasses.add(data.getClassName());
+			} catch (final Exception e) {
+				LogHelper.error("Failed to auto-register a script command "+data.getAnnotationInfo().toString());
+				e.printStackTrace();
+			}
+		for(final Entry<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> entry:listings.entrySet()){
+			LogHelper.debug("Registering "+entry.getValue().size()+" commands to "+entry.getKey().getSimpleName());
+			ScriptCommandRegistry.INSTANCE.registerClassListing(entry.getKey(), entry.getValue());
 		}
 
 		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);

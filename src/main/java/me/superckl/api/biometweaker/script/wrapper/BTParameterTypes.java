@@ -1,7 +1,5 @@
 package me.superckl.api.biometweaker.script.wrapper;
 
-import java.util.List;
-
 import me.superckl.api.biometweaker.block.BasicBlockStateBuilder;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
@@ -43,8 +41,8 @@ public class BTParameterTypes {
 
 		@Override
 		public IBiomePackage tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			final List<Integer> ints = WarningHelper.uncheckedCast(ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler));
-			if(ints.isEmpty()){
+			final int[] ints = WarningHelper.uncheckedCast(ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler));
+			if(ints.length == 0){
 				final ScriptObject obj = handler.getObjects().get(parameter);
 				if(obj != null && obj instanceof BiomePackScriptObject)
 					return ((BiomePackScriptObject)obj).getPack();
@@ -55,10 +53,7 @@ public class BTParameterTypes {
 					return new BasicResourceNameBiomesPackage(rLoc);
 				}
 			}
-			final int[] array = new int[ints.size()];
-			for(int i = 0; i < array.length; i++)
-				array[i] = ints.get(i);
-			return new BasicBiomesPackage(array);
+			return new BasicBiomesPackage(ints);
 		}
 	};
 
@@ -138,5 +133,16 @@ public class BTParameterTypes {
 			return null;
 		}
 	};
+
+	static {
+		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
+		ParameterTypes.registerDefaultType(WorldGeneratorBuilder.class, BTParameterTypes.WORLD_GENERATOR_BUILDER);
+		ParameterTypes.registerDefaultType(SpawnListType.class, BTParameterTypes.SPAWN_TYPE);
+		ParameterTypes.registerDefaultType(IBiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
+
+		ParameterTypes.registerExceptionWrapper("treeGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
+		ParameterTypes.registerExceptionWrapper("oreGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
+		ParameterTypes.registerExceptionWrapper("clusterGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
+	}
 
 }

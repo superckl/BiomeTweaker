@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class CollectionHelper {
 
@@ -57,6 +58,13 @@ public class CollectionHelper {
 		for(int i = 0; i < Array.getLength(array); i++)
 			addTo.add(WarningHelper.uncheckedCast(Array.get(array, i)));
 		return addTo;
+	}
+
+	public static <T, V> T reverseLookup(final Map<T,V> map, final V value){
+		for(final Entry<T,V> entry:map.entrySet())
+			if(entry.getValue().equals(value))
+				return entry.getKey();
+		return null;
 	}
 
 }

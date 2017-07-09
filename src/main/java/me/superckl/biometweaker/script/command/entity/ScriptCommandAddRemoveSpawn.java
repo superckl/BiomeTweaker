@@ -6,11 +6,15 @@ import java.util.Iterator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
+import me.superckl.api.biometweaker.script.AutoRegister;
+import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.EntityHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -27,10 +31,15 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
+	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addSpawn")
+	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 3)
+	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 4)
+	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 5)
 	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type, final int weight, final int minCount, final int maxCount) {
 		this(pack, false, type, entityClass, weight, minCount, maxCount);
 	}
 
+	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "removeSpawn")
 	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type) {
 		this(pack, true, type, entityClass, 0, 0, 0);
 	}

@@ -10,11 +10,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
+import me.superckl.api.biometweaker.script.AutoRegister;
+import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.script.object.BiomesScriptObject;
+import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.FlowerEntry;
@@ -30,10 +34,13 @@ public class ScriptCommandAddRemoveBiomeFlower implements IScriptCommand{
 	private final BlockStateBuilder<?> block;
 	private final int weight;
 
+	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "removeFlower")
 	public ScriptCommandAddRemoveBiomeFlower(final IBiomePackage pack, final BlockStateBuilder<?> block) {
 		this(pack, true, block, 0);
 	}
 
+	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addFlower")
+	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 2)
 	public ScriptCommandAddRemoveBiomeFlower(final IBiomePackage pack, final BlockStateBuilder<?> block, final int weight) {
 		this(pack, false, block, weight);
 	}

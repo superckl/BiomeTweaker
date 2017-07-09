@@ -8,8 +8,8 @@ public class DimensionHelper {
 
 	public static JsonObject populateObject(final DimensionType type){
 		final JsonObject obj = new JsonObject();
-		obj.addProperty("Name", type.getName());
-		obj.addProperty("Suffix", type.getSuffix());
+		obj.addProperty("Name", String.valueOf(type.getName()));
+		obj.addProperty("Suffix", String.valueOf(type.getSuffix()));
 		obj.addProperty("ID", type.getId());
 		return obj;
 	}

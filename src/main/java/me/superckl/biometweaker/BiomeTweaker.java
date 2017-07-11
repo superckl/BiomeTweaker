@@ -123,15 +123,14 @@ public class BiomeTweaker{
 		BiomeTweaker.proxy.initProperties();
 		BiomeTweaker.proxy.setupScripts(e.getAsmData());
 
-
 		bar.step("Pre-Initializing Integration");
 		IntegrationManager.INSTANCE.preInit();
 
-		bar.step("Parsing scripts");
-		this.parseScripts();
-
 		bar.step("Registering handlers");
 		BiomeTweaker.proxy.registerHandlers();
+
+		bar.step("Parsing scripts");
+		this.parseScripts();
 
 		bar.step("Applying scripts");
 		this.commandManager.applyCommandsFor(ApplicationStage.PRE_INIT);

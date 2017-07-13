@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.custom_hash.TObjectByteCustomHashMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.strategy.IdentityHashingStrategy;
 import lombok.Getter;
@@ -45,8 +44,6 @@ public class BiomeEventHandler {
 
 	@Getter
 	private static final TIntObjectMap<List<Pair<IBlockState, IBlockState>>> villageBlockReplacements = new TIntObjectHashMap<>();
-	@Getter
-	private static final TIntIntMap biomeReplacements = new TIntIntHashMap();
 	@Getter
 	private static final TIntObjectMap<List<String>> decorateTypes = new TIntObjectHashMap<>();
 	@Getter

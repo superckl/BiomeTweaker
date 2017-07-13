@@ -129,11 +129,11 @@ public class BlockReplacementManager {
 	@Getter
 	public static class WeightedBlockEntry extends WeightedRandom.Item{
 
-		private final IBlockState block;
+		private final IBlockState blockState;
 
-		public WeightedBlockEntry(final int weight, final IBlockState block) {
+		public WeightedBlockEntry(final int weight, final IBlockState blockState) {
 			super(weight);
-			this.block = block;
+			this.blockState = blockState;
 		}
 
 	}

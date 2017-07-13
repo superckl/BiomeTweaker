@@ -2,6 +2,9 @@ package me.superckl.biometweaker.common.world.gen;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.map.TIntObjectMap;
@@ -37,10 +40,13 @@ public class BlockReplacer {
 						previousReplacements.put(id, new BlockReplacementEntryList());
 					final BlockReplacementEntryList previousReplacementsBiome = previousReplacements.get(id);
 					final BlockReplacementEntryList list = manager.findReplacementEntryList(id, stage);
+					final Set<IBlockState> noReps = Sets.newIdentityHashSet();
 					//assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
 					final int k1 = 256;
 					for(int y = 0; y < k1; y++){
 						final IBlockState state = primer == null ? chunk.getBlockState(x, y, z):primer.getBlockState(x, y, z);
+						if(noReps.contains(state))
+							continue;
 						final Block block = state.getBlock();
 						WeightedBlockEntry toUse = null;
 						final BlockReplacementEntry previousEntry = previousReplacementsBiome.findEntry(state);
@@ -54,14 +60,16 @@ public class BlockReplacer {
 								if(entries == null || entries.isEmpty())
 									continue;
 								toUse = WeightedRandom.getRandomItem(rand, entries);
-								previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getBlock());
+								previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getBlockState());
 							}
 						}
-						if(toUse != null)
+						if(toUse != null){
 							if(primer != null)
-								primer.setBlockState(x, y, z, toUse.getBlock());
+								primer.setBlockState(x, y, z, toUse.getBlockState());
 							else
-								chunk.setBlockState(new BlockPos(x, y, z), toUse.getBlock());
+								chunk.setBlockState(new BlockPos(x, y, z), toUse.getBlockState());
+						}else
+							noReps.add(state);
 					}
 				}
 			final TIntIterator it = previousReplacements.keySet().iterator();

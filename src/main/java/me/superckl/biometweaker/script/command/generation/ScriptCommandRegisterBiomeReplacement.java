@@ -7,7 +7,7 @@ import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.common.handler.BiomeEventHandler;
+import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.world.biome.Biome;
@@ -27,7 +27,7 @@ public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
 			final Iterator<Biome> it2 = this.replaceWith.getIterator();
 			if(!it2.hasNext())
 				throw new IllegalArgumentException("No biome found for replacement!");
-			BiomeEventHandler.getBiomeReplacements().put(id, Biome.getIdForBiome(it2.next()));
+			GenLayerReplacement.registerReplacement(id, Biome.getIdForBiome(it2.next()));
 			BiomeTweaker.getInstance().onTweak(id);
 		}
 	}

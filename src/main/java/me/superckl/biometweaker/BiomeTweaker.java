@@ -21,8 +21,9 @@ import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
 import lombok.Cleanup;
 import lombok.Getter;
-import me.superckl.api.superscript.ScriptCommandManager;
-import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
+import me.superckl.api.superscript.ApplicationStage;
+import me.superckl.api.superscript.BasicScriptCommandManager;
+import me.superckl.api.superscript.ScriptCommandRegistry;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.biometweaker.common.reference.ModData;
@@ -82,7 +83,7 @@ public class BiomeTweaker{
 	private Config config;
 
 	@Getter
-	private ScriptCommandManager commandManager;
+	private BasicScriptCommandManager commandManager;
 	@Getter
 	private final TIntSet tweakedBiomes = new TIntHashSet();
 	private final Set<String> enabledTweaks = new HashSet<>();
@@ -118,7 +119,8 @@ public class BiomeTweaker{
 		final File scripts = new File(this.config.getBtConfigFolder(), "scripts/");
 		scripts.mkdirs();
 
-		this.commandManager = ScriptCommandManager.newInstance(ModData.MOD_ID);
+		this.commandManager = new BasicScriptCommandManager();
+		ScriptCommandRegistry.INSTANCE.registerScriptCommandManager(ModData.MOD_ID, this.commandManager);
 
 		BiomeTweaker.proxy.initProperties();
 		BiomeTweaker.proxy.setupScripts(e.getAsmData());
@@ -178,7 +180,7 @@ public class BiomeTweaker{
 		//Reset other various stages
 		this.commandManager.addCommand(new ScriptCommandSetPlacementStage("BIOME_BLOCKS"));
 		this.commandManager.addCommand(new ScriptCommandSetWorld(null));
-		this.commandManager.setCurrentStage(ScriptCommandManager.getDefaultStage());
+		this.commandManager.setCurrentStage(BasicScriptCommandManager.getDefaultStage());
 	}
 
 	@EventHandler

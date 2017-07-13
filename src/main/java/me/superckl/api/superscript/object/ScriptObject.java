@@ -51,7 +51,7 @@ public abstract class ScriptObject {
 	}
 
 	/**
-	 * You should implement to read any arguments you expetced to receive in scripts.
+	 * You should implement this to read any arguments you expect to receive in scripts.
 	 * @param args The args parsed from the script.
 	 * @throws Exception An exception that arised from incorrect arguments or other parsing problems.
 	 */

@@ -9,42 +9,35 @@ import java.util.Set;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.command.IScriptCommand;
-import net.minecraftforge.common.util.EnumHelper;
 
-public class ScriptCommandManager {
+public class BasicScriptCommandManager implements IScriptCommandManager{
 
-	public static enum ApplicationStage{
-		PRE_INIT, INIT, POST_INIT, FINISHED_LOAD, SERVER_STARTING, SERVER_STARTED;
-
-		public static ApplicationStage newStage(final String name){
-			return EnumHelper.addEnum(ApplicationStage.class, name, new Class[] {});
-		}
-
-	}
-
-	private static Map<String, ScriptCommandManager> instances = Maps.newHashMap();
 	private static ApplicationStage defaultStage = ApplicationStage.FINISHED_LOAD;
 
-	protected ScriptCommandManager() {}
-
-	private ApplicationStage currentStage = ScriptCommandManager.defaultStage;
+	private ApplicationStage currentStage = BasicScriptCommandManager.defaultStage;
 
 	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
 	private final Set<ApplicationStage> appliedStages = EnumSet.noneOf(ApplicationStage.class);
 
 	public boolean addCommand(final IScriptCommand command){
-		if(!this.commands.containsKey(this.currentStage))
-			this.commands.put(this.currentStage, new ArrayList<IScriptCommand>());
-		if(this.appliedStages.contains(this.currentStage))
+		return this.addCommand(command, this.getCurrentStage());
+	}
+
+	@Override
+	public boolean addCommand(final IScriptCommand command, final ApplicationStage stage) {
+		if(!this.commands.containsKey(stage))
+			this.commands.put(stage, new ArrayList<IScriptCommand>());
+		if(this.appliedStages.contains(stage))
 			try {
 				command.perform();
 			} catch (final Exception e) {
 				APIInfo.log.error("Failed to execute script command: "+command);
 				e.printStackTrace();
 			}
-		return this.commands.get(this.currentStage).add(command);
+		return this.commands.get(stage).add(command);
 	}
 
+	@Override
 	public void applyCommandsFor(final ApplicationStage stage){
 		if(!this.commands.containsKey(stage))
 			return;
@@ -60,19 +53,10 @@ public class ScriptCommandManager {
 			}
 	}
 
+	@Override
 	public void reset(){
 		this.commands.clear();
-		this.currentStage = ScriptCommandManager.defaultStage;
-	}
-
-	public static ScriptCommandManager newInstance(final String owner){
-		final ScriptCommandManager manager = new ScriptCommandManager();
-		ScriptCommandManager.instances.put(owner, manager);
-		return manager;
-	}
-
-	public static ScriptCommandManager getManagerFor(final String owner){
-		return ScriptCommandManager.instances.get(owner);
+		this.currentStage = BasicScriptCommandManager.defaultStage;
 	}
 
 	public ApplicationStage getCurrentStage() {
@@ -92,11 +76,11 @@ public class ScriptCommandManager {
 	}
 
 	public static ApplicationStage getDefaultStage() {
-		return ScriptCommandManager.defaultStage;
+		return BasicScriptCommandManager.defaultStage;
 	}
 
 	public static void setDefaultStage(final ApplicationStage defaultStage) {
-		ScriptCommandManager.defaultStage = defaultStage;
+		BasicScriptCommandManager.defaultStage = defaultStage;
 	}
 
 }

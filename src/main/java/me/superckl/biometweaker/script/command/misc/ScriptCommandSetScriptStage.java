@@ -2,7 +2,7 @@ package me.superckl.biometweaker.script.command.misc;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.superscript.ScriptCommandManager.ApplicationStage;
+import me.superckl.api.superscript.ApplicationStage;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;

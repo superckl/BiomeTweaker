@@ -12,6 +12,8 @@ public class ScriptCommandRegistry {
 
 	public static final ScriptCommandRegistry INSTANCE = new ScriptCommandRegistry();
 
+	private final Map<String, IScriptCommandManager> managers = Maps.newHashMap();
+
 	private final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> commands = Maps.newHashMap();
 
 	public Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> getCommandsMap(){
@@ -69,6 +71,14 @@ public class ScriptCommandRegistry {
 			this.commands.get(clazz).put(command, listing);
 		}
 		return listing;
+	}
+
+	public void registerScriptCommandManager(final String key, final IScriptCommandManager manager){
+		this.managers.put(key, manager);
+	}
+
+	public IScriptCommandManager getManagerFor(final String owner){
+		return this.managers.get(owner);
 	}
 
 }

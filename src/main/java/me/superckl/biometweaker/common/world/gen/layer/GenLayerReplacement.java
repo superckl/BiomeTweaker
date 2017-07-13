@@ -36,11 +36,15 @@ public class GenLayerReplacement extends GenLayer{
 
 	private static void bakeMap(){
 		final int[] keys = GenLayerReplacement.biomeReplacements.keys();
-		Arrays.sort(keys);
-		GenLayerReplacement.bakedMap = new int[keys[keys.length-1]];
-		Arrays.fill(GenLayerReplacement.bakedMap, -1);
-		for(final int key:keys)
-			GenLayerReplacement.bakedMap[key] = GenLayerReplacement.biomeReplacements.get(key);
+		if(keys.length == 0)
+			GenLayerReplacement.bakedMap = new int[0];
+		else{
+			Arrays.sort(keys);
+			GenLayerReplacement.bakedMap = new int[keys[keys.length-1]];
+			Arrays.fill(GenLayerReplacement.bakedMap, -1);
+			for(final int key:keys)
+				GenLayerReplacement.bakedMap[key] = GenLayerReplacement.biomeReplacements.get(key);
+		}
 		GenLayerReplacement.mapChanged = false;
 	}
 

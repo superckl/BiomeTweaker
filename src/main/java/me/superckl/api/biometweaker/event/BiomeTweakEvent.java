@@ -3,8 +3,8 @@ package me.superckl.api.biometweaker.event;
 import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
-import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
@@ -164,16 +164,16 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class RemoveSpawn extends BiomeTweakEvent{
 
-		private final SpawnListType type;
+		private final EnumCreatureType type;
 		private final Class<?> entityClass;
 
-		public RemoveSpawn(final IScriptCommand command, final Biome biome, final SpawnListType type, final Class<?> entityClass) {
+		public RemoveSpawn(final IScriptCommand command, final Biome biome, final EnumCreatureType type2, final Class<?> entityClass) {
 			super(command, biome);
-			this.type = type;
+			this.type = type2;
 			this.entityClass = entityClass;
 		}
 
-		public SpawnListType getType() {
+		public EnumCreatureType getType() {
 			return this.type;
 		}
 
@@ -186,14 +186,14 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class RemoveAllSpawns extends BiomeTweakEvent{
 
-		private final SpawnListType type;
+		private final EnumCreatureType type;
 
-		public RemoveAllSpawns(final IScriptCommand command, final Biome biome, final SpawnListType type) {
+		public RemoveAllSpawns(final IScriptCommand command, final Biome biome, final EnumCreatureType type) {
 			super(command, biome);
 			this.type = type;
 		}
 
-		public SpawnListType getType() {
+		public EnumCreatureType getType() {
 			return this.type;
 		}
 

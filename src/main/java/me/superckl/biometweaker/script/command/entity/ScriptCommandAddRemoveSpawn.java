@@ -9,7 +9,6 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
@@ -18,6 +17,7 @@ import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.EntityHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +27,7 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 
 	private final IBiomePackage pack;
 	private final boolean remove;
-	private final SpawnListType type;
+	private final EnumCreatureType type;
 	private final String entityClass;
 	private final int weight, minCount, maxCount;
 
@@ -35,12 +35,12 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 3)
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 4)
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 5)
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type, final int weight, final int minCount, final int maxCount) {
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final EnumCreatureType type, final int weight, final int minCount, final int maxCount) {
 		this(pack, false, type, entityClass, weight, minCount, maxCount);
 	}
 
 	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "removeSpawn")
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final SpawnListType type) {
+	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final EnumCreatureType type) {
 		this(pack, true, type, entityClass, 0, 0, 0);
 	}
 
@@ -55,48 +55,13 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 		final SpawnListEntry entry = new SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount);
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
-			final Biome gen = it.next();
-			if(this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveSpawn(this, gen, this.type, clazz)))
+			final Biome biome = it.next();
+			if(this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.RemoveSpawn(this, biome, this.type, clazz)))
 				continue;
-			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, gen, entry)))
+			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, biome, entry)))
 				continue;
-			this.handleTypeSwitch(gen, entry, clazz);
-			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
-		}
-	}
-
-	private void handleTypeSwitch(final Biome gen, final SpawnListEntry entry, final Class<?> clazz){
-		switch(this.type){
-		case CAVE_CREATURE:{
-			if(this.remove)
-				this.removeEntry(clazz, gen.spawnableCaveCreatureList);
-			else
-				gen.spawnableCaveCreatureList.add(entry);
-			break;
-		}
-		case CREATURE:{
-			if(this.remove)
-				this.removeEntry(clazz, gen.spawnableCreatureList);
-			else
-				gen.spawnableCreatureList.add(entry);
-			break;
-		}
-		case MONSTER:{
-			if(this.remove)
-				this.removeEntry(clazz, gen.spawnableMonsterList);
-			else
-				gen.spawnableMonsterList.add(entry);
-			break;
-		}
-		case WATER_CREATURE:{
-			if(this.remove)
-				this.removeEntry(clazz, gen.spawnableWaterCreatureList);
-			else
-				gen.spawnableWaterCreatureList.add(entry);
-			break;
-		}
-		default:
-			break;
+			this.removeEntry(clazz, biome.getSpawnableList(this.type));
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 		}
 	}
 

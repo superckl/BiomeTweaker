@@ -14,7 +14,6 @@ import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.PropertyRangeBiomePackage;
 import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
-import me.superckl.api.biometweaker.util.SpawnListType;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.script.ParameterType;
@@ -22,17 +21,18 @@ import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.util.WarningHelper;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 
 public class BTParameterTypes {
 
-	public static final ParameterType<SpawnListType> SPAWN_TYPE = new ParameterType<SpawnListType>(SpawnListType.class) {
+	public static final ParameterType<EnumCreatureType> CREATURE_TYPE = new ParameterType<EnumCreatureType>(EnumCreatureType.class) {
 
 		@Override
-		public SpawnListType tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+		public EnumCreatureType tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final String extracted = ParameterTypes.STRING.tryParse(parameter, handler);
 			if(extracted != null)
-				return SpawnListType.valueOf(extracted);
+				return EnumCreatureType.valueOf(extracted);
 			return null;
 		}
 	};
@@ -137,7 +137,7 @@ public class BTParameterTypes {
 	static {
 		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
 		ParameterTypes.registerDefaultType(WorldGeneratorBuilder.class, BTParameterTypes.WORLD_GENERATOR_BUILDER);
-		ParameterTypes.registerDefaultType(SpawnListType.class, BTParameterTypes.SPAWN_TYPE);
+		ParameterTypes.registerDefaultType(EnumCreatureType.class, BTParameterTypes.CREATURE_TYPE);
 		ParameterTypes.registerDefaultType(IBiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
 
 		ParameterTypes.registerExceptionWrapper("treeGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());

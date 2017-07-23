@@ -1,10 +1,10 @@
 package me.superckl.biometweaker.script.object;
 
 import me.superckl.api.biometweaker.script.object.BiomePackScriptObject;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
-import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptHandler;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 
@@ -20,13 +20,13 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 	}
 
 	@Override
-	public void addCommand(final IScriptCommand command) {
+	public void addCommand(final ScriptCommand command) {
 		BiomeTweaker.getInstance().addCommand(command);
 	}
 
 	@Override
 	public void readArgs(final Object... packs) throws Exception {
-		final IBiomePackage[] bPacks = new IBiomePackage[packs.length];
+		final BiomePackage[] bPacks = new BiomePackage[packs.length];
 		System.arraycopy(packs, 0, bPacks, 0, packs.length);
 		if(bPacks.length == 1)
 			this.pack = bPacks[0];

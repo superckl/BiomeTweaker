@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 
-public class AllBiomesPackage implements IBiomePackage{
+public class AllBiomesPackage extends BiomePackage{
 
 	@Override
 	public Iterator<Biome> getIterator() {

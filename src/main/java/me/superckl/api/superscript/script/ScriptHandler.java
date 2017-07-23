@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.APIInfo;
-import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.object.ScriptObject;
 
 public class ScriptHandler {
 

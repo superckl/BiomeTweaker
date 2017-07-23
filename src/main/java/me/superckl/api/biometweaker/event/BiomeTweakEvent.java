@@ -3,7 +3,7 @@ package me.superckl.api.biometweaker.event;
 import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
@@ -14,15 +14,15 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public abstract class BiomeTweakEvent extends Event{
 
-	private final IScriptCommand command;
+	private final ScriptCommand command;
 	private final Biome biome;
 
-	public BiomeTweakEvent(final IScriptCommand command, final Biome biome) {
+	public BiomeTweakEvent(final ScriptCommand command, final Biome biome) {
 		this.command = command;
 		this.biome = biome;
 	}
 
-	public IScriptCommand getCommand() {
+	public ScriptCommand getCommand() {
 		return this.command;
 	}
 
@@ -33,7 +33,7 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class Create extends BiomeTweakEvent{
 
-		public Create(final IScriptCommand command, final Biome biome) {
+		public Create(final ScriptCommand command, final Biome biome) {
 			super(command, biome);
 		}
 
@@ -44,7 +44,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final BiomeEntry entry;
 
-		public AddToGeneration(final IScriptCommand command, final Biome biome, final BiomeEntry entry) {
+		public AddToGeneration(final ScriptCommand command, final Biome biome, final BiomeEntry entry) {
 			super(command, biome);
 			this.entry = entry;
 		}
@@ -59,7 +59,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final BiomeEntry entry;
 
-		public Remove(final IScriptCommand command, final Biome biome, final BiomeEntry entry) {
+		public Remove(final ScriptCommand command, final Biome biome, final BiomeEntry entry) {
 			super(command, biome);
 			this.entry = entry;
 		}
@@ -79,7 +79,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final int biomeID;
 		private final String type;
 
-		public RemoveDecoration(final IScriptCommand command, final Biome biome, final int biomeID, final String type) {
+		public RemoveDecoration(final ScriptCommand command, final Biome biome, final int biomeID, final String type) {
 			super(command, biome);
 			this.biomeID = biomeID;
 			this.type = type;
@@ -104,7 +104,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final int biomeID;
 		private final String type;
 
-		public RemoveFeature(final IScriptCommand command, final Biome biome, final int biomeID, final String type) {
+		public RemoveFeature(final ScriptCommand command, final Biome biome, final int biomeID, final String type) {
 			super(command, biome);
 			this.biomeID = biomeID;
 			this.type = type;
@@ -125,7 +125,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final BiomeDictionary.Type type;
 
-		public AddDictionaryType(final IScriptCommand command, final Biome biome, final BiomeDictionary.Type type) {
+		public AddDictionaryType(final ScriptCommand command, final Biome biome, final BiomeDictionary.Type type) {
 			super(command, biome);
 			this.type = type;
 		}
@@ -141,7 +141,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final BiomeDictionary.Type type;
 
-		public RemoveDictionaryType(final IScriptCommand command, final Biome biome, final BiomeDictionary.Type type) {
+		public RemoveDictionaryType(final ScriptCommand command, final Biome biome, final BiomeDictionary.Type type) {
 			super(command, biome);
 			this.type = type;
 		}
@@ -155,7 +155,7 @@ public abstract class BiomeTweakEvent extends Event{
 	@Cancelable
 	public static class RemoveAllDictionaryTypes extends BiomeTweakEvent{
 
-		public RemoveAllDictionaryTypes(final IScriptCommand command, final Biome biome) {
+		public RemoveAllDictionaryTypes(final ScriptCommand command, final Biome biome) {
 			super(command, biome);
 		}
 
@@ -167,7 +167,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final EnumCreatureType type;
 		private final Class<?> entityClass;
 
-		public RemoveSpawn(final IScriptCommand command, final Biome biome, final EnumCreatureType type2, final Class<?> entityClass) {
+		public RemoveSpawn(final ScriptCommand command, final Biome biome, final EnumCreatureType type2, final Class<?> entityClass) {
 			super(command, biome);
 			this.type = type2;
 			this.entityClass = entityClass;
@@ -188,7 +188,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final EnumCreatureType type;
 
-		public RemoveAllSpawns(final IScriptCommand command, final Biome biome, final EnumCreatureType type) {
+		public RemoveAllSpawns(final ScriptCommand command, final Biome biome, final EnumCreatureType type) {
 			super(command, biome);
 			this.type = type;
 		}
@@ -204,7 +204,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final SpawnListEntry spawnEntry;
 
-		public AddSpawn(final IScriptCommand command, final Biome biome, final SpawnListEntry spawnEntry) {
+		public AddSpawn(final ScriptCommand command, final Biome biome, final SpawnListEntry spawnEntry) {
 			super(command, biome);
 			this.spawnEntry = spawnEntry;
 		}
@@ -221,7 +221,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final String property;
 		private final JsonElement value;
 
-		public SetProperty(final IScriptCommand command, final Biome biome, final String property, final JsonElement value) {
+		public SetProperty(final ScriptCommand command, final Biome biome, final String property, final JsonElement value) {
 			super(command, biome);
 			this.property = property;
 			this.value = value;
@@ -243,7 +243,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final BlockStateBuilder<?> block;
 		private final int weight;
 
-		public AddFlower(final IScriptCommand command, final Biome biome, final BlockStateBuilder<?> block, final int weight) {
+		public AddFlower(final ScriptCommand command, final Biome biome, final BlockStateBuilder<?> block, final int weight) {
 			super(command, biome);
 			this.block = block;
 			this.weight = weight;
@@ -264,7 +264,7 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final BlockStateBuilder<?> block;
 
-		public RemoveFlower(final IScriptCommand command, final Biome biome, final BlockStateBuilder<?> block) {
+		public RemoveFlower(final ScriptCommand command, final Biome biome, final BlockStateBuilder<?> block) {
 			super(command, biome);
 			this.block = block;
 		}
@@ -282,7 +282,7 @@ public abstract class BiomeTweakEvent extends Event{
 		private final BlockStateBuilder<?> toReplace;
 		private final BlockStateBuilder<?> replaceWith;
 
-		public RegisterGenBlockReplacement(final IScriptCommand command, final int weight, final Biome biome, final BlockStateBuilder<?> toReplace, final BlockStateBuilder<?> replaceWith) {
+		public RegisterGenBlockReplacement(final ScriptCommand command, final int weight, final Biome biome, final BlockStateBuilder<?> toReplace, final BlockStateBuilder<?> replaceWith) {
 			super(command, biome);
 			this.weight = weight;
 			this.toReplace = toReplace;

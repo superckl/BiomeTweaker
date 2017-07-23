@@ -7,7 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
 import me.superckl.api.superscript.script.ParameterWrapper;
 import me.superckl.api.superscript.script.ScriptHandler;
@@ -20,10 +20,10 @@ public class AllButPackParameterWrapper extends ParameterWrapper<AllButBiomesPac
 
 	@Override
 	public Pair<AllButBiomesPackage[], String[]> parseArgs(final ScriptHandler handler, final String... args) throws Exception {
-		final List<IBiomePackage> parsed = Lists.newArrayList();
+		final List<BiomePackage> parsed = Lists.newArrayList();
 		String[] toReturn = new String[0];
 		for(int i = 0; i < args.length; i++){
-			final IBiomePackage obj = BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(args[i], handler);
+			final BiomePackage obj = BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(args[i], handler);
 			if(obj == null){
 				toReturn = new String[args.length-i];
 				System.arraycopy(args, i, toReturn, 0, toReturn.length);
@@ -31,7 +31,7 @@ public class AllButPackParameterWrapper extends ParameterWrapper<AllButBiomesPac
 			}
 			parsed.add(obj);
 		}
-		return Pair.of(new AllButBiomesPackage[] {new AllButBiomesPackage(new MergedBiomesPackage(parsed.toArray(new IBiomePackage[parsed.size()])))}, toReturn);
+		return Pair.of(new AllButBiomesPackage[] {new AllButBiomesPackage(new MergedBiomesPackage(parsed.toArray(new BiomePackage[parsed.size()])))}, toReturn);
 	}
 
 }

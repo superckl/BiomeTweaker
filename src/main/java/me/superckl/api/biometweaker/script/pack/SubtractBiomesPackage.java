@@ -7,12 +7,12 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 
-public class SubtractBiomesPackage implements IBiomePackage{
+public class SubtractBiomesPackage extends BiomePackage{
 
-	private final IBiomePackage main;
-	private final IBiomePackage subtract;
+	private final BiomePackage main;
+	private final BiomePackage subtract;
 
-	public SubtractBiomesPackage(final IBiomePackage main, final IBiomePackage subtract) {
+	public SubtractBiomesPackage(final BiomePackage main, final BiomePackage subtract) {
 		this.main = main;
 		this.subtract = subtract;
 	}

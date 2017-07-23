@@ -14,7 +14,7 @@ import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.Loader;
 
-public class IntegrationManager implements IIntegrationModule{
+public class IntegrationManager extends IntegrationModule{
 
 	public static final IntegrationManager INSTANCE = new IntegrationManager();
 	private static final Map<List<String>, String> modules = new HashMap<List<String>, String>();
@@ -24,7 +24,7 @@ public class IntegrationManager implements IIntegrationModule{
 	}
 
 	@Getter
-	private final List<IIntegrationModule> activeModules = Lists.newArrayList();
+	private final List<IntegrationModule> activeModules = Lists.newArrayList();
 
 	private IntegrationManager() {}
 
@@ -39,7 +39,7 @@ public class IntegrationManager implements IIntegrationModule{
 				}
 			if(!noGo)
 				try {
-					final IIntegrationModule module = (IIntegrationModule) Class.forName(entry.getValue()).newInstance();
+					final IntegrationModule module = (IntegrationModule) Class.forName(entry.getValue()).newInstance();
 					this.activeModules.add(module);
 					LogHelper.info("Enabled " + module.getName() + " module.");
 				} catch (final Exception e) {
@@ -47,20 +47,20 @@ public class IntegrationManager implements IIntegrationModule{
 					e.printStackTrace();
 				}
 		}
-		for(final IIntegrationModule module:this.activeModules)
+		for(final IntegrationModule module:this.activeModules)
 			module.preInit();
 	}
 
 
 	@Override
 	public void init() {
-		for(final IIntegrationModule module:this.activeModules)
+		for(final IntegrationModule module:this.activeModules)
 			module.init();
 	}
 
 	@Override
 	public void postInit(){
-		for(final IIntegrationModule module:this.activeModules)
+		for(final IntegrationModule module:this.activeModules)
 			module.postInit();
 	}
 
@@ -71,7 +71,7 @@ public class IntegrationManager implements IIntegrationModule{
 
 	@Override
 	public void addBiomeInfo(final Biome biome, final JsonObject obj) {
-		for(final IIntegrationModule module:this.activeModules)
+		for(final IntegrationModule module:this.activeModules)
 			module.addBiomeInfo(biome, obj);
 	}
 

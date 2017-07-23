@@ -10,11 +10,11 @@ import com.google.common.collect.Lists;
 import me.superckl.api.superscript.util.CollectionHelper;
 import net.minecraft.world.biome.Biome;
 
-public class IntersectBiomesPackage implements IBiomePackage{
+public class IntersectBiomesPackage extends BiomePackage{
 
-	List<IBiomePackage> packs = Lists.newArrayList();
+	List<BiomePackage> packs = Lists.newArrayList();
 
-	public IntersectBiomesPackage(final IBiomePackage ... packs) {
+	public IntersectBiomesPackage(final BiomePackage ... packs) {
 		Collections.addAll(this.packs, packs);
 	}
 
@@ -23,7 +23,7 @@ public class IntersectBiomesPackage implements IBiomePackage{
 		if(this.packs.size() == 0)
 			return Collections.emptyIterator();
 		final List<List<Biome>> lists = Lists.newArrayList();
-		for(final IBiomePackage pack:this.packs){
+		for(final BiomePackage pack:this.packs){
 			final List<Biome> list = Lists.newArrayList();
 			Iterators.addAll(list, pack.getIterator());
 			lists.add(list);
@@ -38,7 +38,7 @@ public class IntersectBiomesPackage implements IBiomePackage{
 
 	@Override
 	public boolean supportsEarlyRawIds() {
-		for(final IBiomePackage pack:this.packs)
+		for(final BiomePackage pack:this.packs)
 			if(!pack.supportsEarlyRawIds())
 				return false;
 		return true;
@@ -49,7 +49,7 @@ public class IntersectBiomesPackage implements IBiomePackage{
 		if(this.packs.size() == 0)
 			return Collections.emptyList();
 		final List<List<Integer>> ints = Lists.newArrayList();
-		for(final IBiomePackage pack:this.packs)
+		for(final BiomePackage pack:this.packs)
 			ints.add(pack.getRawIds());
 		final List<Integer> intersect = Lists.newArrayList(ints.get(0));
 		final Iterator<Integer> it = intersect.iterator();

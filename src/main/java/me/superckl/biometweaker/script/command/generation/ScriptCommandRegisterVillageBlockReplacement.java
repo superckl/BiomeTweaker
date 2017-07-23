@@ -11,8 +11,8 @@ import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
@@ -23,9 +23,9 @@ import net.minecraft.world.biome.Biome;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "registerGenVillageBlockRep")
 @RequiredArgsConstructor
-public class ScriptCommandRegisterVillageBlockReplacement implements IScriptCommand{
+public class ScriptCommandRegisterVillageBlockReplacement extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final BlockStateBuilder<?> toReplace;
 	private final BlockStateBuilder<?> replaceWith;
 

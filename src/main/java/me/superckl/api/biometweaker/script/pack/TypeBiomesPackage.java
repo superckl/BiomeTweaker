@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
-public class TypeBiomesPackage implements IBiomePackage{
+public class TypeBiomesPackage extends BiomePackage{
 
 	private final String[] sTypes;
 	private BiomeDictionary.Type[] types;

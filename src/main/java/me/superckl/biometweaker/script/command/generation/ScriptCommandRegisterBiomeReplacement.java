@@ -4,8 +4,8 @@ import java.util.Iterator;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
@@ -14,10 +14,10 @@ import net.minecraft.world.biome.Biome;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "registerGenBiomeRep")
 @RequiredArgsConstructor
-public class ScriptCommandRegisterBiomeReplacement implements IScriptCommand{
+public class ScriptCommandRegisterBiomeReplacement extends ScriptCommand{
 
-	private final IBiomePackage pack;
-	private final IBiomePackage replaceWith;
+	private final BiomePackage pack;
+	private final BiomePackage replaceWith;
 
 	@Override
 	public void perform() throws Exception {

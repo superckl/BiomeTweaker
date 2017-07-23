@@ -10,8 +10,8 @@ import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
@@ -25,10 +25,10 @@ import net.minecraftforge.common.MinecraftForge;
 
 @AutoRegister(classes = TweakerScriptObject.class, name = "createBiome")
 @RequiredArgsConstructor
-public class ScriptCommandAddBiome implements IScriptCommand{
+public class ScriptCommandAddBiome extends ScriptCommand{
 
 	private final String rLoc;
-	private final IBiomePackage toCopy;
+	private final BiomePackage toCopy;
 
 	public ScriptCommandAddBiome(final String rLoc) {
 		this(rLoc, null);

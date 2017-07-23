@@ -5,15 +5,15 @@ import java.util.Iterator;
 import biomesoplenty.api.biome.IExtendedBiome;
 import biomesoplenty.api.enums.BOPClimates;
 import lombok.RequiredArgsConstructor;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.integration.bop.BOPIntegrationModule;
 import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
-public class ScriptCommandAddToGenerationBOP implements IScriptCommand{
+public class ScriptCommandAddToGenerationBOP extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final String type;
 	private final int weight;
 

@@ -1,8 +1,8 @@
 package me.superckl.api.biometweaker;
 
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
+import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraftforge.fml.common.Loader;
 

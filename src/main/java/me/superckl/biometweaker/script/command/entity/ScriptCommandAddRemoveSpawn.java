@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
@@ -23,9 +23,9 @@ import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.MinecraftForge;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
+public class ScriptCommandAddRemoveSpawn extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final boolean remove;
 	private final EnumCreatureType type;
 	private final String entityClass;
@@ -35,12 +35,12 @@ public class ScriptCommandAddRemoveSpawn implements IScriptCommand{
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 3)
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 4)
 	@ParameterOverride(exceptionKey = "nonNegInt", parameterIndex = 5)
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final EnumCreatureType type, final int weight, final int minCount, final int maxCount) {
+	public ScriptCommandAddRemoveSpawn(final BiomePackage pack, final String entityClass, final EnumCreatureType type, final int weight, final int minCount, final int maxCount) {
 		this(pack, false, type, entityClass, weight, minCount, maxCount);
 	}
 
 	@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "removeSpawn")
-	public ScriptCommandAddRemoveSpawn(final IBiomePackage pack, final String entityClass, final EnumCreatureType type) {
+	public ScriptCommandAddRemoveSpawn(final BiomePackage pack, final String entityClass, final EnumCreatureType type) {
 		this(pack, true, type, entityClass, 0, 0, 0);
 	}
 

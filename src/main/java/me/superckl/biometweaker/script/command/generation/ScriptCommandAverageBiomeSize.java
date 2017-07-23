@@ -2,7 +2,7 @@ package me.superckl.biometweaker.script.command.generation;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
@@ -10,7 +10,7 @@ import net.minecraft.world.WorldType;
 
 @AutoRegister(classes = TweakerScriptObject.class, name = "setAverageBiomeSize")
 @RequiredArgsConstructor
-public class ScriptCommandAverageBiomeSize implements IScriptCommand{
+public class ScriptCommandAverageBiomeSize extends ScriptCommand{
 
 	private final String type;
 	private final byte size;

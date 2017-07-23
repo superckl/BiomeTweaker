@@ -2,8 +2,8 @@ package me.superckl.biometweaker.script.object.block;
 
 import me.superckl.api.biometweaker.block.BasicBlockStateBuilder;
 import me.superckl.api.biometweaker.script.object.BlockStateScriptObject;
-import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptHandler;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 
@@ -23,7 +23,7 @@ public class BasicBlockStateScriptObject extends BlockStateScriptObject<BasicBlo
 	}
 
 	@Override
-	public void addCommand(final IScriptCommand command) {
+	public void addCommand(final ScriptCommand command) {
 		BiomeTweaker.getInstance().addCommand(command);
 	}
 

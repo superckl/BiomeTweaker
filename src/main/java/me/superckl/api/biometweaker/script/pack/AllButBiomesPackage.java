@@ -7,11 +7,11 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 
-public class AllButBiomesPackage implements IBiomePackage{
+public class AllButBiomesPackage extends BiomePackage{
 
-	private final IBiomePackage exclusions;
+	private final BiomePackage exclusions;
 
-	public AllButBiomesPackage(final IBiomePackage exclusions) {
+	public AllButBiomesPackage(final BiomePackage exclusions) {
 		this.exclusions = exclusions;
 	}
 

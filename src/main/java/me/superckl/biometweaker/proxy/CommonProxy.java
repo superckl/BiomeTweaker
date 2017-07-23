@@ -17,15 +17,15 @@ import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.script.AutoRegister.RegisterExempt;
 import me.superckl.api.biometweaker.script.AutoRegisters;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ParameterWrapper;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
+import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
+import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
@@ -53,7 +53,7 @@ import net.minecraftforge.event.terraingen.DecorateBiomeEvent.Decorate.EventType
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.ASMDataTable.ASMData;
 
-public class CommonProxy implements IProxy{
+public class CommonProxy extends SidedProxy{
 
 	@Override
 	public void registerHandlers(){
@@ -140,7 +140,7 @@ public class CommonProxy implements IProxy{
 				if(examinedClasses.contains(data.getClassName()))
 					continue;
 				final Class<?> asmClass = Class.forName(data.getClassName());
-				final Class<? extends IScriptCommand> scriptClass = asmClass.asSubclass(IScriptCommand.class);
+				final Class<? extends ScriptCommand> scriptClass = asmClass.asSubclass(ScriptCommand.class);
 				final AutoRegister[] classAnns = scriptClass.getAnnotationsByType(AutoRegister.class);
 				final Constructor<?>[] cons = scriptClass.getConstructors();
 				for(final Constructor<?> con:cons){

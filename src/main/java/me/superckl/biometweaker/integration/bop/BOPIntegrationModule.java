@@ -19,14 +19,14 @@ import biomesoplenty.api.generation.GeneratorStage;
 import biomesoplenty.api.generation.IGenerationManager;
 import biomesoplenty.api.generation.IGenerator;
 import biomesoplenty.common.biome.vanilla.ExtendedBiomeWrapper;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ParameterWrapper;
+import me.superckl.api.superscript.script.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
 import me.superckl.api.superscript.util.WarningHelper;
-import me.superckl.biometweaker.integration.IIntegrationModule;
+import me.superckl.biometweaker.integration.IntegrationModule;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddBOPWorldType;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddSubBiomeBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddToGenerationBOP;
@@ -39,7 +39,7 @@ import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.world.biome.Biome;
 
-public class BOPIntegrationModule implements IIntegrationModule{
+public class BOPIntegrationModule extends IntegrationModule{
 
 	@Override
 	public void preInit() {
@@ -58,50 +58,50 @@ public class BOPIntegrationModule implements IIntegrationModule{
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-					ScriptCommandAddToGenerationBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+					ScriptCommandAddToGenerationBOP.class.getDeclaredConstructor(BiomePackage.class, String.class, Integer.TYPE));
 			ScriptCommandRegistry.INSTANCE.registerListing("addToGenerationBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(BiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(BiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(BiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeGeneratorBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()),
-					ScriptCommandAddSubBiomeBOP.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
+					ScriptCommandAddSubBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, BiomePackage.class));
 			ScriptCommandRegistry.INSTANCE.registerListing("addSubBiomeBOP", listing, TweakerScriptObject.class);
 
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()),
-					ScriptCommandRemoveSubBiomeBOP.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
+					ScriptCommandRemoveSubBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, BiomePackage.class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeSubBiomeBOP", listing, TweakerScriptObject.class);
 
 
 			//BiomesObject
 			listing = new ScriptCommandListing();
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
-					ScriptCommandAddToGenerationBOP.class.getDeclaredConstructor(IBiomePackage.class, String.class, Integer.TYPE));
+					ScriptCommandAddToGenerationBOP.class.getDeclaredConstructor(BiomePackage.class, String.class, Integer.TYPE));
 			ScriptCommandRegistry.INSTANCE.registerListing("addToGenerationBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(new ArrayList<ParameterWrapper<?>>(), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class));
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
+			listing.addEntry(new ArrayList<ParameterWrapper<?>>(), ScriptCommandRemoveBOP.class.getDeclaredConstructor(BiomePackage.class));
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveBOP.class.getDeclaredConstructor(BiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(IBiomePackage.class, String[].class));
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING_ARRAY.getSpecialWrapper()), ScriptCommandRemoveGeneratorBOP.class.getDeclaredConstructor(BiomePackage.class, String[].class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeGeneratorBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandAddSubBiomeBOP.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandAddSubBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, BiomePackage.class));
 			ScriptCommandRegistry.INSTANCE.registerListing("addSubBiomeBOP", listing, BiomesScriptObject.class);
 
 			listing = new ScriptCommandListing();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveSubBiomeBOP.class.getDeclaredConstructor(IBiomePackage.class, IBiomePackage.class));
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()), ScriptCommandRemoveSubBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, BiomePackage.class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeSubBiomeBOP", listing, BiomesScriptObject.class);
 
 		} catch (final Exception e) {

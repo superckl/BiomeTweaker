@@ -2,11 +2,11 @@ package me.superckl.biometweaker.integration.bop.script;
 
 import biomesoplenty.api.biome.BOPBiomes;
 import lombok.RequiredArgsConstructor;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import net.minecraft.world.WorldType;
 
 @RequiredArgsConstructor
-public class ScriptCommandAddBOPWorldType implements IScriptCommand{
+public class ScriptCommandAddBOPWorldType extends ScriptCommand{
 
 	private final String name;
 

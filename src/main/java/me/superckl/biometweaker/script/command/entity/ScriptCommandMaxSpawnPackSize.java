@@ -7,8 +7,8 @@ import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
@@ -16,13 +16,13 @@ import net.minecraft.world.biome.Biome;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "setMaxSpawnPackSize")
 @RequiredArgsConstructor
-public class ScriptCommandMaxSpawnPackSize implements IScriptCommand{
+public class ScriptCommandMaxSpawnPackSize extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final String entityClass;
 	private final int size;
 
-	public ScriptCommandMaxSpawnPackSize(final IBiomePackage pack, final int size) {
+	public ScriptCommandMaxSpawnPackSize(final BiomePackage pack, final int size) {
 		this(pack, null, size);
 	}
 

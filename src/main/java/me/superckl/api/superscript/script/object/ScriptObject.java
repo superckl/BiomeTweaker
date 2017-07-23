@@ -1,4 +1,4 @@
-package me.superckl.api.superscript.object;
+package me.superckl.api.superscript.script.object;
 
 import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
@@ -7,11 +7,11 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import me.superckl.api.superscript.APIInfo;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.api.superscript.command.ScriptCommandListing;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
+import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.WarningHelper;
 
@@ -36,10 +36,10 @@ public abstract class ScriptObject {
 		final ScriptCommandListing listing = this.validCommands.get(command);
 		String[] args = CollectionHelper.trimAll(ScriptParser.parseArguments(call));
 		args = this.modifyArguments(args, handler);
-		Pair<Constructor<? extends IScriptCommand>, Object[]> pair = ScriptParser.findConstructor(listing, args, handler);
+		Pair<Constructor<? extends ScriptCommand>, Object[]> pair = ScriptParser.findConstructor(listing, args, handler);
 		if(pair != null){
 			pair = this.modifyConstructorPair(pair, args, handler);
-			final IScriptCommand sCommand = pair.getKey().newInstance(pair.getValue());
+			final ScriptCommand sCommand = pair.getKey().newInstance(pair.getValue());
 			sCommand.setScriptHandler(handler);
 			if(listing.isPerformInst())
 				sCommand.perform();
@@ -59,13 +59,13 @@ public abstract class ScriptObject {
 
 	}
 
-	public abstract void addCommand(IScriptCommand command);
+	public abstract void addCommand(ScriptCommand command);
 
 	public Map<String, ScriptCommandListing> getValidCommands() {
 		return this.validCommands;
 	}
 
-	public Pair<Constructor<? extends IScriptCommand>, Object[]> modifyConstructorPair(final Pair<Constructor<? extends IScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler){
+	public Pair<Constructor<? extends ScriptCommand>, Object[]> modifyConstructorPair(final Pair<Constructor<? extends ScriptCommand>, Object[]> pair, final String[] args, final ScriptHandler handler){
 		return pair;
 	}
 

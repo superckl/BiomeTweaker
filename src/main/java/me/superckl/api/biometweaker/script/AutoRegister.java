@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.object.ScriptObject;
 
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)

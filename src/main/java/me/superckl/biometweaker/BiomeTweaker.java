@@ -22,14 +22,13 @@ import gnu.trove.set.hash.TIntHashSet;
 import lombok.Cleanup;
 import lombok.Getter;
 import me.superckl.api.superscript.ApplicationStage;
-import me.superckl.api.superscript.BasicScriptCommandManager;
-import me.superckl.api.superscript.ScriptCommandRegistry;
-import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptParser;
+import me.superckl.api.superscript.script.command.BasicScriptCommandManager;
+import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.config.Config;
 import me.superckl.biometweaker.integration.IntegrationManager;
-import me.superckl.biometweaker.proxy.IProxy;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetPlacementStage;
 import me.superckl.biometweaker.script.command.misc.ScriptCommandSetWorld;
 import me.superckl.biometweaker.server.command.CommandInfo;
@@ -77,7 +76,7 @@ public class BiomeTweaker{
 
 	@SidedProxy(clientSide=ModData.CLIENT_PROXY, serverSide=ModData.SERVER_PROXY)
 	@Getter
-	private static IProxy proxy;
+	private static me.superckl.biometweaker.proxy.SidedProxy proxy;
 
 	@Getter
 	private Config config;
@@ -380,7 +379,7 @@ public class BiomeTweaker{
 		return this.enabledTweaks.contains(tweak);
 	}
 
-	public void addCommand(final IScriptCommand command){
+	public void addCommand(final ScriptCommand command){
 		this.commandManager.addCommand(command);
 	}
 

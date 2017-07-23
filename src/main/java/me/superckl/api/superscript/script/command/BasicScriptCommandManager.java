@@ -1,32 +1,33 @@
-package me.superckl.api.superscript;
+package me.superckl.api.superscript.script.command;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.APIInfo;
+import me.superckl.api.superscript.ApplicationStage;
 
-public class BasicScriptCommandManager implements IScriptCommandManager{
+public class BasicScriptCommandManager extends ScriptCommandManager{
 
 	private static ApplicationStage defaultStage = ApplicationStage.FINISHED_LOAD;
 
 	private ApplicationStage currentStage = BasicScriptCommandManager.defaultStage;
 
-	private final Map<ApplicationStage, List<IScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
+	private final Map<ApplicationStage, List<ScriptCommand>> commands = Maps.newEnumMap(ApplicationStage.class);
 	private final Set<ApplicationStage> appliedStages = EnumSet.noneOf(ApplicationStage.class);
 
-	public boolean addCommand(final IScriptCommand command){
+	public boolean addCommand(final ScriptCommand command){
 		return this.addCommand(command, this.getCurrentStage());
 	}
 
 	@Override
-	public boolean addCommand(final IScriptCommand command, final ApplicationStage stage) {
+	public boolean addCommand(final ScriptCommand command, final ApplicationStage stage) {
 		if(!this.commands.containsKey(stage))
-			this.commands.put(stage, new ArrayList<IScriptCommand>());
+			this.commands.put(stage, Lists.newArrayList());
 		if(this.appliedStages.contains(stage))
 			try {
 				command.perform();
@@ -42,9 +43,9 @@ public class BasicScriptCommandManager implements IScriptCommandManager{
 		if(!this.commands.containsKey(stage))
 			return;
 		this.appliedStages.add(stage);
-		final List<IScriptCommand> commands = this.commands.get(stage);
+		final List<ScriptCommand> commands = this.commands.get(stage);
 		APIInfo.log.info("Found "+commands.size()+" tweak"+(commands.size() > 1 ? "s":"")+" to apply for stage "+stage.toString()+". Applying...");
-		for(final IScriptCommand command:commands)
+		for(final ScriptCommand command:commands)
 			try{
 				command.perform();
 			}catch(final Exception e){
@@ -67,7 +68,7 @@ public class BasicScriptCommandManager implements IScriptCommandManager{
 		this.currentStage = currentStage;
 	}
 
-	public Map<ApplicationStage, List<IScriptCommand>> getCommands() {
+	public Map<ApplicationStage, List<ScriptCommand>> getCommands() {
 		return this.commands;
 	}
 

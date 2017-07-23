@@ -2,8 +2,8 @@ package me.superckl.biometweaker.script.object.decoration;
 
 import me.superckl.api.biometweaker.script.object.DecorationBuilderScriptObject;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
-import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ScriptHandler;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 
@@ -23,7 +23,7 @@ public abstract class DecorationScriptObject<V extends WorldGeneratorBuilder<?>>
 	}
 
 	@Override
-	public void addCommand(final IScriptCommand command) {
+	public void addCommand(final ScriptCommand command) {
 		BiomeTweaker.getInstance().addCommand(command);
 	}
 

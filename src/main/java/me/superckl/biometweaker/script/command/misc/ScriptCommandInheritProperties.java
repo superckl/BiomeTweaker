@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
@@ -15,13 +15,13 @@ import net.minecraft.world.biome.Biome;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "inheritProperties")
 @RequiredArgsConstructor
-public class ScriptCommandInheritProperties implements IScriptCommand{
+public class ScriptCommandInheritProperties extends ScriptCommand{
 
-	private final IBiomePackage pack;
-	private final IBiomePackage toInheritFrom;
+	private final BiomePackage pack;
+	private final BiomePackage toInheritFrom;
 	private final String[] properties;
 
-	public ScriptCommandInheritProperties(final IBiomePackage pack, final IBiomePackage toInheritFrom) {
+	public ScriptCommandInheritProperties(final BiomePackage pack, final BiomePackage toInheritFrom) {
 		this(pack, toInheritFrom, null);
 	}
 

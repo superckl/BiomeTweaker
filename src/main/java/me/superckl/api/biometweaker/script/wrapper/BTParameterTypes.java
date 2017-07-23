@@ -9,17 +9,17 @@ import me.superckl.api.biometweaker.script.pack.AllBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.BasicBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.BasicResourceNameBiomesPackage;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.PropertyRangeBiomePackage;
 import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
-import me.superckl.api.superscript.object.ScriptObject;
 import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
+import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
@@ -37,10 +37,10 @@ public class BTParameterTypes {
 		}
 	};
 
-	public static final ParameterType<IBiomePackage> BASIC_BIOMES_PACKAGE = new ParameterType<IBiomePackage>(IBiomePackage.class) {
+	public static final ParameterType<BiomePackage> BASIC_BIOMES_PACKAGE = new ParameterType<BiomePackage>(BiomePackage.class) {
 
 		@Override
-		public IBiomePackage tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+		public BiomePackage tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final int[] ints = WarningHelper.uncheckedCast(ParameterTypes.NON_NEG_INTEGERS.tryParse(parameter, handler));
 			if(ints.length == 0){
 				final ScriptObject obj = handler.getObjects().get(parameter);
@@ -138,7 +138,7 @@ public class BTParameterTypes {
 		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
 		ParameterTypes.registerDefaultType(WorldGeneratorBuilder.class, BTParameterTypes.WORLD_GENERATOR_BUILDER);
 		ParameterTypes.registerDefaultType(EnumCreatureType.class, BTParameterTypes.CREATURE_TYPE);
-		ParameterTypes.registerDefaultType(IBiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
+		ParameterTypes.registerDefaultType(BiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
 
 		ParameterTypes.registerExceptionWrapper("treeGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
 		ParameterTypes.registerExceptionWrapper("oreGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());

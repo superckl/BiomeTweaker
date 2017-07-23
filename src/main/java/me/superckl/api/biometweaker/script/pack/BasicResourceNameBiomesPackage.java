@@ -9,7 +9,7 @@ import me.superckl.api.biometweaker.APIInfo;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
-public class BasicResourceNameBiomesPackage implements IBiomePackage{
+public class BasicResourceNameBiomesPackage extends BiomePackage{
 
 	private final ResourceLocation[] rLocs;
 

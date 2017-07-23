@@ -1,18 +1,17 @@
-package me.superckl.api.superscript;
+package me.superckl.api.superscript.script.command;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.object.ScriptObject;
 
 public class ScriptCommandRegistry {
 
 	public static final ScriptCommandRegistry INSTANCE = new ScriptCommandRegistry();
 
-	private final Map<String, IScriptCommandManager> managers = Maps.newHashMap();
+	private final Map<String, ScriptCommandManager> managers = Maps.newHashMap();
 
 	private final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> commands = Maps.newHashMap();
 
@@ -73,11 +72,11 @@ public class ScriptCommandRegistry {
 		return listing;
 	}
 
-	public void registerScriptCommandManager(final String key, final IScriptCommandManager manager){
+	public void registerScriptCommandManager(final String key, final ScriptCommandManager manager){
 		this.managers.put(key, manager);
 	}
 
-	public IScriptCommandManager getManagerFor(final String owner){
+	public ScriptCommandManager getManagerFor(final String owner){
 		return this.managers.get(owner);
 	}
 

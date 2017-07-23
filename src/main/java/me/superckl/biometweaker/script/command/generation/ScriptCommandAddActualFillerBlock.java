@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.ArrayHelper;
@@ -16,9 +16,9 @@ import net.minecraft.world.biome.Biome;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addActualFillerBlock")
 @RequiredArgsConstructor
-public class ScriptCommandAddActualFillerBlock implements IScriptCommand{
+public class ScriptCommandAddActualFillerBlock extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final BlockStateBuilder<?> block;
 
 	@Override

@@ -7,8 +7,8 @@ import biomesoplenty.api.biome.IExtendedBiome;
 import biomesoplenty.api.enums.BOPClimates;
 import biomesoplenty.api.enums.BOPClimates.WeightedBiomeEntry;
 import lombok.RequiredArgsConstructor;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.integration.bop.BOPBiomeProperties;
@@ -16,12 +16,12 @@ import me.superckl.biometweaker.integration.bop.BOPIntegrationModule;
 import net.minecraft.world.biome.Biome;
 
 @RequiredArgsConstructor
-public class ScriptCommandRemoveBOP implements IScriptCommand{
+public class ScriptCommandRemoveBOP extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final String[] types;
 
-	public ScriptCommandRemoveBOP(final IBiomePackage pack) {
+	public ScriptCommandRemoveBOP(final BiomePackage pack) {
 		this(pack, null);
 	}
 

@@ -9,7 +9,7 @@ import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.CollectionHelper;
 import net.minecraft.world.biome.Biome;
 
-public class BasicBiomesPackage implements IBiomePackage{
+public class BasicBiomesPackage extends BiomePackage{
 
 	private final int[] ids;
 

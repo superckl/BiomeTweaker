@@ -22,9 +22,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.APIInfo;
-import me.superckl.api.superscript.command.IScriptCommand;
-import me.superckl.api.superscript.command.ScriptCommandListing;
-import me.superckl.api.superscript.object.ScriptObject;
+import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommandListing;
+import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.CollectionHelper;
 import me.superckl.api.superscript.util.ConstructorListing;
 
@@ -130,9 +130,9 @@ public class ScriptParser {
 	}
 
 	@Nullable
-	public static Pair<Constructor<? extends IScriptCommand>, Object[]> findConstructor(final ScriptCommandListing listing, final String[] args, final ScriptHandler handler) throws Exception{
+	public static Pair<Constructor<? extends ScriptCommand>, Object[]> findConstructor(final ScriptCommandListing listing, final String[] args, final ScriptHandler handler) throws Exception{
 		outer:
-			for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends IScriptCommand>> entry:listing.getConstructors().entrySet()){
+			for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends ScriptCommand>> entry:listing.getConstructors().entrySet()){
 				String[] arguments = Arrays.copyOf(args, args.length);
 				final List<Object> objs = Lists.newArrayList();
 				final List<ParameterWrapper<?>> params = Lists.newArrayList(entry.getKey());

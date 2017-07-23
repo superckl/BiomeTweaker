@@ -5,12 +5,12 @@ import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGenTreesBuilder;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.script.object.decoration.TreesDecorationScriptObject;
 
 @AutoRegister(classes = TreesDecorationScriptObject.class, name = "setVineBlock")
 @RequiredArgsConstructor(onConstructor_={@ParameterOverride(exceptionKey="treeGenBuilder", parameterIndex=0)})
-public class ScriptCommandSetTreesVineBlock implements IScriptCommand{
+public class ScriptCommandSetTreesVineBlock extends ScriptCommand{
 
 	private final WorldGenTreesBuilder builder;
 	private final BlockStateBuilder<?> block;

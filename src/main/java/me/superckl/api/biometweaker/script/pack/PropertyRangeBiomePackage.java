@@ -10,7 +10,7 @@ import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.world.biome.Biome;
 
-public class PropertyRangeBiomePackage implements IBiomePackage{
+public class PropertyRangeBiomePackage extends BiomePackage{
 
 	private final Property<? extends Number> property;
 	private final float lowBound;

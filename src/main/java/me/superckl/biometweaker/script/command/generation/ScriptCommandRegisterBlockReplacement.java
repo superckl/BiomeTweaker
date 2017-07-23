@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.biometweaker.script.pack.IBiomePackage;
-import me.superckl.api.superscript.command.IScriptCommand;
+import me.superckl.api.biometweaker.script.pack.BiomePackage;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.world.TweakWorldManager;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager;
@@ -18,14 +18,14 @@ import net.minecraftforge.common.MinecraftForge;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "registerGenBlockRep")
 @RequiredArgsConstructor
-public class ScriptCommandRegisterBlockReplacement implements IScriptCommand{
+public class ScriptCommandRegisterBlockReplacement extends ScriptCommand{
 
-	private final IBiomePackage pack;
+	private final BiomePackage pack;
 	private final int weight;
 	private final BlockStateBuilder<?> toReplace;
 	private final BlockStateBuilder<?> replaceWith;
 
-	public ScriptCommandRegisterBlockReplacement(final IBiomePackage pack, final BlockStateBuilder<?> block1, final BlockStateBuilder<?> block2) {
+	public ScriptCommandRegisterBlockReplacement(final BiomePackage pack, final BlockStateBuilder<?> block1, final BlockStateBuilder<?> block2) {
 		this(pack, 1, block1, block2);
 	}
 

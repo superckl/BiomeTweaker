@@ -5,15 +5,15 @@ import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.AutoRegister;
-import me.superckl.api.superscript.command.IScriptCommand;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
+import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 
 @AutoRegister(classes = BasicBlockStateScriptObject.class, name = "setProperty")
 @RequiredArgsConstructor
-public class ScriptCommandSetBlockProperty implements IScriptCommand{
+public class ScriptCommandSetBlockProperty extends ScriptCommand{
 
 	private final BlockStateBuilder<?> builder;
 	private final String key;

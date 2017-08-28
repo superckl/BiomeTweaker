@@ -54,7 +54,7 @@ public class ScriptParser {
 	}
 
 	public static List<String> parseScriptLines(final File file) throws IOException{
-		final List<String> array = new ArrayList<String>();
+		final List<String> array = new ArrayList<>();
 		try(final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)))){
 			String line;
 			while((line = r.readLine()) != null)

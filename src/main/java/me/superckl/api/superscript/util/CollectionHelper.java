@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 public class CollectionHelper {
 
 	public static <K,V> Map<K,V> linkedMapWithEntry(final K key, final V value){
-		final Map<K,V> map = new LinkedHashMap<K, V>();
+		final Map<K,V> map = new LinkedHashMap<>();
 		map.put(key, value);
 		return map;
 	}

@@ -72,7 +72,7 @@ public class ParameterWrapper<T> {
 	}
 
 	public static <T> Builder<T> builder(){
-		return new Builder<T>();
+		return new Builder<>();
 	}
 
 	public static class Builder<T>{
@@ -121,7 +121,7 @@ public class ParameterWrapper<T> {
 		}
 
 		public ParameterWrapper<T> build(){
-			return new ParameterWrapper<T>(this.type, this.minNum, this.maxNum, this.varArgs);
+			return new ParameterWrapper<>(this.type, this.minNum, this.maxNum, this.varArgs);
 		}
 
 	}

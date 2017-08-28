@@ -29,5 +29,5 @@ public class ScriptCommandSetScriptStage extends ScriptCommand{
 	public boolean performInst() {
 		return true;
 	}
-	
+
 }

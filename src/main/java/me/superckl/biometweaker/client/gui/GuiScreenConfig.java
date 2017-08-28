@@ -17,7 +17,7 @@ public class GuiScreenConfig extends GuiConfig{
 	}
 
 	private static List<IConfigElement> getConfigElements(){
-		final List<IConfigElement> list = new ArrayList<IConfigElement>();
+		final List<IConfigElement> list = new ArrayList<>();
 		DummyConfigElement dummy = new DummyConfigElement("Reload Scripts", false, ConfigGuiType.BOOLEAN, "biometweaker.cfg.reload");
 		dummy.setConfigEntryClass(ReloadScriptsConfigEntry.class);
 		list.add(dummy);

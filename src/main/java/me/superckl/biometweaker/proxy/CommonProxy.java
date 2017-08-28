@@ -190,47 +190,47 @@ public class CommonProxy extends SidedProxy{
 		ScriptHandler.registerStaticObject("Tweaker", TweakerScriptObject.class);
 
 		try {
-			ConstructorListing<ScriptObject> listing = new ConstructorListing<ScriptObject>();
+			ConstructorListing<ScriptObject> listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getVarArgsWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomes", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomesOfTypes", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forAllBiomes", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BUT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forAllBiomesExcept", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.INTERSECT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("intersectionOf", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.SUBTRACT_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("subtractFrom", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.PROPERTY_RANGE_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBiomesWithPropertyRange", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(), OreDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newOreDecoration", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(), TreesDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newTreeDecoration", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newClusterDecoration", listing);
 
-			listing = new ConstructorListing<ScriptObject>();
+			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), BasicBlockStateScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBlock", listing);
 

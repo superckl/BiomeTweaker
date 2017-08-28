@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Loader;
 public class IntegrationManager extends IntegrationModule{
 
 	public static final IntegrationManager INSTANCE = new IntegrationManager();
-	private static final Map<List<String>, String> modules = new HashMap<List<String>, String>();
+	private static final Map<List<String>, String> modules = new HashMap<>();
 
 	static{
 		IntegrationManager.modules.put(Arrays.asList(new String[] {"biomesoplenty"}), "me.superckl.biometweaker.integration.bop.BOPIntegrationModule");

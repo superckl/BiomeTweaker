@@ -15,7 +15,7 @@ public class WorldGenClusterBuilder extends WorldGeneratorBuilder<WorldGenerator
 
 	@Override
 	public WorldGeneratorWrapper<WorldGenCluster> build() {
-		return new WorldGeneratorWrapper<WorldGenCluster>(new WorldGenCluster(false, this.mainBlock, this.radius, this.height, this.soilPredicates), this.count);
+		return new WorldGeneratorWrapper<>(new WorldGenCluster(false, this.mainBlock, this.radius, this.height, this.soilPredicates), this.count);
 	}
 
 	public int getRadius() {

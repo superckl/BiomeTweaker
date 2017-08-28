@@ -8,9 +8,11 @@ import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.ArrayHelper;
+import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
 
@@ -23,6 +25,10 @@ public class ScriptCommandAddActualFillerBlock extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
+		if(!BiomeTweaker.getInstance().isTweakEnabled("actualFillerBlocks")) {
+			LogHelper.error("Unable to add actual filler block - the tweak is not enabled! Enable the tweak in BiomeTweakerCore first.");
+			return;
+		}
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
 			final Biome biome = it.next();

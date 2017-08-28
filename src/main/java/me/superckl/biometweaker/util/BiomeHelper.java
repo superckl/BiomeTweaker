@@ -23,6 +23,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class BiomeHelper {
 
@@ -35,7 +36,7 @@ public class BiomeHelper {
 		BiomeHelper.checkFields();
 		final JsonObject obj = new JsonObject();
 		obj.addProperty("ID", Biome.getIdForBiome(biome));
-		obj.addProperty("Name", biome.getBiomeName());
+		obj.addProperty("Name", biome.biomeName);
 		obj.addProperty("Resource Location", Biome.REGISTRY.getNameForObject(biome).toString());
 		obj.addProperty("Class", biome.getClass().getName());
 		obj.addProperty("Root Height", biome.getBaseHeight());
@@ -78,11 +79,11 @@ public class BiomeHelper {
 			if(!BiomeTweaker.getInstance().isTweakEnabled("grassColor"))
 				obj.addProperty("Grass Color", "Disabled. Activate in BiomeTweakerCore.");
 			else
-				obj.addProperty("Grass Color", ""+(hasCoords ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.GRASS_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
+				obj.addProperty("Grass Color", ""+((hasCoords && FMLCommonHandler.instance().getSide().isClient()) ? biome.getGrassColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.GRASS_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
 			if(!BiomeTweaker.getInstance().isTweakEnabled("foliageColor"))
 				obj.addProperty("Foliage Color", "Disabled. Activate in BiomeTweakerCore.");
 			else
-				obj.addProperty("Foliage Color", ""+(hasCoords ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.FOLIAGE_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
+				obj.addProperty("Foliage Color", ""+((hasCoords && FMLCommonHandler.instance().getSide().isClient()) ? biome.getFoliageColorAtPos(new BlockPos(x, y, z)):(i = BiomePropertyManager.FOLIAGE_COLOR.get(biome)) == -1 ? "Not set. Check in-game.":i));
 			obj.addProperty("Water Color", ""+biome.getWaterColorMultiplier());
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve inserted fields!");

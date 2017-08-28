@@ -26,12 +26,12 @@ public class BasicBlockStateScriptObject extends BlockStateScriptObject<BasicBlo
 	}
 
 	@Override
-	public void readArgs(Object... args) throws Exception {
+	public void readArgs(final Object... args) throws Exception {
 		if(args.length != 1 || !(args[0] instanceof String))
 			throw new IllegalArgumentException("Invalid parameters to create a block object! Objects: "+Arrays.toString(args));
 		this.builder.setrLoc(new ResourceLocation((String) args[0]));
 	}
-	
+
 	@Override
 	public void addCommand(final ScriptCommand command) {
 		BiomeTweaker.getInstance().addCommand(command);

@@ -19,8 +19,8 @@ public class ScriptHandler {
 
 	private Iterator<String> it;
 
-	private final Map<String, String> shortcuts = new HashMap<String, String>();
-	private final Map<String, ScriptObject> objects = new HashMap<String, ScriptObject>();
+	private final Map<String, String> shortcuts = new HashMap<>();
+	private final Map<String, ScriptObject> objects = new HashMap<>();
 
 	public ScriptHandler(final List<String> lines) {
 		this.lines = lines;

@@ -17,7 +17,7 @@ import me.superckl.api.superscript.util.WarningHelper;
 
 public abstract class ScriptObject {
 
-	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<String, ScriptCommandListing>();
+	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<>();
 
 	public ScriptObject() {
 		Class<?> clazz = this.getClass();

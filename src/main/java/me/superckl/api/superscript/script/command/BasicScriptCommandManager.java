@@ -28,14 +28,14 @@ public class BasicScriptCommandManager extends ScriptCommandManager{
 	public boolean addCommand(final ScriptCommand command, final ApplicationStage stage) {
 		if(!this.commands.containsKey(stage))
 			this.commands.put(stage, Lists.newArrayList());
-		if(this.appliedStages.contains(stage))
+		if(this.appliedStages.contains(stage) || command.performInst())
 			try {
 				command.perform();
 			} catch (final Exception e) {
 				APIInfo.log.error("Failed to execute script command: "+command);
 				e.printStackTrace();
 			}
-		return this.commands.get(stage).add(command);
+		return command.performInst() ? true:this.commands.get(stage).add(command);
 	}
 
 	@Override

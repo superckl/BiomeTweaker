@@ -25,4 +25,9 @@ public class ScriptCommandSetScriptStage extends ScriptCommand{
 		BiomeTweaker.getInstance().getCommandManager().setCurrentStage(stage);
 	}
 
+	@Override
+	public boolean performInst() {
+		return true;
+	}
+	
 }

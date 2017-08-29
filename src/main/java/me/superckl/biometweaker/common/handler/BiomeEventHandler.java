@@ -21,7 +21,6 @@ import me.superckl.biometweaker.common.world.gen.feature.Decorator;
 import me.superckl.biometweaker.common.world.gen.layer.GenLayerReplacement;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.BiomeEvent;
@@ -48,6 +47,8 @@ public class BiomeEventHandler {
 	private static final TIntObjectMap<List<String>> decorateTypes = new TIntObjectHashMap<>();
 	@Getter
 	private static final TIntObjectMap<List<String>> populateTypes = new TIntObjectHashMap<>();
+	@Getter
+	private static final TIntObjectMap<List<String>> oreTypes = new TIntObjectHashMap<>();
 	@Getter
 	private static final Map<EventType, TIntIntMap> decorationsPerChunk = new EnumMap<>(EventType.class);
 
@@ -154,8 +155,7 @@ public class BiomeEventHandler {
 		if(BiomeEventHandler.decorateTypes.isEmpty())
 			return;
 		final Biome gen = e.getWorld().getBiome(e.getPos());
-		final boolean isAll = BiomeEventHandler.decorateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.decorateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
+		if((BiomeEventHandler.decorateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
 	}
 
@@ -163,9 +163,17 @@ public class BiomeEventHandler {
 	public void onBiomePopulate(final PopulateChunkEvent.Populate e){
 		if(BiomeEventHandler.populateTypes.isEmpty())
 			return;
-		final Biome gen = e.getWorld().getBiome(new BlockPos(e.getChunkX(), 0, e.getChunkZ()));
-		final boolean isAll = BiomeEventHandler.populateTypes.containsKey(-1);
-		if((isAll || BiomeEventHandler.populateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.populateTypes.get(isAll ? -1:Biome.getIdForBiome(gen)).contains("all")))
+		final Biome gen = e.getWorld().getBiome(new ChunkPos(e.getChunkX(), e.getChunkZ()).getBlock(8, 0, 8));
+		if((BiomeEventHandler.populateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.populateTypes.get(Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.populateTypes.get(Biome.getIdForBiome(gen)).contains("all")))
+			e.setResult(Result.DENY);
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public void onOreGen(final OreGenEvent.GenerateMinable e){
+		if(BiomeEventHandler.oreTypes.isEmpty())
+			return;
+		final Biome gen = e.getWorld().getBiome(e.getPos());
+		if((BiomeEventHandler.oreTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.oreTypes.get(Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.oreTypes.get(Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
 	}
 

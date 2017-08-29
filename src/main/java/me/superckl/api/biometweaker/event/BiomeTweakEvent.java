@@ -120,6 +120,31 @@ public abstract class BiomeTweakEvent extends Event{
 
 	}
 
+	/**
+	 * Note: The corresponding Biome may be null for this event! The biomeID is given for that case.
+	 */
+	@Cancelable
+	public static class RemoveOre extends BiomeTweakEvent{
+
+		private final int biomeID;
+		private final String type;
+
+		public RemoveOre(final ScriptCommand command, final Biome biome, final int biomeID, final String type) {
+			super(command, biome);
+			this.biomeID = biomeID;
+			this.type = type;
+		}
+
+		public int getBiomeID() {
+			return this.biomeID;
+		}
+
+		public String getType() {
+			return this.type;
+		}
+
+	}
+
 	@Cancelable
 	public static class AddDictionaryType extends BiomeTweakEvent{
 

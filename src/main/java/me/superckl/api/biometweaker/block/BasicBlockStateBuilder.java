@@ -1,5 +1,6 @@
 package me.superckl.api.biometweaker.block;
 
+import java.util.Iterator;
 import java.util.Map.Entry;
 
 import me.superckl.biometweaker.util.LogHelper;
@@ -17,10 +18,13 @@ public class BasicBlockStateBuilder extends BlockStateBuilder<IBlockState>{
 			throw new IllegalArgumentException("No block found for resource location "+this.rLoc);
 		final BlockStateContainer container = block.getBlockState();
 		IBlockState state = container.getBaseState();
-		for(final Entry<String, String> entry:this.properties.entrySet()){
+		Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();
+		while(it.hasNext()){
+			Entry<String, String> entry = it.next();
 			final IProperty<?> prop = container.getProperty(entry.getKey());
 			if(prop == null){
 				LogHelper.error("No property "+entry.getKey()+" found for block "+this.rLoc+". Skipping it.");
+				it.remove();
 				continue;
 			}
 			if(!prop.parseValue(entry.getValue()).isPresent()){

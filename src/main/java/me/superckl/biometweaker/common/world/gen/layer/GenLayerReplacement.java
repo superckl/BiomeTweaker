@@ -28,9 +28,10 @@ public class GenLayerReplacement extends GenLayer{
 		final int[] ints = this.parent.getInts(areaX, areaY, areaWidth, areaHeight);
 		if(GenLayerReplacement.bakedMap.length == 0)
 			return ints;
-		for(int i = 0; i < ints.length; i++)
-			if(GenLayerReplacement.bakedMap[ints[i]] != -1)
+		for(int i = 0; i < ints.length; i++) {
+			if(ints[i] != -1 && GenLayerReplacement.bakedMap[ints[i]] != -1)
 				ints[i] = GenLayerReplacement.bakedMap[ints[i]];
+		}
 		return ints;
 	}
 
@@ -40,7 +41,7 @@ public class GenLayerReplacement extends GenLayer{
 			GenLayerReplacement.bakedMap = new int[0];
 		else{
 			Arrays.sort(keys);
-			GenLayerReplacement.bakedMap = new int[keys[keys.length-1]];
+			GenLayerReplacement.bakedMap = new int[keys[keys.length-1] + 1];
 			Arrays.fill(GenLayerReplacement.bakedMap, -1);
 			for(final int key:keys)
 				GenLayerReplacement.bakedMap[key] = GenLayerReplacement.biomeReplacements.get(key);

@@ -2,8 +2,7 @@ package me.superckl.biometweaker.script.command.generation;
 
 import java.lang.reflect.Constructor;
 import java.util.Iterator;
-
-import com.google.common.collect.Lists;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
@@ -18,8 +17,10 @@ import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.BiomeProperties;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -79,11 +80,11 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 			if(BiomeDictionary.hasAnyType(toCopy))
 				BiomeDictionary.addTypes(biome, BiomeDictionary.getTypes(toCopy).toArray(new BiomeDictionary.Type[0]));
 			//Copy spawns
-			biome.spawnableCaveCreatureList = Lists.newArrayList(toCopy.spawnableCaveCreatureList);
-			biome.spawnableCreatureList = Lists.newArrayList(toCopy.spawnableCreatureList);
-			biome.spawnableMonsterList = Lists.newArrayList(toCopy.spawnableMonsterList);
-			biome.spawnableWaterCreatureList = Lists.newArrayList(toCopy.spawnableWaterCreatureList);
-			//TODO modSpawnables? Forge adds it so it'd have to be reflection
+			for(final EnumCreatureType type:EnumCreatureType.values()) {
+				final List<SpawnListEntry> entries = biome.getSpawnableList(type);
+				entries.clear();
+				entries.addAll(toCopy.getSpawnableList(type));
+			}
 			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 		}
 	}

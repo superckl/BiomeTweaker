@@ -35,6 +35,11 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 version = config.mod_version
 group= "me.superckl.biometweaker"
 archivesBaseName = "BiomeTweaker"
@@ -56,11 +61,18 @@ minecraft {
     runDir = "eclipse"
 }
 
+reobf {
+    jar {
+        extraLines "PK: ar/com/hjg/pngj me/superckl/biometweaker/ar/com/hjg/pngj"
+    }
+}
+
 version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("BUILD_NUMBER") ?: 0}"
 
 dependencies {
     compile "org.projectlombok:lombok:" + config.lombok_version
     compile "com.github.glitchfiend.biomesoplenty:BiomesOPlenty:" + config.bop_version + ":universal"
+    shade "ar.com.hjg:pngj:"+config.pngj_version
 }
 
 processResources
@@ -92,7 +104,13 @@ task devJar(type: Jar, dependsOn: 'classes') {
     extension = 'jar'
     classifier = 'dev'
 
-	manifest {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
+
+	  manifest {
         attributes 'FMLAT': config.at_path
     }
 }
@@ -122,6 +140,11 @@ artifacts {
 }
 
 jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
     manifest {
         attributes 'FMLAT': config.at_path
     }

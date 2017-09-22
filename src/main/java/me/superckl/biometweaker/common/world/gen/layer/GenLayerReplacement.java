@@ -28,10 +28,9 @@ public class GenLayerReplacement extends GenLayer{
 		final int[] ints = this.parent.getInts(areaX, areaY, areaWidth, areaHeight);
 		if(GenLayerReplacement.bakedMap.length == 0)
 			return ints;
-		for(int i = 0; i < ints.length; i++) {
+		for(int i = 0; i < ints.length; i++)
 			if(ints[i] != -1 && GenLayerReplacement.bakedMap[ints[i]] != -1)
 				ints[i] = GenLayerReplacement.bakedMap[ints[i]];
-		}
 		return ints;
 	}
 

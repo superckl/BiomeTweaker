@@ -1,4 +1,5 @@
 biometweaker.cfg.reload.tooltip=Press to reload BiomeTweaker configuration and scripts.
+biometweaker.cfg.layout.tooltip=This GUI will let you generate an image that shows the biome layout of a world.
 biometweaker.msg.reload.usage.text=/btreload
 biometweaker.msg.reloadscript.usage.text=/btreloadscript <script file>
 biometweaker.msg.reloadscript.nofile.text=Script %s was not found. Did you misspell it?

@@ -25,6 +25,11 @@ public class GuiScreenConfig extends GuiConfig{
 		dummy = new DummyConfigElement("Regenerate Output Files", false, ConfigGuiType.BOOLEAN, "biometweaker.cfg.output");
 		dummy.setConfigEntryClass(RegenerateOutputConfigEntry.class);
 		list.add(dummy);
+
+		dummy = new DummyConfigElement("Biome Layout Image", false, ConfigGuiType.BOOLEAN, "biometweaker.cfg.layout");
+		dummy.setConfigEntryClass(BiomeLayoutConfigEntry.class);
+		list.add(dummy);
+
 		return list;
 	}
 

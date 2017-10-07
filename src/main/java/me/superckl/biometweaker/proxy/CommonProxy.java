@@ -31,6 +31,7 @@ import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.common.handler.BiomeEventHandler;
 import me.superckl.biometweaker.common.handler.EntityEventHandler;
+import me.superckl.biometweaker.common.handler.RegistryEventHandler;
 import me.superckl.biometweaker.common.handler.WorldEventHandler;
 import me.superckl.biometweaker.common.world.biome.property.PropertyDecorationPerChunk;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenStrongholds;
@@ -65,6 +66,8 @@ public class CommonProxy extends SidedProxy{
 		MinecraftForge.EVENT_BUS.register(eHandler);
 		final WorldEventHandler wHandler = new WorldEventHandler();
 		MinecraftForge.EVENT_BUS.register(wHandler);
+		final RegistryEventHandler rHandler = new RegistryEventHandler();
+		MinecraftForge.EVENT_BUS.register(rHandler);
 	}
 
 	@Override

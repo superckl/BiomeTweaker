@@ -12,10 +12,10 @@ import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.common.handler.RegistryEventHandler;
 import me.superckl.biometweaker.common.reference.ModData;
 import me.superckl.biometweaker.common.world.biome.BiomeTweakerBiome;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
-import me.superckl.biometweaker.util.BiomeHelper;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
@@ -37,11 +37,13 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final int id = BiomeHelper.getNextFreeBiomeId();
+		if(RegistryEventHandler.registry == null)
+			throw new IllegalStateException("No biome registry avilable! Make sure you're using the biome registry script stage!");
 		if(this.toCopy == null){
 			final BiomeTweakerBiome biome = new BiomeTweakerBiome(new BiomeProperties("BiomeTweaker Biome").setBaseHeight(0.125F).setHeightVariation(0.05F).setTemperature(0.8F).setRainfall(0.4F));
 			if(!MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome))){
-				Biome.registerBiome(id, ModData.MOD_ID+":"+this.rLoc.toLowerCase(), biome);
+				biome.setRegistryName(ModData.MOD_ID, this.rLoc.toLowerCase());
+				RegistryEventHandler.registry.register(biome);
 				BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 			}
 		}else{
@@ -71,7 +73,8 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 			}
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
 				return;
-			Biome.registerBiome(id, ModData.MOD_ID+":"+this.rLoc.toLowerCase(), biome);
+			biome.setRegistryName(ModData.MOD_ID, this.rLoc.toLowerCase());
+			RegistryEventHandler.registry.register(biome);
 			//Copy props
 			for(final Property<?> prop:BiomePropertyManager.propertyMap.values())
 				if(prop.isCopyable())

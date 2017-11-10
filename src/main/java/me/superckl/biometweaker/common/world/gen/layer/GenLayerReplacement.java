@@ -29,7 +29,7 @@ public class GenLayerReplacement extends GenLayer{
 		if(GenLayerReplacement.bakedMap.length == 0)
 			return ints;
 		for(int i = 0; i < ints.length; i++)
-			if(ints[i] != -1 && GenLayerReplacement.bakedMap[ints[i]] != -1)
+			if(ints[i] >= 0 && ints[i] < GenLayerReplacement.bakedMap.length && GenLayerReplacement.bakedMap[ints[i]] != -1)
 				ints[i] = GenLayerReplacement.bakedMap[ints[i]];
 		return ints;
 	}

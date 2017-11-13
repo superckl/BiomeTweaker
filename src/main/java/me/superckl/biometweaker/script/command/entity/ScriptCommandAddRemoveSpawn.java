@@ -60,7 +60,10 @@ public class ScriptCommandAddRemoveSpawn extends ScriptCommand{
 				continue;
 			else if(!this.remove && MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.AddSpawn(this, biome, entry)))
 				continue;
-			this.removeEntry(clazz, biome.getSpawnableList(this.type));
+			if(this.remove)
+				this.removeEntry(clazz, biome.getSpawnableList(this.type));
+			else
+				biome.getSpawnableList(this.type).add(new Biome.SpawnListEntry(clazz, this.weight, this.minCount, this.maxCount));
 			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(biome));
 		}
 	}

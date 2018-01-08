@@ -16,7 +16,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.MinecraftForge;
 
-@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addDicType")
+@AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addDicTypes")
 @RequiredArgsConstructor
 public class ScriptCommandAddDictionaryType extends ScriptCommand{
 

@@ -1,10 +1,9 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
@@ -21,7 +20,7 @@ public class TypeBiomesPackage extends BiomePackage{
 	@Override
 	public Iterator<Biome> getIterator() {
 		this.checkTypes();
-		final List<Biome> list = Lists.newArrayList();
+		final List<Biome> list = new ArrayList<>();
 		for(final BiomeDictionary.Type type:this.types){
 			final Set<Biome> gens = BiomeDictionary.getBiomes(type);
 			for(final Biome gen:gens)
@@ -34,7 +33,7 @@ public class TypeBiomesPackage extends BiomePackage{
 	@Override
 	public List<Integer> getRawIds() {
 		this.checkTypes();
-		final List<Integer> ints = Lists.newArrayList();
+		final List<Integer> ints = new ArrayList<>();
 		for(final BiomeDictionary.Type type:this.types){
 			final Set<Biome> gens = BiomeDictionary.getBiomes(type);
 			for(final Biome gen:gens)

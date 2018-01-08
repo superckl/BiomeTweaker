@@ -1,12 +1,12 @@
 package me.superckl.biometweaker.integration;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class IntegrationManager extends IntegrationModule{
 	}
 
 	@Getter
-	private final List<IntegrationModule> activeModules = Lists.newArrayList();
+	private final List<IntegrationModule> activeModules = new ArrayList<>();
 
 	private IntegrationManager() {}
 

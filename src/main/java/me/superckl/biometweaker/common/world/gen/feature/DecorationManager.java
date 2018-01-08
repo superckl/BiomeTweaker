@@ -1,12 +1,11 @@
 package me.superckl.biometweaker.common.world.gen.feature;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Lists;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -75,7 +74,7 @@ public class DecorationManager {
 		if(!this.generators.containsKey(DecorationManager.currentStage))
 			this.generators.put(DecorationManager.currentStage, new TIntObjectHashMap<List<WorldGeneratorWrapper<?>>>());
 		if(!this.generators.get(DecorationManager.currentStage).containsKey(biome))
-			this.generators.get(DecorationManager.currentStage).put(biome, Lists.newArrayList());
+			this.generators.get(DecorationManager.currentStage).put(biome, new ArrayList<>());
 		this.generators.get(DecorationManager.currentStage).get(biome).add(generator);
 	}
 
@@ -83,7 +82,7 @@ public class DecorationManager {
 		if(!DecorationManager.globalGenerators.containsKey(DecorationManager.currentStage))
 			DecorationManager.globalGenerators.put(DecorationManager.currentStage, new TIntObjectHashMap<List<WorldGeneratorWrapper<?>>>());
 		if(!DecorationManager.globalGenerators.get(DecorationManager.currentStage).containsKey(biome))
-			DecorationManager.globalGenerators.get(DecorationManager.currentStage).put(biome, Lists.newArrayList());
+			DecorationManager.globalGenerators.get(DecorationManager.currentStage).put(biome, new ArrayList<>());
 		DecorationManager.globalGenerators.get(DecorationManager.currentStage).get(biome).add(gen);
 	}
 

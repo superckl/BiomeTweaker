@@ -1,9 +1,8 @@
 package me.superckl.api.superscript.script.command;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.script.object.ScriptObject;
 
@@ -11,12 +10,12 @@ public class ScriptCommandRegistry {
 
 	public static final ScriptCommandRegistry INSTANCE = new ScriptCommandRegistry();
 
-	private final Map<String, ScriptCommandManager> managers = Maps.newHashMap();
+	private final Map<String, ScriptCommandManager> managers = new HashMap<>();
 
-	private final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> commands = Maps.newHashMap();
+	private final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> commands = new HashMap<>();
 
 	public Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> getCommandsMap(){
-		return Maps.newHashMap(this.commands);
+		return new HashMap<>(this.commands);
 	}
 
 	/**
@@ -49,10 +48,10 @@ public class ScriptCommandRegistry {
 	public Map<String, ScriptCommandListing> getListings(final Class<? extends ScriptObject> clazz){
 		Map<String, ScriptCommandListing> listings = this.commands.get(clazz);
 		if(listings == null){
-			listings = Maps.newLinkedHashMap();
+			listings = new LinkedHashMap<>();
 			this.commands.put(clazz, listings);
 		}
-		return Maps.newLinkedHashMap(listings);
+		return new LinkedHashMap<>(listings);
 	}
 
 	/**

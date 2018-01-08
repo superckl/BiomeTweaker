@@ -1,12 +1,12 @@
 package me.superckl.biometweaker.script.command.generation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
@@ -35,7 +35,7 @@ public class ScriptCommandRegisterVillageBlockReplacement extends ScriptCommand{
 		while(it.hasNext()){
 			final Biome gen = it.next();
 			if(!BiomeEventHandler.getVillageBlockReplacements().containsKey(Biome.getIdForBiome(gen)))
-				BiomeEventHandler.getVillageBlockReplacements().put(Biome.getIdForBiome(gen), Lists.newArrayList());
+				BiomeEventHandler.getVillageBlockReplacements().put(Biome.getIdForBiome(gen), new ArrayList<>());
 			final List<Pair<IBlockState, IBlockState>> list = BiomeEventHandler.getVillageBlockReplacements().get(Biome.getIdForBiome(gen));
 			final Iterator<Pair<IBlockState, IBlockState>> it2 = list.iterator();
 			final IBlockState toReplace = this.toReplace.build();

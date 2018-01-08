@@ -1,11 +1,11 @@
 package me.superckl.api.superscript.script.command;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.APIInfo;
@@ -27,7 +27,7 @@ public class BasicScriptCommandManager extends ScriptCommandManager{
 	@Override
 	public boolean addCommand(final ScriptCommand command, final ApplicationStage stage) {
 		if(!this.commands.containsKey(stage))
-			this.commands.put(stage, Lists.newArrayList());
+			this.commands.put(stage, new ArrayList<>());
 		if(this.appliedStages.contains(stage) || command.performInst())
 			try {
 				command.perform();

@@ -1,9 +1,9 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 
@@ -11,7 +11,7 @@ public class WorldGenClusterBuilder extends WorldGeneratorBuilder<WorldGenerator
 
 	private int radius = 8;
 	private int height = 4;
-	private final List<Predicate<IBlockState>> soilPredicates = Lists.newArrayList();
+	private final List<Predicate<IBlockState>> soilPredicates = new ArrayList<>();
 
 	@Override
 	public WorldGeneratorWrapper<WorldGenCluster> build() {

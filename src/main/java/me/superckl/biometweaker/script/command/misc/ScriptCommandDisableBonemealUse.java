@@ -1,9 +1,8 @@
 package me.superckl.biometweaker.script.command.misc;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import gnu.trove.map.TIntObjectMap;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class ScriptCommandDisableBonemealUse extends ScriptCommand{
 				continue;
 			}
 			if(!map.containsKey(id))
-				map.put(id, Lists.newArrayList());
+				map.put(id, new ArrayList<>());
 			final List<IBlockState> list = map.get(id);
 			if(list != null)
 				list.add(block);

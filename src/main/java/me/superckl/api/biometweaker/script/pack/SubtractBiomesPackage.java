@@ -1,5 +1,6 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class SubtractBiomesPackage extends BiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		final List<Integer> ints = Lists.newArrayList(this.main.getRawIds());
+		final List<Integer> ints = new ArrayList<>(this.main.getRawIds());
 		ints.removeAll(this.subtract.getRawIds());
 		return ints;
 	}

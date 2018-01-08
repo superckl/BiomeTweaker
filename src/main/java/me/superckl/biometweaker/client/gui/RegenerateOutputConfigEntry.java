@@ -1,6 +1,6 @@
 package me.superckl.biometweaker.client.gui;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
 import me.superckl.biometweaker.BiomeTweaker;
 import me.superckl.biometweaker.util.LogHelper;
@@ -32,7 +32,7 @@ public class RegenerateOutputConfigEntry extends ButtonEntry{
 	@Override
 	public void drawToolTip(final int mouseX, final int mouseY) {
 		if(this.pressedCounter-- > 0)
-			this.owningScreen.drawToolTip(Lists.newArrayList(TextFormatting.AQUA+"Output files regenerated.", TextFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
+			this.owningScreen.drawToolTip(ImmutableList.of(TextFormatting.AQUA+"Output files regenerated.", TextFormatting.RED+"Don't spam the button!"), mouseX, mouseY);
 		else
 			super.drawToolTip(mouseX, mouseY);
 	}

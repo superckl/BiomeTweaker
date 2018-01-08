@@ -1,9 +1,8 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
@@ -29,7 +28,7 @@ public class PropertyRangeBiomePackage extends BiomePackage{
 
 	@Override
 	public Iterator<Biome> getIterator() {
-		final List<Biome> biomes = Lists.newArrayList();
+		final List<Biome> biomes = new ArrayList<>();
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
 			final Biome biome = it.next();
@@ -47,7 +46,7 @@ public class PropertyRangeBiomePackage extends BiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		final List<Integer> biomes = Lists.newArrayList();
+		final List<Integer> biomes = new ArrayList<>();
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
 			final Biome biome = it.next();

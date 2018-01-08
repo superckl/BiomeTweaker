@@ -1,12 +1,11 @@
 package me.superckl.api.superscript.script;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.superscript.util.WarningHelper;
 
@@ -25,7 +24,7 @@ public class ParameterWrapper<T> {
 	}
 
 	public Pair<T[], String[]> parseArgs(final ScriptHandler handler, String ... args) throws Exception{
-		final List<T> parsed = Lists.newArrayList();
+		final List<T> parsed = new ArrayList<>();
 		for(int i = 0; ; i++){
 			T obj;
 			if(!this.shouldCont(i, args.length) || ((obj = this.type.tryParse(args[i], handler)) == null)){

@@ -1,11 +1,10 @@
 package me.superckl.biometweaker.common.world.gen;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Maps;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
@@ -31,7 +30,7 @@ public class BlockReplacementManager {
 
 	private final Map<PlacementStage, TIntObjectMap<BlockReplacementEntryList>> blockReplacements = new EnumMap<>(PlacementStage.class);
 
-	private final Map<ChunkPos, TIntObjectMap<BlockReplacementEntryList>> replacedBiomes = Maps.newHashMap();
+	private final Map<ChunkPos, TIntObjectMap<BlockReplacementEntryList>> replacedBiomes = new HashMap<>();
 
 	@Getter
 	@Setter

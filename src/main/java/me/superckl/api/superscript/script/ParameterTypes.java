@@ -1,12 +1,12 @@
 package me.superckl.api.superscript.script;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
 import com.google.gson.JsonElement;
@@ -17,8 +17,8 @@ import me.superckl.api.superscript.util.WarningHelper;
 
 public final class ParameterTypes {
 
-	private static final Map<Class<?>, ParameterType<?>> defaultTypes = Maps.newHashMap();
-	private static final Map<String, ParameterWrapper<?>> exceptionTypes = Maps.newHashMap();
+	private static final Map<Class<?>, ParameterType<?>> defaultTypes = new HashMap<>();
+	private static final Map<String, ParameterWrapper<?>> exceptionTypes = new HashMap<>();
 
 	public static final ParameterType<JsonElement> JSON_ELEMENT = new ParameterType<JsonElement>(JsonElement.class) {
 
@@ -55,7 +55,7 @@ public final class ParameterTypes {
 		@Override
 		public int[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			final int[] ints = WarningHelper.uncheckedCast(ParameterTypes.INTEGERS.tryParse(parameter, handler));
-			final List<Integer> newInts = Lists.newArrayList();
+			final List<Integer> newInts = new ArrayList<>();
 			Arrays.stream(ints).forEach(i -> newInts.add(i));
 			final Iterator<Integer> it = newInts.iterator();
 			while(it.hasNext())
@@ -78,7 +78,7 @@ public final class ParameterTypes {
 
 		@Override
 		public int[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			final List<Integer> ints = Lists.newArrayList();
+			final List<Integer> ints = new ArrayList<>();
 			final Object i = ParameterTypes.INTEGER.tryParse(parameter, handler);
 			if(i == null){
 				if(parameter.contains("-")){

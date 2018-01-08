@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,6 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.script.command.ScriptCommand;
@@ -30,7 +28,7 @@ import me.superckl.api.superscript.util.ConstructorListing;
 
 public class ScriptParser {
 
-	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = Maps.newHashMap();
+	private static final Map<String, ConstructorListing<ScriptObject>> validObjects = new HashMap<>();
 
 	/**
 	 * Registers a new way to instantiate a ScriptObject.<br>
@@ -105,8 +103,8 @@ public class ScriptParser {
 				final ConstructorListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
 				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
 				for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends ScriptObject>> entry:listing.getConstructors().entrySet()){
-					final List<Object> objs = Lists.newArrayList();
-					final List<ParameterWrapper<?>> params = Lists.newArrayList(entry.getKey());
+					final List<Object> objs = new ArrayList<>();
+					final List<ParameterWrapper<?>> params = new ArrayList<>(entry.getKey());
 					final Iterator<ParameterWrapper<?>> it = params.iterator();
 					while(it.hasNext()){
 						final ParameterWrapper<?> wrap = it.next();
@@ -134,8 +132,8 @@ public class ScriptParser {
 		outer:
 			for(final Entry<List<ParameterWrapper<?>>, Constructor<? extends ScriptCommand>> entry:listing.getConstructors().entrySet()){
 				String[] arguments = Arrays.copyOf(args, args.length);
-				final List<Object> objs = Lists.newArrayList();
-				final List<ParameterWrapper<?>> params = Lists.newArrayList(entry.getKey());
+				final List<Object> objs = new ArrayList<>();
+				final List<ParameterWrapper<?>> params = new ArrayList<>(entry.getKey());
 				final Iterator<ParameterWrapper<?>> it = params.iterator();
 				while(it.hasNext()){
 					final ParameterWrapper<?> wrap = it.next();

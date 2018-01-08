@@ -1,10 +1,9 @@
 package me.superckl.api.superscript.script;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 public class ParameterWrapperStringArray extends ParameterWrapper<String[]>{
 
@@ -14,7 +13,7 @@ public class ParameterWrapperStringArray extends ParameterWrapper<String[]>{
 
 	@Override
 	public Pair<String[][], String[]> parseArgs(final ScriptHandler handler, final String... args) throws Exception {
-		final List<String> parsed = Lists.newArrayList();
+		final List<String> parsed = new ArrayList<>();
 		for (final String arg : args) {
 			final String parse = ParameterTypes.STRING.tryParse(arg, handler);
 			if(parse == null)

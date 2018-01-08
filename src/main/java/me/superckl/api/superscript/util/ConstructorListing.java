@@ -1,16 +1,15 @@
 package me.superckl.api.superscript.util;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import me.superckl.api.superscript.script.ParameterWrapper;
 
 public class ConstructorListing<T> {
 
-	protected final Map<List<ParameterWrapper<?>>, Constructor<? extends T>> constructors = Maps.newHashMap();
+	protected final Map<List<ParameterWrapper<?>>, Constructor<? extends T>> constructors = new HashMap<>();
 
 	public ConstructorListing() {}
 

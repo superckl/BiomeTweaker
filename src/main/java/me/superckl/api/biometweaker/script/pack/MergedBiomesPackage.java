@@ -1,17 +1,17 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 
 public class MergedBiomesPackage extends BiomePackage{
 
-	List<BiomePackage> packs = Lists.newArrayList();
+	List<BiomePackage> packs = new ArrayList<>();
 
 	public MergedBiomesPackage(final BiomePackage ... packs) {
 		Collections.addAll(this.packs, packs);
@@ -19,7 +19,7 @@ public class MergedBiomesPackage extends BiomePackage{
 
 	@Override
 	public Iterator<Biome> getIterator() {
-		final List<Biome> gens = Lists.newArrayList();
+		final List<Biome> gens = new ArrayList<>();
 		for(final BiomePackage pack:this.packs)
 			Iterators.addAll(gens, pack.getIterator());
 		return gens.iterator();
@@ -35,7 +35,7 @@ public class MergedBiomesPackage extends BiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		final List<Integer> ints = Lists.newArrayList();
+		final List<Integer> ints = new ArrayList<>();
 		for(final BiomePackage pack:this.packs)
 			ints.addAll(pack.getRawIds());
 		return ints;

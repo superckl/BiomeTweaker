@@ -1,17 +1,16 @@
 package me.superckl.biometweaker.common.world.gen;
 
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 
 public class BlockReplacementEntryList {
 
-	private final Map<Block, BlockReplacementEntry> replacements = Maps.newIdentityHashMap();
+	private final Map<Block, BlockReplacementEntry> replacements = new IdentityHashMap<>();
 
 	@Nullable
 	public BlockReplacementEntry findEntry(final IBlockState toReplace){

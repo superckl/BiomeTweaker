@@ -1,10 +1,9 @@
 package me.superckl.api.biometweaker.script.wrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.script.pack.AllButBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
@@ -20,7 +19,7 @@ public class AllButPackParameterWrapper extends ParameterWrapper<AllButBiomesPac
 
 	@Override
 	public Pair<AllButBiomesPackage[], String[]> parseArgs(final ScriptHandler handler, final String... args) throws Exception {
-		final List<BiomePackage> parsed = Lists.newArrayList();
+		final List<BiomePackage> parsed = new ArrayList<>();
 		String[] toReturn = new String[0];
 		for(int i = 0; i < args.length; i++){
 			final BiomePackage obj = BTParameterTypes.BASIC_BIOMES_PACKAGE.tryParse(args[i], handler);

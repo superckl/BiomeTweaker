@@ -1,8 +1,7 @@
 package me.superckl.biometweaker.common.world.biome.property;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.property.Property;
 import net.minecraft.world.biome.Biome;
@@ -18,7 +17,7 @@ public class PropertyGenScatteredFeatures extends Property<Boolean>{
 	public void set(final Object obj, final Boolean val) throws IllegalArgumentException {
 		if(!(obj instanceof Biome))
 			throw new IllegalArgumentException("Passed object is not an instance of Biome!");
-		final List<Biome> biomes = Lists.newArrayList();
+		final List<Biome> biomes = new ArrayList<>();
 		biomes.addAll(MapGenScatteredFeature.BIOMELIST);
 		if(val && !biomes.contains(obj))
 			biomes.add((Biome) obj);

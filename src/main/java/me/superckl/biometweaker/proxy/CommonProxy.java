@@ -1,14 +1,15 @@
 package me.superckl.biometweaker.proxy;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.PropertyField;
@@ -131,15 +132,15 @@ public class CommonProxy extends SidedProxy{
 		//Ensure BTParamterTypes registers its defaults
 		BTParameterTypes.BLOCKSTATE_BUILDER.getTypeClass();
 		LogHelper.debug("Discovering @AutoRegister script commands...");
-		final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> listings = Maps.newHashMap();
+		final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> listings = new HashMap<>();
 		final Set<ASMData> datas = table.getAll(AutoRegister.class.getCanonicalName());
 		final Set<ASMData> groupedDatas = table.getAll(AutoRegisters.class.getCanonicalName());
-		final Set<ASMData> allData = Sets.newHashSet(datas);
+		final Set<ASMData> allData = new HashSet<>(datas);
 		for(final ASMData data:groupedDatas){
 			final List<Map<String, Object>> anns =  WarningHelper.uncheckedCast(data.getAnnotationInfo().get("value"));
 			anns.forEach(l -> allData.add(new ASMData(data.getCandidate(), AutoRegister.class.getCanonicalName(), data.getClassName(), data.getObjectName(), l)));
 		}
-		final Set<String> examinedClasses = Sets.newHashSet();
+		final Set<String> examinedClasses = new HashSet<>();
 		for(final ASMData data:allData)
 			try {
 				if(examinedClasses.contains(data.getClassName()))
@@ -174,7 +175,7 @@ public class CommonProxy extends SidedProxy{
 					for(final AutoRegister ann:annsToUse)
 						for(final Class<? extends ScriptObject> clazz:ann.classes()){
 							if(!listings.containsKey(clazz))
-								listings.put(clazz, Maps.newHashMap());
+								listings.put(clazz, new HashMap<>());
 							final Map<String, ScriptCommandListing> map = listings.get(clazz);
 							if(!map.containsKey(ann.name()))
 								map.put(ann.name(), new ScriptCommandListing());
@@ -224,15 +225,15 @@ public class CommonProxy extends SidedProxy{
 			ScriptParser.registerValidObjectInst("forBiomesWithPropertyRange", listing);
 
 			listing = new ConstructorListing<>();
-			listing.addEntry(Lists.newArrayList(), OreDecorationScriptObject.class.getDeclaredConstructor());
+			listing.addEntry(new ArrayList<>(), OreDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newOreDecoration", listing);
 
 			listing = new ConstructorListing<>();
-			listing.addEntry(Lists.newArrayList(), TreesDecorationScriptObject.class.getDeclaredConstructor());
+			listing.addEntry(new ArrayList<>(), TreesDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newTreeDecoration", listing);
 
 			listing = new ConstructorListing<>();
-			listing.addEntry(Lists.newArrayList(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
+			listing.addEntry(new ArrayList<>(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newClusterDecoration", listing);
 
 			listing = new ConstructorListing<>();

@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Maps;
-
 import me.superckl.api.superscript.APIInfo;
 import me.superckl.api.superscript.script.object.ScriptObject;
 
 public class ScriptHandler {
 
-	private final static Map<String, Class<? extends ScriptObject>> staticObjects = Maps.newHashMap();
+	private final static Map<String, Class<? extends ScriptObject>> staticObjects = new HashMap<>();
 
 	private final List<String> lines;
 

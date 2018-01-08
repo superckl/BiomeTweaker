@@ -1,9 +1,8 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import net.minecraft.world.biome.Biome;
 
@@ -11,7 +10,7 @@ public class AllBiomesPackage extends BiomePackage{
 
 	@Override
 	public Iterator<Biome> getIterator() {
-		final List<Biome> list = Lists.newArrayList();
+		final List<Biome> list = new ArrayList<>();
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
 			final Biome gen = it.next();
@@ -23,7 +22,7 @@ public class AllBiomesPackage extends BiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		final List<Integer> list = Lists.newArrayList();
+		final List<Integer> list = new ArrayList<>();
 		final Iterator<Biome> it = Biome.REGISTRY.iterator();
 		while(it.hasNext()){
 			final Biome gen = it.next();

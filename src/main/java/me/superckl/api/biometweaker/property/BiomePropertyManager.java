@@ -1,9 +1,9 @@
 package me.superckl.api.biometweaker.property;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.APIInfo;
@@ -59,7 +59,7 @@ public class BiomePropertyManager {
 	public static Property<Integer> ROCK_PER_CHUNK;
 	public static Property<Integer> SAND2_PER_CHUNK;
 
-	public static final Map<String, Property<?>> propertyMap = Maps.newHashMap();
+	public static final Map<String, Property<?>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = BiomePropertyManager.class.getDeclaredFields();

@@ -1,9 +1,8 @@
 package me.superckl.api.biometweaker.script.pack;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.CollectionHelper;
@@ -19,7 +18,7 @@ public class BasicBiomesPackage extends BiomePackage{
 
 	@Override
 	public Iterator<Biome> getIterator() {
-		final List<Biome> list = Lists.newArrayList();
+		final List<Biome> list = new ArrayList<>();
 		for(final int i:this.ids){
 			final Biome gen = Biome.getBiome(i);
 			if(gen == null){
@@ -33,7 +32,7 @@ public class BasicBiomesPackage extends BiomePackage{
 
 	@Override
 	public List<Integer> getRawIds() {
-		final List<Integer> ids = Lists.newArrayList();
+		final List<Integer> ids = new ArrayList<>();
 		CollectionHelper.addAll(ids, this.ids);
 		return ids;
 	}

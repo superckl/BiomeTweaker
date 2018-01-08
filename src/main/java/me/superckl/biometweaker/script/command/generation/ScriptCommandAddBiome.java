@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Primitives;
 
 import lombok.RequiredArgsConstructor;
@@ -45,14 +45,14 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 	public static final Map<Class<? extends Biome>, List<? extends Property<?>>> extraParameters = new IdentityHashMap<>();
 
 	static {
-		ScriptCommandAddBiome.extraParameters.put(BiomeForest.class, Lists.newArrayList(new PropertyField<>(BiomeForest.class, ObfNameHelper.Fields.BIOMEFOREST_TYPE.getName(), BiomeForest.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeTaiga.class, Lists.newArrayList(new PropertyField<>(BiomeTaiga.class, ObfNameHelper.Fields.BIOMETAIGA_TYPE.getName(), BiomeTaiga.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeHills.class, Lists.newArrayList(new PropertyField<>(BiomeHills.class, ObfNameHelper.Fields.BIOMEHILLS_TYPE.getName(), BiomeHills.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeSnow.class, Lists.newArrayList(new PropertyField<>(BiomeSnow.class, ObfNameHelper.Fields.SUPERICY.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomePlains.class, Lists.newArrayList(new PropertyField<>(BiomePlains.class, ObfNameHelper.Fields.SUNFLOWERS.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeMesa.class, Lists.newArrayList(new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.BRYCEPILLARS.getName(), Boolean.class),
+		ScriptCommandAddBiome.extraParameters.put(BiomeForest.class, ImmutableList.of(new PropertyField<>(BiomeForest.class, ObfNameHelper.Fields.BIOMEFOREST_TYPE.getName(), BiomeForest.Type.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomeTaiga.class, ImmutableList.of(new PropertyField<>(BiomeTaiga.class, ObfNameHelper.Fields.BIOMETAIGA_TYPE.getName(), BiomeTaiga.Type.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomeHills.class, ImmutableList.of(new PropertyField<>(BiomeHills.class, ObfNameHelper.Fields.BIOMEHILLS_TYPE.getName(), BiomeHills.Type.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomeSnow.class, ImmutableList.of(new PropertyField<>(BiomeSnow.class, ObfNameHelper.Fields.SUPERICY.getName(), Boolean.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomePlains.class, ImmutableList.of(new PropertyField<>(BiomePlains.class, ObfNameHelper.Fields.SUNFLOWERS.getName(), Boolean.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomeMesa.class, ImmutableList.of(new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.BRYCEPILLARS.getName(), Boolean.class),
 				new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.HASFOREST.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeJungle.class, Lists.newArrayList(new PropertyField<>(BiomeJungle.class, ObfNameHelper.Fields.ISEDGE.getName(), Boolean.class)));
+		ScriptCommandAddBiome.extraParameters.put(BiomeJungle.class, ImmutableList.of(new PropertyField<>(BiomeJungle.class, ObfNameHelper.Fields.ISEDGE.getName(), Boolean.class)));
 	}
 
 	private final String rLoc;

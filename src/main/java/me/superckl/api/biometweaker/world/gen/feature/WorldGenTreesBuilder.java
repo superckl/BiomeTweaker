@@ -1,9 +1,9 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -17,7 +17,7 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 	private IBlockState vineBlock = Blocks.VINE.getDefaultState();
 	private boolean growVines = false;
 	private boolean checkCanGrow = true;
-	private final List<Predicate<IBlockState>> soilPredicates = Lists.newArrayList();
+	private final List<Predicate<IBlockState>> soilPredicates = new ArrayList<>();
 
 	public WorldGenTreesBuilder() {
 		this.setMainBlock(Blocks.LOG.getDefaultState());

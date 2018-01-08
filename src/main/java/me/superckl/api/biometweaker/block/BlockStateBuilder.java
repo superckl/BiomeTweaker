@@ -1,8 +1,7 @@
 package me.superckl.api.biometweaker.block;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
@@ -10,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 public abstract class BlockStateBuilder<V extends IBlockState> {
 
 	protected ResourceLocation rLoc = new ResourceLocation("minecraft:stone");
-	protected Map<String, String> properties = Maps.newHashMap();
+	protected Map<String, String> properties = new HashMap<>();
 
 	public abstract V build();
 

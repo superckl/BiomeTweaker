@@ -1,8 +1,7 @@
 package me.superckl.biometweaker.util;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -14,7 +13,7 @@ public class BiomeColorMappings {
 	/* These are the biome colors used by default in the Amidst program. */
 	static
 	{
-		BiomeColorMappings.defaultColors = Maps.newHashMap();
+		BiomeColorMappings.defaultColors = new HashMap<>();
 
 		BiomeColorMappings.defaultColors.put("minecraft:ocean",                            0x000070);
 		BiomeColorMappings.defaultColors.put("minecraft:plains",                           0x8DB360);

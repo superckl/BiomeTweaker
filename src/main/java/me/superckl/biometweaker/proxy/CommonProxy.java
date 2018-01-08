@@ -34,6 +34,7 @@ import me.superckl.biometweaker.common.handler.EntityEventHandler;
 import me.superckl.biometweaker.common.handler.RegistryEventHandler;
 import me.superckl.biometweaker.common.handler.WorldEventHandler;
 import me.superckl.biometweaker.common.world.biome.property.PropertyDecorationPerChunk;
+import me.superckl.biometweaker.common.world.biome.property.PropertyGenScatteredFeatures;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenStrongholds;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlants;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenVillages;
@@ -86,6 +87,7 @@ public class CommonProxy extends SidedProxy{
 		BiomePropertyManager.GEN_WEIGHT = new PropertyGenWeight();
 		BiomePropertyManager.GEN_VILLAGES = new PropertyGenVillages();
 		BiomePropertyManager.GEN_STRONGHOLDS = new PropertyGenStrongholds();
+		BiomePropertyManager.GEN_SCATTERED_FEATURES = new PropertyGenScatteredFeatures();
 		BiomePropertyManager.IS_SPAWN_BIOME = new PropertySpawnBiome();
 		BiomePropertyManager.GEN_TALL_PLANTS = new PropertyGenTallPlants();
 		BiomePropertyManager.WATERLILY_PER_CHUNK = new PropertyDecorationPerChunk(EventType.LILYPAD);

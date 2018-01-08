@@ -89,7 +89,7 @@ public class BiomeHelper {
 			LogHelper.error("Failed to retrieve inserted fields!");
 			e.printStackTrace();
 		}
-		obj.addProperty("Temperature", biome.getTemperature());
+		obj.addProperty("Temperature", biome.getDefaultTemperature());
 		obj.addProperty("Humidity", biome.getRainfall());
 		obj.addProperty("Water Tint", biome.getWaterColorMultiplier());
 		obj.addProperty("Enable Rain", biome.enableRain);

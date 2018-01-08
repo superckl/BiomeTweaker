@@ -15,7 +15,14 @@ public final class ObfNameHelper {
 		IBLOCKSTATE("net.minecraft.block.state.IBlockState"),
 		BLOCK("net.minecraft.block.Block"),
 		CHUNKPRIMER("net.minecraft.world.chunk.ChunkPrimer"),
-		BLOCKS("net.minecraft.init.Blocks");
+		BLOCKS("net.minecraft.init.Blocks"),
+		BIOMEFOREST("net.minecraft.world.biome.BiomeForest"),
+		BIOMEJUNGLE("net.minecraft.world.biome.BiomeJungle"),
+		BIOMESNOW("net.minecraft.world.biome.BiomeSnow"),
+		BIOMETAIGA("net.minecraft.world.biome.BiomeTaiga"),
+		BIOMEPLAINS("net.minecraft.world.biome.BiomePlains"),
+		BIOMEMESA("net.minecraft.world.biome.BiomeMesa"),
+		BIOMEHILLS("net.minecraft.world.biome.BiomeHills");
 
 		@Getter
 		private final String name;
@@ -48,7 +55,15 @@ public final class ObfNameHelper {
 		RAINFALL(Classes.BIOME, "field_76751_G", "F"),
 		WATERCOLOR(Classes.BIOME, "field_76759_H", "I"),
 		ENABLESNOW(Classes.BIOME, "field_76766_R", "Z"),
-		ENABLERAIN(Classes.BIOME, "field_76765_S", "Z");
+		ENABLERAIN(Classes.BIOME, "field_76765_S", "Z"),
+		BIOMEFOREST_TYPE(Classes.BIOMEFOREST, "field_150632_aF", "Lnet/minecraft/world/biome/BiomeForest/Type;"),
+		BIOMETAIGA_TYPE(Classes.BIOMETAIGA, "field_150644_aH", "Lnet/minecraft/world/biome/BiomeTaiga/Type;"),
+		BIOMEHILLS_TYPE(Classes.BIOMEHILLS, "field_150638_aH", "Lnet/minecraft/world/biome/BiomeHills/Type;"),
+		SUPERICY(Classes.BIOMESNOW, "field_150615_aC", "Z"),
+		SUNFLOWERS(Classes.BIOMEPLAINS, "field_150628_aC", "Z"),
+		BRYCEPILLARS(Classes.BIOMEMESA, "field_150626_aH", "Z"),
+		HASFOREST(Classes.BIOMEMESA, "field_150620_aI", "Z"),
+		ISEDGE(Classes.BIOMEJUNGLE, "field_150614_aC", "Z");
 
 		private final Classes clazz;
 		private final String name;

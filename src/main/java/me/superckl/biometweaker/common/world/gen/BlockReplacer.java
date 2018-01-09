@@ -13,7 +13,7 @@ import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -29,10 +29,12 @@ public class BlockReplacer {
 				return;
 			final TIntObjectMap<BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
 			final Chunk chunk = primer == null ? world.getChunkFromChunkCoords(pos.x, pos.z):null;
+			final MutableBlockPos biomeCheckPos = new MutableBlockPos();
+			final MutableBlockPos blockSetPos = new MutableBlockPos();
 			for (int x = 0; x < 16; ++x)
 				for (int z = 0; z < 16; ++z)
 				{
-					final Biome biomegenbase = world.getBiome(new BlockPos((pos.x << 4)+x, 0, (pos.z << 4)+z));//e.biomeArray[l + (k * 16)];
+					final Biome biomegenbase = world.getBiome(biomeCheckPos.setPos((pos.x << 4)+x, 0, (pos.z << 4)+z));//e.biomeArray[l + (k * 16)];
 					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!manager.hasReplacements(id, stage))
 						continue;
@@ -67,7 +69,7 @@ public class BlockReplacer {
 							if(primer != null)
 								primer.setBlockState(x, y, z, toUse.getBlockState());
 							else
-								chunk.setBlockState(new BlockPos(x, y, z), toUse.getBlockState());
+								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getBlockState());
 						}else
 							noReps.add(state);
 					}

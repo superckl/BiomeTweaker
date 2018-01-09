@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addDicTypes")
 @RequiredArgsConstructor
-public class ScriptCommandAddDictionaryType extends ScriptCommand{
+public class ScriptCommandAddDictionaryTypes extends ScriptCommand{
 
 	private final BiomePackage pack;
 	private final String[] types;

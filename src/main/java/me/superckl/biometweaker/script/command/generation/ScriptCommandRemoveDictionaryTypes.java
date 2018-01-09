@@ -18,7 +18,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "removeDicTypes")
 @RequiredArgsConstructor
-public class ScriptCommandRemoveDictionaryType extends ScriptCommand{
+public class ScriptCommandRemoveDictionaryTypes extends ScriptCommand{
 
 	private final BiomePackage pack;
 	private final String[] types;

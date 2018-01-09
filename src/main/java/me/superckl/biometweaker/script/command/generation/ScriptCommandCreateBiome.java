@@ -40,25 +40,25 @@ import net.minecraftforge.common.MinecraftForge;
 
 @AutoRegister(classes = TweakerScriptObject.class, name = "createBiome")
 @RequiredArgsConstructor
-public class ScriptCommandAddBiome extends ScriptCommand{
+public class ScriptCommandCreateBiome extends ScriptCommand{
 
 	public static final Map<Class<? extends Biome>, List<? extends Property<?>>> extraParameters = new IdentityHashMap<>();
 
 	static {
-		ScriptCommandAddBiome.extraParameters.put(BiomeForest.class, ImmutableList.of(new PropertyField<>(BiomeForest.class, ObfNameHelper.Fields.BIOMEFOREST_TYPE.getName(), BiomeForest.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeTaiga.class, ImmutableList.of(new PropertyField<>(BiomeTaiga.class, ObfNameHelper.Fields.BIOMETAIGA_TYPE.getName(), BiomeTaiga.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeHills.class, ImmutableList.of(new PropertyField<>(BiomeHills.class, ObfNameHelper.Fields.BIOMEHILLS_TYPE.getName(), BiomeHills.Type.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeSnow.class, ImmutableList.of(new PropertyField<>(BiomeSnow.class, ObfNameHelper.Fields.SUPERICY.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomePlains.class, ImmutableList.of(new PropertyField<>(BiomePlains.class, ObfNameHelper.Fields.SUNFLOWERS.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeMesa.class, ImmutableList.of(new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.BRYCEPILLARS.getName(), Boolean.class),
+		ScriptCommandCreateBiome.extraParameters.put(BiomeForest.class, ImmutableList.of(new PropertyField<>(BiomeForest.class, ObfNameHelper.Fields.BIOMEFOREST_TYPE.getName(), BiomeForest.Type.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomeTaiga.class, ImmutableList.of(new PropertyField<>(BiomeTaiga.class, ObfNameHelper.Fields.BIOMETAIGA_TYPE.getName(), BiomeTaiga.Type.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomeHills.class, ImmutableList.of(new PropertyField<>(BiomeHills.class, ObfNameHelper.Fields.BIOMEHILLS_TYPE.getName(), BiomeHills.Type.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomeSnow.class, ImmutableList.of(new PropertyField<>(BiomeSnow.class, ObfNameHelper.Fields.SUPERICY.getName(), Boolean.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomePlains.class, ImmutableList.of(new PropertyField<>(BiomePlains.class, ObfNameHelper.Fields.SUNFLOWERS.getName(), Boolean.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomeMesa.class, ImmutableList.of(new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.BRYCEPILLARS.getName(), Boolean.class),
 				new PropertyField<>(BiomeMesa.class, ObfNameHelper.Fields.HASFOREST.getName(), Boolean.class)));
-		ScriptCommandAddBiome.extraParameters.put(BiomeJungle.class, ImmutableList.of(new PropertyField<>(BiomeJungle.class, ObfNameHelper.Fields.ISEDGE.getName(), Boolean.class)));
+		ScriptCommandCreateBiome.extraParameters.put(BiomeJungle.class, ImmutableList.of(new PropertyField<>(BiomeJungle.class, ObfNameHelper.Fields.ISEDGE.getName(), Boolean.class)));
 	}
 
 	private final String rLoc;
 	private final BiomePackage toCopy;
 
-	public ScriptCommandAddBiome(final String rLoc) {
+	public ScriptCommandCreateBiome(final String rLoc) {
 		this(rLoc, null);
 	}
 
@@ -83,8 +83,8 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 			Constructor<? extends Biome> construct = null;
 			try{
 				//catches all vanilla biomes
-				if(ScriptCommandAddBiome.extraParameters.containsKey(toCopy.getBiomeClass())) {
-					final List<? extends Property<?>> props = ScriptCommandAddBiome.extraParameters.get(toCopy.getBiomeClass());
+				if(ScriptCommandCreateBiome.extraParameters.containsKey(toCopy.getBiomeClass())) {
+					final List<? extends Property<?>> props = ScriptCommandCreateBiome.extraParameters.get(toCopy.getBiomeClass());
 					final Class<?>[] types = new Class<?>[props.size()+1];
 					for(int i = 0; i < props.size(); i++)
 						types[i] = Primitives.unwrap(props.get(i).getTypeClass());
@@ -111,7 +111,7 @@ public class ScriptCommandAddBiome extends ScriptCommand{
 					biome = construct.newInstance(new BiomeProperties(toCopy.getBiomeName()));
 					break;
 				default:
-					final List<? extends Property<?>> props = ScriptCommandAddBiome.extraParameters.get(toCopy.getBiomeClass());
+					final List<? extends Property<?>> props = ScriptCommandCreateBiome.extraParameters.get(toCopy.getBiomeClass());
 					final Object[] objs = new Object[props.size()+1];
 					for(int i = 0; i < props.size(); i++)
 						objs[i] = props.get(i).get(toCopy);

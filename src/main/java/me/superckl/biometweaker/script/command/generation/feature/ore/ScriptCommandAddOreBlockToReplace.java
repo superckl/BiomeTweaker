@@ -12,7 +12,7 @@ import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObje
 @AutoRegister(classes = OreDecorationScriptObject.class, name = "addBlockToReplace")
 @RequiredArgsConstructor(onConstructor_={@ParameterOverride(exceptionKey="oreGenBuilder", parameterIndex=0)})
 
-public class ScriptCommandSetOreBlockToReplace extends ScriptCommand{
+public class ScriptCommandAddOreBlockToReplace extends ScriptCommand{
 
 	private final WorldGenMineableBuilder builder;
 	private final BlockStateBuilder<?> block;

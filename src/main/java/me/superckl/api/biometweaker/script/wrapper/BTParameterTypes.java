@@ -143,6 +143,7 @@ public class BTParameterTypes {
 		ParameterTypes.registerExceptionWrapper("treeGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
 		ParameterTypes.registerExceptionWrapper("oreGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
 		ParameterTypes.registerExceptionWrapper("clusterGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
+		ParameterTypes.registerExceptionWrapper("splotchGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
 	}
 
 }

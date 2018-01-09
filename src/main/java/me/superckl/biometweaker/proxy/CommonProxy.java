@@ -46,6 +46,7 @@ import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 import me.superckl.biometweaker.script.object.decoration.ClusterDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
+import me.superckl.biometweaker.script.object.decoration.SplotchDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.TreesDecorationScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
 import me.superckl.biometweaker.util.ObfNameHelper;
@@ -235,6 +236,10 @@ public class CommonProxy extends SidedProxy{
 			listing = new ConstructorListing<>();
 			listing.addEntry(new ArrayList<>(), ClusterDecorationScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newClusterDecoration", listing);
+
+			listing = new ConstructorListing<>();
+			listing.addEntry(new ArrayList<>(), SplotchDecorationScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("newSplotchDecoration", listing);
 
 			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), BasicBlockStateScriptObject.class.getDeclaredConstructor());

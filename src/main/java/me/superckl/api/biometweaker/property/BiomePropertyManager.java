@@ -87,16 +87,16 @@ public class BiomePropertyManager {
 				WarningHelper.<Property<IBlockState>>uncheckedCast(prop).set(biome, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
 				return true;
 			}
-			ParameterType<?> pType = ParameterTypes.getDefaultType(type);
+			final ParameterType<?> pType = ParameterTypes.getDefaultType(type);
 			if(pType != null)
-				typeSafeSet(prop, biome, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
+				BiomePropertyManager.typeSafeSet(prop, biome, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
 		} catch (final Exception e) {
 			throw e;
 		}
 		return true;
 	}
-	
-	private static <K> void typeSafeSet(Property<K> prop, Biome b, Object obj){
+
+	private static <K> void typeSafeSet(final Property<K> prop, final Biome b, final Object obj){
 		prop.set(b, WarningHelper.uncheckedCast(obj));
 	}
 

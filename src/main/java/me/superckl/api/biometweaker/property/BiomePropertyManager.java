@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 
 import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
+import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.util.WarningHelper;
@@ -82,20 +83,21 @@ public class BiomePropertyManager {
 			return false;
 		final Class<?> type = prop.getTypeClass();
 		try {
-			if(type.getCanonicalName().equals(Integer.class.getCanonicalName()))
-				WarningHelper.<Property<Integer>>uncheckedCast(prop).set(biome, value.getAsInt());
-			else if(type.getCanonicalName().equals(Float.class.getCanonicalName()))
-				WarningHelper.<Property<Float>>uncheckedCast(prop).set(biome, value.getAsFloat());
-			else if(type.getCanonicalName().equals(Boolean.class.getCanonicalName()))
-				WarningHelper.<Property<Boolean>>uncheckedCast(prop).set(biome, value.getAsBoolean());
-			else if(type.getCanonicalName().equals(String.class.getCanonicalName()))
-				WarningHelper.<Property<String>>uncheckedCast(prop).set(biome, ParameterTypes.STRING.tryParse(value.getAsString(), handler));
-			else if(type.getCanonicalName().equals(IBlockState.class.getCanonicalName()))
+			if(type.getCanonicalName().equals(IBlockState.class.getCanonicalName())) {
 				WarningHelper.<Property<IBlockState>>uncheckedCast(prop).set(biome, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
+				return true;
+			}
+			ParameterType<?> pType = ParameterTypes.getDefaultType(type);
+			if(pType != null)
+				typeSafeSet(prop, biome, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
 		} catch (final Exception e) {
 			throw e;
 		}
 		return true;
+	}
+	
+	private static <K> void typeSafeSet(Property<K> prop, Biome b, Object obj){
+		prop.set(b, WarningHelper.uncheckedCast(obj));
 	}
 
 }

@@ -9,7 +9,7 @@ import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 
-@AutoRegister(classes = OreDecorationScriptObject.class, name = "setBlockToReplace")
+@AutoRegister(classes = OreDecorationScriptObject.class, name = "addBlockToReplace")
 @RequiredArgsConstructor(onConstructor_={@ParameterOverride(exceptionKey="oreGenBuilder", parameterIndex=0)})
 
 public class ScriptCommandSetOreBlockToReplace extends ScriptCommand{
@@ -19,7 +19,7 @@ public class ScriptCommandSetOreBlockToReplace extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		this.builder.setPredicate(new BlockEquivalencePredicate(this.block.build()));
+		this.builder.addReplacePredicate(new BlockEquivalencePredicate(this.block.build()));
 	}
 
 }

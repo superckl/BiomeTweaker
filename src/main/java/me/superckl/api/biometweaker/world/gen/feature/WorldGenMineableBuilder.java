@@ -1,10 +1,9 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
-import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
 public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMineableWrapper>{
@@ -12,11 +11,11 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 	private int size = 9;
 	private int maxHeight = 128;
 	private int minHeight = 0;
-	private Predicate<IBlockState> predicate = new BlockEquivalencePredicate(Blocks.STONE.getDefaultState());
+	private Predicate<IBlockState> replacePredicate = Predicates.alwaysFalse();
 
 	@Override
 	public WorldGenMineableWrapper build() {
-		final WorldGenMinable gen = new WorldGenMinable(this.mainBlock, this.size, this.predicate);
+		final WorldGenMinable gen = new WorldGenMinable(this.mainBlock, this.size, this.replacePredicate);
 		if (this.maxHeight < this.minHeight){
 			final int i = this.minHeight;
 			this.minHeight = this.maxHeight;
@@ -37,12 +36,12 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 		this.size = size;
 	}
 
-	public Predicate<IBlockState> getPredicate() {
-		return this.predicate;
+	public Predicate<IBlockState> getReplacePredicate() {
+		return this.replacePredicate;
 	}
 
-	public void setPredicate(final Predicate<IBlockState> predicate) {
-		this.predicate = predicate;
+	public void addReplacePredicate(final Predicate<IBlockState> predicate) {
+		this.replacePredicate = Predicates.or(predicate, this.replacePredicate);
 	}
 
 	public int getMaxHeight() {

@@ -4,10 +4,11 @@ import java.util.Random;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
-public class WorldGenTreesWrapper extends WorldGeneratorWrapper<WorldGenGenericTree>{
+public class WorldGenTreesWrapper<K extends WorldGenerator> extends WorldGeneratorWrapper<K>{
 
-	public WorldGenTreesWrapper(final WorldGenGenericTree generator, final int count) {
+	public WorldGenTreesWrapper(final K generator, final int count) {
 		super(generator, count);
 	}
 

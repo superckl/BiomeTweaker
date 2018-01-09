@@ -6,7 +6,7 @@ import com.google.common.base.Predicates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
-public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMineableWrapper>{
+public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMineableWrapper<WorldGenMinable>>{
 
 	private int size = 9;
 	private int maxHeight = 128;
@@ -14,7 +14,7 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 	private Predicate<IBlockState> replacePredicate = Predicates.alwaysFalse();
 
 	@Override
-	public WorldGenMineableWrapper build() {
+	public WorldGenMineableWrapper<WorldGenMinable> build() {
 		final WorldGenMinable gen = new WorldGenMinable(this.mainBlock, this.size, this.replacePredicate);
 		if (this.maxHeight < this.minHeight){
 			final int i = this.minHeight;
@@ -25,7 +25,7 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 				++this.maxHeight;
 			else
 				--this.minHeight;
-		return new WorldGenMineableWrapper(gen, this.count, this.maxHeight, this.minHeight);
+		return new WorldGenMineableWrapper<>(gen, this.count, this.maxHeight, this.minHeight);
 	}
 
 	public int getSize() {

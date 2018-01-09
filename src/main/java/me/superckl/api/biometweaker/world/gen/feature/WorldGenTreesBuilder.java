@@ -6,7 +6,7 @@ import com.google.common.base.Predicates;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 
-public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWrapper>{
+public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWrapper<WorldGenGenericTree>>{
 
 	private int minHeight = 4;
 	private int leafHeight = 4;
@@ -22,9 +22,9 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 	}
 
 	@Override
-	public WorldGenTreesWrapper build() {
+	public WorldGenTreesWrapper<WorldGenGenericTree> build() {
 		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.heightVariation, this.leafHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicate);
-		return new WorldGenTreesWrapper(gen, this.count);
+		return new WorldGenTreesWrapper<>(gen, this.count);
 	}
 
 	public int getMinHeight() {

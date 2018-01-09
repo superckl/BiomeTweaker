@@ -1,6 +1,5 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
-import java.util.List;
 import java.util.Random;
 
 import com.google.common.base.Predicate;
@@ -15,14 +14,14 @@ public class WorldGenCluster extends WorldGenerator{
 	private final IBlockState block;
 	private final int radius;
 	private final int height;
-	private final List<Predicate<IBlockState>> soilPredicates;
+	private final Predicate<IBlockState> soilPredicate;
 
-	public WorldGenCluster(final boolean notify, final IBlockState block, final int radius, final int height, final List<Predicate<IBlockState>> soilPredicates) {
+	public WorldGenCluster(final boolean notify, final IBlockState block, final int radius, final int height, final Predicate<IBlockState> soilPredicate) {
 		super(notify);
 		this.block = block;
 		this.radius = radius;
 		this.height = height;
-		this.soilPredicates = soilPredicates;
+		this.soilPredicate = soilPredicate;
 	}
 
 	@Override
@@ -31,15 +30,11 @@ public class WorldGenCluster extends WorldGenerator{
 			final BlockPos blockpos = position.add(rand.nextInt(this.radius) - rand.nextInt(this.radius),
 					rand.nextInt(Math.round(this.height/2F)) - rand.nextInt(Math.round(this.height/2F)), rand.nextInt(this.radius) - rand.nextInt(this.radius));
 			boolean validSoil = false;
-			if(this.soilPredicates.isEmpty() && !world.isAirBlock(blockpos.down()))
+			if(this.soilPredicate == null && !world.isAirBlock(blockpos.down()))
 				validSoil = true;
-			else if(!this.soilPredicates.isEmpty()){
+			else if(this.soilPredicate != null){
 				final IBlockState down = world.getBlockState(blockpos.down());
-				for(final Predicate<IBlockState> predicate:this.soilPredicates)
-					if(predicate.apply(down)){
-						validSoil = true;
-						break;
-					}
+				validSoil = this.soilPredicate.apply(down);
 			}
 			if (validSoil && world.isAirBlock(blockpos) && this.block.getBlock().canPlaceBlockAt(world, blockpos))
 				world.setBlockState(blockpos, this.block, 2);

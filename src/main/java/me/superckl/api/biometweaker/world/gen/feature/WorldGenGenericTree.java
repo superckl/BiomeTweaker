@@ -1,6 +1,5 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
-import java.util.List;
 import java.util.Random;
 
 import com.google.common.base.Predicate;
@@ -30,11 +29,11 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 	private final IBlockState vineBlock;
 	private final boolean growVines;
 	private final boolean checkCanGrow;
-	private final List<Predicate<IBlockState>> soilPredicates;
+	private final Predicate<IBlockState> soilPredicate;
 	private final Predicate<IBlockState> leafPredicate;
 
 	public WorldGenGenericTree(final boolean notify, final int minHeight, final int heightVariation, final int leafHeight, final IBlockState trunkBlock, final IBlockState leafBlock,
-			final IBlockState vineBlock, final boolean growVines, final boolean checkCanGrow, final List<Predicate<IBlockState>> soilPredicates) {
+			final IBlockState vineBlock, final boolean growVines, final boolean checkCanGrow, final Predicate<IBlockState> soilPredicate) {
 		super(notify);
 		this.minHeight = minHeight;
 		this.heightVariation = heightVariation;
@@ -44,7 +43,7 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 		this.vineBlock = vineBlock;
 		this.growVines = growVines;
 		this.checkCanGrow = checkCanGrow;
-		this.soilPredicates = soilPredicates;
+		this.soilPredicate = soilPredicate;
 		this.leafPredicate = new BlockEquivalencePredicate(this.leafBlock);
 	}
 
@@ -79,14 +78,10 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 			else{
 				IBlockState block = world.getBlockState(position.down());
 				shouldGrow = false;
-				if(this.soilPredicates.isEmpty())
+				if(this.soilPredicate == null)
 					shouldGrow = this.checkCanGrow && block.getBlock().canSustainPlant(block, world, position.down(), EnumFacing.UP, (BlockSapling)Blocks.SAPLING);
 				else{
-					for(final Predicate<IBlockState> predicate:this.soilPredicates)
-						if(predicate.apply(block)){
-							shouldGrow = true;
-							break;
-						}
+					shouldGrow = this.soilPredicate.apply(block);
 					if(shouldGrow == false)
 						shouldGrow = this.checkCanGrow && block.getBlock().canSustainPlant(block, world, position.down(), EnumFacing.UP, (BlockSapling)Blocks.SAPLING);
 				}

@@ -1,9 +1,7 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import net.minecraft.block.state.IBlockState;
 
@@ -11,11 +9,11 @@ public class WorldGenClusterBuilder extends WorldGeneratorBuilder<WorldGenerator
 
 	private int radius = 8;
 	private int height = 4;
-	private final List<Predicate<IBlockState>> soilPredicates = new ArrayList<>();
+	private Predicate<IBlockState> soilPredicate = null;
 
 	@Override
 	public WorldGeneratorWrapper<WorldGenCluster> build() {
-		return new WorldGeneratorWrapper<>(new WorldGenCluster(false, this.mainBlock, this.radius, this.height, this.soilPredicates), this.count);
+		return new WorldGeneratorWrapper<>(new WorldGenCluster(false, this.mainBlock, this.radius, this.height, this.soilPredicate), this.count);
 	}
 
 	public int getRadius() {
@@ -35,7 +33,10 @@ public class WorldGenClusterBuilder extends WorldGeneratorBuilder<WorldGenerator
 	}
 
 	public void addSoilPredicate(final Predicate<IBlockState> predicate){
-		this.soilPredicates.add(predicate);
+		if(this.soilPredicate == null)
+			this.soilPredicate = predicate;
+		else
+			this.soilPredicate = Predicates.or(predicate, this.soilPredicate);
 	}
 
 }

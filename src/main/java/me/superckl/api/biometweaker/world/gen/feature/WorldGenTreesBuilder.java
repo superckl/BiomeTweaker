@@ -1,9 +1,7 @@
 package me.superckl.api.biometweaker.world.gen.feature;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -17,7 +15,7 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 	private IBlockState vineBlock = Blocks.VINE.getDefaultState();
 	private boolean growVines = false;
 	private boolean checkCanGrow = true;
-	private final List<Predicate<IBlockState>> soilPredicates = new ArrayList<>();
+	private Predicate<IBlockState> soilPredicate;
 
 	public WorldGenTreesBuilder() {
 		this.setMainBlock(Blocks.LOG.getDefaultState());
@@ -25,7 +23,7 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 
 	@Override
 	public WorldGenTreesWrapper build() {
-		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.heightVariation, this.leafHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicates);
+		final WorldGenGenericTree gen = new WorldGenGenericTree(false, this.minHeight, this.heightVariation, this.leafHeight, this.mainBlock, this.leafBlock, this.vineBlock, this.growVines, this.checkCanGrow, this.soilPredicate);
 		return new WorldGenTreesWrapper(gen, this.count);
 	}
 
@@ -86,7 +84,10 @@ public class WorldGenTreesBuilder extends WorldGeneratorBuilder<WorldGenTreesWra
 	}
 
 	public void addSoilPredicate(final Predicate<IBlockState> predicate){
-		this.soilPredicates.add(predicate);
+		if(this.soilPredicate == null)
+			this.soilPredicate = predicate;
+		else
+			this.soilPredicate = Predicates.or(predicate, this.soilPredicate);
 	}
 
 }

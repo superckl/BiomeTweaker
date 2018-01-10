@@ -75,12 +75,9 @@ public class WorldGenPropertyManager {
 	}
 
 	public static Property<?> findProperty(final Class<?> target, final String name){
-		LogHelper.info("Trying to find prop for "+target.getName()+", "+name);
-		for(final Class<?> clazz:WorldGenPropertyManager.propertyMap.keySet()) {
-			LogHelper.info("Checking "+clazz.getName());
+		for(final Class<?> clazz:WorldGenPropertyManager.propertyMap.keySet())
 			if(clazz.isAssignableFrom(target) && WorldGenPropertyManager.propertyMap.get(clazz).containsKey(name))
 				return WorldGenPropertyManager.propertyMap.get(clazz).get(name);
-		}
 		return null;
 	}
 

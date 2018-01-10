@@ -73,13 +73,13 @@ public class BiomePropertyManager {
 	public static Property<?> findProperty(final String name){
 		return BiomePropertyManager.propertyMap.get(name);
 	}
-	
+
 	public static Collection<Property<?>> getAllProperties(){
-		return Collections.unmodifiableCollection(propertyMap.values());
+		return Collections.unmodifiableCollection(BiomePropertyManager.propertyMap.values());
 	}
-	
+
 	public static Set<String> getAllNames(){
-		return Collections.unmodifiableSet(propertyMap.keySet());
+		return Collections.unmodifiableSet(BiomePropertyManager.propertyMap.keySet());
 	}
 
 }

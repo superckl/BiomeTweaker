@@ -4,16 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
-
 import me.superckl.api.biometweaker.APIInfo;
-import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
-import me.superckl.api.superscript.script.ParameterType;
-import me.superckl.api.superscript.script.ParameterTypes;
-import me.superckl.api.superscript.script.ScriptHandler;
-import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.world.biome.Biome;
 
 public class BiomePropertyManager {
 
@@ -74,30 +66,9 @@ public class BiomePropertyManager {
 				e.printStackTrace();
 			}
 	}
-
-	public static boolean setProperty(final Biome biome, final String property, final JsonElement value, final ScriptHandler handler) throws Exception{
-		final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
-		if(prop == null)
-			throw new IllegalArgumentException("No property found for "+property);
-		if(!prop.isSettable())
-			return false;
-		final Class<?> type = prop.getTypeClass();
-		try {
-			if(type.getCanonicalName().equals(IBlockState.class.getCanonicalName())) {
-				WarningHelper.<Property<IBlockState>>uncheckedCast(prop).set(biome, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
-				return true;
-			}
-			final ParameterType<?> pType = ParameterTypes.getDefaultType(type);
-			if(pType != null)
-				BiomePropertyManager.typeSafeSet(prop, biome, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
-		} catch (final Exception e) {
-			throw e;
-		}
-		return true;
-	}
-
-	private static <K> void typeSafeSet(final Property<K> prop, final Biome b, final Object obj){
-		prop.set(b, WarningHelper.uncheckedCast(obj));
+	
+	public static Property<?> findProperty(String name){
+		return BiomePropertyManager.propertyMap.get(name);
 	}
 
 }

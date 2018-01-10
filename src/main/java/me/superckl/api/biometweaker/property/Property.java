@@ -12,6 +12,7 @@ public abstract class Property <K> {
 	public abstract K get(Object obj);
 	public abstract boolean isReadable();
 	public abstract boolean isSettable();
+	public abstract Class<?> getTargetClass();
 
 	public boolean isCopyable(){
 		return this.isReadable() && this.isSettable();
@@ -26,5 +27,5 @@ public abstract class Property <K> {
 	public Class<K> getTypeClass() {
 		return this.typeClass;
 	}
-
+	
 }

@@ -50,4 +50,9 @@ public class PropertyGenScatteredFeatures extends Property<Boolean>{
 		return false;
 	}
 
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
+	
 }

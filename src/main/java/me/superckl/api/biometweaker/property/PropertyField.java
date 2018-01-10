@@ -57,7 +57,7 @@ public final class PropertyField<K> extends Property<K>{
 			}
 	}
 
-	public Class<?> getClazz() {
+	public Class<?> getTargetClass() {
 		return this.clazz;
 	}
 

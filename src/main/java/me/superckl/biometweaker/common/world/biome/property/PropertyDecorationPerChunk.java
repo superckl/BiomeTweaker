@@ -48,4 +48,9 @@ public class PropertyDecorationPerChunk extends Property<Integer> {
 		return true;
 	}
 
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
+
 }

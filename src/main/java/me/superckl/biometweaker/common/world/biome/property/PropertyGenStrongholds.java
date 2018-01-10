@@ -36,5 +36,10 @@ public class PropertyGenStrongholds extends Property<Boolean>{
 	public boolean isSettable() {
 		return true;
 	}
+	
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
 
 }

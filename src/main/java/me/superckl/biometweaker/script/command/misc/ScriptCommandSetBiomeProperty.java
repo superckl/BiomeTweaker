@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
+import me.superckl.api.biometweaker.property.Property;
+import me.superckl.api.biometweaker.property.PropertyHelper;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.script.ScriptHandler;
@@ -34,8 +36,11 @@ public class ScriptCommandSetBiomeProperty extends ScriptCommand{
 			final Biome gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
-			if(BiomePropertyManager.setProperty(gen, this.key.toLowerCase(), this.value, this.handler))
-				BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
+			Property<?> prop = BiomePropertyManager.findProperty(this.key);
+			if(prop == null)
+				throw new IllegalArgumentException("No property found for "+this.key);
+			PropertyHelper.setProperty(gen, prop, this.value, this.handler);
+			BiomeTweaker.getInstance().onTweak(Biome.getIdForBiome(gen));
 		}
 	}
 

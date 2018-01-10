@@ -33,4 +33,9 @@ public class PropertyGenTallPlants extends Property<Boolean>{
 		return true;
 	}
 
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
+	
 }

@@ -46,4 +46,9 @@ public class PropertySpawnBiome extends Property<Boolean>{
 		return true;
 	}
 
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
+	
 }

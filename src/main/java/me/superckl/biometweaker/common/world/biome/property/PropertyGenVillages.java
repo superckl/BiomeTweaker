@@ -38,4 +38,9 @@ public class PropertyGenVillages extends Property<Boolean>{
 		return true;
 	}
 
+	@Override
+	public Class<?> getTargetClass() {
+		return Biome.class;
+	}
+	
 }

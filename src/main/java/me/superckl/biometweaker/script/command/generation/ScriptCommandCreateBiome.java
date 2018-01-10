@@ -124,7 +124,7 @@ public class ScriptCommandCreateBiome extends ScriptCommand{
 			biome.setRegistryName(ModData.MOD_ID, this.rLoc.toLowerCase());
 			RegistryEventHandler.registry.register(biome);
 			//Copy props
-			for(final Property<?> prop:BiomePropertyManager.propertyMap.values())
+			for(final Property<?> prop:BiomePropertyManager.getAllProperties())
 				if(prop.isCopyable())
 					prop.copy(toCopy, biome);
 			//Copy dict types

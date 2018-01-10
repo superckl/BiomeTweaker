@@ -50,5 +50,5 @@ public class PropertySpawnBiome extends Property<Boolean>{
 	public Class<?> getTargetClass() {
 		return Biome.class;
 	}
-	
+
 }

@@ -1,8 +1,11 @@
 package me.superckl.api.biometweaker.property;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import me.superckl.api.biometweaker.APIInfo;
 import net.minecraft.block.state.IBlockState;
@@ -52,7 +55,7 @@ public class BiomePropertyManager {
 	public static Property<Integer> ROCK_PER_CHUNK;
 	public static Property<Integer> SAND2_PER_CHUNK;
 
-	public static final Map<String, Property<?>> propertyMap = new HashMap<>();
+	private static final Map<String, Property<?>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = BiomePropertyManager.class.getDeclaredFields();
@@ -66,9 +69,17 @@ public class BiomePropertyManager {
 				e.printStackTrace();
 			}
 	}
-	
-	public static Property<?> findProperty(String name){
+
+	public static Property<?> findProperty(final String name){
 		return BiomePropertyManager.propertyMap.get(name);
+	}
+	
+	public static Collection<Property<?>> getAllProperties(){
+		return Collections.unmodifiableCollection(propertyMap.values());
+	}
+	
+	public static Set<String> getAllNames(){
+		return Collections.unmodifiableSet(propertyMap.keySet());
 	}
 
 }

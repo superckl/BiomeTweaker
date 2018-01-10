@@ -32,11 +32,11 @@ public class ScriptCommandInheritProperties extends ScriptCommand{
 			final Biome gen = it.next();
 			String[] props;
 			if(this.properties == null)
-				props = BiomePropertyManager.propertyMap.keySet().toArray(new String[] {});
+				props = BiomePropertyManager.getAllNames().toArray(new String[] {});
 			else
 				props = this.properties;
 			for(final String property:props){
-				final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
+				final Property<?> prop = BiomePropertyManager.findProperty(property);
 				if(prop == null){
 					LogHelper.error("No property found for "+property);
 					continue;

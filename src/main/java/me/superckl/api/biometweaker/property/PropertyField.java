@@ -57,6 +57,7 @@ public final class PropertyField<K> extends Property<K>{
 			}
 	}
 
+	@Override
 	public Class<?> getTargetClass() {
 		return this.clazz;
 	}

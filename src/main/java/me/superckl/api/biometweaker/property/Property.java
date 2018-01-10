@@ -27,5 +27,5 @@ public abstract class Property <K> {
 	public Class<K> getTypeClass() {
 		return this.typeClass;
 	}
-	
+
 }

@@ -11,7 +11,7 @@ import net.minecraft.block.state.IBlockState;
 
 public class PropertyHelper {
 
-	public static void setProperty(final Object obj, final Property<?> property, final JsonElement value, final ScriptHandler handler) throws Exception{		
+	public static void setProperty(final Object obj, final Property<?> property, final JsonElement value, final ScriptHandler handler) throws Exception{
 		if(!property.isSettable())
 			throw new UnsupportedOperationException("Property is not settable!");
 		if(!property.getTargetClass().isAssignableFrom(obj.getClass()))
@@ -24,7 +24,7 @@ public class PropertyHelper {
 			}
 			final ParameterType<?> pType = ParameterTypes.getDefaultType(type);
 			if(pType != null)
-				typeSafeSet(property, obj, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
+				PropertyHelper.typeSafeSet(property, obj, pType.tryParse(pType == ParameterTypes.STRING ? value.toString():ParameterTypes.STRING.tryParse(value.toString(), handler), handler));
 		} catch (final Exception e) {
 			throw e;
 		}
@@ -33,5 +33,5 @@ public class PropertyHelper {
 	public static <K> void typeSafeSet(final Property<K> prop, final Object obj, final Object val){
 		prop.set(obj, WarningHelper.uncheckedCast(val));
 	}
-	
+
 }

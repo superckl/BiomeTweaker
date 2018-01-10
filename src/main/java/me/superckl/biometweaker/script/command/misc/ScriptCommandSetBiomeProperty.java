@@ -36,7 +36,7 @@ public class ScriptCommandSetBiomeProperty extends ScriptCommand{
 			final Biome gen = it.next();
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.SetProperty(this, gen, this.key, this.value)))
 				continue;
-			Property<?> prop = BiomePropertyManager.findProperty(this.key);
+			final Property<?> prop = BiomePropertyManager.findProperty(this.key);
 			if(prop == null)
 				throw new IllegalArgumentException("No property found for "+this.key);
 			PropertyHelper.setProperty(gen, prop, this.value, this.handler);

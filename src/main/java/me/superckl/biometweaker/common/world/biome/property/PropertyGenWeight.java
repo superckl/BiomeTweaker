@@ -63,5 +63,5 @@ public class PropertyGenWeight extends Property<Integer>{
 	public Class<?> getTargetClass() {
 		return Biome.class;
 	}
-	
+
 }

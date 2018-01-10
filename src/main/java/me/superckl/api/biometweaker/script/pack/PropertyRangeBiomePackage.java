@@ -16,7 +16,7 @@ public class PropertyRangeBiomePackage extends BiomePackage{
 	private final float highBound;
 
 	public PropertyRangeBiomePackage(final String property, final float lowBound, final float highBound) {
-		final Property<?> prop = BiomePropertyManager.propertyMap.get(property);
+		final Property<?> prop = BiomePropertyManager.findProperty(property);
 		if(prop == null)
 			throw new IllegalArgumentException("No property found for name "+property);
 		if(!Number.class.isAssignableFrom(prop.getTypeClass()))

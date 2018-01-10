@@ -42,5 +42,5 @@ public class PropertyGenVillages extends Property<Boolean>{
 	public Class<?> getTargetClass() {
 		return Biome.class;
 	}
-	
+
 }

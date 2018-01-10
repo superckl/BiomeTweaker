@@ -18,6 +18,7 @@ import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
 import me.superckl.api.biometweaker.script.AutoRegister.RegisterExempt;
 import me.superckl.api.biometweaker.script.AutoRegisters;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
 import me.superckl.api.superscript.script.ParameterWrapper;
@@ -41,6 +42,11 @@ import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlant
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenVillages;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenWeight;
 import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenClusterBuilder;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenMineableBuilder;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenPropertyManager;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenSplotchBuilder;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
@@ -75,6 +81,7 @@ public class CommonProxy extends SidedProxy{
 
 	@Override
 	public void initProperties() {
+		//Biome properties
 		BiomePropertyManager.NAME = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BIOMENAME.getName(), String.class);
 		BiomePropertyManager.HEIGHT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.BASEHEIGHT.getName(), Float.class);
 		BiomePropertyManager.HEIGHT_VARIATION = new PropertyField<>(Biome.class, ObfNameHelper.Fields.HEIGHTVARIATION.getName(), Float.class);
@@ -126,6 +133,30 @@ public class CommonProxy extends SidedProxy{
 			BiomePropertyManager.SKY_COLOR = new PropertyField<>(Biome.class, "skyColor", Integer.class);
 
 		BiomePropertyManager.populatePropertyMap();
+
+		//Decoration properties
+		WorldGenPropertyManager.COUNT = new PropertyField<>(WorldGeneratorBuilder.class, "count", Integer.class);
+		WorldGenPropertyManager.MAIN_BLOCK = new PropertyField<>(WorldGeneratorBuilder.class, "mainBlock", IBlockState.class);
+
+		WorldGenPropertyManager.Mineable.SIZE = new PropertyField<>(WorldGenMineableBuilder.class, "size", Integer.class);
+		WorldGenPropertyManager.Mineable.MIN_Y = new PropertyField<>(WorldGenMineableBuilder.class, "minY", Integer.class);
+		WorldGenPropertyManager.Mineable.MAX_Y = new PropertyField<>(WorldGenMineableBuilder.class, "maxY", Integer.class);
+
+		WorldGenPropertyManager.Cluster.RADIUS = new PropertyField<>(WorldGenClusterBuilder.class, "radius", Integer.class);
+		WorldGenPropertyManager.Cluster.HEIGHT = new PropertyField<>(WorldGenClusterBuilder.class, "height", Integer.class);
+
+		WorldGenPropertyManager.Tree.MIN_HEIGHT = new PropertyField<>(WorldGenTreesBuilder.class, "minHeight", Integer.class);
+		WorldGenPropertyManager.Tree.HEIGHT_VARIATION = new PropertyField<>(WorldGenTreesBuilder.class, "heightVariation", Integer.class);
+		WorldGenPropertyManager.Tree.LEAF_HEIGHT = new PropertyField<>(WorldGenTreesBuilder.class, "leafHeight", Integer.class);
+		WorldGenPropertyManager.Tree.LEAF_BLOCK = new PropertyField<>(WorldGenTreesBuilder.class, "leafBlock", IBlockState.class);
+		WorldGenPropertyManager.Tree.VINE_BLOCK = new PropertyField<>(WorldGenTreesBuilder.class, "vineBlock", IBlockState.class);
+		WorldGenPropertyManager.Tree.GROW_VINES = new PropertyField<>(WorldGenTreesBuilder.class, "growVines", Boolean.class);
+		WorldGenPropertyManager.Tree.CHECK_CAN_GROW = new PropertyField<>(WorldGenTreesBuilder.class, "checkCanGrow", Boolean.class);
+
+		WorldGenPropertyManager.Splotch.SIZE = new PropertyField<>(WorldGenSplotchBuilder.class, "size", Integer.class);
+		WorldGenPropertyManager.Splotch.REQUIRES_BASE = new PropertyField<>(WorldGenSplotchBuilder.class, "requiresBase", Boolean.class);
+
+		WorldGenPropertyManager.populatePropertyMap();
 	}
 
 	@Override

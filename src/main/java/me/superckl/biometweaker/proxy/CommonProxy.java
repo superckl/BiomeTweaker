@@ -89,10 +89,9 @@ public class CommonProxy extends SidedProxy{
 		BiomePropertyManager.FILLER_BLOCK = new PropertyField<>(Biome.class, ObfNameHelper.Fields.FILLERBLOCK.getName(), IBlockState.class);
 		BiomePropertyManager.TEMPERATURE = new PropertyField<>(Biome.class, ObfNameHelper.Fields.TEMPERATURE.getName(), Float.class);
 		BiomePropertyManager.HUMIDITY = new PropertyField<>(Biome.class, ObfNameHelper.Fields.RAINFALL.getName(), Float.class);
-		BiomePropertyManager.WATER_TINT = new PropertyField<>(Biome.class, ObfNameHelper.Fields.WATERCOLOR.getName(), Integer.class);
+		BiomePropertyManager.WATER_COLOR = new PropertyField<>(Biome.class, ObfNameHelper.Fields.WATERCOLOR.getName(), Integer.class);
 		BiomePropertyManager.ENABLE_RAIN = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLERAIN.getName(), Boolean.class);
 		BiomePropertyManager.ENABLE_SNOW = new PropertyField<>(Biome.class, ObfNameHelper.Fields.ENABLESNOW.getName(), Boolean.class);
-		BiomePropertyManager.WATER_COLOR = new PropertyField<>(Biome.class, "waterColor", Integer.class);
 		BiomePropertyManager.GEN_WEIGHT = new PropertyGenWeight();
 		BiomePropertyManager.GEN_VILLAGES = new PropertyGenVillages();
 		BiomePropertyManager.GEN_STRONGHOLDS = new PropertyGenStrongholds();

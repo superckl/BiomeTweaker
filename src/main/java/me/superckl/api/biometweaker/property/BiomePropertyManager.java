@@ -21,7 +21,6 @@ public class BiomePropertyManager {
 	public static Property<IBlockState> OCEAN_FILLER_BLOCK;
 	public static Property<Float> TEMPERATURE;
 	public static Property<Float> HUMIDITY;
-	public static Property<Integer> WATER_TINT;
 	public static Property<Boolean> ENABLE_RAIN;
 	public static Property<Boolean> ENABLE_SNOW;
 	public static Property<Integer> GRASS_COLOR;

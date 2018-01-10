@@ -1,4 +1,4 @@
-package me.superckl.biometweaker.common.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -12,7 +12,6 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorWrapper;
-import me.superckl.biometweaker.common.world.gen.PlacementStage;
 
 public class DecorationManager {
 

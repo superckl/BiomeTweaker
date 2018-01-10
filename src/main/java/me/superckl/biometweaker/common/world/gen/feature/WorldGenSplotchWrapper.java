@@ -1,7 +1,8 @@
-package me.superckl.api.biometweaker.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen.feature;
 
 import java.util.Random;
 
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;

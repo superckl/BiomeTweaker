@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.biometweaker.script.AutoRegister.ParameterOverride;
-import me.superckl.api.biometweaker.world.gen.feature.WorldGenSplotchBuilder;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.BlockEquivalencePredicate;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenSplotchBuilder;
 import me.superckl.biometweaker.script.object.decoration.SplotchDecorationScriptObject;
 
 @AutoRegister(classes = SplotchDecorationScriptObject.class, name = "addBaseBlock")

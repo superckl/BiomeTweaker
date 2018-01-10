@@ -1,4 +1,4 @@
-package me.superckl.api.biometweaker.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen.feature;
 
 import java.util.Random;
 

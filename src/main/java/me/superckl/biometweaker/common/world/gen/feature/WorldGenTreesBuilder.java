@@ -1,8 +1,9 @@
-package me.superckl.api.biometweaker.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen.feature;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 

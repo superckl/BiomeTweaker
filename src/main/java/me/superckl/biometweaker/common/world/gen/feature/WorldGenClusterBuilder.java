@@ -1,8 +1,10 @@
-package me.superckl.api.biometweaker.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen.feature;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
+import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorWrapper;
 import net.minecraft.block.state.IBlockState;
 
 public class WorldGenClusterBuilder extends WorldGeneratorBuilder<WorldGeneratorWrapper<WorldGenCluster>>{

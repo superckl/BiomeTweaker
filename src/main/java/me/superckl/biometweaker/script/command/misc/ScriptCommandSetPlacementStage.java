@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.AutoRegister;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager;
+import me.superckl.biometweaker.common.world.gen.DecorationManager;
 import me.superckl.biometweaker.common.world.gen.PlacementStage;
-import me.superckl.biometweaker.common.world.gen.feature.DecorationManager;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.util.LogHelper;
 

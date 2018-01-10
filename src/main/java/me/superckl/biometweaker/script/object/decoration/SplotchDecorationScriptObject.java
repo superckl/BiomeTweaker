@@ -1,6 +1,6 @@
 package me.superckl.biometweaker.script.object.decoration;
 
-import me.superckl.api.biometweaker.world.gen.feature.WorldGenSplotchBuilder;
+import me.superckl.biometweaker.common.world.gen.feature.WorldGenSplotchBuilder;
 
 public class SplotchDecorationScriptObject extends DecorationScriptObject<WorldGenSplotchBuilder>{
 

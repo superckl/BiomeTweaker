@@ -8,7 +8,7 @@ import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.common.world.TweakWorldManager;
-import me.superckl.biometweaker.common.world.gen.feature.DecorationManager;
+import me.superckl.biometweaker.common.world.gen.DecorationManager;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.world.biome.Biome;

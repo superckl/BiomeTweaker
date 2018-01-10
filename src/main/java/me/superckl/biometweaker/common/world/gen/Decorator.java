@@ -1,10 +1,9 @@
-package me.superckl.biometweaker.common.world.gen.feature;
+package me.superckl.biometweaker.common.world.gen;
 
 import java.util.List;
 import java.util.Random;
 
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorWrapper;
-import me.superckl.biometweaker.common.world.gen.PlacementStage;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;

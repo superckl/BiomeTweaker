@@ -184,21 +184,24 @@ public class BiomeHelper {
 	}
 
 	public static void modifyBiomeDicType(final Biome gen, final BiomeDictionary.Type type, final boolean remove) throws Exception{
-		BiomeHelper.checkFields();
 		if(gen == null)
 			return;
+		if(!remove) {
+			BiomeDictionary.addTypes(gen, type);
+			return;
+		}
+		BiomeHelper.checkFields();
 		//Have to leave raw types since BiomeInfo is private
 		final Map<?, ?> map = WarningHelper.uncheckedCast(BiomeHelper.biomeInfoMap.get(null));
 		final Object biomeInfo = map.get(gen.getRegistryName());
+		if(biomeInfo == null)
+			return;
 		if(BiomeHelper.typeSet == null){
 			BiomeHelper.typeSet = biomeInfo.getClass().getDeclaredField("types");
 			BiomeHelper.typeSet.setAccessible(true);
 		}
 		final Set<Type> set = WarningHelper.uncheckedCast(BiomeHelper.typeSet.get(biomeInfo));
-		if(remove)
-			set.remove(type);
-		else if(!set.contains(type))
-			set.add(type);
+		set.remove(type);
 	}
 
 	public static void removeAllBiomeDicType(final Biome gen) throws Exception{

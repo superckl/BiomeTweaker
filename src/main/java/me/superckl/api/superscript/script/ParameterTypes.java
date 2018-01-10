@@ -9,7 +9,6 @@ import java.util.Map;
 
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.superscript.util.CollectionHelper;
@@ -20,10 +19,10 @@ public final class ParameterTypes {
 	private static final Map<Class<?>, ParameterType<?>> defaultTypes = new HashMap<>();
 	private static final Map<String, ParameterWrapper<?>> exceptionTypes = new HashMap<>();
 
-	public static final ParameterType<JsonElement> JSON_ELEMENT = new ParameterType<JsonElement>(JsonElement.class) {
+	public static final ParameterType<JsonPrimitive> JSON_PRIMITIVE = new ParameterType<JsonPrimitive>(JsonPrimitive.class) {
 
 		@Override
-		public JsonElement tryParse(final String parameter, final ScriptHandler handler) {
+		public JsonPrimitive tryParse(final String parameter, final ScriptHandler handler) {
 			return new JsonPrimitive(parameter);
 		}
 	};
@@ -172,7 +171,7 @@ public final class ParameterTypes {
 		ParameterTypes.registerDefaultType(int[].class, ParameterTypes.INTEGERS);
 		ParameterTypes.registerDefaultType(String.class, ParameterTypes.STRING);
 		ParameterTypes.registerDefaultType(String[].class, ParameterTypes.STRING_ARRAY);
-		ParameterTypes.registerDefaultType(JsonElement.class, ParameterTypes.JSON_ELEMENT);
+		ParameterTypes.registerDefaultType(JsonPrimitive.class, ParameterTypes.JSON_PRIMITIVE);
 
 		ParameterTypes.registerExceptionWrapper("nonNegInt", ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper());
 		ParameterTypes.registerExceptionWrapper("nonNegByte", ParameterTypes.NON_NEG_BYTE.getSimpleWrapper());

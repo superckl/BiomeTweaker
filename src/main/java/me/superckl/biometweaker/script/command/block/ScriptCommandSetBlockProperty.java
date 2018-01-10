@@ -1,6 +1,6 @@
 package me.superckl.biometweaker.script.command.block;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
@@ -17,7 +17,7 @@ public class ScriptCommandSetBlockProperty extends ScriptCommand{
 
 	private final BlockStateBuilder<?> builder;
 	private final String key;
-	private final JsonElement value;
+	private final JsonPrimitive value;
 
 	private ScriptHandler handler;
 

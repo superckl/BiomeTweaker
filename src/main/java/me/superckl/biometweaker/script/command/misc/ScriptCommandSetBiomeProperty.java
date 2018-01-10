@@ -2,7 +2,7 @@ package me.superckl.biometweaker.script.command.misc;
 
 import java.util.Iterator;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.event.BiomeTweakEvent;
@@ -25,7 +25,7 @@ public class ScriptCommandSetBiomeProperty extends ScriptCommand{
 
 	private final BiomePackage pack;
 	private final String key;
-	private final JsonElement value;
+	private final JsonPrimitive value;
 
 	private ScriptHandler handler;
 

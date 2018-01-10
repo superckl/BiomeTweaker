@@ -1,6 +1,6 @@
 package me.superckl.api.biometweaker.event;
 
-import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.superscript.script.command.ScriptCommand;
@@ -244,9 +244,9 @@ public abstract class BiomeTweakEvent extends Event{
 	public static class SetProperty extends BiomeTweakEvent{
 
 		private final String property;
-		private final JsonElement value;
+		private final JsonPrimitive value;
 
-		public SetProperty(final ScriptCommand command, final Biome biome, final String property, final JsonElement value) {
+		public SetProperty(final ScriptCommand command, final Biome biome, final String property, final JsonPrimitive value) {
 			super(command, biome);
 			this.property = property;
 			this.value = value;
@@ -256,7 +256,7 @@ public abstract class BiomeTweakEvent extends Event{
 			return this.property;
 		}
 
-		public JsonElement getValue() {
+		public JsonPrimitive getValue() {
 			return this.value;
 		}
 

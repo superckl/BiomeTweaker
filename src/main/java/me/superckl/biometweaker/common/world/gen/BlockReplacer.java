@@ -58,21 +58,18 @@ public class BlockReplacer {
 							toUse = previousEntry.findEntriesForMeta(meta).get(0);
 							if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints()))
 								toUse = null;
-							//LogHelper.info("found prev Entry: "+toUse == null);
 						}
 						if(toUse == null){
 							final BlockReplacementEntry entry = list.findEntry(state);
 							if(entry != null){
-								//LogHelper.info("found reps");
 								final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
 								if(entries == null || entries.isEmpty())
 									continue;
 								toUse = WeightedRandom.getRandomItem(rand, entries);
 								if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
-									//LogHelper.info("bad boundaries");
 									final List<WeightedBlockEntry> copy = new ArrayList<>(entries);
 									copy.remove(toUse);
-									boolean isWholeChunk = isWholeChunk(pos, toUse.getConstraints(), world.getHeight());
+									boolean isWholeChunk = BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight());
 									toUse = null;
 									while(!copy.isEmpty()) {
 										toUse = WeightedRandom.getRandomItem(rand, copy);
@@ -86,17 +83,14 @@ public class BlockReplacer {
 									}
 									if(toUse == null && isWholeChunk)
 										noReps.add(state);
-								}/*else
-									LogHelper.info("good boundaries");*/
+								}
 							}
 						}
-						if(toUse != null) {
-							//LogHelper.info("repping");
+						if(toUse != null)
 							if(primer != null)
 								primer.setBlockState(x, y, z, toUse.getConstraints().getBlock());
 							else
 								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getConstraints().getBlock());
-						}
 					}
 				}
 			final TIntIterator it = previousReplacements.keySet().iterator();

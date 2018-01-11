@@ -17,7 +17,7 @@ public class BasicBlockStateBuilder extends BlockStateBuilder<IBlockState>{
 		if(block == null)
 			throw new IllegalArgumentException("No block found for resource location "+this.rLoc);
 		final BlockStateContainer container = block.getBlockState();
-		IBlockState state = container.getBaseState();
+		IBlockState state = block.getDefaultState();
 		final Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();
 		while(it.hasNext()){
 			final Entry<String, String> entry = it.next();

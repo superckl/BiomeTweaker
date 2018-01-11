@@ -21,6 +21,8 @@ import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.common.world.gen.ReplacementConstraints;
+import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 
@@ -134,11 +136,29 @@ public class BTParameterTypes {
 		}
 	};
 
+	public static final ParameterType<ReplacementConstraints> REPLACEMENT_CONSTRAINT = new ParameterType<ReplacementConstraints>(ReplacementConstraints.class) {
+
+		@Override
+		public ReplacementConstraints tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			final BlockStateBuilder<?> builder = BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(parameter, handler);
+			if(builder != null) {
+				final ReplacementConstraints constraints = new ReplacementConstraints();
+				constraints.setBlock(builder.build());
+				return constraints;
+			}
+			final ScriptObject obj = handler.getObjects().get(parameter);
+			if(obj != null && obj instanceof BlockReplacementScriptObject)
+				return ((BlockReplacementScriptObject) obj).getConstraints();
+			return null;
+		}
+	};
+
 	static {
 		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
 		ParameterTypes.registerDefaultType(WorldGeneratorBuilder.class, BTParameterTypes.WORLD_GENERATOR_BUILDER);
 		ParameterTypes.registerDefaultType(EnumCreatureType.class, BTParameterTypes.CREATURE_TYPE);
 		ParameterTypes.registerDefaultType(BiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
+		ParameterTypes.registerDefaultType(ReplacementConstraints.class, BTParameterTypes.REPLACEMENT_CONSTRAINT);
 
 		ParameterTypes.registerExceptionWrapper("treeGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());
 		ParameterTypes.registerExceptionWrapper("oreGenBuilder", BTParameterTypes.WORLD_GENERATOR_BUILDER.getSimpleWrapper());

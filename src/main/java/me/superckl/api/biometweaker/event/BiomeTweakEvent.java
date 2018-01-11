@@ -4,6 +4,7 @@ import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.superscript.script.command.ScriptCommand;
+import me.superckl.biometweaker.common.world.gen.ReplacementConstraints;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnListEntry;
@@ -305,13 +306,13 @@ public abstract class BiomeTweakEvent extends Event{
 
 		private final int weight;
 		private final BlockStateBuilder<?> toReplace;
-		private final BlockStateBuilder<?> replaceWith;
+		private final ReplacementConstraints replaceWith;
 
-		public RegisterGenBlockReplacement(final ScriptCommand command, final int weight, final Biome biome, final BlockStateBuilder<?> toReplace, final BlockStateBuilder<?> replaceWith) {
+		public RegisterGenBlockReplacement(final ScriptCommand command, final int weight, final Biome biome, final BlockStateBuilder<?> toReplace, final ReplacementConstraints replaceWith2) {
 			super(command, biome);
 			this.weight = weight;
 			this.toReplace = toReplace;
-			this.replaceWith = replaceWith;
+			this.replaceWith = replaceWith2;
 		}
 
 		public int getWeight() {
@@ -322,7 +323,7 @@ public abstract class BiomeTweakEvent extends Event{
 			return this.toReplace;
 		}
 
-		public BlockStateBuilder<?> getReplaceWith() {
+		public ReplacementConstraints getReplaceWith() {
 			return this.replaceWith;
 		}
 

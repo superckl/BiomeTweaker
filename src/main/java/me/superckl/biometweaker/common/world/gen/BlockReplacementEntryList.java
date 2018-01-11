@@ -34,7 +34,7 @@ public class BlockReplacementEntryList {
 		return this.replacements.containsKey(block);
 	}
 
-	public void registerReplacement(final int weight, final IBlockState toReplace, final IBlockState replacement){
+	public void registerReplacement(final int weight, final IBlockState toReplace, final ReplacementConstraints replacement){
 		if(!this.replacements.containsKey(toReplace.getBlock())){
 			final BlockReplacementEntry entry = new BlockReplacementEntry(toReplace.getBlock());
 			entry.registerReplacement(weight, toReplace, replacement);

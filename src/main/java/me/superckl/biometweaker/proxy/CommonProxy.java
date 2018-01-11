@@ -42,6 +42,8 @@ import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlant
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenVillages;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenWeight;
 import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
+import me.superckl.biometweaker.common.world.gen.ReplacementConstraints;
+import me.superckl.biometweaker.common.world.gen.ReplacementPropertyManager;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenClusterBuilder;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenMineableBuilder;
 import me.superckl.biometweaker.common.world.gen.feature.WorldGenPropertyManager;
@@ -50,6 +52,7 @@ import me.superckl.biometweaker.common.world.gen.feature.WorldGenTreesBuilder;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
+import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
 import me.superckl.biometweaker.script.object.decoration.ClusterDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.OreDecorationScriptObject;
 import me.superckl.biometweaker.script.object.decoration.SplotchDecorationScriptObject;
@@ -156,6 +159,21 @@ public class CommonProxy extends SidedProxy{
 		WorldGenPropertyManager.Splotch.REQUIRES_BASE = new PropertyField<>(WorldGenSplotchBuilder.class, "requiresBase", Boolean.class);
 
 		WorldGenPropertyManager.populatePropertyMap();
+
+		//Replacement Properties
+		ReplacementPropertyManager.BLOCK = new PropertyField<>(ReplacementConstraints.class, "block", IBlockState.class);
+		ReplacementPropertyManager.MIN_Y = new PropertyField<>(ReplacementConstraints.class, "minY", Integer.class);
+		ReplacementPropertyManager.MAX_Y = new PropertyField<>(ReplacementConstraints.class, "maxY", Integer.class);
+		ReplacementPropertyManager.MIN_X = new PropertyField<>(ReplacementConstraints.class, "minX", Integer.class);
+		ReplacementPropertyManager.MAX_X = new PropertyField<>(ReplacementConstraints.class, "maxX", Integer.class);
+		ReplacementPropertyManager.MIN_Z = new PropertyField<>(ReplacementConstraints.class, "minZ", Integer.class);
+		ReplacementPropertyManager.MAX_Z = new PropertyField<>(ReplacementConstraints.class, "maxZ", Integer.class);
+		ReplacementPropertyManager.MIN_CHUNK_X = new PropertyField<>(ReplacementConstraints.class, "minChunkX", Integer.class);
+		ReplacementPropertyManager.MAX_CHUNK_X = new PropertyField<>(ReplacementConstraints.class, "maxChunkX", Integer.class);
+		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "minChunkZ", Integer.class);
+		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "maxChunkZ", Integer.class);
+
+		ReplacementPropertyManager.populatePropertyMap();
 	}
 
 	@Override
@@ -274,6 +292,10 @@ public class CommonProxy extends SidedProxy{
 			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), BasicBlockStateScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forBlock", listing);
+
+			listing = new ConstructorListing<>();
+			listing.addEntry(new ArrayList<>(), BlockReplacementScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("newBlockReplacement", listing);
 
 		} catch (final Exception e2) {
 			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");

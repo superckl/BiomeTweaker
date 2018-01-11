@@ -26,7 +26,7 @@ public class BlockReplacementEntry {
 		return this.replacements.get(meta);
 	}
 
-	public void registerReplacement(final int weight, final IBlockState toReplace, final IBlockState replacement){
+	public void registerReplacement(final int weight, final IBlockState toReplace, final ReplacementConstraints replacement){
 		final int meta = toReplace.getBlock().getMetaFromState(toReplace);
 		if(!this.replacements.containsKey(meta)){
 			this.replacements.put(meta, Lists.newArrayList(new WeightedBlockEntry(weight, replacement)));

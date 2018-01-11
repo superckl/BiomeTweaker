@@ -78,7 +78,7 @@ public class BlockReplacementManager {
 		return false;
 	}
 
-	public void registerBlockReplacement(final int biome, final int weight, final IBlockState toReplace, final IBlockState replacement){
+	public void registerBlockReplacement(final int biome, final int weight, final IBlockState toReplace, final ReplacementConstraints replacement){
 		if(!this.blockReplacements.containsKey(BlockReplacementManager.currentStage))
 			this.blockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!this.blockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
@@ -86,7 +86,7 @@ public class BlockReplacementManager {
 		this.blockReplacements.get(BlockReplacementManager.currentStage).get(biome).registerReplacement(weight, toReplace, replacement);
 	}
 
-	public static void registerGlobalBlockReplacement(final int biome, final int weight,  final IBlockState toReplace, final IBlockState replacement){
+	public static void registerGlobalBlockReplacement(final int biome, final int weight,  final IBlockState toReplace, final ReplacementConstraints replacement){
 		if(!BlockReplacementManager.globalBlockReplacements.containsKey(BlockReplacementManager.currentStage))
 			BlockReplacementManager.globalBlockReplacements.put(BlockReplacementManager.currentStage, new TIntObjectHashMap<BlockReplacementEntryList>());
 		if(!BlockReplacementManager.globalBlockReplacements.get(BlockReplacementManager.currentStage).containsKey(biome))
@@ -128,11 +128,11 @@ public class BlockReplacementManager {
 	@Getter
 	public static class WeightedBlockEntry extends WeightedRandom.Item{
 
-		private final IBlockState blockState;
+		private final ReplacementConstraints constraints;
 
-		public WeightedBlockEntry(final int weight, final IBlockState blockState) {
+		public WeightedBlockEntry(final int weight, final ReplacementConstraints replacement) {
 			super(weight);
-			this.blockState = blockState;
+			this.constraints = replacement;
 		}
 
 	}

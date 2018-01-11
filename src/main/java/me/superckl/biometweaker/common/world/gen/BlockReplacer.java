@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.common.world.gen;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -53,25 +54,49 @@ public class BlockReplacer {
 						WeightedBlockEntry toUse = null;
 						final BlockReplacementEntry previousEntry = previousReplacementsBiome.findEntry(state);
 						final int meta = block.getMetaFromState(state);
-						if(previousEntry != null)
+						if(previousEntry != null) {
 							toUse = previousEntry.findEntriesForMeta(meta).get(0);
+							if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints()))
+								toUse = null;
+							//LogHelper.info("found prev Entry: "+toUse == null);
+						}
 						if(toUse == null){
 							final BlockReplacementEntry entry = list.findEntry(state);
 							if(entry != null){
+								//LogHelper.info("found reps");
 								final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
 								if(entries == null || entries.isEmpty())
 									continue;
 								toUse = WeightedRandom.getRandomItem(rand, entries);
-								previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getBlockState());
+								if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
+									//LogHelper.info("bad boundaries");
+									final List<WeightedBlockEntry> copy = new ArrayList<>(entries);
+									copy.remove(toUse);
+									boolean isWholeChunk = isWholeChunk(pos, toUse.getConstraints(), world.getHeight());
+									toUse = null;
+									while(!copy.isEmpty()) {
+										toUse = WeightedRandom.getRandomItem(rand, copy);
+										if(BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
+											previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
+											break;
+										}
+										if(!BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight()))
+											isWholeChunk = false;
+										toUse = null;
+									}
+									if(toUse == null && isWholeChunk)
+										noReps.add(state);
+								}/*else
+									LogHelper.info("good boundaries");*/
 							}
 						}
-						if(toUse != null){
+						if(toUse != null) {
+							//LogHelper.info("repping");
 							if(primer != null)
-								primer.setBlockState(x, y, z, toUse.getBlockState());
+								primer.setBlockState(x, y, z, toUse.getConstraints().getBlock());
 							else
-								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getBlockState());
-						}else
-							noReps.add(state);
+								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getConstraints().getBlock());
+						}
 					}
 				}
 			final TIntIterator it = previousReplacements.keySet().iterator();
@@ -83,5 +108,21 @@ public class BlockReplacer {
 			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
 		}
+	}
+
+	private static boolean verifyBoundaries(final ChunkPos pos, final int x, final int y, final int z, final ReplacementConstraints constraints) {
+		return !(y < constraints.getMinY() || y > constraints.getMaxY() ||
+				x < constraints.getMinChunkX() || x > constraints.getMaxChunkX() ||
+				z < constraints.getMinChunkZ() || z > constraints.getMaxChunkZ() ||
+				(pos.x << 4)+x < constraints.getMinX() || (pos.x << 4)+x > constraints.getMaxX() ||
+				(pos.z << 4)+z < constraints.getMinZ() || (pos.z << 4)+z > constraints.getMaxZ());
+	}
+
+	private static boolean isWholeChunk(final ChunkPos pos, final ReplacementConstraints constraints, final int worldHeight) {
+		return !(constraints.getMinY() > 0 || constraints.getMaxY() < worldHeight ||
+				constraints.getMinChunkX() > 0 || constraints.getMaxChunkX() < 15 ||
+				constraints.getMinChunkZ() > 0 || constraints.getMaxChunkZ() < 15 ||
+				constraints.getMinX() > (pos.x << 4) || constraints.getMaxX() < ((pos.x << 4)+16) ||
+				constraints.getMinZ() > (pos.z << 4) || constraints.getMaxZ() < ((pos.z << 4)+16));
 	}
 }

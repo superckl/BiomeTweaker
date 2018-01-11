@@ -24,7 +24,7 @@ public class PropertyHelper {
 			}
 			final ParameterType<?> pType = ParameterTypes.getDefaultType(type);
 			if(pType != null)
-				PropertyHelper.typeSafeSet(property, obj, pType.tryParse(pType == ParameterTypes.STRING ? value.getAsString():ParameterTypes.STRING.tryParse(value.getAsString(), handler), handler));
+				PropertyHelper.typeSafeSet(property, obj, pType.tryParse(value.getAsString(), handler));
 		} catch (final Exception e) {
 			throw e;
 		}

@@ -55,7 +55,7 @@ public class ScriptParser {
 		final List<String> array = new ArrayList<>();
 		try(final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)))){
 			String line;
-			while((line = r.readLine()) != null)
+			while((line = r.readLine().trim()) != null)
 				if(!line.isEmpty() && !line.startsWith("#"))
 					array.add(line);
 		}

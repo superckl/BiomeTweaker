@@ -27,8 +27,9 @@ public class WorldGenCluster extends WorldGenerator{
 	@Override
 	public boolean generate(final World world, final Random rand, final BlockPos position){
 		for (int i = 0; i < 64; ++i){
-			final BlockPos blockpos = position.add(rand.nextInt(this.radius) - rand.nextInt(this.radius),
-					rand.nextInt(Math.round(this.height/2F)) - rand.nextInt(Math.round(this.height/2F)), rand.nextInt(this.radius) - rand.nextInt(this.radius));
+			final BlockPos blockpos = position.add(this.radius == 0 ? 0:(rand.nextInt(this.radius) - rand.nextInt(this.radius)),
+					this.height == 0 ? 0:(rand.nextInt(Math.round(this.height/2F)) - rand.nextInt(Math.round(this.height/2F))),
+							this.radius == 0 ? 0:(rand.nextInt(this.radius) - rand.nextInt(this.radius)));
 			boolean validSoil = false;
 			if(this.soilPredicate == null && !world.isAirBlock(blockpos.down()))
 				validSoil = true;

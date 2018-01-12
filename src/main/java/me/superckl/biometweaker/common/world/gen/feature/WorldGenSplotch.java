@@ -27,7 +27,20 @@ public class WorldGenSplotch extends WorldGenerator{
 		if (this.requiresBase && !this.basePredicate.apply(world.getBlockState(pos)))
 			return false;
 		else {
-			final int i = rand.nextInt(this.size - 2) + 2;
+			int i;
+			switch(this.size) {
+			case 0:
+				 i = 0;
+				 break;
+			case 1:
+				i = 1;
+				break;
+			case 2:
+				i = rand.nextInt(1) + 1;
+				break;
+			default:
+				i = rand.nextInt(this.size - 2) + 2;
+			}
 			for (int k = pos.getX() - i; k <= pos.getX() + i; ++k)
 				for (int l = pos.getZ() - i; l <= pos.getZ() + i; ++l) {
 					final int i1 = k - pos.getX();

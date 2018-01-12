@@ -49,7 +49,7 @@ public class WorldGenGenericTree extends WorldGenAbstractTree{
 
 	@Override
 	public boolean generate(final World world, final Random rand, final BlockPos position) {
-		final int height = rand.nextInt(this.heightVariation) + this.minHeight;
+		final int height = (this.heightVariation == 0 ? 0:rand.nextInt(this.heightVariation)) + this.minHeight;
 		boolean shouldGrow = true;
 
 		if (position.getY() >= 1 && position.getY() + height + 1 <= world.getHeight()){

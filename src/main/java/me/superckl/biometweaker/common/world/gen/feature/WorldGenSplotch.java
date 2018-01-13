@@ -36,7 +36,7 @@ public class WorldGenSplotch extends WorldGenerator{
 				i = 1;
 				break;
 			case 2:
-				i = rand.nextInt(1) + 1;
+				i = rand.nextInt(2) + 1;
 				break;
 			default:
 				i = rand.nextInt(this.size - 2) + 2;

@@ -27,6 +27,7 @@ public class BiomePropertyManager {
 	public static Property<Integer> FOLIAGE_COLOR;
 	public static Property<Integer> WATER_COLOR;
 	public static Property<Integer> SKY_COLOR;
+	public static Property<Integer> FOG_COLOR;
 	public static Property<IBlockState[]> ACTUAL_FILLER_BLOCKS;
 	public static Property<Integer> GEN_WEIGHT;
 	public static Property<Boolean> GEN_VILLAGES;

@@ -133,6 +133,8 @@ public class CommonProxy extends SidedProxy{
 			BiomePropertyManager.FOLIAGE_COLOR = new PropertyField<>(Biome.class, "foliageColor", Integer.class);
 		if(BiomeTweaker.getInstance().isTweakEnabled("skyColor"))
 			BiomePropertyManager.SKY_COLOR = new PropertyField<>(Biome.class, "skyColor", Integer.class);
+		if(BiomeTweaker.getInstance().isTweakEnabled("fogColor"))
+			BiomePropertyManager.FOG_COLOR = new PropertyField<>(Biome.class, "fogColor", Integer.class);
 
 		BiomePropertyManager.populatePropertyMap();
 

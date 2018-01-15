@@ -43,22 +43,23 @@ public class ScriptParser {
 
 	public static void parseScriptFile(final File file){
 		try{
-			final List<String> scriptLines = ScriptParser.parseScriptLines(file);
+			final List<ScriptLine> scriptLines = ScriptParser.parseScriptLines(file);
 			new ScriptHandler(scriptLines).parse();
 		}catch(final Exception e){
-			APIInfo.log.error("Failed to parse a script file: "+file.getPath());
-			e.printStackTrace();
+			APIInfo.log.error("Failed to parse a script file: "+file.getPath()+". Reason: "+e.getMessage());
+			APIInfo.log.debug("Full stacktrace of error provided below for bug reports.", e);
 		}
 	}
 
-	public static List<String> parseScriptLines(final File file) throws IOException{
-		final List<String> array = new ArrayList<>();
+	public static List<ScriptLine> parseScriptLines(final File file) throws IOException{
+		final List<ScriptLine> array = new ArrayList<>();
 		try(final BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file)))){
 			String line;
+			int lineNum = 1;
 			while((line = r.readLine()) != null) {
 				line.trim();
 				if(!line.isEmpty() && !line.startsWith("#"))
-					array.add(line);
+					array.add(new ScriptLine(line, new ScriptContext(file.getName(), lineNum++)));
 			}
 		}
 		return array;
@@ -72,9 +73,9 @@ public class ScriptParser {
 		return arg.matches("[0-9]+");
 	}
 
-	public static String getCommandCalled(final String command){
+	public static String getCommandCalled(final String command) throws IllegalArgumentException{
 		if(!command.endsWith(")") || !command.contains("("))
-			return "";
+			throw new IllegalArgumentException("Improper argument array");
 		return command.substring(0, command.indexOf("("));
 	}
 
@@ -88,10 +89,10 @@ public class ScriptParser {
 		return split;
 	}
 
-	public static Map<String, Object> parseAssignment(final String script, final ScriptHandler handler) throws Exception{
+	public static Map<String, Object> parseAssignment(final String script, final ScriptContext context, final ScriptHandler handler) throws Exception{
 		final String[] split = script.split("=");
 		if(split.length != 2){
-			APIInfo.log.error("Failed to parse object assignment: "+script);
+			APIInfo.log.error("Failed to parse object assignment: "+script+" @ "+context+". Reason: Incorrect '=' placement.");
 			return null;
 		}
 		final String var = split[0].trim();
@@ -100,7 +101,13 @@ public class ScriptParser {
 			final String shortcut = ParameterTypes.STRING.tryParse(assign, handler);
 			return CollectionHelper.linkedMapWithEntry(var, (Object) shortcut);
 		}else{
-			final String called = ScriptParser.getCommandCalled(assign);
+			String called;
+			try {
+				called = ScriptParser.getCommandCalled(assign);
+			} catch (final IllegalArgumentException e) {
+				APIInfo.log.error("Failed to parse object assignment: "+script+" @ "+context+". Reason: "+e.getMessage());
+				return null;
+			}
 			if(ScriptParser.validObjects.containsKey(called)){
 				final ConstructorListing<ScriptObject> listing = ScriptParser.validObjects.get(called);
 				String[] arguments = CollectionHelper.trimAll(ScriptParser.parseArguments(assign));
@@ -124,7 +131,7 @@ public class ScriptParser {
 					return CollectionHelper.linkedMapWithEntry(var, (Object) obj);
 				}
 			}
-			APIInfo.log.error("Failed to find meaning in object assignment "+script+". It will be ignored.");
+			APIInfo.log.error("Failed to find meaning in object assignment "+script+" @ "+context+". Reason: No matching objects or registrations found.");
 		}
 		return null;
 	}

@@ -6,7 +6,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import lombok.Getter;
 import me.superckl.api.superscript.APIInfo;
+import me.superckl.api.superscript.script.ScriptContext;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.script.command.ScriptCommand;
@@ -19,6 +21,9 @@ public abstract class ScriptObject {
 
 	protected final Map<String, ScriptCommandListing> validCommands = new LinkedHashMap<>();
 
+	@Getter
+	private ScriptContext context;
+
 	public ScriptObject() {
 		Class<?> clazz = this.getClass();
 		while(ScriptObject.class.isAssignableFrom(clazz)){
@@ -27,10 +32,16 @@ public abstract class ScriptObject {
 		}
 	}
 
-	public void handleCall(final String call, final ScriptHandler handler) throws Exception{
-		final String command = ScriptParser.getCommandCalled(call);
+	public void handleCall(final String call, final ScriptContext context, final ScriptHandler handler) throws Exception{
+		String command;
+		try {
+			command = ScriptParser.getCommandCalled(call);
+		} catch (final IllegalArgumentException e) {
+			APIInfo.log.error("Failed to parse command call: "+call+" @ "+context+". Reason: "+e.getMessage());
+			return;
+		}
 		if(!this.validCommands.containsKey(command)){
-			APIInfo.log.error("Failed to find meaning in command "+call+". It will be ignored.");
+			APIInfo.log.error("Failed to find meaning in command "+call+" @ "+context+". Reason: No commands found with that name.");
 			return;
 		}
 		final ScriptCommandListing listing = this.validCommands.get(command);
@@ -40,6 +51,7 @@ public abstract class ScriptObject {
 		if(pair != null){
 			pair = this.modifyConstructorPair(pair, args, handler);
 			final ScriptCommand sCommand = pair.getKey().newInstance(pair.getValue());
+			sCommand.setContext(context);
 			sCommand.setScriptHandler(handler);
 			if(listing.isPerformInst())
 				sCommand.perform();
@@ -47,7 +59,7 @@ public abstract class ScriptObject {
 				this.addCommand(sCommand);
 			return;
 		}
-		APIInfo.log.error("Failed to parse arguments for command "+call+". It will be ignored.");
+		APIInfo.log.error("Failed to parse arguments for command "+call+" @ "+context+". Reason: No constructors found with matching arguments.");
 	}
 
 	/**
@@ -71,6 +83,12 @@ public abstract class ScriptObject {
 
 	public String[] modifyArguments(final String[] args, final ScriptHandler handler){
 		return args;
+	}
+
+	public void setContext(final ScriptContext context) {
+		if(this.context != null)
+			throw new IllegalStateException("Context has already been set!");
+		this.context = context;
 	}
 
 }

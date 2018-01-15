@@ -30,8 +30,8 @@ public class WorldGenSplotch extends WorldGenerator{
 			int i;
 			switch(this.size) {
 			case 0:
-				 i = 0;
-				 break;
+				i = 0;
+				break;
 			case 1:
 				i = 1;
 				break;

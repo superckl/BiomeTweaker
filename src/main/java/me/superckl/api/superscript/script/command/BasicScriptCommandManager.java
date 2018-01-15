@@ -32,8 +32,8 @@ public class BasicScriptCommandManager extends ScriptCommandManager{
 			try {
 				command.perform();
 			} catch (final Exception e) {
-				APIInfo.log.error("Failed to execute script command: "+command);
-				e.printStackTrace();
+				APIInfo.log.error("Failed to execute script command: "+command+". Reason: "+e.getMessage());
+				APIInfo.log.debug("Full stacktrace of error provided below for bug reports.", e);
 			}
 		return command.performInst() ? true:this.commands.get(stage).add(command);
 	}
@@ -49,8 +49,8 @@ public class BasicScriptCommandManager extends ScriptCommandManager{
 			try{
 				command.perform();
 			}catch(final Exception e){
-				APIInfo.log.error("Failed to execute script command: "+command);
-				e.printStackTrace();
+				APIInfo.log.error("Failed to execute script command: "+command+". Reason: "+e.getMessage());
+				APIInfo.log.debug("Full stacktrace of error provided below for bug reports.", e);
 			}
 	}
 

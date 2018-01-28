@@ -37,7 +37,7 @@ public class WorldGenCluster extends WorldGenerator{
 				final IBlockState down = world.getBlockState(blockpos.down());
 				validSoil = this.soilPredicate.apply(down);
 			}
-			if (validSoil && world.isAirBlock(blockpos) && this.block.getBlock().canPlaceBlockAt(world, blockpos))
+			if (validSoil && this.block.getBlock().canPlaceBlockAt(world, blockpos))
 				world.setBlockState(blockpos, this.block, 2);
 		}
 

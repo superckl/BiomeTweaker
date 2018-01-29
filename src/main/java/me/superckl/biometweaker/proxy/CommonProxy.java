@@ -145,8 +145,8 @@ public class CommonProxy extends SidedProxy{
 		WorldGenPropertyManager.MAIN_BLOCK = new PropertyField<>(WorldGeneratorBuilder.class, "mainBlock", IBlockState.class);
 
 		WorldGenPropertyManager.Mineable.SIZE = new PropertyField<>(WorldGenMineableBuilder.class, "size", Integer.class);
-		WorldGenPropertyManager.Mineable.MIN_Y = new PropertyField<>(WorldGenMineableBuilder.class, "minY", Integer.class);
-		WorldGenPropertyManager.Mineable.MAX_Y = new PropertyField<>(WorldGenMineableBuilder.class, "maxY", Integer.class);
+		WorldGenPropertyManager.Mineable.MIN_Y = new PropertyField<>(WorldGenMineableBuilder.class, "minHeight", Integer.class);
+		WorldGenPropertyManager.Mineable.MAX_Y = new PropertyField<>(WorldGenMineableBuilder.class, "maxHeight", Integer.class);
 
 		WorldGenPropertyManager.Cluster.RADIUS = new PropertyField<>(WorldGenClusterBuilder.class, "radius", Integer.class);
 		WorldGenPropertyManager.Cluster.HEIGHT = new PropertyField<>(WorldGenClusterBuilder.class, "height", Integer.class);

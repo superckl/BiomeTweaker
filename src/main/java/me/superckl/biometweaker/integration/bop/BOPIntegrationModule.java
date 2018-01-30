@@ -18,6 +18,7 @@ import biomesoplenty.api.generation.GeneratorStage;
 import biomesoplenty.api.generation.IGenerationManager;
 import biomesoplenty.api.generation.IGenerator;
 import biomesoplenty.common.biome.vanilla.ExtendedBiomeWrapper;
+import biomesoplenty.common.init.ModBiomes;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.superscript.script.ParameterTypes;
@@ -26,11 +27,13 @@ import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.integration.IntegrationModule;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddBOPWorldType;
+import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddIslandBiomeBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddSubBiomeBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandAddToGenerationBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandRemoveBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandRemoveBOPWorldType;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandRemoveGeneratorBOP;
+import me.superckl.biometweaker.integration.bop.script.ScriptCommandRemoveIslandBiomeBOP;
 import me.superckl.biometweaker.integration.bop.script.ScriptCommandRemoveSubBiomeBOP;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
@@ -84,6 +87,18 @@ public class BOPIntegrationModule extends IntegrationModule{
 					ScriptCommandRemoveSubBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, BiomePackage.class));
 			ScriptCommandRegistry.INSTANCE.registerListing("removeSubBiomeBOP", listing, TweakerScriptObject.class);
 			ScriptCommandRegistry.INSTANCE.registerListing("removeSubBiomeBOP", listing, BiomesScriptObject.class);
+
+			listing = new ScriptCommandListing();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper(), ParameterTypes.NON_NEG_INTEGER.getSimpleWrapper()),
+					ScriptCommandAddIslandBiomeBOP.class.getDeclaredConstructor(BiomePackage.class, Integer.TYPE));
+			ScriptCommandRegistry.INSTANCE.registerListing("addToIslandBOP", listing, TweakerScriptObject.class);
+			ScriptCommandRegistry.INSTANCE.registerListing("addToIslandBOP", listing, BiomesScriptObject.class);
+
+			listing = new ScriptCommandListing();
+			listing.addEntry(Lists.newArrayList(BTParameterTypes.BASIC_BIOMES_PACKAGE.getSimpleWrapper()),
+					ScriptCommandRemoveIslandBiomeBOP.class.getDeclaredConstructor(BiomePackage.class));
+			ScriptCommandRegistry.INSTANCE.registerListing("removeIslandBOP", listing, TweakerScriptObject.class);
+			ScriptCommandRegistry.INSTANCE.registerListing("removeIslandBOP", listing, BiomesScriptObject.class);
 
 		} catch (final Exception e) {
 			LogHelper.error("Failed to register BOP script commands! Some commands may not work properly!");
@@ -150,6 +165,10 @@ public class BOPIntegrationModule extends IntegrationModule{
 					weights.add(climate.name(), subArray);
 			}
 			obj.add("BOP Climate Weights", weights);
+			if(ModBiomes.islandBiomesMap.containsKey(Biome.getIdForBiome(biome)))
+				obj.add("BOP Island Weight", new JsonPrimitive(ModBiomes.islandBiomesMap.get(Biome.getIdForBiome(biome))));
+			else
+				obj.add("BOP Island Weight", new JsonPrimitive(0));
 		} catch (final Exception e) {
 			LogHelper.error("Failed to retrieve all BOP biome info!");
 			e.printStackTrace();

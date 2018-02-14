@@ -37,3 +37,7 @@ BiomeTweaker 1.11_Client.launch
 BiomeTweaker 1.11_Server.launch
 BiomeTweaker 1.12_Client.launch
 BiomeTweaker 1.12_Server.launch
+*.iml
+*.ipr
+*.iws
+.idea/*

@@ -13,9 +13,9 @@ public class BasicBlockStateBuilder extends BlockStateBuilder<IBlockState>{
 
 	@Override
 	public IBlockState build() {
-		final Block block = Block.REGISTRY.getObject(this.rLoc);
-		if(block == null)
+		if(!Block.REGISTRY.containsKey(this.rLoc))
 			throw new IllegalArgumentException("No block found for resource location "+this.rLoc);
+		final Block block = Block.REGISTRY.getObject(this.rLoc);
 		final BlockStateContainer container = block.getBlockState();
 		IBlockState state = block.getDefaultState();
 		final Iterator<Entry<String, String>> it = this.properties.entrySet().iterator();

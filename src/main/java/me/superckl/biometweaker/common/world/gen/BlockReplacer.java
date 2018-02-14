@@ -88,9 +88,9 @@ public class BlockReplacer {
 						}
 						if(toUse != null)
 							if(primer != null)
-								primer.setBlockState(x, y, z, toUse.getConstraints().getBlock());
+								primer.setBlockState(x, y, z, toUse.getConstraints().getState());
 							else
-								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getConstraints().getBlock());
+								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getConstraints().getState());
 					}
 				}
 			final TIntIterator it = previousReplacements.keySet().iterator();

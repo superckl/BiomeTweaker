@@ -94,7 +94,7 @@ public class BiomeTweaker{
 
 	@EventHandler
 	public void onPreInit(final FMLPreInitializationEvent e){
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 6, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker PreInitialization", 5, true);
 
 		LogHelper.setLogger(e.getModLog());
 
@@ -129,9 +129,6 @@ public class BiomeTweaker{
 
 		bar.step("Registering handlers");
 		BiomeTweaker.proxy.registerHandlers();
-
-		bar.step("Parsing scripts");
-		this.parseScripts();
 
 		bar.step("Applying scripts");
 		this.commandManager.applyCommandsFor(ApplicationStage.PRE_INIT);
@@ -184,7 +181,10 @@ public class BiomeTweaker{
 
 	@EventHandler
 	public void onInit(final FMLInitializationEvent e) throws InterruptedException{
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 2, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker Initialization", 3, true);
+
+		bar.step("Parsing scripts");
+		this.parseScripts();
 
 		bar.step("Initializing Integration");
 		IntegrationManager.INSTANCE.init();

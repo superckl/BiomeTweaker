@@ -125,6 +125,18 @@ public class BlockReplacementManager {
 		return this.contigReplaces[biome] || BlockReplacementManager.globalContigReplaces[biome];
 	}
 
+	public static boolean isGlobalContiguousReplacement(final int biome) {
+		return BlockReplacementManager.globalContigReplaces[biome];
+	}
+
+	public void setContiguousReplacement(final int biome, final boolean contigReplace) {
+		this.contigReplaces[biome] = contigReplace;
+	}
+
+	public static void setGlobalContiguousReplacement(final int biome, final boolean contigReplace) {
+		BlockReplacementManager.globalContigReplaces[biome] = contigReplace;
+	}
+
 	@Getter
 	public static class WeightedBlockEntry extends WeightedRandom.Item{
 

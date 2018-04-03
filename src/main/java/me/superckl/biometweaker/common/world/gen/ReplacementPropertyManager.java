@@ -10,7 +10,7 @@ import net.minecraft.block.state.IBlockState;
 
 public class ReplacementPropertyManager {
 
-	public static Property<IBlockState> BLOCK;
+	public static Property<? extends IBlockState> BLOCK;
 	public static Property<Integer> MIN_Y;
 	public static Property<Integer> MAX_Y;
 	public static Property<Integer> MIN_X;

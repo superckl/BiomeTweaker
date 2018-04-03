@@ -143,7 +143,7 @@ public class BTParameterTypes {
 			final BlockStateBuilder<?> builder = BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(parameter, handler);
 			if(builder != null) {
 				final ReplacementConstraints constraints = new ReplacementConstraints();
-				constraints.setBlock(builder);
+				constraints.setBuilder(builder);
 				return constraints;
 			}
 			final ScriptObject obj = handler.getObjects().get(parameter);

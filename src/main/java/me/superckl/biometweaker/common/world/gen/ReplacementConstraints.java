@@ -9,7 +9,7 @@ import net.minecraft.block.state.IBlockState;
 @Data
 public class ReplacementConstraints {
 
-	private BlockStateBuilder<? extends IBlockState> block;
+	private BlockStateBuilder<? extends IBlockState> builder;
 	private int minY = Integer.MIN_VALUE;
 	private int maxY = Integer.MAX_VALUE;
 	private int minX = Integer.MIN_VALUE;
@@ -22,15 +22,15 @@ public class ReplacementConstraints {
 	private int maxChunkZ = Integer.MAX_VALUE;
 
 	@Setter(AccessLevel.NONE)
-	private transient IBlockState state;
+	private transient IBlockState block;
 
 	public IBlockState getState() {
-		if(this.state == null) {
-			if(this.block == null)
+		if(this.block == null) {
+			if(this.builder == null)
 				throw new IllegalStateException("No BlockState has been specified!");
-			this.state = this.block.build();
+			this.block = this.builder.build();
 		}
-		return this.state;
+		return this.block;
 	}
 
 }

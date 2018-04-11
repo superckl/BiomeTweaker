@@ -79,11 +79,13 @@ public class BlockReplacer {
 										}
 										if(!BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight()))
 											isWholeChunk = false;
+										copy.remove(toUse);
 										toUse = null;
 									}
 									if(toUse == null && isWholeChunk)
 										noReps.add(state);
-								}
+								}else
+									previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
 							}
 						}
 						if(toUse != null)

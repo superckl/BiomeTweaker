@@ -108,7 +108,7 @@ public class BlockReplacementManager {
 	}
 
 	public TIntObjectMap<BlockReplacementEntryList> findMap(final ChunkPos pair){
-		final ChunkPos[] pairs = NumberHelper.fillGrid(4, pair);
+		final ChunkPos[] pairs = NumberHelper.fillGrid(5, pair);
 
 		for(final ChunkPos search:pairs)
 			if(this.replacedBiomes.containsKey(search))

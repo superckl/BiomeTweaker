@@ -33,4 +33,8 @@ public class ReplacementConstraints {
 		return this.block;
 	}
 
+	public boolean hasBlock() {
+		return this.block != null || this.builder != null;
+	}
+
 }

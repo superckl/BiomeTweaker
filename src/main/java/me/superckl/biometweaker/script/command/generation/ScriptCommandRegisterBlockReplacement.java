@@ -32,6 +32,8 @@ public class ScriptCommandRegisterBlockReplacement extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
+		if(this.replaceWith == null || !this.replaceWith.hasBlock())
+			throw new IllegalStateException("Cannot register block replacement with no block specified!");
 		final Iterator<Biome> it = this.pack.getIterator();
 		while(it.hasNext()){
 			final Biome gen = it.next();

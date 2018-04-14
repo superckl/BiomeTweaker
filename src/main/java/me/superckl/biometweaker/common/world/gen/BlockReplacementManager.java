@@ -1,7 +1,6 @@
 package me.superckl.biometweaker.common.world.gen;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -10,10 +9,8 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import lombok.Getter;
 import lombok.Setter;
-import me.superckl.biometweaker.util.NumberHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.WeightedRandom;
-import net.minecraft.util.math.ChunkPos;
 
 public class BlockReplacementManager {
 
@@ -22,15 +19,9 @@ public class BlockReplacementManager {
 	@Getter
 	private static PlacementStage defaultStage = PlacementStage.BIOME_BLOCKS;
 
-	private static final boolean[] globalContigReplaces = new boolean[256];
-
 	private static final Map<PlacementStage, TIntObjectMap<BlockReplacementEntryList>> globalBlockReplacements = new EnumMap<>(PlacementStage.class);
 
-	private final boolean[] contigReplaces = new boolean[256];
-
 	private final Map<PlacementStage, TIntObjectMap<BlockReplacementEntryList>> blockReplacements = new EnumMap<>(PlacementStage.class);
-
-	private final Map<ChunkPos, TIntObjectMap<BlockReplacementEntryList>> replacedBiomes = new HashMap<>();
 
 	@Getter
 	@Setter
@@ -105,36 +96,6 @@ public class BlockReplacementManager {
 				return entryMap.get(biome);
 		}
 		return null;
-	}
-
-	public TIntObjectMap<BlockReplacementEntryList> findMap(final ChunkPos pair){
-		final ChunkPos[] pairs = NumberHelper.fillGrid(5, pair);
-
-		for(final ChunkPos search:pairs)
-			if(this.replacedBiomes.containsKey(search))
-				return this.replacedBiomes.get(search);
-
-		return new TIntObjectHashMap<>();
-	}
-
-	public void trackReplacement(final ChunkPos pos, final TIntObjectMap<BlockReplacementEntryList> map){
-		this.replacedBiomes.put(pos, map);
-	}
-
-	public boolean isContiguousReplacement(final int biome){
-		return this.contigReplaces[biome] || BlockReplacementManager.globalContigReplaces[biome];
-	}
-
-	public static boolean isGlobalContiguousReplacement(final int biome) {
-		return BlockReplacementManager.globalContigReplaces[biome];
-	}
-
-	public void setContiguousReplacement(final int biome, final boolean contigReplace) {
-		this.contigReplaces[biome] = contigReplace;
-	}
-
-	public static void setGlobalContiguousReplacement(final int biome, final boolean contigReplace) {
-		BlockReplacementManager.globalContigReplaces[biome] = contigReplace;
 	}
 
 	@Getter

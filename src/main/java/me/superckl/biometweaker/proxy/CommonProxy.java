@@ -223,7 +223,7 @@ public class CommonProxy extends SidedProxy{
 						final ParameterType<?> type = ParameterTypes.getDefaultType(cTypes[i]);
 						if(type == null)
 							throw new IllegalStateException("No parameter type found for parameter "+cTypes[i].getCanonicalName());
-						pTypes[i] = type.getSimpleWrapper();
+						pTypes[i] = type.hasSpecialWrapper() ? type.getSpecialWrapper():type.getSimpleWrapper();
 					}
 					for(final AutoRegister ann:annsToUse)
 						for(final Class<? extends ScriptObject> clazz:ann.classes()){

@@ -108,14 +108,14 @@ public class ScriptCommandCreateBiome extends ScriptCommand{
 					biome = construct.newInstance();
 					break;
 				case 1:
-					biome = construct.newInstance(new BiomeProperties(toCopy.getBiomeName()));
+					biome = construct.newInstance(new BiomeProperties(BiomePropertyManager.NAME.get(toCopy)));
 					break;
 				default:
 					final List<? extends Property<?>> props = ScriptCommandCreateBiome.extraParameters.get(toCopy.getBiomeClass());
 					final Object[] objs = new Object[props.size()+1];
 					for(int i = 0; i < props.size(); i++)
 						objs[i] = props.get(i).get(toCopy);
-					objs[objs.length-1] = new BiomeProperties(toCopy.getBiomeName());
+					objs[objs.length-1] = new BiomeProperties(BiomePropertyManager.NAME.get(toCopy));
 					biome = construct.newInstance(objs);
 					break;
 				}

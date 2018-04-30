@@ -33,8 +33,11 @@ public class ScriptCommandInheritProperties extends ScriptCommand{
 			String[] props;
 			if(this.properties == null)
 				props = BiomePropertyManager.getAllNames().toArray(new String[] {});
-			else
+			else {
 				props = this.properties;
+				for(int i = 0; i < props.length; i++)
+					props[i] = props[i].toLowerCase();
+			}
 			for(final String property:props){
 				final Property<?> prop = BiomePropertyManager.findProperty(property);
 				if(prop == null){

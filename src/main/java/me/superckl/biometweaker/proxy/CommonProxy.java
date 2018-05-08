@@ -176,6 +176,7 @@ public class CommonProxy extends SidedProxy{
 		ReplacementPropertyManager.MAX_CHUNK_X = new PropertyField<>(ReplacementConstraints.class, "maxChunkX", Integer.class);
 		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "minChunkZ", Integer.class);
 		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "maxChunkZ", Integer.class);
+		ReplacementPropertyManager.IGNORE_META = new PropertyField<>(ReplacementConstraints.class, "ignoreMeta", Boolean.class);
 
 		ReplacementPropertyManager.populatePropertyMap();
 	}

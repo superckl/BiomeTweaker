@@ -20,6 +20,7 @@ public class ReplacementConstraints {
 	private int maxChunkX = Integer.MAX_VALUE;
 	private int minChunkZ = Integer.MIN_VALUE;
 	private int maxChunkZ = Integer.MAX_VALUE;
+	private boolean ignoreMeta = false;
 
 	@Setter(AccessLevel.NONE)
 	private transient IBlockState block;

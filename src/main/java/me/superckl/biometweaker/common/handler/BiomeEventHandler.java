@@ -80,8 +80,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPreDecorateBiome(final DecorateBiomeEvent.Pre e){
-		Decorator.runDecoration(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
-		BlockReplacer.runReplacement(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), e.getChunkPos());
+		BlockReplacer.runReplacement(PlacementStage.PRE_DECORATE, e.getWorld(), e.getRand(), e.getChunkPos(), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
@@ -98,8 +98,8 @@ public class BiomeEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public void onPostDecorateBiome(final DecorateBiomeEvent.Post e){
-		Decorator.runDecoration(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()));
-		BlockReplacer.runReplacement(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), new ChunkPos(e.getPos()), null);
+		Decorator.runDecoration(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), e.getChunkPos());
+		BlockReplacer.runReplacement(PlacementStage.POST_DECORATE, e.getWorld(), e.getRand(), e.getChunkPos(), null);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
@@ -154,7 +154,7 @@ public class BiomeEventHandler {
 	public void onBiomeDecorate(final DecorateBiomeEvent.Decorate e){
 		if(BiomeEventHandler.decorateTypes.isEmpty())
 			return;
-		final Biome gen = e.getWorld().getBiome(e.getPos());
+		final Biome gen = e.getWorld().getBiome(e.getChunkPos().getBlock(0, 0, 0));
 		if((BiomeEventHandler.decorateTypes.containsKey(Biome.getIdForBiome(gen))) && (BiomeEventHandler.decorateTypes.get(Biome.getIdForBiome(gen)).contains(e.getType().name()) || BiomeEventHandler.decorateTypes.get(Biome.getIdForBiome(gen)).contains("all")))
 			e.setResult(Result.DENY);
 	}

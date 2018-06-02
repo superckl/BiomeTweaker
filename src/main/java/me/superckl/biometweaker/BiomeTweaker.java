@@ -277,7 +277,7 @@ public class BiomeTweaker{
 			if(file.getName().endsWith(".json"))
 				file.delete();
 
-		final Iterator<EntityEntry> entityIt = ForgeRegistries.ENTITIES.getValues().iterator();
+		final Iterator<EntityEntry> entityIt = ForgeRegistries.ENTITIES.getValuesCollection().iterator();
 		final JsonArray entityArray = new JsonArray();
 
 		while(entityIt.hasNext()){

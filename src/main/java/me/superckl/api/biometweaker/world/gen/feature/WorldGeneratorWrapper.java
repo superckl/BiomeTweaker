@@ -14,9 +14,18 @@ public class WorldGeneratorWrapper<K extends WorldGenerator> {
 	protected final int count;
 
 	public void generate(final World world, final Random rand, final BlockPos chunkPos){
-		final int x = rand.nextInt(16) + 8;
-		final int z = rand.nextInt(16) + 8;
-		final int y = world.getHeight(chunkPos.add(x, 0, z)).getY() * 2;
+		int x = rand.nextInt(16) + 8;
+		int z = rand.nextInt(16) + 8;
+		int y = world.getHeight(chunkPos.add(x, 0, z)).getY() * 2;
+		int attempts = 0;
+		while (y <= 0 && attempts < 5) {
+			x = rand.nextInt(16) + 8;
+			z = rand.nextInt(16) + 8;
+			y = world.getHeight(chunkPos.add(x, 0, z)).getY() * 2;
+			attempts++;
+		}
+		if(y <= 0)
+			return; //No place to generate
 		for (int i = 0; i < this.count; i++)
 			this.generator.generate(world, rand, chunkPos.add(x, rand.nextInt(y), z));
 	}

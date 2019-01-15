@@ -85,11 +85,11 @@ public class BlockReplacer {
 	}
 
 	private static boolean verifyBoundaries(final ChunkPos pos, final int x, final int y, final int z, final ReplacementConstraints constraints) {
-		return !(y < constraints.getMinY() || y > constraints.getMaxY() ||
-				x < constraints.getMinChunkX() || x > constraints.getMaxChunkX() ||
-				z < constraints.getMinChunkZ() || z > constraints.getMaxChunkZ() ||
-				(pos.x << 4)+x < constraints.getMinX() || (pos.x << 4)+x > constraints.getMaxX() ||
-				(pos.z << 4)+z < constraints.getMinZ() || (pos.z << 4)+z > constraints.getMaxZ());
+		return !(y <= constraints.getMinY() || y >= constraints.getMaxY() ||
+				x <= constraints.getMinChunkX() || x >= constraints.getMaxChunkX() ||
+				z <= constraints.getMinChunkZ() || z >= constraints.getMaxChunkZ() ||
+				(pos.x << 4)+x <= constraints.getMinX() || (pos.x << 4)+x >= constraints.getMaxX() ||
+				(pos.z << 4)+z <= constraints.getMinZ() || (pos.z << 4)+z >= constraints.getMaxZ());
 	}
 
 	private static boolean isWholeChunk(final ChunkPos pos, final ReplacementConstraints constraints, final int worldHeight) {

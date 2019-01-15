@@ -4,7 +4,9 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import me.superckl.api.biometweaker.world.gen.feature.WorldGeneratorBuilder;
+import me.superckl.api.superscript.util.BlockEquivalencePredicate;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
 public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMineableWrapper<WorldGenMinable>>{
@@ -12,7 +14,7 @@ public class WorldGenMineableBuilder extends WorldGeneratorBuilder<WorldGenMinea
 	private int size = 9;
 	private int maxHeight = 128;
 	private int minHeight = 0;
-	private Predicate<IBlockState> replacePredicate = Predicates.alwaysFalse();
+	private Predicate<IBlockState> replacePredicate = new BlockEquivalencePredicate(Blocks.STONE.getDefaultState());
 
 	@Override
 	public WorldGenMineableWrapper<WorldGenMinable> build() {

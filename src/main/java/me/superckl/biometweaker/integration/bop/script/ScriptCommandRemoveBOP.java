@@ -32,7 +32,8 @@ public class ScriptCommandRemoveBOP extends ScriptCommand{
 			Biome biome = it.next();
 			final IExtendedBiome eBiome = BOPIntegrationModule.getExtendedBiome(biome);
 			biome = eBiome.getBaseBiome();
-			if(this.types == null)
+			if(this.types == null) {
+				eBiome.getWeightMap().clear();
 				for(final BOPClimates climate:BOPClimates.values()){
 					final Iterator<WeightedBiomeEntry> bit = WarningHelper.<List<WeightedBiomeEntry>>uncheckedCast(BOPBiomeProperties.LAND_BIOMES.get(climate)).iterator();
 					while(bit.hasNext()){
@@ -43,11 +44,12 @@ public class ScriptCommandRemoveBOP extends ScriptCommand{
 						}
 					}
 				}
-			else
+			}else
 				for (final String type:this.types) {
 					final BOPClimates climate = BOPClimates.valueOf(type);
 					if (climate == null)
 						throw new IllegalArgumentException("No climate type found for: " + type);
+					eBiome.getWeightMap().remove(climate);
 					final Iterator<WeightedBiomeEntry> bit = WarningHelper.<List<WeightedBiomeEntry>>uncheckedCast(BOPBiomeProperties.LAND_BIOMES.get(climate)).iterator();
 					while (bit.hasNext()) {
 						final WeightedBiomeEntry entry = bit.next();

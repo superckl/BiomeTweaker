@@ -121,6 +121,8 @@ public class ScriptCommandCreateBiome extends ScriptCommand{
 				}
 			if(MinecraftForge.EVENT_BUS.post(new BiomeTweakEvent.Create(this, biome)))
 				return;
+			if(biome.getRegistryName() != null)
+				throw new IllegalStateException("It appears the biome "+biome.getRegistryName()+" is setting its registry name during construction. This biome cannot be copied! Contact the mod author.");
 			biome.setRegistryName(ModData.MOD_ID, this.rLoc.toLowerCase());
 			RegistryEventHandler.registry.register(biome);
 			//Copy props

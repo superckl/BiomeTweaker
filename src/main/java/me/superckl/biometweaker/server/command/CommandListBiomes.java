@@ -52,7 +52,9 @@ public class CommandListBiomes implements ICommand{
 		while(it.hasNext()){
 			final Biome gen = it.next();
 			if(gen != null){
-				final String message = new StringBuilder().append(Biome.getIdForBiome(gen)).append(" - ").append(gen.getBiomeName()).toString();
+				if(gen.getRegistryName() == null)
+					continue;
+				final String message = new StringBuilder().append(gen.getRegistryName().toString()).append(" - ").append(gen.getBiomeName()).toString();
 				sender.sendMessage(new TextComponentString(message).setStyle(new Style().setColor(TextFormatting.GOLD)));
 			}
 		}

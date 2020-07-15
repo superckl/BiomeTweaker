@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.google.common.collect.Sets;
 
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.map.TIntObjectMap;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager.WeightedBlockEntry;
 import me.superckl.biometweaker.util.LogHelper;
 import net.minecraft.block.Block;
@@ -26,6 +28,7 @@ public class BlockReplacer {
 			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(world.provider.getDimension());
 			if(!manager.hasReplacements(stage))
 				return;
+			final TIntObjectMap<BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
 			final Chunk chunk = primer == null ? world.getChunkFromChunkCoords(pos.x, pos.z):null;
 			final MutableBlockPos biomeCheckPos = new MutableBlockPos();
 			final MutableBlockPos blockSetPos = new MutableBlockPos();
@@ -36,6 +39,9 @@ public class BlockReplacer {
 					final int id = Biome.getIdForBiome(biomegenbase);
 					if(!manager.hasReplacements(id, stage))
 						continue;
+					if(!previousReplacements.containsKey(id))
+						previousReplacements.put(id, new BlockReplacementEntryList());
+					final BlockReplacementEntryList previousReplacementsBiome = previousReplacements.get(id);
 					final BlockReplacementEntryList list = manager.findReplacementEntryList(id, stage);
 					final Set<IBlockState> noReps = Sets.newIdentityHashSet();
 					//assuming height of 256 since blockArray no longer exposed, results in ((16*16)*256)/256=256
@@ -46,29 +52,40 @@ public class BlockReplacer {
 							continue;
 						final Block block = state.getBlock();
 						WeightedBlockEntry toUse = null;
+						final BlockReplacementEntry previousEntry = previousReplacementsBiome.findEntry(state);
 						final int meta = block.getMetaFromState(state);
-						final BlockReplacementEntry entry = list.findEntry(state);
-						if(entry != null){
-							final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
-							if(entries == null || entries.isEmpty())
-								continue;
-							toUse = WeightedRandom.getRandomItem(rand, entries);
-							if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
-								final List<WeightedBlockEntry> copy = new ArrayList<>(entries);
-								copy.remove(toUse);
-								boolean isWholeChunk = BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight());
+						if(previousEntry != null) {
+							toUse = previousEntry.findEntriesForMeta(meta).get(0);
+							if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints()))
 								toUse = null;
-								while(!copy.isEmpty()) {
-									toUse = WeightedRandom.getRandomItem(rand, copy);
-									if(BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints()))
-										break;
-									if(!BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight()))
-										isWholeChunk = false;
+						}
+						if(toUse == null){
+							final BlockReplacementEntry entry = list.findEntry(state);
+							if(entry != null){
+								final List<WeightedBlockEntry> entries = entry.findEntriesForMeta(meta);
+								if(entries == null || entries.isEmpty())
+									continue;
+								toUse = WeightedRandom.getRandomItem(rand, entries);
+								if(!BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
+									final List<WeightedBlockEntry> copy = new ArrayList<>(entries);
 									copy.remove(toUse);
+									boolean isWholeChunk = BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight());
 									toUse = null;
-								}
-								if(toUse == null && isWholeChunk)
-									noReps.add(state);
+									while(!copy.isEmpty()) {
+										toUse = WeightedRandom.getRandomItem(rand, copy);
+										if(BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
+											previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
+											break;
+										}
+										if(!BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight()))
+											isWholeChunk = false;
+										copy.remove(toUse);
+										toUse = null;
+									}
+									if(toUse == null && isWholeChunk)
+										noReps.add(state);
+								}else
+									previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
 							}
 						}
 						if(toUse != null)
@@ -78,6 +95,11 @@ public class BlockReplacer {
 								chunk.setBlockState(blockSetPos.setPos(x, y, z), toUse.getConstraints().getState());
 					}
 				}
+			final TIntIterator it = previousReplacements.keySet().iterator();
+			while(it.hasNext())
+				if(!manager.isContiguousReplacement(it.next()))
+					it.remove();
+			manager.trackReplacement(pos, previousReplacements);
 		} catch (final Exception e1) {
 			LogHelper.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();

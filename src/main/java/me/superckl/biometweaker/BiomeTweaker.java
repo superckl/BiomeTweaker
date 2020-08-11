@@ -215,146 +215,164 @@ public class BiomeTweaker{
 		bar.step("Applying scripts");
 		this.commandManager.applyCommandsFor(ApplicationStage.FINISHED_LOAD);
 
-		bar.step("Generating output files");
-		this.generateOutputFiles();
-
+		if (!this.config.isDisableOutput()) {
+			bar.step("Generating output files");
+			this.generateOutputFiles();
+		}
 		ProgressManager.pop(bar);
 	}
 
 	public void generateOutputFiles() throws IOException{
-		LogHelper.info("Generating Biome status report...");
-		final JsonArray array = new JsonArray();
-		final Iterator<Biome> it = Biome.REGISTRY.iterator();
-		while(it.hasNext()){
-			final Biome gen = it.next();
-			if(gen == null)
-				continue;
-			array.add(BiomeHelper.fillJsonObject(gen));
-		}
-		final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		final File baseDir = new File(this.config.getBtConfigFolder(), "output/");
-		final File biomeDir = new File(baseDir, "/biome/");
-		biomeDir.mkdirs();
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();;
+		File baseDir = new File(this.config.getBtConfigFolder(), "output/");
+		try {
+			LogHelper.info("Generating Biome status report...");
+			final JsonArray array = new JsonArray();
+			final Iterator<Biome> it = Biome.REGISTRY.iterator();
+			while(it.hasNext()){
+				final Biome gen = it.next();
+				if(gen == null)
+					continue;
+				array.add(BiomeHelper.fillJsonObject(gen));
+			}
+			final File biomeDir = new File(baseDir, "/biome/");
+			biomeDir.mkdirs();
 
-		for(final File file:biomeDir.listFiles())
-			if(file.getName().endsWith(".json"))
-				file.delete();
+			for(final File file:biomeDir.listFiles())
+				if(file.getName().endsWith(".json"))
+					file.delete();
 
-		if(this.config.isOutputSeperateFiles())
-			for(final JsonElement element:array){
-				final JsonObject obj = (JsonObject) element;
-				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
-						.append(" (").append(obj.get("Resource Location").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
-				final File biomeOutput = new File(biomeDir, fileName.toString());
+			if(this.config.isOutputSeperateFiles())
+				for(final JsonElement element:array){
+					final JsonObject obj = (JsonObject) element;
+					final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+							.append(" (").append(obj.get("Resource Location").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+					final File biomeOutput = new File(biomeDir, fileName.toString());
+					if(biomeOutput.exists())
+						biomeOutput.delete();
+					biomeOutput.createNewFile();
+					@Cleanup
+					final
+					BufferedWriter writer = new BufferedWriter(new FileWriter(biomeOutput));
+					writer.newLine();
+					writer.write(gson.toJson(obj));
+				}
+			else{
+				final File biomeOutput = new File(biomeDir, "BiomeTweaker - Biome Status Report.json");
 				if(biomeOutput.exists())
 					biomeOutput.delete();
 				biomeOutput.createNewFile();
 				@Cleanup
 				final
 				BufferedWriter writer = new BufferedWriter(new FileWriter(biomeOutput));
+				writer.write("//Yeah, it's a doozy.");
 				writer.newLine();
-				writer.write(gson.toJson(obj));
+				writer.write(gson.toJson(array));
 			}
-		else{
-			final File biomeOutput = new File(biomeDir, "BiomeTweaker - Biome Status Report.json");
-			if(biomeOutput.exists())
-				biomeOutput.delete();
-			biomeOutput.createNewFile();
-			@Cleanup
-			final
-			BufferedWriter writer = new BufferedWriter(new FileWriter(biomeOutput));
-			writer.write("//Yeah, it's a doozy.");
-			writer.newLine();
-			writer.write(gson.toJson(array));
+		} catch (Exception e) {
+			LogHelper.error("Caught an exception while generating biome status report!");
+			e.printStackTrace();
 		}
 
-		LogHelper.info("Generating LivingEntity status report...");
+		File entityDir;
+		JsonArray entityArray;
+		try {
+			LogHelper.info("Generating LivingEntity status report...");
 
-		final File entityDir = new File(baseDir, "/entity/");
-		entityDir.mkdirs();
+			entityDir = new File(baseDir, "/entity/");
+			entityDir.mkdirs();
 
-		for(final File file:entityDir.listFiles())
-			if(file.getName().endsWith(".json"))
-				file.delete();
+			for(final File file:entityDir.listFiles())
+				if(file.getName().endsWith(".json"))
+					file.delete();
 
-		final Iterator<EntityEntry> entityIt = ForgeRegistries.ENTITIES.getValuesCollection().iterator();
-		final JsonArray entityArray = new JsonArray();
+			final Iterator<EntityEntry> entityIt = ForgeRegistries.ENTITIES.getValuesCollection().iterator();
+			entityArray = new JsonArray();
 
-		while(entityIt.hasNext()){
-			final EntityEntry entry = entityIt.next();
-			if(!EntityLiving.class.isAssignableFrom(entry.getEntityClass()))
-				continue;
-			entityArray.add(EntityHelper.populateObject(entry));
+			while(entityIt.hasNext()){
+				final EntityEntry entry = entityIt.next();
+				if(!EntityLiving.class.isAssignableFrom(entry.getEntityClass()))
+					continue;
+				entityArray.add(EntityHelper.populateObject(entry));
 
-		}
+			}
 
-		if(this.config.isOutputSeperateFiles())
-			for(final JsonElement ele:entityArray){
-				final JsonObject obj = (JsonObject) ele;
-				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
-						.append(" (").append(obj.get("Registry ID").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
-				final File entityOutput = new File(entityDir, fileName.toString());
+			if(this.config.isOutputSeperateFiles())
+				for(final JsonElement ele:entityArray){
+					final JsonObject obj = (JsonObject) ele;
+					final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+							.append(" (").append(obj.get("Registry ID").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+					final File entityOutput = new File(entityDir, fileName.toString());
+					if(entityOutput.exists())
+						entityOutput.delete();
+					entityOutput.createNewFile();
+					@Cleanup
+					final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
+					writer.newLine();
+					writer.write(gson.toJson(obj));
+				}
+			else{
+
+				final File entityOutput = new File(entityDir, "BiomeTweaker - EntityLiving Status Report.json");
 				if(entityOutput.exists())
 					entityOutput.delete();
 				entityOutput.createNewFile();
 				@Cleanup
 				final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
+				writer.write("//Yeah, it's a doozy.");
 				writer.newLine();
-				writer.write(gson.toJson(obj));
+				writer.write(gson.toJson(entityArray));
 			}
-		else{
-
-			final File entityOutput = new File(entityDir, "BiomeTweaker - EntityLiving Status Report.json");
-			if(entityOutput.exists())
-				entityOutput.delete();
-			entityOutput.createNewFile();
-			@Cleanup
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(entityOutput));
-			writer.write("//Yeah, it's a doozy.");
-			writer.newLine();
-			writer.write(gson.toJson(entityArray));
+		} catch (Exception e) {
+			LogHelper.error("Caught an exception while generating Living Entity status report!");
+			e.printStackTrace();
 		}
 
-		LogHelper.info("Generating Dimension status report...");
+		try {
+			LogHelper.info("Generating Dimension status report...");
 
-		final File dimDir = new File(baseDir, "/dimension/");
-		dimDir.mkdirs();
+			final File dimDir = new File(baseDir, "/dimension/");
+			dimDir.mkdirs();
 
-		for(final File file:dimDir.listFiles())
-			if(file.getName().endsWith(".json"))
-				file.delete();
+			for(final File file:dimDir.listFiles())
+				if(file.getName().endsWith(".json"))
+					file.delete();
 
-		final DimensionType[] dimTypes = DimensionType.values();
-		final JsonArray dimArray = new JsonArray();
+			final DimensionType[] dimTypes = DimensionType.values();
+			final JsonArray dimArray = new JsonArray();
 
-		for(final DimensionType dimType:dimTypes)
-			dimArray.add(DimensionHelper.populateObject(dimType));
+			for(final DimensionType dimType:dimTypes)
+				dimArray.add(DimensionHelper.populateObject(dimType));
 
-		if(this.config.isOutputSeperateFiles())
-			for(final JsonElement ele:dimArray){
-				final JsonObject obj = (JsonObject) ele;
-				final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
-						.append(" (").append(obj.get("Suffix").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
-				final File dimOutput = new File(dimDir, fileName.toString());
+			if(this.config.isOutputSeperateFiles())
+				for(final JsonElement ele:dimArray){
+					final JsonObject obj = (JsonObject) ele;
+					final StringBuilder fileName = new StringBuilder(obj.get("Name").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_"))
+							.append(" (").append(obj.get("Suffix").getAsString().replaceAll("[^a-zA-Z0-9.-]", "_")).append(")").append(".json");
+					final File dimOutput = new File(dimDir, fileName.toString());
+					if(dimOutput.exists())
+						dimOutput.delete();
+					dimOutput.createNewFile();
+					@Cleanup
+					final BufferedWriter writer = new BufferedWriter(new FileWriter(dimOutput));
+					writer.newLine();
+					writer.write(gson.toJson(obj));
+				}
+			else{
+
+				final File dimOutput = new File(dimDir, "BiomeTweaker - Dimension Status Report.json");
 				if(dimOutput.exists())
 					dimOutput.delete();
 				dimOutput.createNewFile();
 				@Cleanup
 				final BufferedWriter writer = new BufferedWriter(new FileWriter(dimOutput));
+				writer.write("//Yeah, it's a doozy.");
 				writer.newLine();
-				writer.write(gson.toJson(obj));
+				writer.write(gson.toJson(dimArray));
 			}
-		else{
-
-			final File dimOutput = new File(entityDir, "BiomeTweaker - Dimension Status Report.json");
-			if(dimOutput.exists())
-				dimOutput.delete();
-			dimOutput.createNewFile();
-			@Cleanup
-			final BufferedWriter writer = new BufferedWriter(new FileWriter(dimOutput));
-			writer.write("//Yeah, it's a doozy.");
-			writer.newLine();
-			writer.write(gson.toJson(entityArray));
+		} catch (Exception e) {
+			LogHelper.error("Caught an exception while generating Dimension status report!");
+			e.printStackTrace();
 		}
 
 	}

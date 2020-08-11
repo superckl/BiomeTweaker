@@ -35,6 +35,7 @@ public class BiomePropertyManager {
 	public static Property<Boolean> GEN_VILLAGES;
 	public static Property<Boolean> GEN_STRONGHOLDS;
 	public static Property<Boolean> GEN_SCATTERED_FEATURES;
+	public static Property<Boolean> IS_OCEANIC;
 	public static Property<Boolean> IS_SPAWN_BIOME;
 	public static Property<Boolean> GEN_TALL_PLANTS;
 	public static Property<Integer> WATERLILY_PER_CHUNK;

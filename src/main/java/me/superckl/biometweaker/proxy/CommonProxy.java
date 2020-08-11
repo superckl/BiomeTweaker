@@ -42,6 +42,7 @@ import me.superckl.biometweaker.common.world.biome.property.PropertyGenStronghol
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenTallPlants;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenVillages;
 import me.superckl.biometweaker.common.world.biome.property.PropertyGenWeight;
+import me.superckl.biometweaker.common.world.biome.property.PropertyOceanic;
 import me.superckl.biometweaker.common.world.biome.property.PropertySpawnBiome;
 import me.superckl.biometweaker.common.world.gen.ReplacementConstraints;
 import me.superckl.biometweaker.common.world.gen.ReplacementPropertyManager;
@@ -100,6 +101,7 @@ public class CommonProxy extends SidedProxy{
 		BiomePropertyManager.GEN_VILLAGES = new PropertyGenVillages();
 		BiomePropertyManager.GEN_STRONGHOLDS = new PropertyGenStrongholds();
 		BiomePropertyManager.GEN_SCATTERED_FEATURES = new PropertyGenScatteredFeatures();
+		BiomePropertyManager.IS_OCEANIC = new PropertyOceanic();
 		BiomePropertyManager.CONTIGUOUS_REPLACEMENT = new PropertyContigReplace();
 		BiomePropertyManager.IS_SPAWN_BIOME = new PropertySpawnBiome();
 		BiomePropertyManager.GEN_TALL_PLANTS = new PropertyGenTallPlants();

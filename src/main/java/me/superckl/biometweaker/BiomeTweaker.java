@@ -210,7 +210,7 @@ public class BiomeTweaker{
 
 	@EventHandler
 	public void onLoadComplete(final FMLLoadCompleteEvent e) throws IOException{
-		final ProgressBar bar = ProgressManager.push("BiomeTweaker LoadComplete", 2, true);
+		final ProgressBar bar = ProgressManager.push("BiomeTweaker LoadComplete", this.config.isDisableOutput() ? 1:2, true);
 
 		bar.step("Applying scripts");
 		this.commandManager.applyCommandsFor(ApplicationStage.FINISHED_LOAD);

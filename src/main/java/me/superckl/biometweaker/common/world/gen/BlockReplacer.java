@@ -74,7 +74,8 @@ public class BlockReplacer {
 									while(!copy.isEmpty()) {
 										toUse = WeightedRandom.getRandomItem(rand, copy);
 										if(BlockReplacer.verifyBoundaries(pos, x, y, z, toUse.getConstraints())) {
-											previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
+											if(toUse.getConstraints().isContiguous())
+												previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
 											break;
 										}
 										if(!BlockReplacer.isWholeChunk(pos, toUse.getConstraints(), world.getHeight()))
@@ -84,7 +85,7 @@ public class BlockReplacer {
 									}
 									if(toUse == null && isWholeChunk)
 										noReps.add(state);
-								}else
+								}else if(toUse.getConstraints().isContiguous())
 									previousReplacementsBiome.registerReplacement(toUse.itemWeight, state, toUse.getConstraints());
 							}
 						}

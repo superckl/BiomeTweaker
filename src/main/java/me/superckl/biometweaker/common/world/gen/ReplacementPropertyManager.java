@@ -22,6 +22,7 @@ public class ReplacementPropertyManager {
 	public static Property<Integer> MIN_CHUNK_Z;
 	public static Property<Integer> MAX_CHUNK_Z;
 	public static Property<Boolean> IGNORE_META;
+	public static Property<Boolean> CONTIGUOUS;
 
 	private static final Map<String, Property<?>> propertyMap = new HashMap<>();
 

@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[39,)"
+license="See GitHub repository for details"
+logoFile="logo.png"
+
+[[mods]]
+modId="biometweaker"
+version="0.0.0"
+displayName="BiomeTweaker"
+authors="superckl"
+description="Used to tweak various properties of biomes"
+
+[[dependencies.biometweaker]]
+    modId="forge"
+    mandatory=true
+    versionRange="${forge_version}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.biometweaker]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="${minecraft_version}"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,40 @@
+.classpath
+.gradle/*
+.project
+.settings/*
+eclipse/*
+bin/*
+Techne/*
+config/*
+saves/*
+screenshots/*
+logs/*
+crash-reports/*
+options.txt
+usernamecache.json
+Logo/*
+/bin/
+build.bat
+desktop.ini
+eclipse.bat
+setup.bat
+src/main/resources/nei_at.cfg
+build/*
+run/*
+BiomeTweaker 1.8.8_Client.launch
+BiomeTweaker 1.8.8_Server.launch
+BiomeTweaker-1.8.8_Client.launch
+BiomeTweaker-1.8.8_Server.launch
+BiomeTweaker-1.9_Client.launch
+BiomeTweaker-1.9_Server.launch
+BiomeTweaker 1.9_Client.launch
+BiomeTweaker 1.9_Server.launch
+BiomeTweaker 1.10_Client.launch
+BiomeTweaker 1.10_Server.launch
+/.gradle/
+/build/
+BiomeTweaker 1.11_Client.launch
+BiomeTweaker 1.11_Server.launch
+BiomeTweaker 1.12_Client.launch
+BiomeTweaker 1.12_Server.launch
+*.launch

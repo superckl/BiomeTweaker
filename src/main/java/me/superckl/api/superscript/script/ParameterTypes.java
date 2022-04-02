@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.primitives.Floats;
-import com.google.common.primitives.Ints;
 import com.google.gson.JsonPrimitive;
 
 import me.superckl.api.superscript.util.CollectionHelper;
@@ -19,14 +18,14 @@ public final class ParameterTypes {
 	private static final Map<Class<?>, ParameterType<?>> defaultTypes = new HashMap<>();
 	private static final Map<String, ParameterWrapper<?>> exceptionTypes = new HashMap<>();
 
-	public static final ParameterType<JsonPrimitive> JSON_PRIMITIVE = new ParameterType<JsonPrimitive>(JsonPrimitive.class) {
+	public static final ParameterType<JsonPrimitive> JSON_PRIMITIVE = new ParameterType<>(JsonPrimitive.class) {
 
 		@Override
 		public JsonPrimitive tryParse(final String parameter, final ScriptHandler handler) {
 			return new JsonPrimitive(parameter);
 		}
 	};
-	public static final ParameterType<Byte> NON_NEG_BYTE = new ParameterType<Byte>(Byte.class) {
+	public static final ParameterType<Byte> NON_NEG_BYTE = new ParameterType<>(Byte.class) {
 
 		@Override
 		public Byte tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -34,7 +33,7 @@ public final class ParameterTypes {
 			return i == null || i > Byte.MAX_VALUE || i < Byte.MIN_VALUE ? null:i.byteValue();
 		}
 	};
-	public static final ParameterType<Byte> BYTE = new ParameterType<Byte>(Byte.class) {
+	public static final ParameterType<Byte> BYTE = new ParameterType<>(Byte.class) {
 
 		@Override
 		public Byte tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -42,14 +41,14 @@ public final class ParameterTypes {
 			return i == null || i > Byte.MAX_VALUE || i < Byte.MIN_VALUE ? null:i.byteValue();
 		}
 	};
-	public static final ParameterType<Float> FLOAT = new ParameterType<Float>(Float.class) {
+	public static final ParameterType<Float> FLOAT = new ParameterType<>(Float.class) {
 
 		@Override
 		public Float tryParse(final String parameter, final ScriptHandler handler) {
 			return Floats.tryParse(parameter);
 		}
 	};
-	public static final ParameterType<int[]> NON_NEG_INTEGERS = new ParameterType<int[]>(int[].class) {
+	public static final ParameterType<int[]> NON_NEG_INTEGERS = new ParameterType<>(int[].class) {
 
 		@Override
 		public int[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -63,17 +62,17 @@ public final class ParameterTypes {
 			return newInts.stream().mapToInt(i -> i).toArray();
 		}
 	};
-	public static final ParameterType<Integer> NON_NEG_INTEGER = new ParameterType<Integer>(Integer.class) {
+	public static final ParameterType<Integer> NON_NEG_INTEGER = new ParameterType<>(Integer.class) {
 
 		@Override
-		public Integer tryParse(final String parameter, final ScriptHandler handler) {
-			final Integer i = Ints.tryParse(parameter);
+		public Integer tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			final Integer i = ParameterTypes.INTEGER.tryParse(parameter, handler);
 			if(i != null && i.intValue() >= 0)
 				return i;
 			return null;
 		}
 	};
-	public static final ParameterType<int[]> INTEGERS = new ParameterType<int[]>(int[].class) {
+	public static final ParameterType<int[]> INTEGERS = new ParameterType<>(int[].class) {
 
 		@Override
 		public int[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -94,14 +93,16 @@ public final class ParameterTypes {
 			return ints.stream().mapToInt(j -> j).toArray();
 		}
 	};
-	public static final ParameterType<Integer> INTEGER = new ParameterType<Integer>(Integer.class) {
+	public static final ParameterType<Integer> INTEGER = new ParameterType<>(Integer.class) {
 
 		@Override
 		public Integer tryParse(final String parameter, final ScriptHandler handler) {
-			return Ints.tryParse(parameter);
+			Integer i = null;
+			try { i = Integer.decode(parameter);} catch (final Exception e) {}
+			return i;
 		}
 	};
-	public static final ParameterType<String> STRING = new ParameterType<String>(String.class){
+	public static final ParameterType<String> STRING = new ParameterType<>(String.class){
 
 		@Override
 		public String tryParse(final String parameter, final ScriptHandler handler) {
@@ -112,7 +113,7 @@ public final class ParameterTypes {
 
 	};
 
-	public static final ParameterType<String[]> STRING_ARRAY = new ParameterType<String[]>(String[].class, new ParameterWrapperStringArray()) {
+	public static final ParameterType<String[]> STRING_ARRAY = new ParameterType<>(String[].class, new ParameterWrapperStringArray()) {
 
 		@Override
 		public String[] tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -123,7 +124,7 @@ public final class ParameterTypes {
 		}
 	};
 
-	public static final ParameterType<Boolean> BOOLEAN = new ParameterType<Boolean>(Boolean.class) {
+	public static final ParameterType<Boolean> BOOLEAN = new ParameterType<>(Boolean.class) {
 
 		@Override
 		public Boolean tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -135,7 +136,7 @@ public final class ParameterTypes {
 		}
 	};
 
-	public static final ParameterType<Object> BLANK = new ParameterType<Object>(Object.class) {
+	public static final ParameterType<Object> BLANK = new ParameterType<>(Object.class) {
 
 		@Override
 		public Object tryParse(final String parameter, final ScriptHandler handler) throws Exception {

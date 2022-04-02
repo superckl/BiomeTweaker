@@ -1,11 +1,13 @@
 package me.superckl.api.biometweaker.script.pack;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
 
 public class SubtractBiomesPackage extends BiomePackage{
 
@@ -18,12 +20,14 @@ public class SubtractBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<Biome> iterator() {
-		final List<Biome> list = Lists.newArrayList(this.main.iterator());
-		final Iterator<Biome> it = this.subtract.iterator();
-		while(it.hasNext())
-			list.remove(it.next());
-		return list.iterator();
+	public Iterator<ResourceLocation> locIterator() {
+		final Set<ResourceLocation> sub = Sets.newHashSet(this.subtract.locIterator());
+		return Iterators.filter(this.main.locIterator(), Predicates.not(sub::contains));
+	}
+
+	@Override
+	public boolean requiresRegistry() {
+		return this.main.requiresRegistry() || this.subtract.requiresRegistry();
 	}
 
 }

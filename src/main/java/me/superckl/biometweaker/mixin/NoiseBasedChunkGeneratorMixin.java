@@ -1,5 +1,7 @@
 package me.superckl.biometweaker.mixin;
 
+import java.util.Optional;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -8,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import me.superckl.biometweaker.common.world.gen.BlockReplacer;
 import me.superckl.biometweaker.common.world.gen.PlacementStage;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.StructureFeatureManager;
 import net.minecraft.world.level.biome.BiomeManager;
@@ -16,15 +20,17 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 @Mixin(NoiseBasedChunkGenerator.class)
 public abstract class NoiseBasedChunkGeneratorMixin extends ChunkGenerator{
 
-	public NoiseBasedChunkGeneratorMixin(final BiomeSource pBiomeSource, final BiomeSource pRuntimeBiomeSource,
-			final StructureSettings pSettings, final long pStrongholdSeed) {
-		super(pBiomeSource, pRuntimeBiomeSource, pSettings, pStrongholdSeed);
+
+	public NoiseBasedChunkGeneratorMixin(final Registry<StructureSet> pStructureSets,
+			final Optional<HolderSet<StructureSet>> pStructureOverrides, final BiomeSource pBiomeSource) {
+		super(pStructureSets, pStructureOverrides, pBiomeSource);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Inject(method = "buildSurface(Lnet/minecraft/server/level/WorldGenRegion;Lnet/minecraft/world/level/StructureFeatureManager;Lnet/minecraft/world/level/chunk/ChunkAccess;)V",

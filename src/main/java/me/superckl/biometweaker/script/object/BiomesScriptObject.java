@@ -7,6 +7,8 @@ import me.superckl.api.biometweaker.script.pack.MergedBiomesPackage;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.api.superscript.util.CollectionHelper;
+import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.script.command.BiomeScriptCommand;
 
 public class BiomesScriptObject extends BiomePackScriptObject{
 
@@ -21,6 +23,10 @@ public class BiomesScriptObject extends BiomePackScriptObject{
 
 	@Override
 	public void addCommand(final ScriptCommand command) {
+		if(command instanceof final BiomeScriptCommand bCommand &&
+				!bCommand.requiredStage().isValid(BiomeTweaker.getINSTANCE().getCommandManager().getCurrentStage()))
+			throw new IllegalStateException(String.format("Invalid application stage! Command requires stages %s but found stage %s",
+					bCommand.requiredStage().getValidStages(), BiomeTweaker.getINSTANCE().getCommandManager().getCurrentStage()));
 		BiomeTweakerAPI.getCommandAdder().accept(command);
 	}
 

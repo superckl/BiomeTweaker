@@ -1,13 +1,10 @@
 package me.superckl.api.biometweaker.script.pack;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import me.superckl.api.biometweaker.APIInfo;
+import com.google.common.collect.Iterators;
+
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class BasicResourceNameBiomesPackage extends BiomePackage{
 
@@ -20,17 +17,13 @@ public class BasicResourceNameBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<Biome> iterator() {
-		final List<Biome> biomes = new ArrayList<>();
-		for(final ResourceLocation rLoc:this.rLocs){
-			final Biome biome = ForgeRegistries.BIOMES.getValue(rLoc);
-			if(biome == null){
-				APIInfo.log.error("Error applying tweaks. Resource location "+rLoc+" does not correspond to a biome! Check the output files for the correct location!");
-				continue;
-			}
-			biomes.add(biome);
-		}
-		return biomes.iterator();
+	public Iterator<ResourceLocation> locIterator() {
+		return Iterators.forArray(this.rLocs);
+	}
+
+	@Override
+	public boolean requiresRegistry() {
+		return false;
 	}
 
 }

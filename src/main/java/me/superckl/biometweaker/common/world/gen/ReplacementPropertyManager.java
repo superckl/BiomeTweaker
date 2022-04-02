@@ -4,27 +4,29 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.property.Property;
+import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
+import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.LogHelper;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class ReplacementPropertyManager {
 
-	public static Property<? extends BlockState> BLOCK;
-	public static Property<Integer> MIN_Y;
-	public static Property<Integer> MAX_Y;
-	public static Property<Integer> MIN_X;
-	public static Property<Integer> MAX_X;
-	public static Property<Integer> MIN_Z;
-	public static Property<Integer> MAX_Z;
-	public static Property<Integer> MIN_CHUNK_X;
-	public static Property<Integer> MAX_CHUNK_X;
-	public static Property<Integer> MIN_CHUNK_Z;
-	public static Property<Integer> MAX_CHUNK_Z;
-	public static Property<Boolean> IGNORE_META;
-	public static Property<Boolean> CONTIGUOUS;
+	public static Property<BlockStateBuilder<?>, ReplacementConstraints> BLOCK;
+	public static Property<Integer, ReplacementConstraints> MIN_Y;
+	public static Property<Integer, ReplacementConstraints> MAX_Y;
+	public static Property<Integer, ReplacementConstraints> MIN_X;
+	public static Property<Integer, ReplacementConstraints> MAX_X;
+	public static Property<Integer, ReplacementConstraints> MIN_Z;
+	public static Property<Integer, ReplacementConstraints> MAX_Z;
+	public static Property<Integer, ReplacementConstraints> MIN_CHUNK_X;
+	public static Property<Integer, ReplacementConstraints> MAX_CHUNK_X;
+	public static Property<Integer, ReplacementConstraints> MIN_CHUNK_Z;
+	public static Property<Integer, ReplacementConstraints> MAX_CHUNK_Z;
+	public static Property<Boolean, ReplacementConstraints> IGNORE_META;
+	public static Property<Boolean, ReplacementConstraints> CONTIGUOUS;
 
-	private static final Map<String, Property<?>> propertyMap = new HashMap<>();
+	private static final Map<String, Property<?, ReplacementConstraints>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = ReplacementPropertyManager.class.getDeclaredFields();
@@ -32,14 +34,14 @@ public class ReplacementPropertyManager {
 			try {
 				if(!Property.class.isAssignableFrom(field.getType()) || field.get(null) == null)
 					continue;
-				ReplacementPropertyManager.propertyMap.put(field.getName().toLowerCase().replace("_", ""), (Property<?>) field.get(null));
+				ReplacementPropertyManager.propertyMap.put(field.getName().toLowerCase().replace("_", ""), WarningHelper.uncheckedCast(field.get(null)));
 			} catch (final Exception e) {
 				LogHelper.error("Unable to add property to propertyMap!");
 				e.printStackTrace();
 			}
 	}
 
-	public static Property<?> findProperty(final String name){
+	public static Property<?, ReplacementConstraints> findProperty(final String name){
 		return ReplacementPropertyManager.propertyMap.get(name);
 	}
 }

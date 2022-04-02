@@ -11,27 +11,28 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PropertyHelper {
 
-	public static void setProperty(final Object obj, final Property<?> property, final JsonPrimitive value, final ScriptHandler handler) throws Exception{
+	public static <K, V> void setProperty(final Object obj, final Property<K, V> property, final JsonPrimitive value, final ScriptHandler handler) throws Exception{
 		if(!property.isSettable())
 			throw new UnsupportedOperationException("Property is not settable!");
 		if(!property.getTargetClass().isAssignableFrom(obj.getClass()))
 			throw new IllegalArgumentException("Property is not applicable to object with type "+obj.getClass().getSimpleName());
-		final Class<?> type = property.getTypeClass();
+		final V target = property.getTargetClass().cast(obj);
+		final Class<K> type = property.getTypeClass();
 		try {
 			if(type.isAssignableFrom(BlockState.class)) {
-				WarningHelper.<Property<? super BlockState>>uncheckedCast(property).set(obj, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
+				WarningHelper.<Property<? super BlockState, V>>uncheckedCast(property).set(target, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
 				return;
 			}
-			final ParameterType<?> pType = ParameterTypes.getDefaultType(type);
-			if(pType != null)
-				PropertyHelper.typeSafeSet(property, obj, pType.tryParse(value.getAsString(), handler));
+			final ParameterType<? extends K> pType = ParameterTypes.getDefaultType(type);
+			if(pType != null) {
+				final K parsed = pType.tryParse(value.getAsString(), handler);
+				if(parsed == null)
+					throw new IllegalArgumentException("Failed to parse command argument "+value.getAsString());
+				property.set(target, parsed);
+			}
 		} catch (final Exception e) {
 			throw e;
 		}
-	}
-
-	public static <K> void typeSafeSet(final Property<K> prop, final Object obj, final Object val){
-		prop.set(obj, WarningHelper.uncheckedCast(val));
 	}
 
 }

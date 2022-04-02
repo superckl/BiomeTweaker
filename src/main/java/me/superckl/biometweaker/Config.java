@@ -18,20 +18,32 @@ public class Config {
 	private final BooleanValue outputBiomes;
 	private final BooleanValue outputEntities;
 	private final BooleanValue outputDims;
+	private final BooleanValue outputCarvers;
+	private final BooleanValue outputFeatures;
 
 
 	private Config(final ForgeConfigSpec.Builder builder) {
 
-		//Wither Cheese
+
 		builder.comment("If true, BiomeTweaker will output separate files for each object (e.g., biomes)");
 		this.separateFiles = builder.define("Output.Separate Files", true);
 
-		builder.comment("Whether or not BiomeTweaker should output biome info. You can turn this off if you don't need it to shave startup time.");
+
+		builder.comment("Whether or not BiomeTweaker should output biome info. You can turn this off if you don't need it to shave output time.",
+				"You must run the biometweaker output command in game.");
 		this.outputBiomes = builder.define("Output.Biomes", true);
-		builder.comment("Whether or not BiomeTweaker should output entity info. You can turn this off if you don't need it to shave startup time.");
+		builder.comment("Whether or not BiomeTweaker should output entity info. You can turn this off if you don't need it to shave output time.",
+				"You must run the biometweaker output command in game.");
 		this.outputEntities = builder.define("Output.Entities", true);
-		builder.comment("Whether or not BiomeTweaker should output dimensions info. You can turn this off if you don't need it to shave startup time.");
+		builder.comment("Whether or not BiomeTweaker should output dimension info. You can turn this off if you don't need it to shave output time.",
+				"You must run the biometweaker output command in game.");
 		this.outputDims = builder.define("Output.Dimensions", true);
+		builder.comment("Whether or not BiomeTweaker should output feature info. You can turn this off if you don't need it to shave output time.",
+				"You must run the biometweaker output command in game.");
+		this.outputFeatures = builder.define("Output.Features", true);
+		builder.comment("Whether or not BiomeTweaker should output carver info. You can turn this off if you don't need it to shave output time.",
+				"You must run the biometweaker output command in game.");
+		this.outputCarvers = builder.define("Output.Carvers", true);
 	}
 
 	public static ForgeConfigSpec setup() {

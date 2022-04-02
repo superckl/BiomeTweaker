@@ -11,7 +11,9 @@ public final class ObfNameHelper {
 	@RequiredArgsConstructor
 	public enum Classes{
 
-		BIOME_GENERATION_SETTINGS("net.minecraft.world.level.biome.BiomeGenerationSettings");
+		BIOME_GENERATION_SETTINGS("net.minecraft.world.level.biome.BiomeGenerationSettings"),
+		BIOME("net.minecraft.world.level.biome.Biome"),
+		CLIMATE_SETTINGS("net.minecraft.world.level.biome.Biome.ClimateSettings");
 
 		@Getter
 		private final String name;
@@ -28,9 +30,16 @@ public final class ObfNameHelper {
 	@RequiredArgsConstructor
 	public enum Fields {
 
-		FEATURES(Classes.BIOME_GENERATION_SETTINGS, "f_4778"+"1_");
+		FEATURES(Classes.BIOME_GENERATION_SETTINGS, "f_4778"+"1_"),
+		TEMPERATURE(Classes.CLIMATE_SETTINGS, "f_4768"+"1_"),
+		DOWNFALL(Classes.CLIMATE_SETTINGS, "f_4768"+"3_"),
+		PRECIPITATION(Classes.CLIMATE_SETTINGS, "f_4768"+"0_"),
+		TEMPERATURE_MODIFIER(Classes.CLIMATE_SETTINGS, "f_4768"+"2_"),
+		CLIMATE_SETTINGS(Classes.BIOME, "f_4743"+"7_");
 
+		@Getter
 		private final Classes clazz;
+		@Getter
 		private final String name;
 
 		public Field get() throws ClassNotFoundException {

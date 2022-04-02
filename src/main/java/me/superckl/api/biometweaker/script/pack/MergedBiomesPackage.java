@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterators;
 
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.resources.ResourceLocation;
 
 public class MergedBiomesPackage extends BiomePackage{
 
@@ -18,11 +18,13 @@ public class MergedBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<Biome> iterator() {
-		final List<Biome> gens = new ArrayList<>();
-		for(final BiomePackage pack:this.packs)
-			Iterators.addAll(gens, pack.iterator());
-		return gens.iterator();
+	public Iterator<ResourceLocation> locIterator() {
+		return this.packs.stream().map(BiomePackage::locIterator).reduce(Iterators::concat).orElseGet(Collections::emptyIterator);
+	}
+
+	@Override
+	public boolean requiresRegistry() {
+		return this.packs.stream().anyMatch(BiomePackage::requiresRegistry);
 	}
 
 }

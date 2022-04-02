@@ -34,7 +34,7 @@ public class BlockReplacer {
 				return;
 			final WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(RandomSupport.seedUniquifier()));
 			final ChunkPos pos = chunk.getPos();
-			rand.setLargeFeatureSeed(level.getSeed()+BiomeTweakerAPI.MOD_ID.hashCode(), pos.x, pos.z);
+			rand.setLargeFeatureSeed(level.getSeed()+BiomeTweakerAPI.MOD_ID.hashCode()+chunk.getPos().hashCode(), pos.x, pos.z);
 			final Map<ResourceLocation, BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
 			for (final LevelChunkSection section : chunk.getSections()) {
 				if(section.hasOnlyAir())
@@ -44,7 +44,7 @@ public class BlockReplacer {
 				//Loop over the quarts first to obtain the biome efficiently
 				for(final BlockPos biome_pos : biome_positions) {
 					final int bx = biome_pos.getX(); final int by = biome_pos.getY(); final int bz = biome_pos.getZ();
-					final Biome biome = section.getNoiseBiome(bx, by, bz);
+					final Biome biome = section.getNoiseBiome(bx, by, bz).value();
 					final ResourceLocation rLoc = biome.getRegistryName();
 					if(!manager.hasReplacements(rLoc, stage))
 						continue;

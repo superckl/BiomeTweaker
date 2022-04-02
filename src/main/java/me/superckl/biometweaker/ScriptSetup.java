@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.objectweb.asm.Type;
@@ -16,7 +19,10 @@ import org.objectweb.asm.Type;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import me.superckl.api.biometweaker.property.PropertyField;
+import me.superckl.api.biometweaker.block.BlockStateBuilder;
+import me.superckl.api.biometweaker.property.BiomePropertyManager;
+import me.superckl.api.biometweaker.property.EarlyBiomeProperty;
+import me.superckl.api.biometweaker.property.PropertySimple;
 import me.superckl.api.biometweaker.script.wrapper.BTParameterTypes;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.api.superscript.AutoRegister;
@@ -34,12 +40,19 @@ import me.superckl.api.superscript.script.command.ScriptCommandRegistry;
 import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.BiomeModificationManager.ClimateModification;
+import me.superckl.biometweaker.BiomeModificationManager.EffectsModification;
+import me.superckl.biometweaker.BiomeModificationManager.MobSpawnModification;
 import me.superckl.biometweaker.common.world.gen.ReplacementPropertyManager;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.biome.Biome.Precipitation;
+import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
 
@@ -158,24 +171,59 @@ public class ScriptSetup {
 		}
 	}
 
-	public static void initProperties() {
+	public static void initProperties() throws ClassNotFoundException {
 
 		//Replacement Properties
-		ReplacementPropertyManager.BLOCK = new PropertyField<>(ReplacementConstraints.class, "block", BlockState.class);
-		ReplacementPropertyManager.MIN_Y = new PropertyField<>(ReplacementConstraints.class, "minY", Integer.class);
-		ReplacementPropertyManager.MAX_Y = new PropertyField<>(ReplacementConstraints.class, "maxY", Integer.class);
-		ReplacementPropertyManager.MIN_X = new PropertyField<>(ReplacementConstraints.class, "minX", Integer.class);
-		ReplacementPropertyManager.MAX_X = new PropertyField<>(ReplacementConstraints.class, "maxX", Integer.class);
-		ReplacementPropertyManager.MIN_Z = new PropertyField<>(ReplacementConstraints.class, "minZ", Integer.class);
-		ReplacementPropertyManager.MAX_Z = new PropertyField<>(ReplacementConstraints.class, "maxZ", Integer.class);
-		ReplacementPropertyManager.MIN_CHUNK_X = new PropertyField<>(ReplacementConstraints.class, "minChunkX", Integer.class);
-		ReplacementPropertyManager.MAX_CHUNK_X = new PropertyField<>(ReplacementConstraints.class, "maxChunkX", Integer.class);
-		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "minChunkZ", Integer.class);
-		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertyField<>(ReplacementConstraints.class, "maxChunkZ", Integer.class);
-		ReplacementPropertyManager.IGNORE_META = new PropertyField<>(ReplacementConstraints.class, "ignoreMeta", Boolean.class);
-		ReplacementPropertyManager.CONTIGUOUS = new PropertyField<>(ReplacementConstraints.class, "contiguous", Boolean.class);
+		//We have to get a little weird to force the wildcard in the Class generic
+		final Class<BlockStateBuilder<?>> builderClass = WarningHelper.uncheckedCast(BlockStateBuilder.class);
+		ReplacementPropertyManager.BLOCK = new PropertySimple<>(builderClass, ReplacementConstraints.class, ReplacementConstraints::getBuilder, ReplacementConstraints::setBuilder);
+		ReplacementPropertyManager.MIN_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinY, ReplacementConstraints::setMinY);
+		ReplacementPropertyManager.MAX_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxY, ReplacementConstraints::setMaxY);
+		ReplacementPropertyManager.MIN_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinX, ReplacementConstraints::setMinX);
+		ReplacementPropertyManager.MAX_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxX, ReplacementConstraints::setMaxX);
+		ReplacementPropertyManager.MIN_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinZ, ReplacementConstraints::setMinZ);
+		ReplacementPropertyManager.MAX_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxZ, ReplacementConstraints::setMaxZ);
+		ReplacementPropertyManager.MIN_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinChunkX, ReplacementConstraints::setMinChunkX);
+		ReplacementPropertyManager.MAX_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxChunkX, ReplacementConstraints::setMaxChunkX);
+		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinChunkZ, ReplacementConstraints::setMinChunkZ);
+		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxChunkZ, ReplacementConstraints::setMaxChunkZ);
+		ReplacementPropertyManager.IGNORE_META = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::isIgnoreMeta, ReplacementConstraints::setIgnoreMeta);
+		ReplacementPropertyManager.CONTIGUOUS = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::isContiguous, ReplacementConstraints::setContiguous);
 
 		ReplacementPropertyManager.populatePropertyMap();
+
+		final Function<ResourceLocation, ClimateModification> climate = loc -> BiomeModificationManager.forBiome(loc).getClimate();
+		final Function<ResourceLocation, EffectsModification> effects = loc -> BiomeModificationManager.forBiome(loc).getEffects();
+		final Function<ResourceLocation, MobSpawnModification> spawn = loc -> BiomeModificationManager.forBiome(loc).getSpawn();
+		BiomePropertyManager.TEMPERATURE = new EarlyBiomeProperty<>(Float.class,
+				Biome::getBaseTemperature, (loc, f) -> climate.apply(loc).setTemperature(Optional.of(f)));
+		BiomePropertyManager.TEMPERATURE_MODIFIER = new EarlyBiomeProperty<>(TemperatureModifier.class,
+				null, (loc, f) -> climate.apply(loc).setTemperatureModifier(f));
+		BiomePropertyManager.DOWNFALL = new EarlyBiomeProperty<>(Float.class,
+				Biome::getDownfall, (loc, f) -> climate.apply(loc).setDownfall(Optional.of(f)));
+		BiomePropertyManager.PRECIPITATION = new EarlyBiomeProperty<>(Precipitation.class,
+				Biome::getPrecipitation, (loc, f) -> climate.apply(loc).setPrecipitation(f));
+
+		BiomePropertyManager.GRASS_COLOR = new EarlyBiomeProperty<>(Integer.class,
+				loc -> loc.getSpecialEffects().getGrassColorOverride().orElseThrow(), (loc, f) -> effects.apply(loc).setGrassColorOverride(OptionalInt.of(f)));
+		BiomePropertyManager.FOG_COLOR = new EarlyBiomeProperty<>(Integer.class,
+				Biome::getFogColor, (loc, f) -> effects.apply(loc).setFogColor(OptionalInt.of(f)));
+		BiomePropertyManager.WATER_COLOR = new EarlyBiomeProperty<>(Integer.class, Biome::getWaterColor,
+				(loc, f) -> effects.apply(loc).setWaterColor(OptionalInt.of(f)));
+		BiomePropertyManager.WATER_FOG_COLOR = new EarlyBiomeProperty<>(Integer.class, Biome::getWaterFogColor,
+				(loc, f) -> effects.apply(loc).setWaterFogColor(OptionalInt.of(f)));
+		BiomePropertyManager.SKY_COLOR = new EarlyBiomeProperty<>(Integer.class,
+				Biome::getSkyColor, (loc, f) -> effects.apply(loc).setSkyColor(OptionalInt.of(f)));
+		BiomePropertyManager.FOLIAGE_COLOR = new EarlyBiomeProperty<>(Integer.class,
+				Biome::getFoliageColor, (loc, f) -> effects.apply(loc).setFoliageColorOverride(OptionalInt.of(f)));
+
+		BiomePropertyManager.SPAWN_PROBABILITY = new EarlyBiomeProperty<>(Float.class,
+				loc -> loc.getMobSettings().getCreatureProbability(), (loc, f) -> spawn.apply(loc).setProbability(Optional.of(f)));
+		BiomePropertyManager.CATEGORY = new EarlyBiomeProperty<>(BiomeCategory.class,
+				null, (loc, f) -> BiomeModificationManager.forBiome(loc).setCategory(f));
+
+		BiomePropertyManager.populatePropertyMap();
+
 	}
 
 	public static Set<AnnotationData> ungroupAutoRegs(final AnnotationData autoRegs){

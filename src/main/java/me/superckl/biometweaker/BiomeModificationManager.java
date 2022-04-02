@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
+import it.unimi.dsi.fastutil.doubles.DoubleDoublePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Data;
@@ -155,7 +156,7 @@ public class BiomeModificationManager {
 		private final Multimap<MobCategory, ResourceLocation> removedSpawns = MultimapBuilder.enumKeys(MobCategory.class).hashSetValues().build();
 		private final Set<MobCategory> allSpawns = EnumSet.noneOf(MobCategory.class);
 		private final Multimap<MobCategory, SpawnerData> addedSpawns = MultimapBuilder.enumKeys(MobCategory.class).hashSetValues().build();
-		private final Map<ResourceLocation, IntIntPair> costs = new HashMap<>();
+		private final Map<ResourceLocation, DoubleDoublePair> costs = new HashMap<>();
 		@Setter
 		@Getter
 		private Optional<Float> probability = Optional.empty();
@@ -165,7 +166,7 @@ public class BiomeModificationManager {
 			this.removedSpawns.forEach((type, loc) -> val.getSpawner(type).removeIf(spawner -> spawner.type.delegate.name().equals(loc)));
 			this.addedSpawns.forEach((type, spawn) -> val.getSpawner(type).add(spawn));
 			this.probability.ifPresent(val::creatureGenerationProbability);
-			this.costs.forEach((loc, pair) -> val.addMobCharge(ForgeRegistries.ENTITIES.getValue(loc), pair.leftInt(), pair.rightInt()));
+			this.costs.forEach((loc, pair) -> val.addMobCharge(ForgeRegistries.ENTITIES.getValue(loc), pair.leftDouble(), pair.rightDouble()));
 
 		}
 
@@ -183,8 +184,8 @@ public class BiomeModificationManager {
 				this.addedSpawns.put(type, spawn);
 		}
 
-		public void setCost(final ResourceLocation entity, final int costPer, final int maxCost) {
-			this.costs.put(entity, IntIntPair.of(costPer, maxCost));
+		public void setCost(final ResourceLocation entity, final double costPer, final double maxCost) {
+			this.costs.put(entity, DoubleDoublePair.of(costPer, maxCost));
 		}
 
 	}

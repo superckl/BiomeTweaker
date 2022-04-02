@@ -13,10 +13,10 @@ public class ScriptCommandSetSpawnCost extends BiomeScriptCommand{
 
 	private final BiomePackage pack;
 	private final ResourceLocation rLoc;
-	private final int costPer;
-	private final int maxCost;
+	private final double costPer;
+	private final double maxCost;
 
-	public ScriptCommandSetSpawnCost(final BiomePackage pack, final String rLoc, final int perCost, final int maxCost) throws ClassNotFoundException {
+	public ScriptCommandSetSpawnCost(final BiomePackage pack, final String rLoc, final double perCost, final double maxCost) throws ClassNotFoundException {
 		this.pack = pack;
 		this.rLoc = new ResourceLocation(rLoc);
 		this.costPer = perCost;

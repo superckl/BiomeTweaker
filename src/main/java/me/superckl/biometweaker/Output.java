@@ -45,7 +45,7 @@ public class Output {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", entry.getRegistryName().toString());
 				final Either<JsonElement, PartialResult<JsonElement>> result = (Config.getInstance().getReducedBiomeOutput().get() ? Biome.NETWORK_CODEC : Biome.DIRECT_CODEC).encodeStart(ops, entry).get();
-				result.ifRight(pR -> LogHelper.warn("Failed to encode a biome! "+pR.message()));
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a biome! "+pR.message()));
 				result.ifLeft(el -> obj.add("biome", el));
 				return obj;
 			}, namer.apply("registry_name", "Biome"));
@@ -62,7 +62,7 @@ public class Output {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", entry.key().location().toString());
 				final Either<JsonElement, PartialResult<JsonElement>> result = LevelStem.CODEC.encodeStart(ops, entry.value()).get();
-				result.ifRight(pR -> LogHelper.warn("Failed to encode an entity! "+pR.message()));
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode an entity! "+pR.message()));
 				result.ifLeft(el -> obj.add("level_stem", el));
 				return obj;
 			}, namer.apply("registry_name", "Dimension"));
@@ -74,7 +74,7 @@ public class Output {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", holder.key().location().toString());
 				final Either<JsonElement, PartialResult<JsonElement>> result = PlacedFeature.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> LogHelper.warn("Failed to encode a feature! "+pR.message()));
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a feature! "+pR.message()));
 				result.ifLeft(el -> obj.add("placed_feature", el));
 				return obj;
 			}, namer.apply("registry_name", "Feature"));
@@ -86,7 +86,7 @@ public class Output {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", holder.key().location().toString());
 				final Either<JsonElement, PartialResult<JsonElement>> result = ConfiguredWorldCarver.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> LogHelper.warn("Failed to encode a carver! "+pR.message()));
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a carver! "+pR.message()));
 				result.ifLeft(el -> obj.add("configured_carver", el));
 				return obj;
 			}, namer.apply("registry_name", "Carver"));
@@ -98,7 +98,7 @@ public class Output {
 		final String name = namingStrategy.apply(Optional.empty());
 		if(Config.getInstance().getOutputDims().get())
 			try {
-				LogHelper.info(String.format("Generating %s status report...", name));
+				BiomeTweaker.LOG.info("Generating %s status report...", name);
 
 				dir.mkdirs();
 				Output.clearOutput(dir);
@@ -108,7 +108,7 @@ public class Output {
 
 				Output.writeArray(array, dir, namingStrategy);
 			} catch (final Exception e) {
-				LogHelper.error(String.format("Caught an exception while generating %s status report! %s", name, e.toString()));
+				BiomeTweaker.LOG.error(String.format("Caught an exception while generating %s status report!", name), e);
 				e.printStackTrace();
 			}
 	}

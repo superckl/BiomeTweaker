@@ -62,7 +62,7 @@ public class ScriptSetup {
 
 		//Ensure BTParamterTypes registers its defaults
 		BTParameterTypes.BLOCKSTATE_BUILDER.getTypeClass();
-		LogHelper.debug("Discovering @AutoRegister script commands...");
+		BiomeTweaker.LOG.debug("Discovering @AutoRegister script commands...");
 		final Map<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> listings = new HashMap<>();
 
 		final Type autoReg = Type.getType(AutoRegister.class);
@@ -118,11 +118,11 @@ public class ScriptSetup {
 				}
 				examinedClasses.add(data.clazz());
 			} catch (final Exception e) {
-				LogHelper.error("Failed to auto-register a script command "+data.toString());
+				BiomeTweaker.LOG.error("Failed to auto-register a script command "+data.toString());
 				e.printStackTrace();
 			}
 		for(final Entry<Class<? extends ScriptObject>, Map<String, ScriptCommandListing>> entry:listings.entrySet()){
-			LogHelper.debug("Registering "+entry.getValue().size()+" commands to "+entry.getKey().getSimpleName());
+			BiomeTweaker.LOG.debug("Registering "+entry.getValue().size()+" commands to "+entry.getKey().getSimpleName());
 			ScriptCommandRegistry.INSTANCE.registerClassListing(entry.getKey(), entry.getValue());
 		}
 
@@ -166,7 +166,7 @@ public class ScriptSetup {
 			ScriptParser.registerValidObjectInst("newBlockReplacement", listing);
 
 		} catch (final Exception e2) {
-			LogHelper.error("Failed to populate object listings! Some tweaks may not be applied.");
+			BiomeTweaker.LOG.error("Failed to populate object listings! Some tweaks may not be applied.");
 			e2.printStackTrace();
 		}
 	}

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
-import me.superckl.biometweaker.LogHelper;
+import me.superckl.biometweaker.BiomeTweaker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceLocation;
@@ -101,7 +101,7 @@ public class BlockReplacer {
 					it.remove();
 			manager.trackReplacement(pos, previousReplacements);
 		} catch (final Exception e1) {
-			LogHelper.error("Failed to process replace biome blocks event.");
+			BiomeTweaker.LOG.error("Failed to process replace biome blocks event.");
 			e1.printStackTrace();
 		}
 	}

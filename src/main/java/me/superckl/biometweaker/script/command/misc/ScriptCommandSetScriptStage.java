@@ -5,7 +5,6 @@ import me.superckl.api.superscript.ApplicationStage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.LogHelper;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 
 @AutoRegister(classes = TweakerScriptObject.class, name = "setStage")
@@ -19,7 +18,7 @@ public class ScriptCommandSetScriptStage extends ScriptCommand{
 	public void perform() throws Exception {
 		final ApplicationStage stage = ApplicationStage.valueOf(this.stage);
 		if(stage == null){
-			LogHelper.error("Invalid application stage specified!");
+			BiomeTweaker.LOG.error("Invalid application stage specified!");
 			return;
 		}
 		BiomeTweaker.getINSTANCE().getCommandManager().setCurrentStage(stage);

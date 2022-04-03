@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import lombok.Getter;
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
@@ -36,6 +37,7 @@ public class BiomeTweaker {
 
 	@Getter
 	private static BiomeTweaker INSTANCE;
+	public static final Logger LOG = LogManager.getFormatterLogger(BiomeTweakerAPI.MOD_ID);
 	@Getter
 	private final BasicScriptCommandManager commandManager;
 	@Getter
@@ -45,12 +47,11 @@ public class BiomeTweaker {
 
 	public BiomeTweaker() {
 		BiomeTweaker.INSTANCE = this;
-		LogHelper.setLogger(LogManager.getFormatterLogger(BiomeTweakerAPI.MOD_ID));
 		ScriptSetup.setupScripts(ModList.get().getAllScanData());
 		try {
 			ScriptSetup.initProperties();
 		} catch (final ClassNotFoundException e) {
-			LogHelper.warn("Failed to setup properties, set commands may not work!");
+			BiomeTweaker.LOG.warn("Failed to setup properties, set commands may not work!");
 			e.printStackTrace();
 		}
 
@@ -96,7 +97,7 @@ public class BiomeTweaker {
 
 	public void parseScripts(){
 		try {
-			LogHelper.info("Beginning script parsing...");
+			BiomeTweaker.LOG.info("Beginning script parsing...");
 			long diff;
 			final long time = System.currentTimeMillis();
 			this.scriptDir.mkdirs();
@@ -104,12 +105,12 @@ public class BiomeTweaker {
 				try {
 					this.parseScript(script);
 				} catch (final Exception e1) {
-					LogHelper.error("Failed to parse a script file! File: " + script);
+					BiomeTweaker.LOG.error("Failed to parse a script file! File: " + script);
 					e1.printStackTrace();
 				}
 			diff = System.currentTimeMillis() - time;
-			LogHelper.info("Finished script parsing.");
-			LogHelper.debug("Script parsing took "+diff+"ms.");
+			BiomeTweaker.LOG.info("Finished script parsing.");
+			BiomeTweaker.LOG.debug("Script parsing took "+diff+"ms.");
 		} catch (final Exception e) {
 			throw new RuntimeException("An unexpected error occurred while processing script files. Parsing may be incomplete. Ensure BiomeTweakerCore was called successfully.", e);
 		}
@@ -117,7 +118,7 @@ public class BiomeTweaker {
 
 	public void parseScript(final File file) throws IOException{
 		if(!file.exists()){
-			LogHelper.debug(String.format("Subfile %s not found. A blank one will be generated.", file.getName()));
+			BiomeTweaker.LOG.debug("Subfile %s not found. A blank one will be generated.", file.getName());
 			file.createNewFile();
 		}
 		ScriptParser.parseScriptFile(file);

@@ -8,7 +8,7 @@ import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.api.superscript.util.WarningHelper;
-import me.superckl.biometweaker.LogHelper;
+import me.superckl.biometweaker.BiomeTweaker;
 
 public class ReplacementPropertyManager {
 
@@ -36,7 +36,7 @@ public class ReplacementPropertyManager {
 					continue;
 				ReplacementPropertyManager.propertyMap.put(field.getName().toLowerCase().replace("_", ""), WarningHelper.uncheckedCast(field.get(null)));
 			} catch (final Exception e) {
-				LogHelper.error("Unable to add property to propertyMap!");
+				BiomeTweaker.LOG.error("Unable to add property to propertyMap!");
 				e.printStackTrace();
 			}
 	}

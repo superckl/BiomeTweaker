@@ -42,10 +42,13 @@ public class Output {
 		if(Config.getInstance().getOutputBiomes().get()) {
 			final File biomeDir = new File(baseDir, "/biome/");
 			Output.genOutput(Streams.stream(registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY).iterator()), biomeDir, entry -> {
-				final Either<JsonElement, PartialResult<JsonElement>> result = Biome.DIRECT_CODEC.encodeStart(ops, entry).get();
+				final JsonObject obj = new JsonObject();
+				obj.addProperty("registry_name", entry.getRegistryName().toString());
+				final Either<JsonElement, PartialResult<JsonElement>> result = (Config.getInstance().getReducedBiomeOutput().get() ? Biome.NETWORK_CODEC : Biome.DIRECT_CODEC).encodeStart(ops, entry).get();
 				result.ifRight(pR -> LogHelper.warn("Failed to encode a biome! "+pR.message()));
-				return result.left().orElseGet(JsonObject::new).getAsJsonObject();
-			}, namer.apply("forge:registry_name", "Biome"));
+				result.ifLeft(el -> obj.add("biome", el));
+				return obj;
+			}, namer.apply("registry_name", "Biome"));
 		}
 
 		if(Config.getInstance().getOutputEntities().get()) {
@@ -105,7 +108,7 @@ public class Output {
 
 				Output.writeArray(array, dir, namingStrategy);
 			} catch (final Exception e) {
-				LogHelper.error(String.format("Caught an exception while generating %s status report!", name));
+				LogHelper.error(String.format("Caught an exception while generating %s status report! %s", name, e.toString()));
 				e.printStackTrace();
 			}
 	}

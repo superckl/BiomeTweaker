@@ -16,7 +16,6 @@ public class Config {
 
 	private final BooleanValue separateFiles;
 	private final BooleanValue outputBiomes;
-	private final BooleanValue reducedBiomeOutput;
 	private final BooleanValue outputEntities;
 	private final BooleanValue outputDims;
 	private final BooleanValue outputCarvers;
@@ -33,8 +32,6 @@ public class Config {
 		builder.comment("Whether or not BiomeTweaker should output biome info. You can turn this off if you don't need it to shave output time.",
 				"You must run the biometweaker output command in game.");
 		this.outputBiomes = builder.define("Output.Biomes", true);
-		builder.comment("Set to true to have BiomeTweaker only output biome data that is sent from server to client. This should be unnecessary, but can alleviate issues with mod compability.");
-		this.reducedBiomeOutput = builder.define("Output.Reduced Biome", false);
 		builder.comment("Whether or not BiomeTweaker should output entity info. You can turn this off if you don't need it to shave output time.",
 				"You must run the biometweaker output command in game.");
 		this.outputEntities = builder.define("Output.Entities", true);

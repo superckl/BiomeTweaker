@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -16,20 +17,28 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult.PartialResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 
 import lombok.Cleanup;
 import me.superckl.api.superscript.util.WarningHelper;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.GenerationStep.Carving;
+import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class Output {
@@ -44,9 +53,12 @@ public class Output {
 			Output.genOutput(Streams.stream(registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY).iterator()), biomeDir, entry -> {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", entry.getRegistryName().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = (Config.getInstance().getReducedBiomeOutput().get() ? Biome.NETWORK_CODEC : Biome.DIRECT_CODEC).encodeStart(ops, entry).get();
+				final Either<JsonElement, PartialResult<JsonElement>> result = Biome.NETWORK_CODEC.encodeStart(ops, entry).get();
 				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a biome! "+pR.message()));
-				result.ifLeft(el -> obj.add("biome", el));
+				result.ifLeft(el -> {
+					Output.addGenInfo(el.getAsJsonObject(), entry, ops);
+					obj.add("biome", el);
+				});
 				return obj;
 			}, namer.apply("registry_name", "Biome"));
 		}
@@ -74,10 +86,20 @@ public class Output {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", holder.key().location().toString());
 				final Either<JsonElement, PartialResult<JsonElement>> result = PlacedFeature.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a feature! "+pR.message()));
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a placed feature! "+pR.message()));
 				result.ifLeft(el -> obj.add("placed_feature", el));
 				return obj;
-			}, namer.apply("registry_name", "Feature"));
+			}, namer.apply("registry_name", "Placed Feature"));
+
+			final File configDir = new File(featureDir, "config/");
+			Output.genOutput(registry.ownedRegistryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY).holders(), configDir, holder -> {
+				final JsonObject obj = new JsonObject();
+				obj.addProperty("registry_name", holder.key().location().toString());
+				final Either<JsonElement, PartialResult<JsonElement>> result = ConfiguredFeature.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
+				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a configured feature! "+pR.message()));
+				result.ifLeft(el -> obj.add("configured_feature", el));
+				return obj;
+			}, namer.apply("registry_name", "Configured Feature"));
 		}
 
 		if(Config.getInstance().getOutputCarvers().get()) {
@@ -89,7 +111,7 @@ public class Output {
 				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a carver! "+pR.message()));
 				result.ifLeft(el -> obj.add("configured_carver", el));
 				return obj;
-			}, namer.apply("registry_name", "Carver"));
+			}, namer.apply("registry_name", "Configured Carver"));
 		}
 	}
 
@@ -129,6 +151,55 @@ public class Output {
 		size.addProperty("fixed", type.getDimensions().fixed);
 		obj.add("size", size);
 		return obj;
+	}
+
+	private static void addGenInfo(final JsonObject obj, final Biome biome, final DynamicOps<JsonElement> ops) {
+		final BiomeGenerationSettings gen = biome.getGenerationSettings();
+		final JsonObject featuresObj = new JsonObject();
+		final List<HolderSet<PlacedFeature>> features = gen.features();
+		for(final Decoration stage:Decoration.values()) {
+			if(stage.ordinal() >= gen.features().size())
+				break;
+			featuresObj.add(stage.name(), Output.serializeHolders(features.get(stage.ordinal()), feature -> Output.serializePlacedFeature(feature, ops)));
+		}
+		obj.add("features", featuresObj);
+		final JsonObject carversObj = new JsonObject();
+		for(final Carving stage:gen.getCarvingStages())
+			carversObj.add(stage.name(), Output.serializeHolders(gen.getCarvers(stage), carver -> Output.encode(ops, carver, ConfiguredWorldCarver.DIRECT_CODEC)));
+		obj.add("carver", carversObj);
+	}
+
+	private static JsonObject serializePlacedFeature(final PlacedFeature feature, final DynamicOps<JsonElement> ops) {
+		final JsonObject obj = new JsonObject();
+		obj.add("feature", Output.serializeHolder(feature.feature(), cf -> Output.encode(ops, cf, ConfiguredFeature.DIRECT_CODEC)));
+		final JsonArray array = new JsonArray();
+		for(final PlacementModifier modifier : feature.placement())
+			array.add(Output.encode(ops, modifier, PlacementModifier.CODEC));
+		obj.add("placement", array);
+		return obj;
+	}
+
+	private static <T> JsonArray serializeHolders(final Iterable<Holder<T>> holders, final Function<T, JsonElement> serializer) {
+		final JsonArray array = new JsonArray();
+		holders.forEach(holder -> array.add(Output.serializeHolder(holder, serializer)));
+		return array;
+	}
+
+	private static <T> JsonObject serializeHolder(final Holder<T> holder, final Function<T, JsonElement> serializer) {
+		final JsonObject obj = new JsonObject();
+		obj.addProperty("kind", holder.kind().name());
+		if(holder instanceof final Holder.Reference<T> ref)
+			obj.addProperty("registry_name", ref.key().location().toString());
+		else
+			obj.add("value", serializer.apply(holder.value()));
+		return obj;
+	}
+
+	public static <T, V> V encode(final DynamicOps<? extends V> ops, final T data, final Codec<? super T> codec) {
+		final var result = codec.encodeStart(ops, data).get();
+		if(result.right().isPresent())
+			throw new IllegalArgumentException(String.format("Failed to encode: %s", result.right().get().message()));
+		return result.left().get();
 	}
 
 	private static void clearOutput(final File dir) {

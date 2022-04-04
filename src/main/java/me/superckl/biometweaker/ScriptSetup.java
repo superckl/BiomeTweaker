@@ -171,7 +171,7 @@ public class ScriptSetup {
 		}
 	}
 
-	public static void initProperties() throws ClassNotFoundException {
+	public static void initProperties(){
 
 		//Replacement Properties
 		//We have to get a little weird to force the wildcard in the Class generic

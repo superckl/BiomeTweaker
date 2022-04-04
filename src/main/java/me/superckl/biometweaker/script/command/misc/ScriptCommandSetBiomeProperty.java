@@ -12,7 +12,7 @@ import me.superckl.api.biometweaker.property.PropertyHelper;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.api.superscript.script.ScriptHandler;
-import me.superckl.biometweaker.script.command.BiomeScriptCommand;
+import me.superckl.biometweaker.script.command.StagedScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "set")
 @RequiredArgsConstructor
-public class ScriptCommandSetBiomeProperty extends BiomeScriptCommand{
+public class ScriptCommandSetBiomeProperty extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final String key;

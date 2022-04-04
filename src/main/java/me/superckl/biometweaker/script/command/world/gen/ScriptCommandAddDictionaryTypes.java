@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
-import me.superckl.biometweaker.script.command.BiomeScriptCommand;
+import me.superckl.biometweaker.script.command.StagedScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.core.Registry;
@@ -16,7 +16,7 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "addDicTypes")
 @RequiredArgsConstructor
-public class ScriptCommandAddDictionaryTypes extends BiomeScriptCommand{
+public class ScriptCommandAddDictionaryTypes extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final String[] types;

@@ -15,6 +15,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
@@ -24,6 +25,8 @@ import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.levelgen.GenerationStep.Carving;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -196,6 +199,9 @@ public class BiomeModificationManager {
 		private final Multimap<Carving, ResourceLocation> removedCarvers = MultimapBuilder.enumKeys(Carving.class).hashSetValues().build();
 		private final Set<Carving> allCarvers = EnumSet.noneOf(Carving.class);
 
+		private final Multimap<Decoration, Holder<PlacedFeature>> addedFeatures = MultimapBuilder.enumKeys(Decoration.class).arrayListValues().build();
+		private final Multimap<Carving, Holder<ConfiguredWorldCarver<?>>> addedCarvers = MultimapBuilder.enumKeys(Carving.class).arrayListValues().build();
+
 		public void removeFeature(final ResourceLocation feature, final Decoration... stages) {
 			for (final Decoration stage : stages)
 				this.removedFeatures.put(stage, feature);
@@ -203,6 +209,11 @@ public class BiomeModificationManager {
 
 		public void removeAllFeatures(final Decoration stage) {
 			this.allFeatures.add(stage);
+		}
+
+		public void addFeature(final Holder<PlacedFeature> feature, final Decoration... stages) {
+			for (final Decoration stage : stages)
+				this.addedFeatures.put(stage, feature);
 		}
 
 		public void removeCarver(final ResourceLocation feature, final Carving... stages) {
@@ -214,11 +225,19 @@ public class BiomeModificationManager {
 			this.allCarvers.add(stage);
 		}
 
+		public void addCarver(final Holder<ConfiguredWorldCarver<?>> feature, final Carving... stages) {
+			for (final Carving stage : stages)
+				this.addedCarvers.put(stage, feature);
+		}
+
 		public void modify(final BiomeGenerationSettingsBuilder val) {
 			this.allFeatures.forEach(stage -> val.getFeatures(stage).clear());
 			this.removedFeatures.forEach((stage, loc) -> val.getFeatures(stage).removeIf(feature -> feature.is(loc)));
 			this.allCarvers.forEach(stage -> val.getCarvers(stage).clear());
 			this.removedCarvers.forEach((stage, loc) -> val.getCarvers(stage).removeIf(carver -> carver.is(loc)));
+
+			this.addedFeatures.forEach((stage, holder) -> val.getFeatures(stage).add(holder));
+			this.addedCarvers.forEach((stage, holder) -> val.getCarvers(stage).add(holder));
 		}
 
 	}

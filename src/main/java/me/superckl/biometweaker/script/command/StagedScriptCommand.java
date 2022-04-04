@@ -8,13 +8,13 @@ import lombok.Getter;
 import me.superckl.api.superscript.ApplicationStage;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 
-public abstract class BiomeScriptCommand extends ScriptCommand{
+public abstract class StagedScriptCommand extends ScriptCommand{
 
-	public BIOME_REQUIREMENT requiredStage() {
-		return BIOME_REQUIREMENT.NONE;
+	public StageRequirement requiredStage() {
+		return StageRequirement.NONE;
 	}
 
-	public enum BIOME_REQUIREMENT{
+	public enum StageRequirement{
 		NONE(ApplicationStage.CONSTRUCTION, ApplicationStage.SETUP, ApplicationStage.LOAD_COMPLETE),
 		EARLY(ApplicationStage.CONSTRUCTION),
 		LATE(ApplicationStage.SETUP, ApplicationStage.LOAD_COMPLETE);
@@ -22,7 +22,7 @@ public abstract class BiomeScriptCommand extends ScriptCommand{
 		@Getter
 		private final Set<ApplicationStage> validStages;
 
-		BIOME_REQUIREMENT(final ApplicationStage stage, final ApplicationStage... stages) {
+		StageRequirement(final ApplicationStage stage, final ApplicationStage... stages) {
 			this.validStages = Sets.immutableEnumSet(stage, stages);
 		}
 

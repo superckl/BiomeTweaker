@@ -44,19 +44,25 @@ public class BiomeTweaker {
 	private final File scriptDir;
 	@Getter
 	private final File outputDir;
+	@Getter
+	private final File configedFeatureDir;
+	@Getter
+	private final File featureDir;
+	@Getter
+	private final File carverDir;
 
 	public BiomeTweaker() {
 		BiomeTweaker.INSTANCE = this;
 		ScriptSetup.setupScripts(ModList.get().getAllScanData());
-		try {
-			ScriptSetup.initProperties();
-		} catch (final ClassNotFoundException e) {
-			BiomeTweaker.LOG.warn("Failed to setup properties, set commands may not work!");
-			e.printStackTrace();
-		}
+		ScriptSetup.initProperties();
 
 		this.scriptDir = FMLPaths.CONFIGDIR.get().resolve(BiomeTweakerAPI.MOD_ID+"/scripts/").toFile();
 		this.outputDir = FMLPaths.CONFIGDIR.get().resolve(BiomeTweakerAPI.MOD_ID+"/output/").toFile();
+		this.configedFeatureDir = FMLPaths.CONFIGDIR.get().resolve(BiomeTweakerAPI.MOD_ID+"/features/config/").toFile();
+		this.featureDir = FMLPaths.CONFIGDIR.get().resolve(BiomeTweakerAPI.MOD_ID+"/features/").toFile();
+		this.carverDir = FMLPaths.CONFIGDIR.get().resolve(BiomeTweakerAPI.MOD_ID+"/carvers/").toFile();
+		this.configedFeatureDir.mkdirs();
+		this.carverDir.mkdirs();
 
 		this.commandManager = new BasicScriptCommandManager();
 		ScriptCommandRegistry.INSTANCE.registerScriptCommandManager(BiomeTweakerAPI.MOD_ID, this.commandManager);

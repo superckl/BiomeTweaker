@@ -7,13 +7,13 @@ import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.common.world.gen.BlockReplacementManager;
 import me.superckl.biometweaker.common.world.gen.TweakWorldManager;
-import me.superckl.biometweaker.script.command.BiomeScriptCommand;
+import me.superckl.biometweaker.script.command.StagedScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "registerGenBlockRep")
 @RequiredArgsConstructor
-public class ScriptCommandRegisterBlockReplacement extends BiomeScriptCommand{
+public class ScriptCommandRegisterBlockReplacement extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final int weight;

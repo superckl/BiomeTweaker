@@ -17,7 +17,11 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.Music;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.level.biome.AmbientAdditionsSettings;
+import net.minecraft.world.level.biome.AmbientParticleSettings;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.biome.Biome.ClimateSettings;
@@ -120,6 +124,11 @@ public class BiomeModificationManager {
 		private OptionalInt foliageColorOverride = OptionalInt.empty();
 		private OptionalInt grassColorOverride = OptionalInt.empty();
 		private BiomeSpecialEffects.GrassColorModifier grassColorModifier;
+		private Optional<SoundEvent> ambientSoundLoop = Optional.empty();
+		private Optional<AmbientParticleSettings> particle = Optional.empty();
+		private Optional<AmbientAdditionsSettings> additions = Optional.empty();
+		private Optional<Music> backgroundMusic = Optional.empty();
+
 
 		public BiomeSpecialEffects modify(final BiomeSpecialEffects val) {
 			final BiomeSpecialEffects.Builder builder = this.toBuilder(val);
@@ -131,6 +140,10 @@ public class BiomeModificationManager {
 			this.foliageColorOverride.ifPresent(builder::foliageColorOverride);
 			this.grassColorOverride.ifPresent(builder::grassColorOverride);
 			builder.grassColorModifier(this.grassColorModifier == null ? val.getGrassColorModifier() : this.grassColorModifier);
+			this.ambientSoundLoop.ifPresent(builder::ambientLoopSound);
+			this.particle.ifPresent(builder::ambientParticle);
+			this.additions.ifPresent(builder::ambientAdditionsSound);
+			this.backgroundMusic.ifPresent(builder::backgroundMusic);
 			return builder.build();
 		}
 

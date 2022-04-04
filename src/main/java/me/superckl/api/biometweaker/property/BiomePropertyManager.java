@@ -26,6 +26,7 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Integer> FOG_COLOR;
 	public static EarlyBiomeProperty<Float> SPAWN_PROBABILITY;
 	public static EarlyBiomeProperty<BiomeCategory> CATEGORY;
+	public static EarlyBiomeProperty<String> AMBIENT_LOOP_SOUND;
 
 	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
 

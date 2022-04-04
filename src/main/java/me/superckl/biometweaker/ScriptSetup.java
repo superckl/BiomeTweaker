@@ -55,6 +55,7 @@ import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraftforge.forgespi.language.ModFileScanData;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class ScriptSetup {
 
@@ -221,6 +222,9 @@ public class ScriptSetup {
 				loc -> loc.getMobSettings().getCreatureProbability(), (loc, f) -> spawn.apply(loc).setProbability(Optional.of(f)));
 		BiomePropertyManager.CATEGORY = new EarlyBiomeProperty<>(BiomeCategory.class,
 				null, (loc, f) -> BiomeModificationManager.forBiome(loc).setCategory(f));
+
+		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, loc -> loc.getAmbientLoop().orElseThrow().getRegistryName().toString(),
+				(loc, f) -> effects.apply(loc).setAmbientSoundLoop(Optional.of(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(f)))));
 
 		BiomePropertyManager.populatePropertyMap();
 

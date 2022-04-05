@@ -81,6 +81,7 @@ public class BiomeTweaker {
 		this.parseScripts();
 
 		this.commandManager.applyCommandsFor(ApplicationStage.CONSTRUCTION);
+
 	}
 
 	private void commonSetup(final FMLCommonSetupEvent e) {

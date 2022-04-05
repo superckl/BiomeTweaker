@@ -27,6 +27,7 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Float> SPAWN_PROBABILITY;
 	public static EarlyBiomeProperty<BiomeCategory> CATEGORY;
 	public static EarlyBiomeProperty<String> AMBIENT_LOOP_SOUND;
+	public static EarlyBiomeProperty<Boolean> DISABLE_SLEEP;
 
 	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
 

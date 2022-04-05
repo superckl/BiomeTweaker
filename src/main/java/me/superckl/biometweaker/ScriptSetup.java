@@ -226,6 +226,9 @@ public class ScriptSetup {
 		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, loc -> loc.getAmbientLoop().orElseThrow().getRegistryName().toString(),
 				(loc, f) -> effects.apply(loc).setAmbientSoundLoop(Optional.of(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(f)))));
 
+		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSleep(),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSleep(f));
+
 		BiomePropertyManager.populatePropertyMap();
 
 	}

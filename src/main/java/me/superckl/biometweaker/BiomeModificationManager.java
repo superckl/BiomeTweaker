@@ -47,9 +47,10 @@ public class BiomeModificationManager {
 	private EffectsModification effects;
 	private GenerationModification generation;
 	private MobSpawnModification spawn;
-	@Getter
-	@Setter
+	@Getter @Setter
 	private BiomeCategory category;
+	@Getter @Setter
+	private boolean disableSleep;
 
 	private BiomeModificationManager() {}
 

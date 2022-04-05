@@ -169,6 +169,14 @@ public class BTParameterTypes {
 		}
 	};
 
+	public static final ParameterType<ResourceLocation> RESOURCE_LOCATION = new ParameterType<>(ResourceLocation.class) {
+
+		@Override
+		public ResourceLocation tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return new ResourceLocation(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
+		}
+	};
+
 	static {
 		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
 		ParameterTypes.registerDefaultType(BiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
@@ -177,6 +185,7 @@ public class BTParameterTypes {
 		ParameterTypes.registerDefaultType(Biome.TemperatureModifier.class, BTParameterTypes.TEMPERATURE_MODIFIER);
 		ParameterTypes.registerDefaultType(BiomeSpecialEffects.GrassColorModifier.class, BTParameterTypes.GRASS_COLOR_MODIFIER);
 		ParameterTypes.registerDefaultType(BiomeCategory.class, BTParameterTypes.BIOME_CATEGORY);
+		ParameterTypes.registerDefaultType(ResourceLocation.class, BTParameterTypes.RESOURCE_LOCATION);
 	}
 
 }

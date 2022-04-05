@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 @RequiredArgsConstructor
 public class ScriptCommandSetWorld extends ScriptCommand{
 
-	private final String dim;
+	private final ResourceLocation dim;
 
 	public ScriptCommandSetWorld() {
 		this(null);
@@ -19,7 +19,7 @@ public class ScriptCommandSetWorld extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		TweakWorldManager.setCurrentWorld(this.dim == null ? null : new ResourceLocation(this.dim));
+		TweakWorldManager.setCurrentWorld(this.dim == null ? null : this.dim);
 	}
 
 }

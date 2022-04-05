@@ -20,7 +20,7 @@ public class Config {
 	private final BooleanValue outputDims;
 	private final BooleanValue outputCarvers;
 	private final BooleanValue outputFeatures;
-	
+
 	private final BooleanValue consumeBonemeal;
 
 
@@ -46,7 +46,7 @@ public class Config {
 		builder.comment("Whether or not BiomeTweaker should output carver info. You can turn this off if you don't need it to shave output time.",
 				"You must run the biometweaker output command in game.");
 		this.outputCarvers = builder.define("Output.Carvers", true);
-		
+
 		builder.comment("Whether or not bonemeal should be consumed when used in a biome with bonemeal use disabled.");
 		this.consumeBonemeal = builder.define("Consume Bonemeal", false);
 	}

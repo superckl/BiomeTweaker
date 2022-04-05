@@ -19,21 +19,20 @@ public class ScriptCommandAddFeature extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final String stage;
-	private final String name;
+	private final ResourceLocation key;
 
-	public ScriptCommandAddFeature(final BiomePackage pack, final String stage, final String name) throws ClassNotFoundException {
+	public ScriptCommandAddFeature(final BiomePackage pack, final String stage, final ResourceLocation key) throws ClassNotFoundException {
 		this.pack = pack;
 		this.stage = stage;
-		this.name = name;
+		this.key = key;
 	}
 
 	@Override
 	public void perform() throws IllegalArgumentException, IllegalAccessException{
 		final boolean isAllStages = "ALL".equals(this.stage);
 		final Decoration[] stages = isAllStages ? Decoration.values() : new Decoration[] {Decoration.valueOf(this.stage)};
-		final ResourceLocation key = new ResourceLocation(this.name);
 		final Holder<PlacedFeature> feature = BuiltinRegistries.PLACED_FEATURE.getHolder(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY,
-				key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", key)));
+				this.key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", this.key)));
 		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addFeature(feature, stages));
 	}
 

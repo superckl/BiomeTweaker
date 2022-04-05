@@ -19,21 +19,20 @@ public class ScriptCommandAddCarver extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final String stage;
-	private final String name;
+	private final ResourceLocation key;
 
-	public ScriptCommandAddCarver(final BiomePackage pack, final String stage, final String name) throws ClassNotFoundException {
+	public ScriptCommandAddCarver(final BiomePackage pack, final String stage, final ResourceLocation key) throws ClassNotFoundException {
 		this.pack = pack;
 		this.stage = stage;
-		this.name = name;
+		this.key = key;
 	}
 
 	@Override
 	public void perform() throws IllegalArgumentException, IllegalAccessException{
 		final boolean isAllStages = "ALL".equals(this.stage);
 		final Carving[] stages = isAllStages ? Carving.values() : new Carving[] {Carving.valueOf(this.stage)};
-		final ResourceLocation key = new ResourceLocation(this.name);
 		final Holder<ConfiguredWorldCarver<?>> carver = BuiltinRegistries.CONFIGURED_CARVER.getHolder(ResourceKey.create(Registry.CONFIGURED_CARVER_REGISTRY,
-				key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", key)));
+				this.key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", this.key)));
 		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addCarver(carver, stages));
 	}
 

@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
-import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.BiomeModificationManager;
+import me.superckl.biometweaker.script.command.StagedScriptCommand;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.core.particles.ParticleOptions;
@@ -15,15 +15,15 @@ import net.minecraft.world.level.biome.AmbientParticleSettings;
 import net.minecraftforge.registries.ForgeRegistries;
 
 @AutoRegister(classes = {BiomesScriptObject.class, TweakerScriptObject.class}, name = "setAmbientParticle")
-public class ScriptCommandSetParticle extends ScriptCommand{
+public class ScriptCommandSetParticle extends StagedScriptCommand{
 
 	private final BiomePackage pack;
 	private final ResourceLocation particleType;
 	private final float probability;
 
-	public ScriptCommandSetParticle(final BiomePackage pack, final String rLoc, final float probability) {
+	public ScriptCommandSetParticle(final BiomePackage pack, final ResourceLocation rLoc, final float probability) {
 		this.pack = pack;
-		this.particleType = new ResourceLocation(rLoc);
+		this.particleType = rLoc;
 		this.probability = probability;
 	}
 
@@ -36,6 +36,11 @@ public class ScriptCommandSetParticle extends ScriptCommand{
 			throw new IllegalArgumentException(String.format("Particle type %s requires additional options. This is currently not supported!", this.particleType));
 		final AmbientParticleSettings settings = new AmbientParticleSettings(opts, this.probability);
 		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getEffects().setParticle(Optional.of(settings)));
+	}
+
+	@Override
+	public StageRequirement requiredStage() {
+		return StageRequirement.LATE;
 	}
 
 }

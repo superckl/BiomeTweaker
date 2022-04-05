@@ -16,9 +16,9 @@ public class ScriptCommandSetSpawnCost extends StagedScriptCommand{
 	private final double costPer;
 	private final double maxCost;
 
-	public ScriptCommandSetSpawnCost(final BiomePackage pack, final String rLoc, final float perCost, final float maxCost) throws ClassNotFoundException {
+	public ScriptCommandSetSpawnCost(final BiomePackage pack, final ResourceLocation rLoc, final float perCost, final float maxCost) throws ClassNotFoundException {
 		this.pack = pack;
-		this.rLoc = new ResourceLocation(rLoc);
+		this.rLoc = rLoc;
 		this.costPer = perCost;
 		this.maxCost = maxCost;
 	}

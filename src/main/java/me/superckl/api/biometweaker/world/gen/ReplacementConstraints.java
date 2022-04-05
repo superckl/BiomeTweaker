@@ -3,10 +3,12 @@ package me.superckl.api.biometweaker.world.gen;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import net.minecraft.world.level.block.state.BlockState;
 
 @Data
+@Accessors(fluent = true)
 public class ReplacementConstraints {
 
 	private BlockStateBuilder<? extends BlockState> builder;

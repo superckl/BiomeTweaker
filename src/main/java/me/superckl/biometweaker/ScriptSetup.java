@@ -42,12 +42,14 @@ import me.superckl.api.superscript.util.ConstructorListing;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeModificationManager.ClimateModification;
 import me.superckl.biometweaker.BiomeModificationManager.EffectsModification;
+import me.superckl.biometweaker.BiomeModificationManager.MobEffectModification.Builder;
 import me.superckl.biometweaker.BiomeModificationManager.MobSpawnModification;
 import me.superckl.biometweaker.common.world.gen.ReplacementPropertyManager;
 import me.superckl.biometweaker.script.object.BiomesScriptObject;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
+import me.superckl.biometweaker.script.object.effect.MobEffectScriptObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
@@ -163,6 +165,10 @@ public class ScriptSetup {
 			ScriptParser.registerValidObjectInst("forBlock", listing);
 
 			listing = new ConstructorListing<>();
+			listing.addEntry(Lists.newArrayList(ParameterTypes.STRING.getSimpleWrapper()), MobEffectScriptObject.class.getDeclaredConstructor());
+			ScriptParser.registerValidObjectInst("forMobEffect", listing);
+
+			listing = new ConstructorListing<>();
 			listing.addEntry(new ArrayList<>(), BlockReplacementScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("newBlockReplacement", listing);
 
@@ -177,21 +183,31 @@ public class ScriptSetup {
 		//Replacement Properties
 		//We have to get a little weird to force the wildcard in the Class generic
 		final Class<BlockStateBuilder<?>> builderClass = WarningHelper.uncheckedCast(BlockStateBuilder.class);
-		ReplacementPropertyManager.BLOCK = new PropertySimple<>(builderClass, ReplacementConstraints.class, ReplacementConstraints::getBuilder, ReplacementConstraints::setBuilder);
-		ReplacementPropertyManager.MIN_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinY, ReplacementConstraints::setMinY);
-		ReplacementPropertyManager.MAX_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxY, ReplacementConstraints::setMaxY);
-		ReplacementPropertyManager.MIN_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinX, ReplacementConstraints::setMinX);
-		ReplacementPropertyManager.MAX_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxX, ReplacementConstraints::setMaxX);
-		ReplacementPropertyManager.MIN_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinZ, ReplacementConstraints::setMinZ);
-		ReplacementPropertyManager.MAX_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxZ, ReplacementConstraints::setMaxZ);
-		ReplacementPropertyManager.MIN_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinChunkX, ReplacementConstraints::setMinChunkX);
-		ReplacementPropertyManager.MAX_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxChunkX, ReplacementConstraints::setMaxChunkX);
-		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMinChunkZ, ReplacementConstraints::setMinChunkZ);
-		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::getMaxChunkZ, ReplacementConstraints::setMaxChunkZ);
-		ReplacementPropertyManager.IGNORE_META = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::isIgnoreMeta, ReplacementConstraints::setIgnoreMeta);
-		ReplacementPropertyManager.CONTIGUOUS = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::isContiguous, ReplacementConstraints::setContiguous);
+		ReplacementPropertyManager.BLOCK = new PropertySimple<>(builderClass, ReplacementConstraints.class, ReplacementConstraints::builder, ReplacementConstraints::builder);
+		ReplacementPropertyManager.MIN_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::minY, ReplacementConstraints::minY);
+		ReplacementPropertyManager.MAX_Y = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::maxY, ReplacementConstraints::maxY);
+		ReplacementPropertyManager.MIN_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::minX, ReplacementConstraints::minX);
+		ReplacementPropertyManager.MAX_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::maxX, ReplacementConstraints::maxX);
+		ReplacementPropertyManager.MIN_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::minZ, ReplacementConstraints::minZ);
+		ReplacementPropertyManager.MAX_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::maxZ, ReplacementConstraints::maxZ);
+		ReplacementPropertyManager.MIN_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::minChunkX, ReplacementConstraints::minChunkX);
+		ReplacementPropertyManager.MAX_CHUNK_X = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::maxChunkX, ReplacementConstraints::maxChunkX);
+		ReplacementPropertyManager.MIN_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::minChunkZ, ReplacementConstraints::minChunkZ);
+		ReplacementPropertyManager.MAX_CHUNK_Z = new PropertySimple<>(Integer.class, ReplacementConstraints.class, ReplacementConstraints::maxChunkZ, ReplacementConstraints::maxChunkZ);
+		ReplacementPropertyManager.IGNORE_META = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::ignoreMeta, ReplacementConstraints::ignoreMeta);
+		ReplacementPropertyManager.CONTIGUOUS = new PropertySimple<>(Boolean.class, ReplacementConstraints.class, ReplacementConstraints::contiguous, ReplacementConstraints::contiguous);
 
 		ReplacementPropertyManager.populatePropertyMap();
+
+
+		MobEffectPropertyManager.AMPLIFIER = new PropertySimple<>(Integer.class, Builder.class, Builder::amplifier, Builder::amplifier);
+		MobEffectPropertyManager.DURATION = new PropertySimple<>(Integer.class, Builder.class, Builder::duration, Builder::duration);
+		MobEffectPropertyManager.INTERVAL = new PropertySimple<>(Integer.class, Builder.class, Builder::interval, Builder::interval);
+		MobEffectPropertyManager.CHANCE = new PropertySimple<>(Float.class, Builder.class, Builder::chance, Builder::chance);
+		MobEffectPropertyManager.VISIBLE_PARTICLES = new PropertySimple<>(Boolean.class, Builder.class, Builder::visible, Builder::visible);
+		MobEffectPropertyManager.SHOW_ICON = new PropertySimple<>(Boolean.class, Builder.class, Builder::showIcon, Builder::showIcon);
+
+		MobEffectPropertyManager.populatePropertyMap();
 
 		final Function<ResourceLocation, ClimateModification> climate = loc -> BiomeModificationManager.forBiome(loc).getClimate();
 		final Function<ResourceLocation, EffectsModification> effects = loc -> BiomeModificationManager.forBiome(loc).getEffects();

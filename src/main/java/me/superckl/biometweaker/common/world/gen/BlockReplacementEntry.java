@@ -36,7 +36,7 @@ public class BlockReplacementEntry {
 	}
 
 	public void registerReplacement(final int weight, final BlockState toReplace, final ReplacementConstraints replacement){
-		if(replacement.isIgnoreMeta()) {
+		if(replacement.ignoreMeta()) {
 			this.wildcardReplacements.add(WeightedEntry.wrap(replacement, weight));
 			return;
 		}

@@ -1,5 +1,6 @@
 package me.superckl.biometweaker;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,10 +16,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.AmbientAdditionsSettings;
 import net.minecraft.world.level.biome.AmbientParticleSettings;
@@ -37,10 +42,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class BiomeModificationManager {
 
+	public static boolean hasMobEffects = false;
 	private static final Map<ResourceLocation, BiomeModificationManager> modifiers = new Object2ObjectOpenHashMap<>();
 
 	public static BiomeModificationManager forBiome(final ResourceLocation rLoc) {
 		return BiomeModificationManager.modifiers.computeIfAbsent(rLoc, loc -> new BiomeModificationManager());
+	}
+
+	public static Optional<BiomeModificationManager> forBiomeOpt(final ResourceLocation rLoc) {
+		return Optional.ofNullable(BiomeModificationManager.modifiers.get(rLoc));
 	}
 
 	private ClimateModification climate;
@@ -57,6 +67,8 @@ public class BiomeModificationManager {
 	private boolean disableCropGrowth;
 	@Getter @Setter
 	private boolean disableSaplingGrowth;
+
+	private final Multimap<EntityType<?>, MobEffectModification> potionEffects = MultimapBuilder.hashKeys().arrayListValues().build();
 
 	private BiomeModificationManager() {}
 
@@ -102,6 +114,15 @@ public class BiomeModificationManager {
 
 	public boolean hasCategory() {
 		return this.category != null;
+	}
+
+	public void addMobEffect(final EntityType<?> type, final MobEffectModification effect) {
+		BiomeModificationManager.hasMobEffects = true;
+		this.potionEffects.put(type, effect);
+	}
+
+	public Collection<MobEffectModification> getMobEffects(final EntityType<?> type){
+		return this.potionEffects.get(type);
 	}
 
 	@Data
@@ -258,6 +279,39 @@ public class BiomeModificationManager {
 
 			this.addedFeatures.forEach((stage, holder) -> val.getFeatures(stage).add(holder));
 			this.addedCarvers.forEach((stage, holder) -> val.getCarvers(stage).add(holder));
+		}
+
+	}
+
+
+	public static record MobEffectModification(MobEffect effect, int amplifier, int duration, int interval, float chance, boolean visible, boolean showIcon) {
+
+		public MobEffectInstance createInstance() {
+			return new MobEffectInstance(this.effect, this.duration, this.amplifier, this.showIcon, this.visible, this.showIcon);
+		}
+
+		public static Builder builder(final ResourceLocation effect) {
+			return new Builder(effect);
+		}
+
+		@Data
+		@Accessors(fluent = true)
+		public static class Builder{
+
+			private final ResourceLocation effect;
+			private int amplifier = 0;
+			private int duration = 200;
+			private int interval = 198;
+			private float chance = 1;
+			private boolean visible = false;
+			private boolean showIcon = true;
+
+			public MobEffectModification build() throws IllegalArgumentException {
+				if(!ForgeRegistries.MOB_EFFECTS.containsKey(this.effect))
+					throw new IllegalArgumentException(String.format("No mob effect %s found!", this.effect));
+				return new MobEffectModification(ForgeRegistries.MOB_EFFECTS.getValue(this.effect), this.amplifier, this.duration, this.interval, this.chance, this.visible, this.showIcon);
+			}
+
 		}
 
 	}

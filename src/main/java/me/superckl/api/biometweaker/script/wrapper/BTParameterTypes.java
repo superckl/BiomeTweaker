@@ -20,6 +20,8 @@ import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.BiomeModificationManager.MobEffectModification;
+import me.superckl.biometweaker.script.object.effect.MobEffectScriptObject;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -95,8 +97,7 @@ public class BTParameterTypes {
 		}
 	};
 
-	@SuppressWarnings("rawtypes")
-	public static final ParameterType<BlockStateBuilder> BLOCKSTATE_BUILDER = new ParameterType<>(BlockStateBuilder.class) {
+	public static final ParameterType<BlockStateBuilder<?>> BLOCKSTATE_BUILDER = new ParameterType<>(WarningHelper.uncheckedCast(BlockStateBuilder.class)) {
 
 		@Override
 		public BlockStateBuilder<?> tryParse(final String parameter, final ScriptHandler handler) throws Exception {
@@ -106,8 +107,8 @@ public class BTParameterTypes {
 				return builder;
 			}
 			final ScriptObject obj = handler.getObjects().get(parameter);
-			if(obj instanceof BlockStateScriptObject)
-				return ((BlockStateScriptObject<?>) obj).getBuilder();
+			if(obj instanceof final BlockStateScriptObject<?> blockObj)
+				return blockObj.getBuilder();
 			return null;
 		}
 	};
@@ -119,12 +120,25 @@ public class BTParameterTypes {
 			final BlockStateBuilder<?> builder = BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(parameter, handler);
 			if(builder != null) {
 				final ReplacementConstraints constraints = new ReplacementConstraints();
-				constraints.setBuilder(builder);
+				constraints.builder(builder);
 				return constraints;
 			}
 			final ScriptObject obj = handler.getObjects().get(parameter);
-			if(obj instanceof BlockReplacementScriptObject)
-				return ((BlockReplacementScriptObject) obj).getConstraints();
+			if(obj instanceof final BlockReplacementScriptObject blockObj)
+				return blockObj.getConstraints();
+			return null;
+		}
+	};
+
+	public static final ParameterType<MobEffectModification.Builder> MOB_EFFECT_BUILDER = new ParameterType<>(MobEffectModification.Builder.class) {
+
+		@Override
+		public MobEffectModification.Builder tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			if(ScriptParser.isStringArg(parameter))
+				return MobEffectModification.builder(new ResourceLocation(ParameterTypes.STRING.tryParse(parameter, handler)));
+			final ScriptObject obj = handler.getObjects().get(parameter);
+			if(obj instanceof final MobEffectScriptObject effectObj)
+				return effectObj.getBuilder();
 			return null;
 		}
 	};
@@ -181,6 +195,7 @@ public class BTParameterTypes {
 		ParameterTypes.registerDefaultType(BlockStateBuilder.class, BTParameterTypes.BLOCKSTATE_BUILDER);
 		ParameterTypes.registerDefaultType(BiomePackage.class, BTParameterTypes.BASIC_BIOMES_PACKAGE);
 		ParameterTypes.registerDefaultType(ReplacementConstraints.class, BTParameterTypes.REPLACEMENT_CONSTRAINT);
+		ParameterTypes.registerDefaultType(MobEffectModification.Builder.class, BTParameterTypes.MOB_EFFECT_BUILDER);
 		ParameterTypes.registerDefaultType(Biome.Precipitation.class, BTParameterTypes.PRECIPITATION);
 		ParameterTypes.registerDefaultType(Biome.TemperatureModifier.class, BTParameterTypes.TEMPERATURE_MODIFIER);
 		ParameterTypes.registerDefaultType(BiomeSpecialEffects.GrassColorModifier.class, BTParameterTypes.GRASS_COLOR_MODIFIER);

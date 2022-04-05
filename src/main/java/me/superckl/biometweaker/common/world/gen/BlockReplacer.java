@@ -78,14 +78,14 @@ public class BlockReplacer {
 									while(!copy.isEmpty()) {
 										toUse = WeightedRandom.getRandomItem(rand, copy).orElseThrow();
 										if(BlockReplacer.verifyBoundaries(pos, x, y+section.bottomBlockY(), z, toUse.getData())) {
-											if(toUse.getData().isContiguous())
+											if(toUse.getData().contiguous())
 												previousReplacementsBiome.registerReplacement(toUse.getWeight().asInt(), state, toUse.getData());
 											break;
 										}
 										copy.remove(toUse);
 										toUse = null;
 									}
-								}else if(toUse.getData().isContiguous())
+								}else if(toUse.getData().contiguous())
 									previousReplacementsBiome.registerReplacement(toUse.getWeight().asInt(), state, toUse.getData());
 							}
 						}
@@ -107,8 +107,8 @@ public class BlockReplacer {
 	}
 
 	private static boolean verifyBoundaries(final ChunkPos pos, final int x, final int y, final int z, final ReplacementConstraints constraints) {
-		return y > constraints.getMinY() && y < constraints.getMaxY() && x > constraints.getMinChunkX() && x < constraints.getMaxChunkX()
-				&& z > constraints.getMinChunkZ() && z < constraints.getMaxChunkZ() && pos.getBlockX(x) > constraints.getMinX() && pos.getBlockX(x) < constraints.getMaxX()
-				&& pos.getBlockZ(z) > constraints.getMinZ() && pos.getBlockZ(z) < constraints.getMaxZ();
+		return y > constraints.minY() && y < constraints.maxY() && x > constraints.minChunkX() && x < constraints.maxChunkX()
+				&& z > constraints.minChunkZ() && z < constraints.maxChunkZ() && pos.getBlockX(x) > constraints.minX() && pos.getBlockX(x) < constraints.maxX()
+				&& pos.getBlockZ(z) > constraints.minZ() && pos.getBlockZ(z) < constraints.maxZ();
 	}
 }

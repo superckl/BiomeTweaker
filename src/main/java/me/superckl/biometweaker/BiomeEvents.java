@@ -3,10 +3,14 @@ package me.superckl.biometweaker;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player.BedSleepingProblem;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.BlockEvent.CropGrowEvent;
+import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event.Result;
 
 public class BiomeEvents {
 
@@ -37,5 +41,35 @@ public class BiomeEvents {
 			}
 		});
 	}
+	
+	@SubscribeEvent
+	public void onBonemeal(final BonemealEvent e) {
+		if(e.getPlayer().level.isClientSide)
+			return;
+		BiomeModificationManager mod = BiomeModificationManager.forBiome(e.getWorld().getBiome(e.getPos()).value().getRegistryName());
+		if(mod.isDisableBonemeal())
+			if(Config.getInstance().getConsumeBonemeal().get())
+				e.setResult(Result.ALLOW);
+			else
+				e.setCanceled(true);
+	}
+	
+	@SubscribeEvent
+	public void onCropGrow(final CropGrowEvent.Pre e) {
+		if(e.getWorld().isClientSide())
+			return;
+		BiomeModificationManager mod = BiomeModificationManager.forBiome(e.getWorld().getBiome(e.getPos()).value().getRegistryName());
+		if(mod.isDisableCropGrowth())
+			e.setResult(Result.DENY);
+	}
 
+	@SubscribeEvent
+	public void onSaplingGrow(final SaplingGrowTreeEvent e) {
+		if(e.getWorld().isClientSide())
+			return;
+		BiomeModificationManager mod = BiomeModificationManager.forBiome(e.getWorld().getBiome(e.getPos()).value().getRegistryName());
+		if(mod.isDisableSaplingGrowth())
+			e.setResult(Result.DENY);
+	}
+	
 }

@@ -28,6 +28,9 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<BiomeCategory> CATEGORY;
 	public static EarlyBiomeProperty<String> AMBIENT_LOOP_SOUND;
 	public static EarlyBiomeProperty<Boolean> DISABLE_SLEEP;
+	public static EarlyBiomeProperty<Boolean> DISABLE_BONEMEAL;
+	public static EarlyBiomeProperty<Boolean> DISABLE_CROP_GROWTH;
+	public static EarlyBiomeProperty<Boolean> DISABLE_SAPLING_GROWTH;
 
 	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
 

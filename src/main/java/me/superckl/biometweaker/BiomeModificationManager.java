@@ -51,6 +51,12 @@ public class BiomeModificationManager {
 	private BiomeCategory category;
 	@Getter @Setter
 	private boolean disableSleep;
+	@Getter @Setter
+	private boolean disableBonemeal;
+	@Getter @Setter
+	private boolean disableCropGrowth;
+	@Getter @Setter
+	private boolean disableSaplingGrowth;
 
 	private BiomeModificationManager() {}
 

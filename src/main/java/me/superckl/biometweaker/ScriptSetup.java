@@ -228,6 +228,12 @@ public class ScriptSetup {
 
 		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSleep(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSleep(f));
+		BiomePropertyManager.DISABLE_BONEMEAL = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableBonemeal(),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableBonemeal(f));
+		BiomePropertyManager.DISABLE_CROP_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableCropGrowth(),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableCropGrowth(f));
+		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSaplingGrowth(),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSaplingGrowth(f));
 
 		BiomePropertyManager.populatePropertyMap();
 

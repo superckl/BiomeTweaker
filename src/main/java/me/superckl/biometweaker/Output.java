@@ -32,6 +32,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.GenerationStep.Carving;
 import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
@@ -57,6 +58,7 @@ public class Output {
 				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a biome! "+pR.message()));
 				result.ifLeft(el -> {
 					Output.addGenInfo(el.getAsJsonObject(), entry, ops);
+					el.getAsJsonObject().add("spawner_data", encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
 					obj.add("biome", el);
 				});
 				return obj;

@@ -95,6 +95,7 @@ public class BiomeTweaker {
 	private void loadComplete(final FMLLoadCompleteEvent e) {
 		e.enqueueWork(() -> {
 			this.commandManager.applyCommandsFor(ApplicationStage.LOAD_COMPLETE);
+			BiomeModificationManager.checkBiomes();
 		});
 	}
 

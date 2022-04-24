@@ -58,7 +58,7 @@ public class Output {
 				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a biome! "+pR.message()));
 				result.ifLeft(el -> {
 					Output.addGenInfo(el.getAsJsonObject(), entry, ops);
-					el.getAsJsonObject().add("spawner_data", encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
+					el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
 					obj.add("biome", el);
 				});
 				return obj;

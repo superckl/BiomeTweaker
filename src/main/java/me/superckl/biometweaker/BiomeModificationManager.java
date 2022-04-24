@@ -124,7 +124,7 @@ public class BiomeModificationManager {
 	public Collection<MobEffectModification> getMobEffects(final EntityType<?> type){
 		return this.potionEffects.get(type);
 	}
-	
+
 	public static void checkBiomes() {
 		BiomeModificationManager.modifiers.keySet().forEach(loc -> {
 			if(!ForgeRegistries.BIOMES.containsKey(loc))

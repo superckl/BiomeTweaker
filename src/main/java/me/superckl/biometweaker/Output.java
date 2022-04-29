@@ -16,15 +16,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult.PartialResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 
 import lombok.Cleanup;
 import me.superckl.api.superscript.util.WarningHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -54,13 +53,10 @@ public class Output {
 			Output.genOutput(Streams.stream(registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY).iterator()), biomeDir, entry -> {
 				final JsonObject obj = new JsonObject();
 				obj.addProperty("registry_name", entry.getRegistryName().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = Biome.NETWORK_CODEC.encodeStart(ops, entry).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a biome! "+pR.message()));
-				result.ifLeft(el -> {
-					Output.addGenInfo(el.getAsJsonObject(), entry, ops);
-					el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
-					obj.add("biome", el);
-				});
+				final JsonElement el = Output.encode(ops, entry, Biome.NETWORK_CODEC);
+				Output.addGenInfo(el.getAsJsonObject(), entry, ops);
+				el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
+				obj.add("biome", el);
 				return obj;
 			}, namer.apply("registry_name", "Biome"));
 		}
@@ -72,48 +68,24 @@ public class Output {
 
 		if(Config.getInstance().getOutputDims().get()) {
 			final File dimDir = new File(baseDir, "/dimension/");
-			Output.genOutput(levelRegistry.holders(), dimDir, entry -> {
-				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", entry.key().location().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = LevelStem.CODEC.encodeStart(ops, entry.value()).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode an entity! "+pR.message()));
-				result.ifLeft(el -> obj.add("level_stem", el));
-				return obj;
-			}, namer.apply("registry_name", "Dimension"));
+			Output.genOutput(levelRegistry.holders(), dimDir,
+					entry -> Output.serializeDynamic(entry, LevelStem.CODEC, ops), namer.apply("registry_name", "Dimension"));
 		}
 
 		if(Config.getInstance().getOutputFeatures().get()) {
 			final File featureDir = new File(baseDir, "/feature/");
-			Output.genOutput(registry.ownedRegistryOrThrow(Registry.PLACED_FEATURE_REGISTRY).holders(), featureDir, holder -> {
-				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", holder.key().location().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = PlacedFeature.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a placed feature! "+pR.message()));
-				result.ifLeft(el -> obj.add("placed_feature", el));
-				return obj;
-			}, namer.apply("registry_name", "Placed Feature"));
+			Output.genOutput(registry.ownedRegistryOrThrow(Registry.PLACED_FEATURE_REGISTRY).holders(), featureDir,
+					holder -> Output.serializeDynamic(holder, PlacedFeature.DIRECT_CODEC, ops), namer.apply("registry_name", "Placed Feature"));
 
 			final File configDir = new File(featureDir, "config/");
-			Output.genOutput(registry.ownedRegistryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY).holders(), configDir, holder -> {
-				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", holder.key().location().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = ConfiguredFeature.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a configured feature! "+pR.message()));
-				result.ifLeft(el -> obj.add("configured_feature", el));
-				return obj;
-			}, namer.apply("registry_name", "Configured Feature"));
+			Output.genOutput(registry.ownedRegistryOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY).holders(), configDir,
+					holder -> Output.serializeDynamic(holder, ConfiguredFeature.DIRECT_CODEC, ops), namer.apply("registry_name", "Configured Feature"));
 		}
 
 		if(Config.getInstance().getOutputCarvers().get()) {
 			final File featureDir = new File(baseDir, "/carver/");
-			Output.genOutput(registry.ownedRegistryOrThrow(Registry.CONFIGURED_CARVER_REGISTRY).holders(), featureDir, holder -> {
-				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", holder.key().location().toString());
-				final Either<JsonElement, PartialResult<JsonElement>> result = ConfiguredWorldCarver.DIRECT_CODEC.encodeStart(ops, holder.value()).get();
-				result.ifRight(pR -> BiomeTweaker.LOG.warn("Failed to encode a carver! "+pR.message()));
-				result.ifLeft(el -> obj.add("configured_carver", el));
-				return obj;
-			}, namer.apply("registry_name", "Configured Carver"));
+			Output.genOutput(registry.ownedRegistryOrThrow(Registry.CONFIGURED_CARVER_REGISTRY).holders(), featureDir,
+					holder -> Output.serializeDynamic(holder, ConfiguredWorldCarver.DIRECT_CODEC, ops), namer.apply("registry_name", "Configured Carver"));
 		}
 	}
 
@@ -135,6 +107,13 @@ public class Output {
 				BiomeTweaker.LOG.error(String.format("Caught an exception while generating %s status report!", name), e);
 				e.printStackTrace();
 			}
+	}
+
+	private static <T, V extends JsonElement> JsonObject serializeDynamic(final Reference<T> holder, final Codec<? super T> codec, final DynamicOps<? extends V> ops) {
+		final JsonObject obj = new JsonObject();
+		obj.addProperty("registry_name", holder.key().location().toString());
+		obj.add(holder.key().registry().getPath(), Output.encode(ops, holder.value(), codec));
+		return obj;
 	}
 
 	private static JsonObject entityTypeToJson(final EntityType<?> type) {

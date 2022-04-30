@@ -12,11 +12,15 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 
 import it.unimi.dsi.fastutil.doubles.DoubleDoublePair;
+import it.unimi.dsi.fastutil.objects.Object2FloatLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatMap;
+import it.unimi.dsi.fastutil.objects.Object2FloatMap.Entry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import me.superckl.biometweaker.util.IntRange;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
@@ -55,6 +59,7 @@ public class BiomeModificationManager {
 
 	private ClimateModification climate;
 	private EffectsModification effects;
+	private FogModification fog;
 	private GenerationModification generation;
 	private MobSpawnModification spawn;
 	@Getter @Setter
@@ -67,13 +72,6 @@ public class BiomeModificationManager {
 	private boolean disableCropGrowth;
 	@Getter @Setter
 	private boolean disableSaplingGrowth;
-
-	@Getter @Setter
-	private Optional<Float> fogEndModifier = Optional.empty();
-	@Getter @Setter
-	private Optional<Float> fogStartModifier = Optional.empty();
-	@Getter @Setter
-	private FogShape fogShape;
 
 	private final Multimap<EntityType<?>, MobEffectModification> potionEffects = MultimapBuilder.hashKeys().arrayListValues().build();
 
@@ -133,11 +131,13 @@ public class BiomeModificationManager {
 	}
 
 	public boolean hasFog() {
-		return this.fogEndModifier.isPresent() || this.fogStartModifier.isPresent() || this.hasFogShape();
+		return this.fog != null;
 	}
 
-	public boolean hasFogShape() {
-		return this.fogShape != null;
+	public FogModification getFog() {
+		if(this.fog == null)
+			this.fog = new FogModification();
+		return this.fog;
 	}
 
 	public static void checkBiomes() {
@@ -160,6 +160,37 @@ public class BiomeModificationManager {
 					this.temperature.orElse(val.temperature),
 					this.temperatureModifier == null ? val.temperatureModifier : this.temperatureModifier,
 							this.downfall.orElse(val.downfall));
+		}
+
+	}
+
+	public static class FogModification{
+
+		@Getter @Setter
+		private FogShape shape;
+		private final Object2FloatMap<IntRange> nearModifiers = new Object2FloatLinkedOpenHashMap<>();
+		private final Object2FloatMap<IntRange> farModifiers = new Object2FloatLinkedOpenHashMap<>();
+
+		public void addNearModifier(final int minY, final int maxY, final float modifier) {
+			this.nearModifiers.put(new IntRange(minY, maxY), modifier);
+		}
+
+		public void addFarModifier(final int minY, final int maxY, final float modifier) {
+			this.farModifiers.put(new IntRange(minY, maxY), modifier);
+		}
+
+		public float getNearModifier(final int y) {
+			return (float) this.nearModifiers.object2FloatEntrySet().stream().filter(entry -> entry.getKey().contains(y))
+					.mapToDouble(Entry::getFloatValue).reduce(1D, (a, b) -> a*b);
+		}
+
+		public float getFarModifier(final int y) {
+			return (float) this.farModifiers.object2FloatEntrySet().stream().filter(entry -> entry.getKey().contains(y))
+					.mapToDouble(Entry::getFloatValue).reduce(1D, (a, b) -> a*b);
+		}
+
+		public boolean hasShape() {
+			return this.shape != null;
 		}
 
 	}

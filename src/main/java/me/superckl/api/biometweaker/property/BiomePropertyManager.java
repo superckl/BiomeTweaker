@@ -32,8 +32,6 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Boolean> DISABLE_BONEMEAL;
 	public static EarlyBiomeProperty<Boolean> DISABLE_CROP_GROWTH;
 	public static EarlyBiomeProperty<Boolean> DISABLE_SAPLING_GROWTH;
-	public static EarlyBiomeProperty<Float> FOG_START_MODIFIER;
-	public static EarlyBiomeProperty<Float> FOG_END_MODIFIER;
 	public static EarlyBiomeProperty<BiomeModificationManager.FogShape> FOG_SHAPE;
 
 	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();

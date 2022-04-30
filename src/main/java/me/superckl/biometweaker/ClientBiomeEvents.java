@@ -2,6 +2,7 @@ package me.superckl.biometweaker;
 
 import com.mojang.blaze3d.shaders.FogShape;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -13,14 +14,15 @@ public class ClientBiomeEvents {
 
 	@SubscribeEvent(receiveCanceled = true)
 	public void onRenderFog(final EntityViewRenderEvent.RenderFogEvent e) {
-		final Holder<Biome> biome = e.getCamera().getEntity().level.getBiome(e.getCamera().getBlockPosition());
+		final BlockPos pos = e.getCamera().getBlockPosition();
+		final Holder<Biome> biome = e.getCamera().getEntity().level.getBiome(pos);
 		final ResourceLocation rLoc = biome.unwrap().map(ResourceKey::location, Biome::getRegistryName);
 
-		BiomeModificationManager.forBiomeOpt(rLoc).filter(BiomeModificationManager::hasFog).ifPresent(manager -> {
-			manager.getFogStartModifier().ifPresent(mod -> e.setNearPlaneDistance(e.getNearPlaneDistance()*mod));
-			manager.getFogEndModifier().ifPresent(mod -> e.setFarPlaneDistance(e.getFarPlaneDistance()*mod));
-			if(manager.hasFogShape())
-				e.setFogShape(this.toClientShape(manager.getFogShape()));
+		BiomeModificationManager.forBiomeOpt(rLoc).filter(BiomeModificationManager::hasFog).map(BiomeModificationManager::getFog).ifPresent(fog -> {
+			e.setNearPlaneDistance(e.getNearPlaneDistance()*fog.getNearModifier(pos.getY()));
+			e.setFarPlaneDistance(e.getFarPlaneDistance()*fog.getFarModifier(pos.getY()));
+			if(fog.hasShape())
+				e.setFogShape(this.toClientShape(fog.getShape()));
 			e.setCanceled(true);
 		});
 	}

@@ -251,6 +251,13 @@ public class ScriptSetup {
 		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSaplingGrowth(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSaplingGrowth(f));
 
+		BiomePropertyManager.FOG_START_MODIFIER = new EarlyBiomeProperty<>(Float.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).getFogStartModifier().orElse(1F),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setFogStartModifier(Optional.of(f)));
+		BiomePropertyManager.FOG_END_MODIFIER = new EarlyBiomeProperty<>(Float.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).getFogEndModifier().orElse(1F),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setFogEndModifier(Optional.of(f)));
+		BiomePropertyManager.FOG_SHAPE = new EarlyBiomeProperty<>(BiomeModificationManager.FogShape.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).getFogShape(),
+				(loc, f) -> BiomeModificationManager.forBiome(loc).setFogShape(f));
+
 		BiomePropertyManager.populatePropertyMap();
 
 	}

@@ -27,6 +27,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -75,6 +76,7 @@ public class BiomeTweaker {
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::loadComplete);
+		bus.addListener(this::clientSetup);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.setup());
 
@@ -97,6 +99,10 @@ public class BiomeTweaker {
 			this.commandManager.applyCommandsFor(ApplicationStage.LOAD_COMPLETE);
 			BiomeModificationManager.checkBiomes();
 		});
+	}
+
+	private void clientSetup(final FMLClientSetupEvent e) {
+		e.enqueueWork(() -> MinecraftForge.EVENT_BUS.register(new ClientBiomeEvents()));
 	}
 
 	private void registerCommands(final RegisterCommandsEvent e) {

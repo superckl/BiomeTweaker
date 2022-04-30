@@ -9,6 +9,7 @@ import java.util.Set;
 
 import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.BiomeModificationManager;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 
@@ -31,6 +32,9 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Boolean> DISABLE_BONEMEAL;
 	public static EarlyBiomeProperty<Boolean> DISABLE_CROP_GROWTH;
 	public static EarlyBiomeProperty<Boolean> DISABLE_SAPLING_GROWTH;
+	public static EarlyBiomeProperty<Float> FOG_START_MODIFIER;
+	public static EarlyBiomeProperty<Float> FOG_END_MODIFIER;
+	public static EarlyBiomeProperty<BiomeModificationManager.FogShape> FOG_SHAPE;
 
 	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
 

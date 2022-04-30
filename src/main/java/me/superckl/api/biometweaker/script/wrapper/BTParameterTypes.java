@@ -20,6 +20,7 @@ import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.ScriptParser;
 import me.superckl.api.superscript.script.object.ScriptObject;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.BiomeModificationManager;
 import me.superckl.biometweaker.BiomeModificationManager.MobEffectModification;
 import me.superckl.biometweaker.script.object.effect.MobEffectScriptObject;
 import net.minecraft.core.Registry;
@@ -180,6 +181,14 @@ public class BTParameterTypes {
 		@Override
 		public BiomeCategory tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			return BiomeCategory.byName(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
+		}
+	};
+
+	public static final ParameterType<BiomeModificationManager.FogShape> FOG_SHAPE = new ParameterType<>(BiomeModificationManager.FogShape.class) {
+
+		@Override
+		public BiomeModificationManager.FogShape tryParse(final String parameter, final ScriptHandler handler) throws Exception {
+			return BiomeModificationManager.FogShape.valueOf(ParameterTypes.STRING.tryParse(parameter, handler).toUpperCase());
 		}
 	};
 

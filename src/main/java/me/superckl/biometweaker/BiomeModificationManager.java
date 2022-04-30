@@ -68,6 +68,13 @@ public class BiomeModificationManager {
 	@Getter @Setter
 	private boolean disableSaplingGrowth;
 
+	@Getter @Setter
+	private Optional<Float> fogEndModifier = Optional.empty();
+	@Getter @Setter
+	private Optional<Float> fogStartModifier = Optional.empty();
+	@Getter @Setter
+	private FogShape fogShape;
+
 	private final Multimap<EntityType<?>, MobEffectModification> potionEffects = MultimapBuilder.hashKeys().arrayListValues().build();
 
 	private BiomeModificationManager() {}
@@ -123,6 +130,14 @@ public class BiomeModificationManager {
 
 	public Collection<MobEffectModification> getMobEffects(final EntityType<?> type){
 		return this.potionEffects.get(type);
+	}
+
+	public boolean hasFog() {
+		return this.fogEndModifier.isPresent() || this.fogStartModifier.isPresent() || this.hasFogShape();
+	}
+
+	public boolean hasFogShape() {
+		return this.fogShape != null;
 	}
 
 	public static void checkBiomes() {
@@ -321,6 +336,11 @@ public class BiomeModificationManager {
 
 		}
 
+	}
+
+	public enum FogShape {
+		SPHERE,
+		CYLINDER;
 	}
 
 }

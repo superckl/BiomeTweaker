@@ -24,12 +24,12 @@ public class PropertyHelper {
 				return;
 			}
 			final ParameterType<? extends K> pType = ParameterTypes.getDefaultType(type);
-			if(pType != null) {
-				final K parsed = pType.tryParse(value.getAsString(), handler);
-				if(parsed == null)
-					throw new IllegalArgumentException("Failed to parse command argument "+value.getAsString());
-				property.set(target, parsed);
-			}
+			if(pType == null)
+				throw new IllegalStateException("No paramter type found for required type "+type.getCanonicalName());
+			final K parsed = pType.tryParse(value.getAsString(), handler);
+			if(parsed == null)
+				throw new IllegalArgumentException("Failed to parse command argument "+value.getAsString());
+			property.set(target, parsed);
 		} catch (final Exception e) {
 			throw e;
 		}

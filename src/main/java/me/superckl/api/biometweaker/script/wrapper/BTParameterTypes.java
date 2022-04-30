@@ -210,6 +210,7 @@ public class BTParameterTypes {
 		ParameterTypes.registerDefaultType(BiomeSpecialEffects.GrassColorModifier.class, BTParameterTypes.GRASS_COLOR_MODIFIER);
 		ParameterTypes.registerDefaultType(BiomeCategory.class, BTParameterTypes.BIOME_CATEGORY);
 		ParameterTypes.registerDefaultType(ResourceLocation.class, BTParameterTypes.RESOURCE_LOCATION);
+		ParameterTypes.registerDefaultType(BiomeModificationManager.FogShape.class, BTParameterTypes.FOG_SHAPE);
 	}
 
 }

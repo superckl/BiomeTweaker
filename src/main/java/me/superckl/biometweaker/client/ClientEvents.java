@@ -1,16 +1,24 @@
-package me.superckl.biometweaker;
+package me.superckl.biometweaker.client;
 
 import com.mojang.blaze3d.shaders.FogShape;
 
+import me.superckl.api.biometweaker.BiomeTweakerAPI;
+import me.superckl.biometweaker.BiomeModificationManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigGuiHandler.ConfigGuiFactory;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class ClientBiomeEvents {
+public class ClientEvents {
 
 	@SubscribeEvent(receiveCanceled = true)
 	public void onRenderFog(final EntityViewRenderEvent.RenderFogEvent e) {
@@ -35,7 +43,21 @@ public class ClientBiomeEvents {
 			return FogShape.SPHERE;
 		default:
 			throw new IllegalArgumentException("Unknown fog shape "+shape);
-		}
+		} 
 	}
+
+	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD, modid = BiomeTweakerAPI.MOD_ID)
+	public static class ModEvents{
+
+		@SubscribeEvent
+		public static void clientSetup(final FMLClientSetupEvent e) {
+			e.enqueueWork(() -> MinecraftForge.EVENT_BUS.register(new ClientEvents()));
+			//ModLoadingContext.get().registerExtensionPoint(ConfigGuiFactory.class, () -> new ConfigGuiFactory((mc, screen) -> new ConfigGui(screen)));
+
+		}
+
+	}
+
+
 
 }

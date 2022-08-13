@@ -21,7 +21,9 @@ import me.superckl.biometweaker.script.command.StagedScriptCommand;
 import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -41,8 +43,7 @@ public class ScriptCommandRegisterFeature extends StagedScriptCommand{
 			throw new IllegalArgumentException("Failed to find placed feature file "+jsonFile);
 		try (FileReader reader = new FileReader(jsonFile)){
 			final JsonObject el = JsonParser.parseReader(reader).getAsJsonObject();
-			//final DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.BUILTIN.get());
-			final DynamicOps<JsonElement> ops = JsonOps.INSTANCE;
+			final DynamicOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, RegistryAccess.BUILTIN.get());
 			final ResourceLocation featureLoc = new ResourceLocation(el.getAsJsonPrimitive("feature").getAsString());
 			Holder<ConfiguredFeature<?, ?>> featureHolder = null;
 			if(!BuiltinRegistries.CONFIGURED_FEATURE.containsKey(featureLoc)) {

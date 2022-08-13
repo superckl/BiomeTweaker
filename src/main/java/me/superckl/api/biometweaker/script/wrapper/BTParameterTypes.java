@@ -12,7 +12,6 @@ import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.script.pack.IntersectBiomesPackage;
 import me.superckl.api.biometweaker.script.pack.PropertyRangeBiomePackage;
 import me.superckl.api.biometweaker.script.pack.SubtractBiomesPackage;
-import me.superckl.api.biometweaker.script.pack.TypeBiomesPackage;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.api.superscript.script.ParameterType;
 import me.superckl.api.superscript.script.ParameterTypes;
@@ -47,14 +46,6 @@ public class BTParameterTypes {
 				return null;
 			return new BasicResourceNameBiomesPackage(rLoc);
 
-		}
-	};
-
-	public static final ParameterType<TypeBiomesPackage> TYPE_BIOMES_PACKAGE = new ParameterType<>(TypeBiomesPackage.class, new TypesPackParameterWrapper()) {
-
-		@Override
-		public TypeBiomesPackage tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			return new TypeBiomesPackage(ParameterTypes.STRING.tryParse(parameter, handler));
 		}
 	};
 

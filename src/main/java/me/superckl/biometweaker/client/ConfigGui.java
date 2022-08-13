@@ -8,18 +8,18 @@ import net.minecraft.network.chat.TextComponent;
 public class ConfigGui extends Screen{
 
 	private final Screen prevScreen;
-	
-	protected ConfigGui(Screen prevScreen) {
+
+	protected ConfigGui(final Screen prevScreen) {
 		super(new TextComponent("BiomeTweaker Configuration"));
 		this.prevScreen = prevScreen;
 	}
-	
+
 	@Override
-	public void render(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+	public void render(final PoseStack poseStack, final int pMouseX, final int pMouseY, final float pPartialTick) {
 		this.renderBackground(poseStack);
 		super.render(poseStack, pMouseX, pMouseY, pPartialTick);
 	}
-	
+
 	@Override
 	public void onClose() {
 		super.minecraft.setScreen(this.prevScreen);

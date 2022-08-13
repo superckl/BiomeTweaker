@@ -137,10 +137,6 @@ public class ScriptSetup {
 			ScriptParser.registerValidObjectInst("forBiomes", listing);
 
 			listing = new ConstructorListing<>();
-			listing.addEntry(Lists.newArrayList(BTParameterTypes.TYPE_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
-			ScriptParser.registerValidObjectInst("forBiomesOfTypes", listing);
-
-			listing = new ConstructorListing<>();
 			listing.addEntry(Lists.newArrayList(BTParameterTypes.ALL_BIOMES_PACKAGE.getSpecialWrapper()), BiomesScriptObject.class.getDeclaredConstructor());
 			ScriptParser.registerValidObjectInst("forAllBiomes", listing);
 

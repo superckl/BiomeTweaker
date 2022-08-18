@@ -26,7 +26,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
@@ -147,7 +146,7 @@ public class BTParameterTypes {
 
 		@Override
 		public Precipitation tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			return Precipitation.byName(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
+			return Precipitation.valueOf(ParameterTypes.STRING.tryParse(parameter, handler).toUpperCase());
 		}
 	};
 
@@ -155,7 +154,7 @@ public class BTParameterTypes {
 
 		@Override
 		public TemperatureModifier tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			return TemperatureModifier.byName(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
+			return TemperatureModifier.valueOf(ParameterTypes.STRING.tryParse(parameter, handler).toUpperCase());
 		}
 	};
 
@@ -164,14 +163,6 @@ public class BTParameterTypes {
 		@Override
 		public GrassColorModifier tryParse(final String parameter, final ScriptHandler handler) throws Exception {
 			return GrassColorModifier.byName(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
-		}
-	};
-
-	public static final ParameterType<BiomeCategory> BIOME_CATEGORY = new ParameterType<>(BiomeCategory.class) {
-
-		@Override
-		public BiomeCategory tryParse(final String parameter, final ScriptHandler handler) throws Exception {
-			return BiomeCategory.byName(ParameterTypes.STRING.tryParse(parameter, handler).toLowerCase());
 		}
 	};
 
@@ -199,7 +190,6 @@ public class BTParameterTypes {
 		ParameterTypes.registerDefaultType(Biome.Precipitation.class, BTParameterTypes.PRECIPITATION);
 		ParameterTypes.registerDefaultType(Biome.TemperatureModifier.class, BTParameterTypes.TEMPERATURE_MODIFIER);
 		ParameterTypes.registerDefaultType(BiomeSpecialEffects.GrassColorModifier.class, BTParameterTypes.GRASS_COLOR_MODIFIER);
-		ParameterTypes.registerDefaultType(BiomeCategory.class, BTParameterTypes.BIOME_CATEGORY);
 		ParameterTypes.registerDefaultType(ResourceLocation.class, BTParameterTypes.RESOURCE_LOCATION);
 		ParameterTypes.registerDefaultType(BiomeModificationManager.FogShape.class, BTParameterTypes.FOG_SHAPE);
 	}

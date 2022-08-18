@@ -22,9 +22,9 @@ public class ScriptCommandAddPotionEffect extends StagedScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		if(!ForgeRegistries.ENTITIES.containsKey(this.entityLocation))
+		if(!ForgeRegistries.ENTITY_TYPES.containsKey(this.entityLocation))
 			throw new IllegalArgumentException(String.format("No entity type %s found", this.entityLocation));
-		final EntityType<?> type = ForgeRegistries.ENTITIES.getValue(this.entityLocation);
+		final EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(this.entityLocation);
 		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).addMobEffect(type, this.effect.build()));
 	}
 

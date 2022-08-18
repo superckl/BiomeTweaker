@@ -50,9 +50,9 @@ import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.script.object.block.BasicBlockStateScriptObject;
 import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
 import me.superckl.biometweaker.script.object.effect.MobEffectScriptObject;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.biome.Biome.Precipitation;
 import net.minecraft.world.level.biome.Biome.TemperatureModifier;
 import net.minecraftforge.forgespi.language.ModFileScanData;
@@ -232,22 +232,20 @@ public class ScriptSetup {
 
 		BiomePropertyManager.SPAWN_PROBABILITY = new EarlyBiomeProperty<>(Float.class,
 				loc -> loc.getMobSettings().getCreatureProbability(), (loc, f) -> spawn.apply(loc).setProbability(Optional.of(f)));
-		BiomePropertyManager.CATEGORY = new EarlyBiomeProperty<>(BiomeCategory.class,
-				null, (loc, f) -> BiomeModificationManager.forBiome(loc).setCategory(f));
 
-		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, loc -> loc.getAmbientLoop().orElseThrow().getRegistryName().toString(),
+		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, loc -> RegistryNameHelper.getRegistryName(loc.getAmbientLoop().orElseThrow()).toString(),
 				(loc, f) -> effects.apply(loc).setAmbientSoundLoop(Optional.of(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(f)))));
 
-		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSleep(),
+		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableSleep(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSleep(f));
-		BiomePropertyManager.DISABLE_BONEMEAL = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableBonemeal(),
+		BiomePropertyManager.DISABLE_BONEMEAL = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableBonemeal(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableBonemeal(f));
-		BiomePropertyManager.DISABLE_CROP_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableCropGrowth(),
+		BiomePropertyManager.DISABLE_CROP_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableCropGrowth(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableCropGrowth(f));
-		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).isDisableSaplingGrowth(),
+		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableSaplingGrowth(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSaplingGrowth(f));
 
-		BiomePropertyManager.FOG_SHAPE = new EarlyBiomeProperty<>(BiomeModificationManager.FogShape.class, loc -> BiomeModificationManager.forBiome(loc.getRegistryName()).getFog().getShape(),
+		BiomePropertyManager.FOG_SHAPE = new EarlyBiomeProperty<>(BiomeModificationManager.FogShape.class, loc -> BiomeModificationManager.forBiome(loc).getFog().getShape(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).getFog().setShape(f));
 
 		BiomePropertyManager.populatePropertyMap();

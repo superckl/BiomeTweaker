@@ -3,14 +3,14 @@ package me.superckl.biometweaker.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 public class ConfigGui extends Screen{
 
 	private final Screen prevScreen;
 
 	protected ConfigGui(final Screen prevScreen) {
-		super(new TextComponent("BiomeTweaker Configuration"));
+		super(Component.literal("BiomeTweaker Configuration"));
 		this.prevScreen = prevScreen;
 	}
 

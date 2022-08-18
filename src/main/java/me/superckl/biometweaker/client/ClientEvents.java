@@ -4,13 +4,14 @@ import com.mojang.blaze3d.shaders.FogShape;
 
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
 import me.superckl.biometweaker.BiomeModificationManager;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.ViewportEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -19,10 +20,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientEvents {
 
 	@SubscribeEvent(receiveCanceled = true)
-	public void onRenderFog(final EntityViewRenderEvent.RenderFogEvent e) {
+	public void onRenderFog(final ViewportEvent.RenderFog e) {
 		final BlockPos pos = e.getCamera().getBlockPosition();
 		final Holder<Biome> biome = e.getCamera().getEntity().level.getBiome(pos);
-		final ResourceLocation rLoc = biome.unwrap().map(ResourceKey::location, Biome::getRegistryName);
+		final ResourceLocation rLoc = biome.unwrap().map(ResourceKey::location, RegistryNameHelper::getRegistryName);
 
 		BiomeModificationManager.forBiomeOpt(rLoc).filter(BiomeModificationManager::hasFog).map(BiomeModificationManager::getFog).ifPresent(fog -> {
 			e.setNearPlaneDistance(e.getNearPlaneDistance()*fog.getNearModifier(pos.getY()));

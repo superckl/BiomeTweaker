@@ -8,6 +8,7 @@ import com.google.common.collect.Iterators;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,7 +43,7 @@ public class PropertyRangeBiomePackage extends BiomePackage{
 
 	@Override
 	public Iterator<ResourceLocation> locIterator() {
-		return Iterators.transform(this.iterator(), Biome::getRegistryName);
+		return Iterators.transform(this.iterator(), RegistryNameHelper::getRegistryName);
 	}
 
 	@Override

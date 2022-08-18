@@ -22,6 +22,7 @@ import com.mojang.serialization.JsonOps;
 
 import lombok.Cleanup;
 import me.superckl.api.superscript.util.WarningHelper;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderSet;
@@ -52,7 +53,7 @@ public class Output {
 			final File biomeDir = new File(baseDir, "/biome/");
 			Output.genOutput(Streams.stream(registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY).iterator()), biomeDir, entry -> {
 				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", entry.getRegistryName().toString());
+				obj.addProperty("registry_name", RegistryNameHelper.getRegistryName(entry).toString());
 				final JsonElement el = Output.encode(ops, entry, Biome.NETWORK_CODEC);
 				Output.addGenInfo(el.getAsJsonObject(), entry, ops);
 				el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
@@ -63,7 +64,7 @@ public class Output {
 
 		if(Config.getInstance().getOutputEntities().get()) {
 			final File entityDir = new File(baseDir, "/entity/");
-			Output.genOutput(Streams.stream(ForgeRegistries.ENTITIES.iterator()), entityDir, Output::entityTypeToJson, namer.apply("registry_name", "Entity"));
+			Output.genOutput(Streams.stream(ForgeRegistries.ENTITY_TYPES.iterator()), entityDir, Output::entityTypeToJson, namer.apply("registry_name", "Entity"));
 		}
 
 		if(Config.getInstance().getOutputDims().get()) {
@@ -118,7 +119,7 @@ public class Output {
 
 	private static JsonObject entityTypeToJson(final EntityType<?> type) {
 		final JsonObject obj = new JsonObject();
-		obj.addProperty("registry_name", ForgeRegistries.ENTITIES.getKey(type).toString());
+		obj.addProperty("registry_name", ForgeRegistries.ENTITY_TYPES.getKey(type).toString());
 		obj.addProperty("category", type.getCategory().name());
 		obj.addProperty("fire_immune", type.fireImmune());
 		obj.addProperty("summonable", type.canSummon());

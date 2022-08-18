@@ -21,7 +21,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.superckl.biometweaker.util.IntRange;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
 import net.minecraft.sounds.SoundEvent;
@@ -32,8 +34,6 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.AmbientAdditionsSettings;
 import net.minecraft.world.level.biome.AmbientParticleSettings;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
-import net.minecraft.world.level.biome.Biome.ClimateSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
 import net.minecraft.world.level.levelgen.GenerationStep.Carving;
@@ -41,6 +41,8 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
+import net.minecraftforge.common.world.BiomeSpecialEffectsBuilder;
+import net.minecraftforge.common.world.ClimateSettingsBuilder;
 import net.minecraftforge.common.world.MobSpawnSettingsBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -53,8 +55,20 @@ public class BiomeModificationManager {
 		return BiomeModificationManager.modifiers.computeIfAbsent(rLoc, loc -> new BiomeModificationManager());
 	}
 
+	public static BiomeModificationManager forBiome(final Biome biome) {
+		return BiomeModificationManager.forBiome(RegistryNameHelper.getRegistryName(biome));
+	}
+
 	public static Optional<BiomeModificationManager> forBiomeOpt(final ResourceLocation rLoc) {
 		return Optional.ofNullable(BiomeModificationManager.modifiers.get(rLoc));
+	}
+
+	public static Optional<BiomeModificationManager> forBiomeOpt(final ResourceKey<Biome> key) {
+		return BiomeModificationManager.forBiomeOpt(key.location());
+	}
+
+	public static Optional<BiomeModificationManager> forBiomeOpt(final Biome biome) {
+		return BiomeModificationManager.forBiomeOpt(RegistryNameHelper.getRegistryName(biome));
 	}
 
 	private ClimateModification climate;
@@ -62,8 +76,6 @@ public class BiomeModificationManager {
 	private FogModification fog;
 	private GenerationModification generation;
 	private MobSpawnModification spawn;
-	@Getter @Setter
-	private BiomeCategory category;
 	@Getter @Setter
 	private boolean disableSleep;
 	@Getter @Setter
@@ -117,10 +129,6 @@ public class BiomeModificationManager {
 		return this.spawn;
 	}
 
-	public boolean hasCategory() {
-		return this.category != null;
-	}
-
 	public void addMobEffect(final EntityType<?> type, final MobEffectModification effect) {
 		BiomeModificationManager.hasMobEffects = true;
 		this.potionEffects.put(type, effect);
@@ -155,11 +163,13 @@ public class BiomeModificationManager {
 		private Biome.TemperatureModifier temperatureModifier;
 		private Optional<Float> downfall = Optional.empty();
 
-		public ClimateSettings modify(final ClimateSettings val) {
-			return new ClimateSettings(this.precipitation == null ? val.precipitation : this.precipitation,
-					this.temperature.orElse(val.temperature),
-					this.temperatureModifier == null ? val.temperatureModifier : this.temperatureModifier,
-							this.downfall.orElse(val.downfall));
+		public void modify(final ClimateSettingsBuilder val) {
+			if(this.precipitation != null)
+				val.setPrecipitation(this.precipitation);
+			if(this.temperatureModifier != null)
+				val.setTemperatureModifier(this.temperatureModifier);
+			this.temperature.ifPresent(val::setTemperature);
+			this.downfall.ifPresent(val::setDownfall);
 		}
 
 	}
@@ -211,38 +221,19 @@ public class BiomeModificationManager {
 		private Optional<Music> backgroundMusic = Optional.empty();
 
 
-		public BiomeSpecialEffects modify(final BiomeSpecialEffects val) {
-			final BiomeSpecialEffects.Builder builder = this.toBuilder(val);
-
+		public void modify(final BiomeSpecialEffectsBuilder builder) {
 			this.fogColor.ifPresent(builder::fogColor);
 			this.waterColor.ifPresent(builder::waterColor);
 			this.waterFogColor.ifPresent(builder::waterFogColor);
 			this.skyColor.ifPresent(builder::skyColor);
 			this.foliageColorOverride.ifPresent(builder::foliageColorOverride);
 			this.grassColorOverride.ifPresent(builder::grassColorOverride);
-			builder.grassColorModifier(this.grassColorModifier == null ? val.getGrassColorModifier() : this.grassColorModifier);
+			if(this.grassColorModifier != null)
+				builder.grassColorModifier(this.grassColorModifier);
 			this.ambientSoundLoop.ifPresent(builder::ambientLoopSound);
 			this.particle.ifPresent(builder::ambientParticle);
 			this.additions.ifPresent(builder::ambientAdditionsSound);
 			this.backgroundMusic.ifPresent(builder::backgroundMusic);
-			return builder.build();
-		}
-
-		private BiomeSpecialEffects.Builder toBuilder(final BiomeSpecialEffects val){
-			final BiomeSpecialEffects.Builder builder = new BiomeSpecialEffects.Builder();
-			builder.fogColor(val.getFogColor());
-			builder.waterColor(val.getWaterColor());
-			builder.waterFogColor(val.getWaterFogColor());
-			builder.skyColor(val.getSkyColor());
-			val.getFoliageColorOverride().ifPresent(builder::foliageColorOverride);
-			val.getGrassColorOverride().ifPresent(builder::grassColorOverride);
-			builder.grassColorModifier(val.getGrassColorModifier());
-			val.getAmbientParticleSettings().ifPresent(builder::ambientParticle);
-			val.getAmbientLoopSoundEvent().ifPresent(builder::ambientLoopSound);
-			val.getAmbientMoodSettings().ifPresent(builder::ambientMoodSound);
-			val.getAmbientAdditionsSettings().ifPresent(builder::ambientAdditionsSound);
-			val.getBackgroundMusic().ifPresent(builder::backgroundMusic);
-			return builder;
 		}
 
 	}
@@ -258,12 +249,17 @@ public class BiomeModificationManager {
 		private Optional<Float> probability = Optional.empty();
 
 		public void modify(final MobSpawnSettingsBuilder val) {
-			this.allSpawns.forEach(type -> val.getSpawner(type).clear());
-			this.removedSpawns.forEach((type, loc) -> val.getSpawner(type).removeIf(spawner -> spawner.type.delegate.name().equals(loc)));
-			this.addedSpawns.forEach((type, spawn) -> val.getSpawner(type).add(spawn));
 			this.probability.ifPresent(val::creatureGenerationProbability);
-			this.costs.forEach((loc, pair) -> val.addMobCharge(ForgeRegistries.ENTITIES.getValue(loc), pair.leftDouble(), pair.rightDouble()));
+			this.costs.forEach((loc, pair) -> val.addMobCharge(ForgeRegistries.ENTITY_TYPES.getValue(loc), pair.leftDouble(), pair.rightDouble()));
+		}
 
+		public void doRemove(final MobSpawnSettingsBuilder val) {
+			this.allSpawns.forEach(type -> val.getSpawner(type).clear());
+			this.removedSpawns.forEach((type, loc) -> val.getSpawner(type).removeIf(spawner -> RegistryNameHelper.getRegistryName(spawner.type).equals(loc)));
+		}
+
+		public void doAdd(final MobSpawnSettingsBuilder val) {
+			this.addedSpawns.forEach((type, spawn) -> val.getSpawner(type).add(spawn));
 		}
 
 		public void removeSpawn(final ResourceLocation feature, final MobCategory... types) {
@@ -324,14 +320,16 @@ public class BiomeModificationManager {
 				this.addedCarvers.put(stage, feature);
 		}
 
-		public void modify(final BiomeGenerationSettingsBuilder val) {
+		public void doAdd(final BiomeGenerationSettingsBuilder val) {
+			this.addedFeatures.forEach((stage, holder) -> val.getFeatures(stage).add(holder));
+			this.addedCarvers.forEach((stage, holder) -> val.getCarvers(stage).add(holder));
+		}
+
+		public void doRemove(final BiomeGenerationSettingsBuilder val) {
 			this.allFeatures.forEach(stage -> val.getFeatures(stage).clear());
 			this.removedFeatures.forEach((stage, loc) -> val.getFeatures(stage).removeIf(feature -> feature.is(loc)));
 			this.allCarvers.forEach(stage -> val.getCarvers(stage).clear());
 			this.removedCarvers.forEach((stage, loc) -> val.getCarvers(stage).removeIf(carver -> carver.is(loc)));
-
-			this.addedFeatures.forEach((stage, holder) -> val.getFeatures(stage).add(holder));
-			this.addedCarvers.forEach((stage, holder) -> val.getCarvers(stage).add(holder));
 		}
 
 	}

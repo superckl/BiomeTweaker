@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.serialization.Codec;
+
 import lombok.Getter;
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
 import me.superckl.api.superscript.ApplicationStage;
@@ -21,6 +23,7 @@ import me.superckl.biometweaker.script.object.TweakerScriptObject;
 import me.superckl.biometweaker.server.command.CommandOutput;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
@@ -31,6 +34,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod(BiomeTweakerAPI.MOD_ID)
 public class BiomeTweaker {
@@ -50,6 +56,11 @@ public class BiomeTweaker {
 	private final File featureDir;
 	@Getter
 	private final File carverDir;
+
+	public static final DeferredRegister<Codec<? extends BiomeModifier>> BIOME_MODIFIER_SERIALIZERS =
+			DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, BiomeTweakerAPI.MOD_ID);
+	public static final RegistryObject<Codec<MainBiomeModifier>> MAIN_MODIFIER_CODEC =
+			BiomeTweaker.BIOME_MODIFIER_SERIALIZERS.register("main", () -> Codec.unit(MainBiomeModifier::new));
 
 	public BiomeTweaker() {
 		BiomeTweaker.INSTANCE = this;
@@ -75,6 +86,7 @@ public class BiomeTweaker {
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::loadComplete);
+		BiomeTweaker.BIOME_MODIFIER_SERIALIZERS.register(bus);
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.setup());
 

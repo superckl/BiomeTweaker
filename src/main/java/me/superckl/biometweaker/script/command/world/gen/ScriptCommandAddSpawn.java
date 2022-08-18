@@ -21,7 +21,7 @@ public class ScriptCommandAddSpawn extends StagedScriptCommand{
 	public ScriptCommandAddSpawn(final BiomePackage pack, final String stage, final ResourceLocation rLoc, final int weight, final int minCount, final int maxCount) throws ClassNotFoundException {
 		this.pack = pack;
 		this.stage = stage;
-		this.data = new SpawnerData(ForgeRegistries.ENTITIES.getValue(rLoc), weight, minCount, maxCount);
+		this.data = new SpawnerData(ForgeRegistries.ENTITY_TYPES.getValue(rLoc), weight, minCount, maxCount);
 	}
 
 	@Override

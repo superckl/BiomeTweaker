@@ -11,7 +11,6 @@ import me.superckl.api.biometweaker.APIInfo;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.BiomeModificationManager;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.Biome.BiomeCategory;
 
 public class BiomePropertyManager {
 
@@ -26,7 +25,6 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Integer> SKY_COLOR;
 	public static EarlyBiomeProperty<Integer> FOG_COLOR;
 	public static EarlyBiomeProperty<Float> SPAWN_PROBABILITY;
-	public static EarlyBiomeProperty<BiomeCategory> CATEGORY;
 	public static EarlyBiomeProperty<String> AMBIENT_LOOP_SOUND;
 	public static EarlyBiomeProperty<Boolean> DISABLE_SLEEP;
 	public static EarlyBiomeProperty<Boolean> DISABLE_BONEMEAL;

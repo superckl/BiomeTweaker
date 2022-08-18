@@ -8,6 +8,7 @@ import java.util.Map;
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.biometweaker.BiomeTweaker;
+import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceLocation;
@@ -29,10 +30,10 @@ public class BlockReplacer {
 
 	public static void runReplacement(final PlacementStage stage, final WorldGenLevel level, final ChunkAccess chunk){
 		try {
-			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(level.getLevel().dimension().getRegistryName());
+			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(level.getLevel().dimension().location());
 			if(!manager.hasReplacements(stage))
 				return;
-			final WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(RandomSupport.seedUniquifier()));
+			final WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(RandomSupport.generateUniqueSeed()));
 			final ChunkPos pos = chunk.getPos();
 			rand.setLargeFeatureSeed(level.getSeed()+BiomeTweakerAPI.MOD_ID.hashCode()+chunk.getPos().hashCode(), pos.x, pos.z);
 			final Map<ResourceLocation, BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
@@ -45,7 +46,7 @@ public class BlockReplacer {
 				for(final BlockPos biome_pos : biome_positions) {
 					final int bx = biome_pos.getX(); final int by = biome_pos.getY(); final int bz = biome_pos.getZ();
 					final Biome biome = section.getNoiseBiome(bx, by, bz).value();
-					final ResourceLocation rLoc = biome.getRegistryName();
+					final ResourceLocation rLoc = RegistryNameHelper.getRegistryName(biome);
 					if(!manager.hasReplacements(rLoc, stage))
 						continue;
 					final BlockReplacementEntryList previousReplacementsBiome = previousReplacements.computeIfAbsent(rLoc, loc -> new BlockReplacementEntryList());

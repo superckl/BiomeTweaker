@@ -29,7 +29,7 @@ public class BlockReplacer {
 
 	public static void runReplacement(final PlacementStage stage, final WorldGenLevel level, final ChunkAccess chunk){
 		try {
-			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(level.getLevel().dimension().getRegistryName());
+			final BlockReplacementManager manager = BlockReplacementManager.getManagerForWorld(level.getLevel().dimension().location());
 			if(!manager.hasReplacements(stage))
 				return;
 			final WorldgenRandom rand = new WorldgenRandom(new LegacyRandomSource(RandomSupport.seedUniquifier()));

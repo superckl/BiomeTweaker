@@ -4,17 +4,16 @@ import java.util.Iterator;
 
 import com.google.common.collect.Iterators;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraftforge.registries.ForgeRegistries;
 
-public abstract class BiomePackage implements Iterable<Biome>{
+public abstract class BiomePackage{
 
-	public abstract Iterator<ResourceLocation> locIterator();
+	public abstract Iterator<ResourceLocation> locIterator(BiomeLookup lookup);
 
-	@Override
-	public Iterator<Biome> iterator() {
-		return Iterators.transform(this.locIterator(), ForgeRegistries.BIOMES::getValue);
+	public Iterator<Biome> iterator(final BiomeLookup lookup) {
+		return Iterators.transform(this.locIterator(lookup), lookup::value);
 	}
 
 	public abstract boolean requiresRegistry();

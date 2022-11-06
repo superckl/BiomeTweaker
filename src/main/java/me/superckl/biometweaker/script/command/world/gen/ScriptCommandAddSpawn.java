@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.command.world.gen;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -28,7 +29,7 @@ public class ScriptCommandAddSpawn extends StagedScriptCommand{
 	public void perform() throws Exception {
 		final boolean isAllStages = "ALL".equals(this.stage);
 		final MobCategory[] types = isAllStages ? MobCategory.values() : new MobCategory[] {MobCategory.valueOf(this.stage)};
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getSpawn().addSpawn(this.data, types));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getSpawn().addSpawn(this.data, types));
 	}
 
 }

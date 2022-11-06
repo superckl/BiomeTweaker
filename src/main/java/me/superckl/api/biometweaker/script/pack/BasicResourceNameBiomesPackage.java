@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.google.common.collect.Iterators;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
 
 public class BasicResourceNameBiomesPackage extends BiomePackage{
@@ -17,7 +18,7 @@ public class BasicResourceNameBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<ResourceLocation> locIterator() {
+	public Iterator<ResourceLocation> locIterator(final BiomeLookup lookup) {
 		return Iterators.forArray(this.rLocs);
 	}
 

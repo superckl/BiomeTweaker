@@ -11,7 +11,7 @@ public record MainBiomeModifier() implements BiomeModifier {
 
 	@Override
 	public void modify(final Holder<Biome> biome, final Phase phase, final Builder builder) {
-		biome.unwrap().map(BiomeModificationManager::forBiomeOpt, BiomeModificationManager::forBiomeOpt).ifPresent(mod -> {
+		BiomeModificationManager.forBiomeOpt(biome.unwrapKey().get()).ifPresent(mod -> {
 			switch(phase) {
 			case ADD:
 				if(mod.hasSpawn())

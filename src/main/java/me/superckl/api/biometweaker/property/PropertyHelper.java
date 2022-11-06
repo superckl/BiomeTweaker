@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class PropertyHelper {
 
-	public static <K, V> void setProperty(final Object obj, final Property<K, V> property, final JsonPrimitive value, final ScriptHandler handler) throws Exception{
+	public static <K, V, C> void setProperty(final Object obj, final Property<K, V, C> property, final JsonPrimitive value, final ScriptHandler handler) throws Exception{
 		if(!property.isSettable())
 			throw new UnsupportedOperationException("Property is not settable!");
 		if(!property.getTargetClass().isAssignableFrom(obj.getClass()))
@@ -20,7 +20,7 @@ public class PropertyHelper {
 		final Class<K> type = property.getTypeClass();
 		try {
 			if(type.isAssignableFrom(BlockState.class)) {
-				WarningHelper.<Property<? super BlockState, V>>uncheckedCast(property).set(target, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
+				WarningHelper.<Property<? super BlockState, V, C>>uncheckedCast(property).set(target, BTParameterTypes.BLOCKSTATE_BUILDER.tryParse(value.getAsString(), handler).build());
 				return;
 			}
 			final ParameterType<? extends K> pType = ParameterTypes.getDefaultType(type);

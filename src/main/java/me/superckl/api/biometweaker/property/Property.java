@@ -1,6 +1,8 @@
 package me.superckl.api.biometweaker.property;
 
-public abstract class Property <K, V> {
+import java.util.Optional;
+
+public abstract class Property <K, V, C> {
 
 	private final Class<K> typeClass;
 
@@ -9,7 +11,7 @@ public abstract class Property <K, V> {
 	}
 
 	public abstract void set(V obj, K val);
-	public abstract K get(V obj);
+	public abstract K get(V obj, Optional<C> context);
 	public abstract boolean isReadable();
 	public abstract boolean isSettable();
 	public abstract Class<V> getTargetClass();
@@ -18,10 +20,10 @@ public abstract class Property <K, V> {
 		return this.isReadable() && this.isSettable();
 	}
 
-	public void copy(final V from, final V to){
+	public void copy(final V from, final V to, final Optional<C> context){
 		if(!this.isCopyable())
 			throw new UnsupportedOperationException("Property cannot be copied!");
-		this.set(to, this.get(from));
+		this.set(to, this.get(from, context));
 	}
 
 	public Class<K> getTypeClass() {

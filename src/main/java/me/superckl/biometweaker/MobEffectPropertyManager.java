@@ -14,14 +14,14 @@ import me.superckl.biometweaker.BiomeModificationManager.MobEffectModification.B
 
 public class MobEffectPropertyManager {
 
-	public static Property<Integer, Builder> AMPLIFIER;
-	public static Property<Integer, Builder> DURATION;
-	public static Property<Integer, Builder> INTERVAL;
-	public static Property<Float, Builder> CHANCE;
-	public static Property<Boolean, Builder> VISIBLE_PARTICLES;
-	public static Property<Boolean, Builder> SHOW_ICON;
+	public static Property<Integer, Builder, ?> AMPLIFIER;
+	public static Property<Integer, Builder, ?> DURATION;
+	public static Property<Integer, Builder, ?> INTERVAL;
+	public static Property<Float, Builder, ?> CHANCE;
+	public static Property<Boolean, Builder, ?> VISIBLE_PARTICLES;
+	public static Property<Boolean, Builder, ?> SHOW_ICON;
 
-	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
+	private static final Map<String, Property<?, ?, ?>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = MobEffectPropertyManager.class.getDeclaredFields();
@@ -36,11 +36,11 @@ public class MobEffectPropertyManager {
 			}
 	}
 
-	public static Property<?, ?> findProperty(final String name){
+	public static Property<?, ?, ?> findProperty(final String name){
 		return MobEffectPropertyManager.propertyMap.get(name);
 	}
 
-	public static Collection<Property<?, ?>> getAllProperties(){
+	public static Collection<Property<?, ?, ?>> getAllProperties(){
 		return Collections.unmodifiableCollection(MobEffectPropertyManager.propertyMap.values());
 	}
 

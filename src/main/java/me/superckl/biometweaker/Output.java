@@ -22,7 +22,6 @@ import com.mojang.serialization.JsonOps;
 
 import lombok.Cleanup;
 import me.superckl.api.superscript.util.WarningHelper;
-import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderSet;
@@ -51,9 +50,10 @@ public class Output {
 
 		if(Config.getInstance().getOutputBiomes().get()) {
 			final File biomeDir = new File(baseDir, "/biome/");
-			Output.genOutput(Streams.stream(registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY).iterator()), biomeDir, entry -> {
+			final Registry<Biome> biomeReg = registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
+			Output.genOutput(Streams.stream(biomeReg.iterator()), biomeDir, entry -> {
 				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", RegistryNameHelper.getRegistryName(entry).toString());
+				obj.addProperty("registry_name", biomeReg.getKey(entry).toString());
 				final JsonElement el = Output.encode(ops, entry, Biome.NETWORK_CODEC);
 				Output.addGenInfo(el.getAsJsonObject(), entry, ops);
 				el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));

@@ -32,7 +32,7 @@ public class BiomePropertyManager {
 	public static EarlyBiomeProperty<Boolean> DISABLE_SAPLING_GROWTH;
 	public static EarlyBiomeProperty<BiomeModificationManager.FogShape> FOG_SHAPE;
 
-	private static final Map<String, Property<?, ?>> propertyMap = new HashMap<>();
+	private static final Map<String, Property<?, ?, ?>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = BiomePropertyManager.class.getDeclaredFields();
@@ -47,11 +47,11 @@ public class BiomePropertyManager {
 			}
 	}
 
-	public static Property<?, ?> findProperty(final String name){
+	public static Property<?, ?, ?> findProperty(final String name){
 		return BiomePropertyManager.propertyMap.get(name);
 	}
 
-	public static Collection<Property<?, ?>> getAllProperties(){
+	public static Collection<Property<?, ?, ?>> getAllProperties(){
 		return Collections.unmodifiableCollection(BiomePropertyManager.propertyMap.values());
 	}
 

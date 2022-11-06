@@ -5,6 +5,7 @@ import java.util.Iterator;
 import com.google.gson.JsonPrimitive;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.EarlyBiomeProperty;
 import me.superckl.api.biometweaker.property.Property;
@@ -30,10 +31,10 @@ public class ScriptCommandSetBiomeProperty extends StagedScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Iterator<ResourceLocation> it = this.pack.locIterator();
+		final Iterator<ResourceLocation> it = this.pack.locIterator(BiomeLookup.fromForge());
 		while(it.hasNext()){
 			final ResourceLocation loc = it.next();
-			final Property<?, ?> prop = BiomePropertyManager.findProperty(this.key.toLowerCase());
+			final Property<?, ?, ?> prop = BiomePropertyManager.findProperty(this.key.toLowerCase());
 			if(prop == null)
 				throw new IllegalArgumentException("No property found for "+this.key);
 			if(prop instanceof EarlyBiomeProperty)

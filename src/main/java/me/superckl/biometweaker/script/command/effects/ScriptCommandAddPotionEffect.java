@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command.effects;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -25,7 +26,7 @@ public class ScriptCommandAddPotionEffect extends StagedScriptCommand{
 		if(!ForgeRegistries.ENTITY_TYPES.containsKey(this.entityLocation))
 			throw new IllegalArgumentException(String.format("No entity type %s found", this.entityLocation));
 		final EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(this.entityLocation);
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).addMobEffect(type, this.effect.build()));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).addMobEffect(type, this.effect.build()));
 	}
 
 	@Override

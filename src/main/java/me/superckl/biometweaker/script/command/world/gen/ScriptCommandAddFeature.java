@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.command.world.gen;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -33,7 +34,7 @@ public class ScriptCommandAddFeature extends StagedScriptCommand{
 		final Decoration[] stages = isAllStages ? Decoration.values() : new Decoration[] {Decoration.valueOf(this.stage)};
 		final Holder<PlacedFeature> feature = BuiltinRegistries.PLACED_FEATURE.getHolder(ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY,
 				this.key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", this.key)));
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addFeature(feature, stages));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addFeature(feature, stages));
 	}
 
 }

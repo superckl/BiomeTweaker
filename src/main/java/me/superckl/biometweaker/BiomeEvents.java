@@ -21,7 +21,7 @@ public class BiomeEvents {
 		if(e.getEntity().level.isClientSide || e.getResultStatus() != null)
 			return;
 		e.getOptionalPos().ifPresent(pos -> {
-			final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getEntity().level.getBiome(pos).value());
+			final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getEntity().level.getBiome(pos).unwrapKey().get());
 			mod.filter(BiomeModificationManager::isDisableSleep).ifPresent(x -> {
 				e.setResult(BedSleepingProblem.NOT_POSSIBLE_HERE);
 				((ServerPlayer) e.getEntity()).displayClientMessage(Component.translatable("biometweaker.sleep.biome"), true);
@@ -33,7 +33,7 @@ public class BiomeEvents {
 	public void onBonemeal(final BonemealEvent e) {
 		if(e.getEntity().level.isClientSide)
 			return;
-		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getEntity().level.getBiome(e.getPos()).value());
+		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getEntity().level.getBiome(e.getPos()).unwrapKey().get());
 		mod.filter(BiomeModificationManager::isDisableBonemeal).ifPresent(x -> {
 			if(Config.getInstance().getConsumeBonemeal().get())
 				e.setResult(Result.ALLOW);
@@ -46,7 +46,7 @@ public class BiomeEvents {
 	public void onCropGrow(final CropGrowEvent.Pre e) {
 		if(e.getLevel().isClientSide())
 			return;
-		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getLevel().getBiome(e.getPos()).value());
+		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getLevel().getBiome(e.getPos()).unwrapKey().get());
 		mod.filter(BiomeModificationManager::isDisableCropGrowth).ifPresent(x -> e.setResult(Result.DENY));
 	}
 
@@ -54,7 +54,7 @@ public class BiomeEvents {
 	public void onSaplingGrow(final SaplingGrowTreeEvent e) {
 		if(e.getLevel().isClientSide())
 			return;
-		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getLevel().getBiome(e.getPos()).value());
+		final Optional<BiomeModificationManager> mod = BiomeModificationManager.forBiomeOpt(e.getLevel().getBiome(e.getPos()).unwrapKey().get());
 		mod.filter(BiomeModificationManager::isDisableSaplingGrowth).ifPresent(x -> e.setResult(Result.DENY));
 	}
 
@@ -66,7 +66,7 @@ public class BiomeEvents {
 		final LivingEntity entity = e.getEntity();
 		if(entity.level.isClientSide || !entity.isAffectedByPotions())
 			return;
-		final Optional<BiomeModificationManager> modOpt = BiomeModificationManager.forBiomeOpt(entity.level.getBiome(entity.getOnPos()).value());
+		final Optional<BiomeModificationManager> modOpt = BiomeModificationManager.forBiomeOpt(entity.level.getBiome(entity.getOnPos()).unwrapKey().get());
 		modOpt.ifPresent(mod -> {
 			mod.getMobEffects(entity.getType()).forEach(effect -> {
 				if(entity.tickCount % effect.interval() != 0 || entity.getRandom().nextFloat() > effect.chance())

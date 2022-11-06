@@ -12,21 +12,21 @@ import me.superckl.biometweaker.BiomeTweaker;
 
 public class ReplacementPropertyManager {
 
-	public static Property<BlockStateBuilder<?>, ReplacementConstraints> BLOCK;
-	public static Property<Integer, ReplacementConstraints> MIN_Y;
-	public static Property<Integer, ReplacementConstraints> MAX_Y;
-	public static Property<Integer, ReplacementConstraints> MIN_X;
-	public static Property<Integer, ReplacementConstraints> MAX_X;
-	public static Property<Integer, ReplacementConstraints> MIN_Z;
-	public static Property<Integer, ReplacementConstraints> MAX_Z;
-	public static Property<Integer, ReplacementConstraints> MIN_CHUNK_X;
-	public static Property<Integer, ReplacementConstraints> MAX_CHUNK_X;
-	public static Property<Integer, ReplacementConstraints> MIN_CHUNK_Z;
-	public static Property<Integer, ReplacementConstraints> MAX_CHUNK_Z;
-	public static Property<Boolean, ReplacementConstraints> IGNORE_META;
-	public static Property<Boolean, ReplacementConstraints> CONTIGUOUS;
+	public static Property<BlockStateBuilder<?>, ReplacementConstraints, ?> BLOCK;
+	public static Property<Integer, ReplacementConstraints, ?> MIN_Y;
+	public static Property<Integer, ReplacementConstraints, ?> MAX_Y;
+	public static Property<Integer, ReplacementConstraints, ?> MIN_X;
+	public static Property<Integer, ReplacementConstraints, ?> MAX_X;
+	public static Property<Integer, ReplacementConstraints, ?> MIN_Z;
+	public static Property<Integer, ReplacementConstraints, ?> MAX_Z;
+	public static Property<Integer, ReplacementConstraints, ?> MIN_CHUNK_X;
+	public static Property<Integer, ReplacementConstraints, ?> MAX_CHUNK_X;
+	public static Property<Integer, ReplacementConstraints, ?> MIN_CHUNK_Z;
+	public static Property<Integer, ReplacementConstraints, ?> MAX_CHUNK_Z;
+	public static Property<Boolean, ReplacementConstraints, ?> IGNORE_META;
+	public static Property<Boolean, ReplacementConstraints, ?> CONTIGUOUS;
 
-	private static final Map<String, Property<?, ReplacementConstraints>> propertyMap = new HashMap<>();
+	private static final Map<String, Property<?, ReplacementConstraints, ?>> propertyMap = new HashMap<>();
 
 	public static void populatePropertyMap(){
 		final Field[] fields = ReplacementPropertyManager.class.getDeclaredFields();
@@ -41,7 +41,7 @@ public class ReplacementPropertyManager {
 			}
 	}
 
-	public static Property<?, ReplacementConstraints> findProperty(final String name){
+	public static Property<?, ReplacementConstraints, ?> findProperty(final String name){
 		return ReplacementPropertyManager.propertyMap.get(name);
 	}
 }

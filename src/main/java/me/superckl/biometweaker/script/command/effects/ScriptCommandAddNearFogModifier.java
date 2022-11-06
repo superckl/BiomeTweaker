@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command.effects;
 
 import lombok.AllArgsConstructor;
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -25,7 +26,7 @@ public class ScriptCommandAddNearFogModifier extends StagedScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getFog().addNearModifier(this.minY, this.maxY, this.modifier));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getFog().addNearModifier(this.minY, this.maxY, this.modifier));
 	}
 
 }

@@ -8,7 +8,7 @@ import com.google.common.primitives.Primitives;
 import me.superckl.api.superscript.util.WarningHelper;
 import me.superckl.biometweaker.util.ObfNameHelper;
 
-public final class PropertyField<K, V> extends Property<K, V>{
+public final class PropertyField<K, V> extends Property<K, V, Void>{
 
 	private final ObfNameHelper.Fields info;
 	private final Class<V> targetClass;
@@ -38,7 +38,7 @@ public final class PropertyField<K, V> extends Property<K, V>{
 	}
 
 	@Override
-	public K get(final V obj) throws IllegalStateException, IllegalArgumentException{
+	public K get(final V obj, final Optional<Void> c) throws IllegalStateException, IllegalArgumentException{
 		this.verifyField();
 		try {
 			Object val = this.field.get(obj);

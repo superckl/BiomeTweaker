@@ -8,7 +8,6 @@ import java.util.Map;
 import me.superckl.api.biometweaker.BiomeTweakerAPI;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.biometweaker.BiomeTweaker;
-import me.superckl.biometweaker.util.RegistryNameHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.QuartPos;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +16,6 @@ import net.minecraft.util.random.WeightedEntry.Wrapper;
 import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -45,8 +43,7 @@ public class BlockReplacer {
 				//Loop over the quarts first to obtain the biome efficiently
 				for(final BlockPos biome_pos : biome_positions) {
 					final int bx = biome_pos.getX(); final int by = biome_pos.getY(); final int bz = biome_pos.getZ();
-					final Biome biome = section.getNoiseBiome(bx, by, bz).value();
-					final ResourceLocation rLoc = RegistryNameHelper.getRegistryName(biome);
+					final ResourceLocation rLoc = section.getNoiseBiome(bx, by, bz).unwrapKey().get().location();
 					if(!manager.hasReplacements(rLoc, stage))
 						continue;
 					final BlockReplacementEntryList previousReplacementsBiome = previousReplacements.computeIfAbsent(rLoc, loc -> new BlockReplacementEntryList());

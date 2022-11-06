@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.command.world.gen;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -33,7 +34,7 @@ public class ScriptCommandAddCarver extends StagedScriptCommand{
 		final Carving[] stages = isAllStages ? Carving.values() : new Carving[] {Carving.valueOf(this.stage)};
 		final Holder<ConfiguredWorldCarver<?>> carver = BuiltinRegistries.CONFIGURED_CARVER.getHolder(ResourceKey.create(Registry.CONFIGURED_CARVER_REGISTRY,
 				this.key)).orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find placed feature %s. Did you register it?", this.key)));
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addCarver(carver, stages));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getGeneration().addCarver(carver, stages));
 	}
 
 }

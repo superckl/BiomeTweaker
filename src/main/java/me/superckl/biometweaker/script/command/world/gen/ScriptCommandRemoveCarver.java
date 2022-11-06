@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -34,7 +35,7 @@ public class ScriptCommandRemoveCarver extends StagedScriptCommand{
 	public void perform() throws IllegalArgumentException, IllegalAccessException{
 		final boolean isAllStages = "ALL".equals(this.stage);
 		final Carving[] stages = isAllStages ? Carving.values() : new Carving[] {Carving.valueOf(this.stage)};
-		this.pack.locIterator().forEachRemaining(loc -> {
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> {
 			final GenerationModification mod = BiomeModificationManager.forBiome(loc).getGeneration();
 			Arrays.stream(stages).forEach(stage -> {
 				if(this.isAll)

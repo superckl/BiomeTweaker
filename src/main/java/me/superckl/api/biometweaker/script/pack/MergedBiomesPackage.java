@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Iterators;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
 
 public class MergedBiomesPackage extends BiomePackage{
@@ -18,8 +19,8 @@ public class MergedBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<ResourceLocation> locIterator() {
-		return this.packs.stream().map(BiomePackage::locIterator).reduce(Iterators::concat).orElseGet(Collections::emptyIterator);
+	public Iterator<ResourceLocation> locIterator(final BiomeLookup lookup) {
+		return this.packs.stream().map(pack -> pack.locIterator(lookup)).reduce(Iterators::concat).orElseGet(Collections::emptyIterator);
 	}
 
 	@Override

@@ -1,9 +1,10 @@
 package me.superckl.api.biometweaker.property;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public class PropertySimple<K, V> extends Property<K, V> {
+public class PropertySimple<K, V> extends Property<K, V, Void> {
 
 	private final Class<V> target;
 	private final Function<? super V, ? extends K> getter;
@@ -22,7 +23,7 @@ public class PropertySimple<K, V> extends Property<K, V> {
 	}
 
 	@Override
-	public K get(final V obj) {
+	public K get(final V obj, final Optional<Void> c) {
 		return this.getter.apply(obj);
 	}
 

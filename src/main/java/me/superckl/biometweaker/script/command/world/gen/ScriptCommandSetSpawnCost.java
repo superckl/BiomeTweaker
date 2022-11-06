@@ -1,5 +1,6 @@
 package me.superckl.biometweaker.script.command.world.gen;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -25,7 +26,7 @@ public class ScriptCommandSetSpawnCost extends StagedScriptCommand{
 
 	@Override
 	public void perform() {
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getSpawn().setCost(this.rLoc, this.costPer, this.maxCost));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getSpawn().setCost(this.rLoc, this.costPer, this.maxCost));
 	}
 
 }

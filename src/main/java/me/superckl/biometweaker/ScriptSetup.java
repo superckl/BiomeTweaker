@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import org.objectweb.asm.Type;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.property.BiomePropertyManager;
 import me.superckl.api.biometweaker.property.EarlyBiomeProperty;
@@ -209,43 +211,43 @@ public class ScriptSetup {
 		final Function<ResourceLocation, EffectsModification> effects = loc -> BiomeModificationManager.forBiome(loc).getEffects();
 		final Function<ResourceLocation, MobSpawnModification> spawn = loc -> BiomeModificationManager.forBiome(loc).getSpawn();
 		BiomePropertyManager.TEMPERATURE = new EarlyBiomeProperty<>(Float.class,
-				Biome::getBaseTemperature, (loc, f) -> climate.apply(loc).setTemperature(Optional.of(f)));
+				ScriptSetup.transform(Biome::getBaseTemperature), (loc, f) -> climate.apply(loc).setTemperature(Optional.of(f)));
 		BiomePropertyManager.TEMPERATURE_MODIFIER = new EarlyBiomeProperty<>(TemperatureModifier.class,
 				null, (loc, f) -> climate.apply(loc).setTemperatureModifier(f));
 		BiomePropertyManager.DOWNFALL = new EarlyBiomeProperty<>(Float.class,
-				Biome::getDownfall, (loc, f) -> climate.apply(loc).setDownfall(Optional.of(f)));
+				ScriptSetup.transform(Biome::getDownfall), (loc, f) -> climate.apply(loc).setDownfall(Optional.of(f)));
 		BiomePropertyManager.PRECIPITATION = new EarlyBiomeProperty<>(Precipitation.class,
-				Biome::getPrecipitation, (loc, f) -> climate.apply(loc).setPrecipitation(f));
+				ScriptSetup.transform(Biome::getPrecipitation), (loc, f) -> climate.apply(loc).setPrecipitation(f));
 
 		BiomePropertyManager.GRASS_COLOR = new EarlyBiomeProperty<>(Integer.class,
-				loc -> loc.getSpecialEffects().getGrassColorOverride().orElseThrow(), (loc, f) -> effects.apply(loc).setGrassColorOverride(OptionalInt.of(f)));
+				ScriptSetup.transform(loc -> loc.getSpecialEffects().getGrassColorOverride().orElseThrow()), (loc, f) -> effects.apply(loc).setGrassColorOverride(OptionalInt.of(f)));
 		BiomePropertyManager.FOG_COLOR = new EarlyBiomeProperty<>(Integer.class,
-				Biome::getFogColor, (loc, f) -> effects.apply(loc).setFogColor(OptionalInt.of(f)));
-		BiomePropertyManager.WATER_COLOR = new EarlyBiomeProperty<>(Integer.class, Biome::getWaterColor,
+				ScriptSetup.transform(Biome::getFogColor), (loc, f) -> effects.apply(loc).setFogColor(OptionalInt.of(f)));
+		BiomePropertyManager.WATER_COLOR = new EarlyBiomeProperty<>(Integer.class, ScriptSetup.transform(Biome::getWaterColor),
 				(loc, f) -> effects.apply(loc).setWaterColor(OptionalInt.of(f)));
-		BiomePropertyManager.WATER_FOG_COLOR = new EarlyBiomeProperty<>(Integer.class, Biome::getWaterFogColor,
+		BiomePropertyManager.WATER_FOG_COLOR = new EarlyBiomeProperty<>(Integer.class, ScriptSetup.transform(Biome::getWaterFogColor),
 				(loc, f) -> effects.apply(loc).setWaterFogColor(OptionalInt.of(f)));
 		BiomePropertyManager.SKY_COLOR = new EarlyBiomeProperty<>(Integer.class,
-				Biome::getSkyColor, (loc, f) -> effects.apply(loc).setSkyColor(OptionalInt.of(f)));
+				ScriptSetup.transform(Biome::getSkyColor), (loc, f) -> effects.apply(loc).setSkyColor(OptionalInt.of(f)));
 		BiomePropertyManager.FOLIAGE_COLOR = new EarlyBiomeProperty<>(Integer.class,
-				Biome::getFoliageColor, (loc, f) -> effects.apply(loc).setFoliageColorOverride(OptionalInt.of(f)));
+				ScriptSetup.transform(Biome::getFoliageColor), (loc, f) -> effects.apply(loc).setFoliageColorOverride(OptionalInt.of(f)));
 
 		BiomePropertyManager.SPAWN_PROBABILITY = new EarlyBiomeProperty<>(Float.class,
-				loc -> loc.getMobSettings().getCreatureProbability(), (loc, f) -> spawn.apply(loc).setProbability(Optional.of(f)));
+				ScriptSetup.transform(loc -> loc.getMobSettings().getCreatureProbability()), (loc, f) -> spawn.apply(loc).setProbability(Optional.of(f)));
 
-		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, loc -> RegistryNameHelper.getRegistryName(loc.getAmbientLoop().orElseThrow()).toString(),
+		BiomePropertyManager.AMBIENT_LOOP_SOUND = new EarlyBiomeProperty<>(String.class, ScriptSetup.transform(loc -> RegistryNameHelper.getRegistryName(loc.getAmbientLoop().orElseThrow()).toString()),
 				(loc, f) -> effects.apply(loc).setAmbientSoundLoop(Optional.of(ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(f)))));
 
-		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableSleep(),
+		BiomePropertyManager.DISABLE_SLEEP = new EarlyBiomeProperty<>(Boolean.class, (loc, l) -> BiomeModificationManager.forBiome(loc).isDisableSleep(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSleep(f));
-		BiomePropertyManager.DISABLE_BONEMEAL = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableBonemeal(),
+		BiomePropertyManager.DISABLE_BONEMEAL = new EarlyBiomeProperty<>(Boolean.class, (loc, l) -> BiomeModificationManager.forBiome(loc).isDisableBonemeal(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableBonemeal(f));
-		BiomePropertyManager.DISABLE_CROP_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableCropGrowth(),
+		BiomePropertyManager.DISABLE_CROP_GROWTH = new EarlyBiomeProperty<>(Boolean.class, (loc, l) -> BiomeModificationManager.forBiome(loc).isDisableCropGrowth(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableCropGrowth(f));
-		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, loc -> BiomeModificationManager.forBiome(loc).isDisableSaplingGrowth(),
+		BiomePropertyManager.DISABLE_SAPLING_GROWTH = new EarlyBiomeProperty<>(Boolean.class, (loc, l) -> BiomeModificationManager.forBiome(loc).isDisableSaplingGrowth(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).setDisableSaplingGrowth(f));
 
-		BiomePropertyManager.FOG_SHAPE = new EarlyBiomeProperty<>(BiomeModificationManager.FogShape.class, loc -> BiomeModificationManager.forBiome(loc).getFog().getShape(),
+		BiomePropertyManager.FOG_SHAPE = new EarlyBiomeProperty<>(BiomeModificationManager.FogShape.class, (loc, l) -> BiomeModificationManager.forBiome(loc).getFog().getShape(),
 				(loc, f) -> BiomeModificationManager.forBiome(loc).getFog().setShape(f));
 
 		BiomePropertyManager.populatePropertyMap();
@@ -257,6 +259,10 @@ public class ScriptSetup {
 		return autoRegs.annotationData().entrySet().stream()
 				.map(entry -> new AnnotationData(autoReg, autoRegs.targetType(), autoRegs.clazz(), autoRegs.memberName(), Collections.singletonMap(entry.getKey(), entry.getValue())))
 				.collect(Collectors.toSet());
+	}
+
+	private static <V> BiFunction<? super ResourceLocation, ? super BiomeLookup, V> transform(final Function<? super Biome, ? extends V> fun){
+		return (loc, lookup) -> fun.apply(lookup.value(loc));
 	}
 
 }

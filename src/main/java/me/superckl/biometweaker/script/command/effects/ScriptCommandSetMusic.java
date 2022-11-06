@@ -2,6 +2,7 @@ package me.superckl.biometweaker.script.command.effects;
 
 import java.util.Optional;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.biometweaker.BiomeModificationManager;
@@ -36,7 +37,7 @@ public class ScriptCommandSetMusic extends StagedScriptCommand{
 			throw new IllegalArgumentException("Unknown particle type "+this.type);
 		final SoundEvent type = ForgeRegistries.SOUND_EVENTS.getValue(this.type);
 		final Music music = new Music(type, this.minDelay, this.maxDelay, this.replaceMusic);
-		this.pack.locIterator().forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getEffects().setBackgroundMusic(Optional.of(music)));
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> BiomeModificationManager.forBiome(loc).getEffects().setBackgroundMusic(Optional.of(music)));
 	}
 
 	@Override

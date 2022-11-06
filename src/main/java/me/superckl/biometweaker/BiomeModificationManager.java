@@ -55,20 +55,12 @@ public class BiomeModificationManager {
 		return BiomeModificationManager.modifiers.computeIfAbsent(rLoc, loc -> new BiomeModificationManager());
 	}
 
-	public static BiomeModificationManager forBiome(final Biome biome) {
-		return BiomeModificationManager.forBiome(RegistryNameHelper.getRegistryName(biome));
-	}
-
 	public static Optional<BiomeModificationManager> forBiomeOpt(final ResourceLocation rLoc) {
 		return Optional.ofNullable(BiomeModificationManager.modifiers.get(rLoc));
 	}
 
 	public static Optional<BiomeModificationManager> forBiomeOpt(final ResourceKey<Biome> key) {
 		return BiomeModificationManager.forBiomeOpt(key.location());
-	}
-
-	public static Optional<BiomeModificationManager> forBiomeOpt(final Biome biome) {
-		return BiomeModificationManager.forBiomeOpt(RegistryNameHelper.getRegistryName(biome));
 	}
 
 	private ClimateModification climate;

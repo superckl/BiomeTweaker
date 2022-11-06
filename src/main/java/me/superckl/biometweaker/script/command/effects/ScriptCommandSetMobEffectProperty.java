@@ -24,7 +24,7 @@ public class ScriptCommandSetMobEffectProperty extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Property<?, ?> prop = MobEffectPropertyManager.findProperty(this.key.toLowerCase());
+		final Property<?, ?, ?> prop = MobEffectPropertyManager.findProperty(this.key.toLowerCase());
 		if(prop == null)
 			throw new IllegalArgumentException("No property found for "+this.key);
 		PropertyHelper.setProperty(this.effect, prop, this.value, this.handler);

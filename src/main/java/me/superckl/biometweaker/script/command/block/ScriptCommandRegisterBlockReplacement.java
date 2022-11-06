@@ -1,6 +1,7 @@
 package me.superckl.biometweaker.script.command.block;
 
 import lombok.RequiredArgsConstructor;
+import me.superckl.api.biometweaker.BiomeLookup;
 import me.superckl.api.biometweaker.block.BlockStateBuilder;
 import me.superckl.api.biometweaker.script.pack.BiomePackage;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
@@ -28,7 +29,7 @@ public class ScriptCommandRegisterBlockReplacement extends StagedScriptCommand{
 	public void perform() throws Exception {
 		if(this.replaceWith == null || !this.replaceWith.hasBlock())
 			throw new IllegalStateException("Cannot register block replacement with no block specified!");
-		this.pack.locIterator().forEachRemaining(loc -> {
+		this.pack.locIterator(BiomeLookup.fromForge()).forEachRemaining(loc -> {
 			if(TweakWorldManager.getCurrentWorld() == null)
 				BlockReplacementManager.registerGlobalBlockReplacement(loc, this.weight, this.toReplace.build(), this.replaceWith);
 			else

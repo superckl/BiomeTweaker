@@ -7,6 +7,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
 
 public class SubtractBiomesPackage extends BiomePackage{
@@ -20,9 +21,9 @@ public class SubtractBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<ResourceLocation> locIterator() {
-		final Set<ResourceLocation> sub = Sets.newHashSet(this.subtract.locIterator());
-		return Iterators.filter(this.main.locIterator(), Predicates.not(sub::contains));
+	public Iterator<ResourceLocation> locIterator(final BiomeLookup lookup) {
+		final Set<ResourceLocation> sub = Sets.newHashSet(this.subtract.locIterator(lookup));
+		return Iterators.filter(this.main.locIterator(lookup), Predicates.not(sub::contains));
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class ScriptCommandSetReplacementProperty extends ScriptCommand{
 
 	@Override
 	public void perform() throws Exception {
-		final Property<?, ?> prop = ReplacementPropertyManager.findProperty(this.key.toLowerCase());
+		final Property<?, ?, ?> prop = ReplacementPropertyManager.findProperty(this.key.toLowerCase());
 		if(prop == null)
 			throw new IllegalArgumentException("No property found for "+this.key);
 		PropertyHelper.setProperty(this.constraints, prop, this.value, this.handler);

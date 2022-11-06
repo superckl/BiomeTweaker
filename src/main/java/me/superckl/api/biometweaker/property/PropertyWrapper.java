@@ -1,14 +1,15 @@
 package me.superckl.api.biometweaker.property;
 
+import java.util.Optional;
 import java.util.function.Function;
 
-public class PropertyWrapper<K, V, T> extends Property<K, V>{
+public class PropertyWrapper<K, V, C, T> extends Property<K, V, C>{
 
 	private final Class<V> targetClass;
 	private final Function<V, T> mapper;
-	private final Property<K, T> wrapped;
+	private final Property<K, T, C> wrapped;
 
-	public PropertyWrapper(final Class<V> target, final Function<V, T> targetMapper, final Property<K, T> wrapped) {
+	public PropertyWrapper(final Class<V> target, final Function<V, T> targetMapper, final Property<K, T, C> wrapped) {
 		super(wrapped.getTypeClass());
 		this.targetClass = target;
 		this.mapper = targetMapper;
@@ -21,8 +22,8 @@ public class PropertyWrapper<K, V, T> extends Property<K, V>{
 	}
 
 	@Override
-	public K get(final V obj) {
-		return this.wrapped.get(this.mapper.apply(obj));
+	public K get(final V obj, final Optional<C> context) {
+		return this.wrapped.get(this.mapper.apply(obj), context);
 	}
 
 	@Override

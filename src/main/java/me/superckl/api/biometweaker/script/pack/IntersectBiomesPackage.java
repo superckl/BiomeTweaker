@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Sets;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
 
 public class IntersectBiomesPackage extends BiomePackage{
@@ -21,10 +22,10 @@ public class IntersectBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<ResourceLocation> locIterator() {
+	public Iterator<ResourceLocation> locIterator(final BiomeLookup lookup) {
 		final Set<ResourceLocation> allLocs = new HashSet<>();
-		this.packs.stream().map(BiomePackage::locIterator).forEach(it -> Iterators.addAll(allLocs, it));
-		return this.packs.stream().map(BiomePackage::locIterator).map(Sets::newHashSet).reduce(allLocs, Sets::intersection, Sets::intersection).iterator();
+		this.packs.stream().map(pack -> pack.locIterator(lookup)).forEach(it -> Iterators.addAll(allLocs, it));
+		return this.packs.stream().map(pack -> pack.locIterator(lookup)).map(Sets::newHashSet).reduce(allLocs, Sets::intersection, Sets::intersection).iterator();
 	}
 
 	@Override

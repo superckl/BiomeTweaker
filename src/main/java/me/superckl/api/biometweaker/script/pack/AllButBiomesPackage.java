@@ -8,8 +8,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Streams;
 
+import me.superckl.api.biometweaker.BiomeLookup;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllButBiomesPackage extends BiomePackage{
 
@@ -20,9 +20,9 @@ public class AllButBiomesPackage extends BiomePackage{
 	}
 
 	@Override
-	public Iterator<ResourceLocation> locIterator() {
-		final Set<ResourceLocation> excludes = Streams.stream(this.exclusions.locIterator()).collect(Collectors.toSet());
-		return Iterators.filter(ForgeRegistries.BIOMES.getKeys().iterator(), Predicates.not(excludes::contains));
+	public Iterator<ResourceLocation> locIterator(final BiomeLookup lookup) {
+		final Set<ResourceLocation> excludes = Streams.stream(this.exclusions.locIterator(lookup)).collect(Collectors.toSet());
+		return Iterators.filter(lookup.allKeys(), Predicates.not(excludes::contains));
 	}
 
 	@Override

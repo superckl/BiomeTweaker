@@ -38,7 +38,7 @@ public class BlockReplacer {
 			final Map<ResourceLocation, BlockReplacementEntryList> previousReplacements = manager.findMap(pos);
 			for (final LevelChunkSection section : chunk.getSections()) {
 				if(section.hasOnlyAir())
-					return;
+					continue;
 				section.acquire();
 				final Iterable<BlockPos> biome_positions = BlockPos.betweenClosed(0, 0, 0, 3, 3, 3);
 				//Loop over the quarts first to obtain the biome efficiently

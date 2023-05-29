@@ -52,13 +52,18 @@ public class Output {
 			final File biomeDir = new File(baseDir, "/biome/");
 			final Registry<Biome> biomeReg = registry.ownedRegistryOrThrow(Registry.BIOME_REGISTRY);
 			Output.genOutput(Streams.stream(biomeReg.iterator()), biomeDir, entry -> {
-				final JsonObject obj = new JsonObject();
-				obj.addProperty("registry_name", biomeReg.getKey(entry).toString());
-				final JsonElement el = Output.encode(ops, entry, Biome.NETWORK_CODEC);
-				Output.addGenInfo(el.getAsJsonObject(), entry, ops);
-				el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
-				obj.add("biome", el);
-				return obj;
+				try {
+					final JsonObject obj = new JsonObject();
+					obj.addProperty("registry_name", biomeReg.getKey(entry).toString());
+					final JsonElement el = Output.encode(ops, entry, Biome.NETWORK_CODEC);
+					Output.addGenInfo(el.getAsJsonObject(), entry, ops);
+					el.getAsJsonObject().add("spawner_data", Output.encode(ops, entry.getMobSettings(), MobSpawnSettings.CODEC.codec()));
+					obj.add("biome", el);
+					return obj;
+				} catch (final Exception e) {
+					BiomeTweaker.LOG.error(String.format("Failed to encode biome %s", biomeReg.getKey(entry).toString()), e);
+					return null;
+				}
 			}, namer.apply("registry_name", "Biome"));
 		}
 
@@ -101,7 +106,8 @@ public class Output {
 				Output.clearOutput(dir);
 
 				array = new JsonArray();
-				values.map(serializer).forEach(array::add);
+
+				values.map(serializer).filter(e -> e != null).forEach(array::add);
 
 				Output.writeArray(array, dir, namingStrategy);
 			} catch (final Exception e) {

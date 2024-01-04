@@ -5,12 +5,12 @@ import com.google.gson.JsonPrimitive;
 import lombok.RequiredArgsConstructor;
 import me.superckl.api.biometweaker.property.Property;
 import me.superckl.api.biometweaker.property.PropertyHelper;
+import me.superckl.api.biometweaker.script.object.BlockReplacementScriptObject;
 import me.superckl.api.biometweaker.world.gen.ReplacementConstraints;
 import me.superckl.api.superscript.AutoRegister;
 import me.superckl.api.superscript.script.ScriptHandler;
 import me.superckl.api.superscript.script.command.ScriptCommand;
 import me.superckl.biometweaker.common.world.gen.ReplacementPropertyManager;
-import me.superckl.biometweaker.script.object.block.BlockReplacementScriptObject;
 
 @AutoRegister(classes = BlockReplacementScriptObject.class, name = "set")
 @RequiredArgsConstructor
